@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+backend/venv/
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+scratch/
+*.pyc
+
+# Next.js build
+frontend/.next/
+frontend/out/
+
+# Environment files & Secrets
+.env
+.env.local
+*.db
+*.sqlite3
+
+# OS files
+.DS_Store
+.vscode/
+.idea/

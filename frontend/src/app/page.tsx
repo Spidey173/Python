@@ -1,0 +1,474 @@
+'use client';
+
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
+import { AuthModal } from '@/components/ui/AuthModal';
+import { api } from '@/lib/api';
+import {
+  persistence,
+  SubmissionLogEntry,
+  calculateRealStreak,
+} from '@/lib/persistence';
+import { ChapterGroup } from '@/lib/types';
+import { DifficultyBadge, StatusPill } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import {
+  Play, CheckCircle2, Flame, Target, ArrowRight,
+  ChevronRight, Zap, Sparkles, GitBranch, Repeat,
+  Code2, Hash, Boxes, Terminal, Check, Award, Layers, Code
+} from 'lucide-react';
+
+// Modern Circular SVG Gauge Component
+function CircularProgressGauge({
+  percent,
+  size = 62,
+  strokeWidth = 5,
+}: {
+  percent: number;
+  size?: number;
+  strokeWidth?: number;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const strokeDashoffset = circumference - (percent / 100) * circumference;
+
+  return (
+    <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
+      <svg className="transform -rotate-90" width={size} height={size}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#21262D"
+          strokeWidth={strokeWidth}
+          fill="transparent"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="url(#dashboardProgressGradient)"
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          className="transition-all duration-700 ease-out"
+        />
+        <defs>
+          <linearGradient id="dashboardProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#238636" />
+            <stop offset="100%" stopColor="#3FB950" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span className="absolute font-mono text-xs font-bold text-[#E6EDF3]">
+        {percent}%
+      </span>
+    </div>
+  );
+}
+
+// Icon mapping per module index
+const MODULE_ICONS = [
+  Layers,      // 1: Variables
+  GitBranch,   // 2: Operators & Logic
+  Repeat,      // 3: Loops
+  Code2,       // 4: Functions
+  Terminal,    // 5: Strings
+  Code,        // 6: Lists
+  Hash,        // 7: Comprehensions & Dicts
+  Sparkles,    // 8: Advanced Algorithms
+  Boxes,       // 9: Object-Oriented
+  Award,       // 10: Real-World Systems
+];
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const { user, isGuest } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signup');
+
+  const [chapters, setChapters] = useState<ChapterGroup[]>([]);
+  const [solvedIds, setSolvedIds] = useState<number[]>([]);
+  const [lastActiveId, setLastActiveId] = useState<number>(1);
+  const [submissions, setSubmissions] = useState<SubmissionLogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeStageTab, setActiveStageTab] = useState<'all' | 'stage1' | 'stage2' | 'stage3'>('all');
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        if (!user) {
+          // Fresh unauthenticated visitor session has 0 solved, 0 submissions, 0 streak
+          const chaps = await api.getChapters().catch(() => []);
+          setChapters(chaps);
+          setSolvedIds([]);
+          setLastActiveId(1);
+          setSubmissions([]);
+          return;
+        }
+        const [chaps, localSolved, lastId, subs] = await Promise.all([
+          api.getChapters().catch(() => []),
+          persistence.getSolvedIds(),
+          persistence.getLastActiveProblemId(),
+          persistence.getSubmissions(),
+        ]);
+        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
+        setChapters(chaps);
+        setSolvedIds(mergedSolved);
+        setLastActiveId(lastId);
+        setSubmissions(subs);
+      } catch (e) {
+        console.error('Failed to load dashboard state:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+
+    const handleLogout = () => {
+      setSolvedIds([]);
+      setSubmissions([]);
+      setLastActiveId(1);
+    };
+    window.addEventListener('pyforge_auth_logout', handleLogout);
+    return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
+  }, [user]);
+
+  const allProblems = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
+  const totalCount = allProblems.length || 0;
+  const solvedCount = user ? solvedIds.length : 0;
+  const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
+
+  // Real calculated analytics
+  const realStreak = useMemo(() => {
+    if (!user) return 0;
+    return calculateRealStreak(submissions);
+  }, [user, submissions]);
+
+  const solvedToday = useMemo(() => {
+    if (!user) return 0;
+    const todayStr = new Date().toDateString();
+    return submissions.filter(
+      (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
+    ).length;
+  }, [user, submissions]);
+
+  // Find active problem to resume
+  const currentProblem = useMemo(() => {
+    return allProblems.find((p) => p.id === lastActiveId) || allProblems[0] || {
+      id: 1,
+      title: 'Valid Palindrome',
+      chapter_title: 'Module 1: Strings & Text Manipulation',
+      difficulty: 'Easy',
+      level_number: 1,
+    };
+  }, [allProblems, lastActiveId]);
+
+  // Recommendations: First 3 unsolved problems
+  const upNextProblems = useMemo(() => {
+    return allProblems.filter((p) => !solvedIds.includes(p.id)).slice(0, 3);
+  }, [allProblems, solvedIds]);
+
+  // 7-day study streak tracking visualization
+  const streakDays = useMemo(() => {
+    const dates = [];
+    const now = new Date();
+    const activeDateStrings = new Set(
+      (!user ? [] : submissions).map((s) => {
+        const d = new Date(s.timestamp);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      })
+    );
+
+    const daysLabel = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      dates.push({
+        label: daysLabel[d.getDay()],
+        active: activeDateStrings.has(dateStr),
+        isToday: i === 0,
+      });
+    }
+    return dates;
+  }, [user, submissions]);
+
+  // Readiness Tier Label
+  const readinessTier = useMemo(() => {
+    if (solvedCount >= 40) return { label: 'Placement Ready', color: 'text-[#A371F7] border-[#A371F7]/40 bg-[#A371F7]/10' };
+    if (solvedCount >= 20) return { label: 'Advanced DSA', color: 'text-[#58A6FF] border-[#58A6FF]/40 bg-[#58A6FF]/10' };
+    if (solvedCount >= 8) return { label: 'Intermediate', color: 'text-[#3FB950] border-[#3FB950]/40 bg-[#3FB950]/10' };
+    return { label: 'DSA Foundation', color: 'text-[#58A6FF] border-[#58A6FF]/40 bg-[#58A6FF]/10' };
+  }, [solvedCount]);
+
+  // Filter modules by Stage
+  const filteredChapters = useMemo(() => {
+    if (activeStageTab === 'stage1') return chapters.filter((c) => c.chapter_id >= 1 && c.chapter_id <= 3);
+    if (activeStageTab === 'stage2') return chapters.filter((c) => c.chapter_id >= 4 && c.chapter_id <= 7);
+    if (activeStageTab === 'stage3') return chapters.filter((c) => c.chapter_id >= 8 && c.chapter_id <= 10);
+    return chapters;
+  }, [chapters, activeStageTab]);
+
+  return (
+    <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] py-7 px-4 sm:px-6 lg:px-8">
+      <div className="w-full space-y-7">
+
+        {/* 1. Guest Session Transparent Banner */}
+        {isGuest && (
+          <div className="rounded-xl border border-[#30363D] bg-gradient-to-r from-[#161B22] via-[#1C2128] to-[#161B22] p-4 sm:px-5 sm:py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 shadow-md">
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#D29922]/15 text-[#D29922] border border-[#D29922]/30 shrink-0">
+                <Zap className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-[#E6EDF3]">Guest Coding Active</span>
+                  <span className="text-xs uppercase font-mono px-2 py-0.5 rounded bg-[#3FB950]/15 text-[#3FB950] border border-[#3FB950]/30 font-medium">
+                    No Sign-Up Required
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-[#8B949E] mt-0.5">
+                  You can code immediately without logging in. All your submissions, streak, and performance metrics are tracked live in your browser.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => {
+                  setAuthTab('signup');
+                  setAuthModalOpen(true);
+                }}
+                className="px-4 py-2 text-xs sm:text-sm font-medium text-white bg-[#238636] hover:bg-[#2EA043] rounded-md transition-colors flex items-center gap-1.5"
+              >
+                <span>Save Progress to Cloud</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 2. Dashboard Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#21262D] pb-6">
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#E6EDF3]">
+                {user && !isGuest ? `Welcome back, ${user.username}` : 'Python Interview Preparation'}
+              </h1>
+              <span className={`text-xs uppercase font-mono px-2.5 py-1 rounded border font-semibold ${readinessTier.color}`}>
+                {readinessTier.label}
+              </span>
+            </div>
+            <p className="text-sm sm:text-base text-[#8B949E] mt-1.5">
+              50 high-frequency DSA questions for tech interviews & campus placements • Real test suites
+            </p>
+          </div>
+
+          {/* Quick Stats Pill Header */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#161B22] px-3.5 py-2 text-sm">
+              <Target className="h-4 w-4 text-[#58A6FF]" />
+              <span className="text-[#8B949E]">Daily Goal:</span>
+              <span className="font-mono font-semibold text-[#E6EDF3]">{Math.min(solvedToday, 3)}/3</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#161B22] px-3.5 py-2 text-sm">
+              <Flame className="h-4 w-4 text-[#D29922] fill-[#D29922]" />
+              <span className="text-[#8B949E]">Streak:</span>
+              <span className="font-mono font-semibold text-[#E6EDF3]">{realStreak}d</span>
+            </div>
+            <Link href="/quest">
+              <Button variant="secondary" size="md">
+                <span>Browse Challenges</span>
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* 3. Metrics Cockpit: 3 High-Impact Cards (Sandbox Velocity Removed) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          {/* Metric 1: Curriculum Solved with Radial Progress */}
+          <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between">
+            <div className="flex items-center justify-between text-sm text-[#8B949E]">
+              <span className="font-semibold text-[#E6EDF3]">Curriculum Mastery</span>
+              <CheckCircle2 className="h-5 w-5 text-[#3FB950]" />
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl sm:text-4xl font-bold font-mono text-[#E6EDF3]">
+                    {solvedCount}
+                  </span>
+                  {totalCount > 0 && (
+                    <span className="text-sm sm:text-base text-[#8B949E]">/ {totalCount}</span>
+                  )}
+                </div>
+                <p className="text-xs sm:text-sm text-[#8B949E] mt-1">
+                  {totalCount > 0 ? `${Math.max(0, totalCount - solvedCount)} challenges remaining` : 'Challenges in progress'}
+                </p>
+              </div>
+              <CircularProgressGauge percent={progressPercent} size={62} strokeWidth={5} />
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#21262D] flex items-center justify-between text-xs sm:text-sm">
+              <span className="text-[#8B949E]">Track</span>
+              <span className="text-[#3FB950] font-mono font-semibold">Core Curriculum</span>
+            </div>
+          </div>
+
+          {/* Metric 2: Daily Target Sprint (3-Step Node Tracker) */}
+          <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between">
+            <div className="flex items-center justify-between text-sm text-[#8B949E]">
+              <span className="font-semibold text-[#E6EDF3]">Daily Sprint Target</span>
+              <Target className="h-5 w-5 text-[#58A6FF]" />
+            </div>
+            <div className="mt-4">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-bold font-mono text-[#E6EDF3]">
+                  {Math.min(solvedToday, 3)}
+                  <span className="text-base font-normal text-[#8B949E]"> / 3</span>
+                </span>
+                <span className="text-xs sm:text-sm text-[#8B949E]">solved today</span>
+              </div>
+              {/* Visual 3-Node Target Milestone Tracker */}
+              <div className="mt-3 flex items-center gap-2.5">
+                {[1, 2, 3].map((step) => {
+                  const isDone = solvedToday >= step;
+                  return (
+                    <div
+                      key={step}
+                      className={`flex-1 h-6 rounded-md flex items-center justify-center text-xs font-mono font-semibold transition-all ${isDone
+                          ? 'bg-[#238636] text-white border border-[#3FB950]/50 shadow-[0_0_8px_rgba(35,134,54,0.35)]'
+                          : 'bg-[#21262D] text-[#8B949E] border border-[#30363D]'
+                        }`}
+                      title={`Daily target problem ${step}: ${isDone ? 'Completed' : 'Pending'}`}
+                    >
+                      {isDone ? '✓' : step}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#21262D] text-xs sm:text-sm text-[#8B949E] truncate">
+              {solvedToday >= 3 ? (
+                <span className="text-[#3FB950] font-medium flex items-center gap-1.5">
+                  <Check className="h-4 w-4" /> Target achieved! Great momentum
+                </span>
+              ) : (
+                `${3 - Math.min(solvedToday, 3)} more to hit today's target`
+              )}
+            </div>
+          </div>
+
+          {/* Metric 3: Study Streak with 7-Day Dot Visualizer */}
+          <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between">
+            <div className="flex items-center justify-between text-sm text-[#8B949E]">
+              <span className="font-semibold text-[#E6EDF3]">Active Study Streak</span>
+              <Flame className="h-5 w-5 text-[#D29922] fill-[#D29922]" />
+            </div>
+            <div className="mt-4">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-bold font-mono text-[#E6EDF3]">
+                  {realStreak}
+                </span>
+                <span className="text-xs sm:text-sm text-[#D29922] font-semibold font-mono">
+                  {realStreak === 1 ? 'DAY' : 'DAYS'} ACTIVE
+                </span>
+              </div>
+              {/* 7-Day Streak Dots Visualization */}
+              <div className="flex items-center gap-2 mt-3">
+                {streakDays.map((day, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-1.5 flex-1">
+                    <div
+                      className={`h-3 w-full rounded transition-all ${day.active
+                          ? 'bg-[#F59E0B] shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+                          : day.isToday
+                            ? 'border border-[#D29922]/50 bg-[#21262D]'
+                            : 'bg-[#21262D]'
+                        }`}
+                      title={`${day.label}: ${day.active ? 'Active practice day' : 'No submission'}`}
+                    />
+                    <span className={`text-[11px] font-mono ${day.isToday ? 'text-[#E6EDF3] font-bold' : 'text-[#8B949E]'}`}>
+                      {day.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 pt-3 border-t border-[#21262D] text-xs sm:text-sm text-[#8B949E] truncate">
+              {realStreak > 0 ? 'Consecutive daily consistency' : 'Solve a challenge today to ignite streak'}
+            </div>
+          </div>
+
+        </div>
+
+        {/* 4. Continue Learning Hero Spotlight Card */}
+        <div className="rounded-xl border border-[#30363D] bg-gradient-to-br from-[#161B22] via-[#1C2128] to-[#161B22] p-6 sm:p-7 card-hover-interactive shadow-xl relative overflow-hidden">
+          {/* Subtle decorative background glow */}
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#238636]/10 blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+            <div className="space-y-2.5 max-w-3xl">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="flex items-center gap-2 text-xs font-mono font-semibold text-[#3FB950]">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#3FB950] animate-pulse" />
+                  CONTINUE WHERE YOU LEFT OFF
+                </span>
+                <span className="text-[#30363D]">•</span>
+                <span className="text-xs sm:text-sm text-[#8B949E] font-medium">{currentProblem.chapter_title}</span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#E6EDF3] tracking-tight">
+                Problem #{currentProblem.id}: {currentProblem.title}
+              </h2>
+
+              <p className="text-sm sm:text-base text-[#8B949E] leading-relaxed">
+                Jump straight into the workspace. Your code drafts, test executions, and console logs are preserved automatically.
+              </p>
+
+              {/* Tags */}
+              <div className="flex items-center gap-2.5 pt-1.5 flex-wrap">
+                <DifficultyBadge difficulty={currentProblem.difficulty || 'Easy'} size="md" />
+                <span className="text-xs font-mono px-2.5 py-1 rounded bg-[#21262D] text-[#8B949E] border border-[#30363D]">
+                  ⏱ ~10 mins
+                </span>
+                <span className="text-xs font-mono px-2.5 py-1 rounded bg-[#21262D] text-[#8B949E] border border-[#30363D]">
+                  🐍 Python 3.12
+                </span>
+                <span className="text-xs font-mono px-2.5 py-1 rounded bg-[#21262D] text-[#8B949E] border border-[#30363D]">
+                  ⚡ AST Validated
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5 shrink-0 flex-wrap">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => router.push(`/quest/${currentProblem.id}`)}
+                className="gap-2.5 font-semibold text-sm px-6 py-3 shadow-lg shadow-[#238636]/20"
+              >
+                <Play className="h-4 w-4 fill-current" />
+                <span>Resume Problem</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Global Auth Modal for Account Creation / Login */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialTab={authTab}
+      />
+    </div>
+  );
+}
