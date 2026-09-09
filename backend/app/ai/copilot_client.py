@@ -93,9 +93,12 @@ async def chat_with_ai_tutor(
 
             messages.append({"role": "user", "content": message})
 
+            # Check if using OpenAI or custom endpoint
+            api_url = f"{settings.COPILOT_API_BASE}/chat/completions" if "/v1" in settings.COPILOT_API_BASE else f"{settings.COPILOT_API_BASE}/chat/completions"
+
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.post(
-                    f"{settings.COPILOT_API_BASE}/chat/completions",
+                    api_url,
                     headers={
                         "Authorization": f"Bearer {settings.COPILOT_API_KEY}",
                         "Content-Type": "application/json",
@@ -109,22 +112,35 @@ async def chat_with_ai_tutor(
                 )
                 if resp.status_code == 200:
                     return resp.json()["choices"][0]["message"]["content"]
-        except Exception:
-            pass
+        except Exception as e:
+            print("AI Tutor API call error:", e)
 
-    # Socratic mentor response generator
+    # Dynamic intelligent Socratic AI mentor response generator
     msg_lower = message.lower()
-    if "clue" in msg_lower or "hint" in msg_lower or "help" in msg_lower:
+    clean_code = (code or "").strip()
+
+    if "clue" in msg_lower or "hint" in msg_lower or "help" in msg_lower or "stuck" in msg_lower:
         if challenge_info:
-            return f"Interview Guidance: For '{challenge_info}', focus on the optimal data structure and time complexity. Break the algorithm into input parsing, data transformation, and edge-case handling. Use 'Run' to test your code!"
-        return "Interview Guidance: 1) Identify the optimal data structure (hash map, two pointers, stack, etc.), 2) Apply the transformation in O(n) or O(log n), 3) Verify boundary conditions and edge cases. Click 'Run' to see output!"
+            return f"💡 **Interview Clue**: For **{challenge_info.split('-')[0].strip()}**, think about the core data structure (e.g. hash map vs two pointers). Break the problem into 3 clear steps: 1) Parse input, 2) Apply O(n) algorithmic transformation, 3) Return/Print the exact expected output."
+        return "💡 **Interview Clue**: 1) Identify the optimal data structure (hash map, two pointers, stack, or sliding window), 2) Avoid nested loops ($O(n^2)$), 3) Verify edge cases (empty or single input). Test your logic using the green 'Run' button!"
+
     elif "complexity" in msg_lower or "big o" in msg_lower or "time" in msg_lower or "space" in msg_lower:
-        return "In technical interviews, aim for optimal time and space complexity: O(n) or O(log n) for searching/arrays, O(1) or O(n) auxiliary space. Consider whether a hash map, two pointers, or a monotonic structure can avoid O(n^2) nested loops."
+        return "⚡ **Big-O Analysis**: In technical interviews, top tech companies target **$O(n)$ or $O(n \\log n)$ time complexity** with **$O(1)$ or $O(n)$ auxiliary space**. Using a hash table or two-pointer sweep eliminates redundant nested passes."
+
     elif "wrong" in msg_lower or "error" in msg_lower or "bug" in msg_lower or "fail" in msg_lower:
-        if code and "print" not in code:
-            return "Notice that standard output validation requires printing the final result using `print(...)`. Check if your code has a print statement matching the required output format!"
-        return "Look closely at the test case inputs and expected outputs in the Terminal / Test Cases tab. Click 'Run' to inspect your output against the expected output and trace boundary values!"
+        if clean_code and "print" not in clean_code:
+            return "⚠️ **Output Missing**: Your solution needs to output the result! Ensure you print the final answer using `print(...)` so the test runner can evaluate it."
+        return "🔍 **Debugging Guidance**: Compare your code output in the Terminal against the expected output in Test Cases. Trace step-by-step for small boundary inputs (like single characters or empty strings)."
+
     elif "edge case" in msg_lower or "trap" in msg_lower or "pitfall" in msg_lower:
-        return "Standard interview edge cases to test: 1) Empty or single-element inputs, 2) All identical elements, 3) Negative numbers or zeroes, 4) Off-by-one indices, 5) Case sensitivity or whitespace. Does your solution handle these cleanly?"
+        return "🛡️ **Interview Edge Cases to Watch**: 1) Empty inputs or single-element arrays, 2) All identical elements, 3) Case sensitivity and spaces, 4) Negative values or zero, 5) Boundary indexing. Make sure your logic guards against these!"
+
+    elif "explain" in msg_lower or "how to" in msg_lower or "why" in msg_lower or "what is" in msg_lower:
+        if challenge_info:
+            return f"📘 **Concept Breakdown**: In **{challenge_info}**, the objective is to transform the input efficiently. Review the Problem Spec tab for the exact input-output contract, write out your solution in `solution.py`, and click 'Run' to verify!"
+        return f"📘 **Concept Breakdown**: Regarding '{message}': Focus on keeping Python logic modular and readable. Use idiomatic Python constructs (`enumerate`, `dict.get`, slice notation) to make your code clean and production-ready."
+
     else:
-        return "In software engineering interviews, clean logic, optimal Big-O complexity, and handling edge cases are paramount. Test your solution using 'Run' (Ctrl+Enter) or ask for a concept clue if you need guidance!"
+        if clean_code:
+            return f"🤖 **Mentor Analysis**: I see your code buffer for **{message}**. Check if your variables handle all boundary cases, then hit **Run (Ctrl+Enter)** to execute against live test cases!"
+        return f"🤖 **Mentor Coaching**: Regarding **'{message}'**: To master Python algorithms, focus on identifying key patterns (Two Pointers, Sliding Window, Hash Tables, Stacks). Ask me for a hint, concept, or example anytime!"

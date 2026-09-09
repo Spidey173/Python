@@ -2,6 +2,8 @@ from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+import os
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Python Quest API"
     VERSION: str = "1.0.0"
@@ -18,10 +20,10 @@ class Settings(BaseSettings):
     # Redis (Optional)
     REDIS_URL: Optional[str] = None
 
-    # AI Integration (GitHub Copilot / OpenAI compatible)
-    COPILOT_API_KEY: Optional[str] = None
-    COPILOT_API_BASE: str = "https://api.openai.com/v1"
-    COPILOT_MODEL: str = "gpt-4o-mini"
+    # AI Integration (GitHub Copilot / OpenAI / GitHub PAT compatible)
+    COPILOT_API_KEY: Optional[str] = os.getenv("COPILOT_API_KEY") or os.getenv("GITHUB_TOKEN")
+    COPILOT_API_BASE: str = os.getenv("COPILOT_API_BASE", "https://api.github.com")
+    COPILOT_MODEL: str = os.getenv("COPILOT_MODEL", "gpt-4o-mini")
 
     # Execution Sandbox Constraints
     SANDBOX_TIMEOUT_SECONDS: float = 3.0
