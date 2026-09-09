@@ -135,8 +135,21 @@ export function CommandPalette({
       setQuery('');
       setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
+
+      const handleGlobalKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }
+      };
+
+      window.addEventListener('keydown', handleGlobalKeyDown, true);
+      return () => {
+        window.removeEventListener('keydown', handleGlobalKeyDown, true);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   const allCommands = useMemo<CommandItem[]>(() => {
     const items: CommandItem[] = [];

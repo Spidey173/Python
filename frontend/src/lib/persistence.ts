@@ -25,6 +25,8 @@ export interface PersistenceProvider {
   loadLayoutSettings(): Promise<LayoutSettings>;
   getSolvedIds(): Promise<number[]>;
   markSolved(problemId: number): Promise<void>;
+  getUnlockedSolutionIds(): Promise<number[]>;
+  markSolutionUnlocked(problemId: number): Promise<void>;
   getLastActiveProblemId(): Promise<number>;
   setLastActiveProblemId(id: number): Promise<void>;
   getSubmissions(): Promise<SubmissionLogEntry[]>;
@@ -104,6 +106,30 @@ class LocalPersistenceProvider implements PersistenceProvider {
       }
     } catch (e) {
       console.warn('Failed to mark problem solved:', e);
+    }
+  }
+
+  async getUnlockedSolutionIds(): Promise<number[]> {
+    if (!this.isBrowser) return [];
+    try {
+      const raw = localStorage.getItem('pyforge_unlocked_solution_ids');
+      if (!raw) return [];
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }
+
+  async markSolutionUnlocked(problemId: number): Promise<void> {
+    if (!this.isBrowser) return;
+    try {
+      const unlocked = await this.getUnlockedSolutionIds();
+      if (!unlocked.includes(problemId)) {
+        unlocked.push(problemId);
+        localStorage.setItem('pyforge_unlocked_solution_ids', JSON.stringify(unlocked));
+      }
+    } catch (e) {
+      console.warn('Failed to mark solution unlocked:', e);
     }
   }
 

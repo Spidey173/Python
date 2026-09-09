@@ -186,10 +186,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     async function loadWorkspace() {
       try {
         setLoading(true);
-        const [prob, chapters, solved, savedDraft, layoutSettings] = await Promise.all([
+        const [prob, chapters, solved, unlockedSolutions, savedDraft, layoutSettings] = await Promise.all([
           api.getChallenge(problemId),
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds(),
+          persistence.getUnlockedSolutionIds(),
           persistence.loadDraft(problemId),
           persistence.loadLayoutSettings(),
         ]);
@@ -227,8 +228,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setConsoleCollapsed(layoutSettings.consoleCollapsed);
         await persistence.setLastActiveProblemId(problemId);
 
-        // Solution is unlocked if the challenge has been solved
-        setIsSolutionUnlocked(isAlreadySolved);
+        // Solution is unlocked if the challenge has been solved OR manually unlocked previously
+        const isUnlockedInStorage = unlockedSolutions.includes(problemId);
+        setIsSolutionUnlocked(isAlreadySolved || isUnlockedInStorage);
 
         // Initialize Mentor with welcoming greeting
         const knowledge = getMentorKnowledge(prob);
@@ -971,7 +973,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                 isSolved={Boolean(isCurrentProblemSolved)}
                 unlocked={isSolutionUnlocked}
                 hintsUsedCount={hintTier}
-                onUnlock={() => setIsSolutionUnlocked(true)}
+                onUnlock={() => {
+                  setIsSolutionUnlocked(true);
+                  persistence.markSolutionUnlocked(problemId);
+                }}
                 onSubmitCode={handleSubmitCode}
                 onLoadCodeToEditor={(solCode) => {
                   setCode(solCode);
