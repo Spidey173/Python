@@ -35,6 +35,10 @@ export const SolutionVault: React.FC<SolutionVaultProps> = ({
   const [copiedCode, setCopiedCode] = useState(false);
   const [loadedRank, setLoadedRank] = useState<number | null>(null);
 
+  React.useEffect(() => {
+    setSelectedRank(1);
+  }, [problem?.id, problem?.level_number]);
+
   const rankedSolutions: RankedSolution[] = React.useMemo(() => {
     return getProblemRankedSolutions(problem);
   }, [problem]);
@@ -212,29 +216,47 @@ export const SolutionVault: React.FC<SolutionVaultProps> = ({
           <span className="text-xs font-mono text-[#8B949E] uppercase tracking-wider font-semibold">
             Ranked Approaches for Interviews
           </span>
+          <span className="text-[11px] font-mono text-[#58A6FF] bg-[#1F6FEB]/10 px-2 py-0.5 rounded border border-[#1F6FEB]/20">
+            Click rank tab to inspect & load into editor
+          </span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          {rankedSolutions.map((sol) => (
-            <button
-              key={sol.rank}
-              onClick={() => setSelectedRank(sol.rank)}
-              className={`px-3.5 py-2 rounded-xl border text-xs font-mono font-semibold transition-all flex items-center gap-2 ${
-                selectedRank === sol.rank
-                  ? 'border-[#58A6FF] bg-[#1F6FEB]/20 text-[#E6EDF3] shadow-md shadow-[#1F6FEB]/10'
-                  : 'border-[#30363D] bg-[#161B22]/60 text-[#8B949E] hover:border-[#8B949E] hover:bg-[#21262D]'
-              }`}
-            >
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                sol.rank === 1 ? 'bg-[#238636]/20 text-[#3FB950] border border-[#238636]/40' : 'bg-[#21262D] text-[#8B949E]'
-              }`}>
-                Rank {sol.rank}
-              </span>
-              <span className="text-[11px] text-[#8B949E] font-normal">
-                {sol.timeComplexity}
-              </span>
-            </button>
-          ))}
+          {rankedSolutions.map((sol) => {
+            const isSelected = selectedRank === sol.rank;
+            const rankIcon = sol.rank === 1 ? '🏆' : sol.rank === 2 ? '🥈' : '🥉';
+            const rankSubtitle = sol.rank === 1 ? 'Optimal' : sol.rank === 2 ? 'Alternative' : 'Baseline';
+            const badgeColor = sol.rank === 1
+              ? 'bg-[#238636]/20 text-[#3FB950] border-[#238636]/40'
+              : sol.rank === 2
+              ? 'bg-[#1F6FEB]/20 text-[#58A6FF] border-[#1F6FEB]/40'
+              : 'bg-[#D29922]/20 text-[#D29922] border-[#D29922]/40';
+
+            return (
+              <button
+                key={sol.rank}
+                onClick={() => setSelectedRank(sol.rank)}
+                className={`px-3.5 py-2 rounded-xl border text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 ${
+                  isSelected
+                    ? 'border-[#58A6FF] bg-[#1F6FEB]/20 text-[#E6EDF3] shadow-md shadow-[#1F6FEB]/10 ring-1 ring-[#58A6FF]/40'
+                    : 'border-[#30363D] bg-[#161B22]/70 text-[#8B949E] hover:border-[#8B949E] hover:bg-[#21262D]'
+                }`}
+              >
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded border flex items-center gap-1 ${badgeColor}`}>
+                  <span>{rankIcon}</span>
+                  <span>Rank {sol.rank}: {rankSubtitle}</span>
+                </span>
+                <span className="text-[11px] text-[#8B949E] font-normal">
+                  {sol.timeComplexity}
+                </span>
+                {sol.acceptanceRate && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0D1117] text-[#8B949E] border border-white/5">
+                    {sol.acceptanceRate.split(' ')[0]}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -244,17 +266,26 @@ export const SolutionVault: React.FC<SolutionVaultProps> = ({
           {/* Solution Header & Complexities */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#30363D] pb-3">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-[#3FB950]">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-xs font-mono font-bold flex items-center gap-1 ${
+                  activeSolution.rank === 1 ? 'text-[#3FB950]' : activeSolution.rank === 2 ? 'text-[#58A6FF]' : 'text-[#D29922]'
+                }`}>
                   {activeSolution.rankBadge}
                 </span>
-                <span className="text-xs text-[#8B949E]">•</span>
-                <span className="text-xs text-[#8B949E] font-medium font-mono">Rank #{activeSolution.rank}</span>
+                {activeSolution.acceptanceRate && (
+                  <>
+                    <span className="text-xs text-[#8B949E]">•</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#21262D] border border-[#30363D] text-[#8B949E]">
+                      {activeSolution.acceptanceRate}
+                    </span>
+                  </>
+                )}
               </div>
               <h5 className="text-base font-bold text-[#E6EDF3] mt-0.5">
                 {activeSolution.title}
               </h5>
             </div>
+
 
             <div className="flex items-center gap-2 text-xs font-mono">
               <span className="px-2.5 py-1 rounded-md bg-[#0D1117] border border-[#30363D] text-[#58A6FF] flex items-center gap-1">
