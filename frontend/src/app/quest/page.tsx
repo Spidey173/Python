@@ -33,7 +33,7 @@ function CurriculumExplorerContent() {
   useEffect(() => {
     // 1. Instant Cache Hydration for 0ms load speed
     try {
-      const cached = localStorage.getItem('pq_cached_chapters');
+      const cached = localStorage.getItem('pq_cached_chapters_v2');
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -50,7 +50,7 @@ function CurriculumExplorerContent() {
         const chaps = await api.getChapters().catch(() => []);
         if (Array.isArray(chaps) && chaps.length > 0) {
           try {
-            localStorage.setItem('pq_cached_chapters', JSON.stringify(chaps));
+            localStorage.setItem('pq_cached_chapters_v2', JSON.stringify(chaps));
           } catch {
             // ignore
           }
