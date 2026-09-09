@@ -4,7 +4,7 @@ import {
   Achievement, ProfileResponse, User
 } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 function getAuthHeader(): Record<string, string> {
   if (typeof window === 'undefined') return {};
