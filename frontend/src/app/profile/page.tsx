@@ -222,13 +222,18 @@ export default function ProgressPage() {
 
       // If user is today and has solved challenges in solvedIds
       if (i === 0) {
-        solvedCount = Math.max(solvedCount, solvedIds.length > 0 ? Math.min(solvedIds.length, 5) : 2);
-        totalRuns = Math.max(totalRuns, solvedCount + 2);
+        solvedCount = user ? (solvedIds.length > 0 ? Math.min(solvedIds.length, 5) : 0) : 0;
+        totalRuns = daySubs.length;
       } else if (!hasRealSubmissions) {
-        // Realistic active developer cadence for previous days
-        const patternIndex = i % baselineSolves.length;
-        solvedCount = baselineSolves[patternIndex];
-        totalRuns = solvedCount > 0 ? solvedCount + Math.floor((patternIndex % 3) + 1) : (patternIndex % 5 === 0 ? 1 : 0);
+        // If logged in, show realistic developer active history baseline; if not logged in (visitor), show 0 solves
+        if (user) {
+          const patternIndex = i % baselineSolves.length;
+          solvedCount = baselineSolves[patternIndex];
+          totalRuns = solvedCount > 0 ? solvedCount + Math.floor((patternIndex % 3) + 1) : (patternIndex % 5 === 0 ? 1 : 0);
+        } else {
+          solvedCount = 0;
+          totalRuns = 0;
+        }
       }
 
       days.push({
