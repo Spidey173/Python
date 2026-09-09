@@ -119,37 +119,63 @@ async def chat_with_ai_tutor(
     # Dynamic intelligent Socratic AI mentor response generator
     msg_lower = message.lower().strip()
     clean_code = (code or "").strip()
+    prob_name = challenge_info.split('-')[0].strip() if challenge_info else "this challenge"
 
-    # Greetings & Conversational Chit-Chat
-    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo"]:
-        return "👋 **Hey there!** I'm your Python DSA & Technical Interview Mentor. How can I help you with this challenge today? You can ask me how to get started, ask about time/space complexity, or ask for a hint!"
+    # 1. Greetings & Chit-Chat
+    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo", "can u help solve this problem"]:
+        return f"👋 **Hey!** I'm ready to help you conquer **{prob_name}**! What part of the problem would you like to explore first? We can discuss the optimal data structure, write an algorithm outline, or debug your current code!"
 
-    elif "who are you" in msg_lower or "what can you do" in msg_lower or "your name" in msg_lower:
-        return "🤖 I'm **Byte**, your AI Python Coach! I can explain algorithm concepts, review your code complexity, give Socratic clues, and guide you through edge cases."
+    elif "who are you" in msg_lower or "what can you do" in msg_lower:
+        return "🤖 I'm **Byte**, your AI Python Coach! Ask me anything about algorithm strategy, line-by-line code logic, time complexity, or edge cases."
 
     elif "thank" in msg_lower or "thanks" in msg_lower or "awesome" in msg_lower or "great" in msg_lower:
-        return "🙌 You're very welcome! Keep pushing your coding skills. Try writing out your logic in `solution.py` and hit **Run** when ready!"
+        return "🙌 Happy to help! Keep sharpening your problem-solving intuition. Try writing out your logic in `solution.py` and hit **Run**!"
 
-    elif "clue" in msg_lower or "hint" in msg_lower or "help" in msg_lower or "stuck" in msg_lower:
-        if challenge_info:
-            return f"💡 **Interview Clue**: For **{challenge_info.split('-')[0].strip()}**, think about the core data structure (e.g. hash map vs two pointers). Break the problem into 3 clear steps: 1) Parse input, 2) Apply O(n) algorithmic transformation, 3) Return/Print the exact expected output."
-        return "💡 **Interview Clue**: 1) Identify the optimal data structure (hash map, two pointers, stack, or sliding window), 2) Avoid nested loops ($O(n^2)$), 3) Verify edge cases (empty or single input). Test your logic using the green 'Run' button!"
+    # 2. Detailed explanation / how to solve / concept questions
+    elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach"]):
+        return (
+            f"📘 **Strategy for {prob_name}**:\n\n"
+            f"1. **Analyze Input & Edge Cases**: Watch out for empty strings/lists, case sensitivity, or boundary values.\n"
+            f"2. **Choose Optimal Data Structure**: Think if a two-pointer approach, hash map, or sliding window eliminates $O(n^2)$ nested loops.\n"
+            f"3. **Format Output**: Ensure your solution prints the exact expected result format.\n\n"
+            f"What data structure or loop strategy are you planning to use?"
+        )
 
-    elif "complexity" in msg_lower or "big o" in msg_lower or "time" in msg_lower or "space" in msg_lower:
-        return "⚡ **Big-O Analysis**: In technical interviews, top tech companies target **$O(n)$ or $O(n \\log n)$ time complexity** with **$O(1)$ or $O(n)$ auxiliary space**. Using a hash table or two-pointer sweep eliminates redundant nested passes."
+    # 3. Hints & Clues
+    elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help"]):
+        return (
+            f"💡 **Key Clue for {prob_name}**:\n"
+            f"- For string or array scanning, can you maintain pointer(s) or track seen elements in a hash set/dict?\n"
+            f"- Check if built-in Python methods like `.isalnum()`, `.lower()`, or `.split()` simplify your data prep.\n"
+            f"- Click the **Tiny Hint** or **Bigger Clue** button above for progressive step-by-step nudges!"
+        )
 
-    elif "wrong" in msg_lower or "error" in msg_lower or "bug" in msg_lower or "fail" in msg_lower:
+    # 4. Big-O Complexity
+    elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
+        return (
+            f"⚡ **Big-O Goals for {prob_name}**:\n"
+            f"- **Target Time Complexity**: $O(n)$ linear scan (or $O(n \\log n)$ if sorting is needed).\n"
+            f"- **Target Space Complexity**: $O(1)$ auxiliary memory or $O(n)$ for hash storage.\n"
+            f"Avoid nested `for` loops where possible to keep execution fast under 3,000ms!"
+        )
+
+    # 5. Debugging & Errors
+    elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working"]):
         if clean_code and "print" not in clean_code:
-            return "⚠️ **Output Missing**: Your solution needs to output the result! Ensure you print the final answer using `print(...)` so the test runner can evaluate it."
-        return "🔍 **Debugging Guidance**: Compare your code output in the Terminal against the expected output in Test Cases. Trace step-by-step for small boundary inputs (like single characters or empty strings)."
+            return "⚠️ **Output Required**: Remember that Python Quest evaluates your solution using standard output. Make sure you use `print(...)` to output your calculated answer!"
+        return (
+            f"🔍 **Debugging {prob_name}**:\n"
+            f"1. Click the green **Run (Ctrl+Enter)** button to run your solution against test cases.\n"
+            f"2. Inspect the **Terminal** tab to see your actual output vs the expected test case output.\n"
+            f"3. Check for off-by-one errors or empty input handling!"
+        )
 
-    elif "edge case" in msg_lower or "trap" in msg_lower or "pitfall" in msg_lower:
-        return "🛡️ **Interview Edge Cases to Watch**: 1) Empty inputs or single-element arrays, 2) All identical elements, 3) Case sensitivity and spaces, 4) Negative values or zero, 5) Boundary indexing. Make sure your logic guards against these!"
-
-    elif "explain" in msg_lower or "how to" in msg_lower or "why" in msg_lower or "what is" in msg_lower:
-        if challenge_info:
-            return f"📘 **Concept Breakdown**: In **{challenge_info}**, the objective is to transform the input efficiently. Review the Problem Spec tab for the exact input-output contract, write out your solution in `solution.py`, and click 'Run' to verify!"
-        return f"📘 **Concept Breakdown**: Regarding '{message}': Focus on keeping Python logic modular and readable. Use idiomatic Python constructs (`enumerate`, `dict.get`, slice notation) to make your code clean and production-ready."
-
+    # 6. Any other general prompt
     else:
-        return f"💬 **Mentor**: You asked: *\"{message}\"*. To solve this challenge efficiently, break down your approach: check your loop conditions, ensure your output format matches the specs, and hit **Run (Ctrl+Enter)** to test it against live inputs!"
+        return (
+            f"🤖 **Mentor**: You asked: *\"{message}\"*\n\n"
+            f"To excel in Python technical interviews for **{prob_name}**:\n"
+            f"- Keep your code clean, modular, and readable.\n"
+            f"- Double check your conditional statements and variable updates.\n"
+            f"- Click **Run** anytime to test your solution live!"
+        )
