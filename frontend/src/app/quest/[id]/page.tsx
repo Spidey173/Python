@@ -692,7 +692,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               ‹ Prev
             </button>
             <span className="text-[#30363D]">|</span>
-            <span className="font-bold text-[#58A6FF]">#{problemId}</span>
+            <span className="font-bold text-[#58A6FF]">#{problem?.level_number || problemId}</span>
             <span className="text-[#30363D]">|</span>
             <button
               onClick={() => router.push(`/quest/${problemId + 1}`)}

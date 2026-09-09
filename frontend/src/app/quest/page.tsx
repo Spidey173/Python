@@ -31,10 +31,30 @@ function CurriculumExplorerContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 1. Instant Cache Hydration for 0ms load speed
+    try {
+      const cached = localStorage.getItem('pq_cached_chapters');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setChapters(parsed);
+          setLoading(false);
+        }
+      }
+    } catch {
+      // ignore
+    }
+
     async function loadData() {
       try {
-        setLoading(true);
         const chaps = await api.getChapters().catch(() => []);
+        if (Array.isArray(chaps) && chaps.length > 0) {
+          try {
+            localStorage.setItem('pq_cached_chapters', JSON.stringify(chaps));
+          } catch {
+            // ignore
+          }
+        }
         if (!user) {
           setChapters(chaps);
           setSolvedIds([]);
@@ -79,9 +99,11 @@ function CurriculumExplorerContent() {
         (statusFilter === 'solved' && isSolved) ||
         (statusFilter === 'unsolved' && !isSolved);
       const q = searchQuery.toLowerCase().trim();
+      const numStr = (p.level_number || p.id).toString();
       const matchesSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
+        numStr.includes(q) ||
         p.id.toString().includes(q) ||
         (p.chapter_title && p.chapter_title.toLowerCase().includes(q));
 
@@ -218,18 +240,30 @@ function CurriculumExplorerContent() {
               </div>
 
               <div className="divide-y divide-[#21262D]">
-                {filteredProblems.length === 0 ? (
+                {loading && filteredProblems.length === 0 ? (
+                  // Sleek Shimmer Skeleton Loader for fast visual feedback
+                  Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="grid grid-cols-12 px-5 py-4 items-center animate-pulse">
+                      <div className="col-span-1"><div className="h-4 w-4 rounded-full bg-[#21262D]" /></div>
+                      <div className="col-span-1"><div className="h-3 w-6 rounded bg-[#21262D]" /></div>
+                      <div className="col-span-5"><div className="h-3.5 w-48 rounded bg-[#21262D]" /></div>
+                      <div className="col-span-3"><div className="h-3 w-32 rounded bg-[#21262D]" /></div>
+                      <div className="col-span-2 flex justify-end"><div className="h-5 w-14 rounded-full bg-[#21262D]" /></div>
+                    </div>
+                  ))
+                ) : filteredProblems.length === 0 ? (
                   <div className="py-16 text-center text-sm text-[#8B949E]">
                     No challenges found matching your current filters.
                   </div>
                 ) : (
                   filteredProblems.map((problem) => {
                     const isSolved = solvedIds.includes(problem.id);
+                    const displayNum = problem.level_number || problem.id;
 
                     return (
                       <div
                         key={problem.id}
-                        onClick={() => router.push(`/quest/${problem.id}`)}
+                        onClick={() => router.push(`/quest/${displayNum}`)}
                         className="grid grid-cols-12 px-5 py-3.5 items-center text-sm hover:bg-[#21262D]/60 cursor-pointer transition-colors duration-100 group"
                       >
                         {/* Status */}
@@ -241,9 +275,9 @@ function CurriculumExplorerContent() {
                           )}
                         </div>
 
-                        {/* Number */}
-                        <div className="col-span-1 font-mono text-xs text-[#8B949E]">
-                          {String(problem.id).padStart(2, '0')}
+                        {/* Number: Clean 01 - 50 ordering */}
+                        <div className="col-span-1 font-mono text-xs text-[#8B949E] font-medium">
+                          {String(displayNum).padStart(2, '0')}
                         </div>
 
                         {/* Title */}
