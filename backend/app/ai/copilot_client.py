@@ -6,13 +6,14 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 
 ast_analyzer = ASTCodeAnalyzer()
 
-SYSTEM_TUTOR_PROMPT = """You are an expert Python Technical Interview Coach and Senior DSA Mentor.
-Your mission: Help MCA students, freshers, and job seekers master Python coding fundamentals and crack technical interviews for software engineering roles.
-Rules:
-1. Guide candidates socratically towards optimal time and space complexity without immediately dumping the full solution.
-2. Focus on core Data Structures & Algorithms patterns: Two Pointers, Hash Maps, Sliding Window, Monotonic Stacks, Binary Search, Trees, Graphs, and DP.
-3. Emphasize interview traps, edge cases (empty inputs, duplicates, boundaries), and production-grade Python 3 idioms.
-4. Keep explanations concise, professional, structured, and interview-ready.
+SYSTEM_TUTOR_PROMPT = """You are Byte, an expert, warm, and encouraging AI Python Coding Tutor and DSA Mentor.
+You engage naturally like a friendly conversational chatbot (ChatGPT/Claude style).
+Key persona rules:
+1. Respond conversationally to any user prompt—whether it's a greeting ('hi', 'hello'), a request for an explanation ('explain how two pointers work'), code analysis ('why is my code slow?'), or an open discussion.
+2. Be highly encouraging, supportive, and motivating. Build student confidence!
+3. Provide clear, detailed, step-by-step explanations when asked for concept breakdowns or guidance. Use bullet points and code snippets where appropriate.
+4. When discussing coding problems, guide candidates socratically toward optimal time/space complexity while highlighting key Python 3 idioms and interview edge cases.
+5. Never refuse chit-chat or general coding questions. Always answer naturally and offer relevant follow-up tips!
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -116,10 +117,20 @@ async def chat_with_ai_tutor(
             print("AI Tutor API call error:", e)
 
     # Dynamic intelligent Socratic AI mentor response generator
-    msg_lower = message.lower()
+    msg_lower = message.lower().strip()
     clean_code = (code or "").strip()
 
-    if "clue" in msg_lower or "hint" in msg_lower or "help" in msg_lower or "stuck" in msg_lower:
+    # Greetings & Conversational Chit-Chat
+    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo"]:
+        return "👋 **Hey there!** I'm your Python DSA & Technical Interview Mentor. How can I help you with this challenge today? You can ask me how to get started, ask about time/space complexity, or ask for a hint!"
+
+    elif "who are you" in msg_lower or "what can you do" in msg_lower or "your name" in msg_lower:
+        return "🤖 I'm **Byte**, your AI Python Coach! I can explain algorithm concepts, review your code complexity, give Socratic clues, and guide you through edge cases."
+
+    elif "thank" in msg_lower or "thanks" in msg_lower or "awesome" in msg_lower or "great" in msg_lower:
+        return "🙌 You're very welcome! Keep pushing your coding skills. Try writing out your logic in `solution.py` and hit **Run** when ready!"
+
+    elif "clue" in msg_lower or "hint" in msg_lower or "help" in msg_lower or "stuck" in msg_lower:
         if challenge_info:
             return f"💡 **Interview Clue**: For **{challenge_info.split('-')[0].strip()}**, think about the core data structure (e.g. hash map vs two pointers). Break the problem into 3 clear steps: 1) Parse input, 2) Apply O(n) algorithmic transformation, 3) Return/Print the exact expected output."
         return "💡 **Interview Clue**: 1) Identify the optimal data structure (hash map, two pointers, stack, or sliding window), 2) Avoid nested loops ($O(n^2)$), 3) Verify edge cases (empty or single input). Test your logic using the green 'Run' button!"
@@ -141,6 +152,4 @@ async def chat_with_ai_tutor(
         return f"📘 **Concept Breakdown**: Regarding '{message}': Focus on keeping Python logic modular and readable. Use idiomatic Python constructs (`enumerate`, `dict.get`, slice notation) to make your code clean and production-ready."
 
     else:
-        if clean_code:
-            return f"🤖 **Mentor Analysis**: I see your code buffer for **{message}**. Check if your variables handle all boundary cases, then hit **Run (Ctrl+Enter)** to execute against live test cases!"
-        return f"🤖 **Mentor Coaching**: Regarding **'{message}'**: To master Python algorithms, focus on identifying key patterns (Two Pointers, Sliding Window, Hash Tables, Stacks). Ask me for a hint, concept, or example anytime!"
+        return f"💬 **Mentor**: You asked: *\"{message}\"*. To solve this challenge efficiently, break down your approach: check your loop conditions, ensure your output format matches the specs, and hit **Run (Ctrl+Enter)** to test it against live inputs!"

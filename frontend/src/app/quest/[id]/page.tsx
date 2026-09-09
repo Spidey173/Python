@@ -402,73 +402,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     setIsThinking(true);
     setThinkingPhase('Mentor pondering...');
 
-    const lower = prompt.trim().toLowerCase();
-    const knowledge = getMentorKnowledge(problem);
-
-    // 1. Clue / Hint intent: user typed "clue", "hint", "help", "stuck", etc.
-    const isClueRequest =
-      lower === 'clue' ||
-      lower === 'hint' ||
-      lower.includes('clue') ||
-      lower.includes('hint') ||
-      lower.includes('stuck') ||
-      lower.includes('help') ||
-      lower.includes('what next') ||
-      lower.includes('what to do') ||
-      lower.includes('guide') ||
-      lower.includes('how to solve');
-
-    if (isClueRequest) {
-      const nextTier = Math.min(hintTier + 1, 5) as HintTier;
-      setHintTier(nextTier);
-      const targetHint = knowledge.hints[nextTier - 1];
-      const cleanTitle = targetHint.title.replace(/^Tier\s*\d+:\s*/i, '');
-      const tipText = targetHint.reflectionQuestion ? `\n\n${targetHint.reflectionQuestion}` : '';
-      const mentorNudge = `💡 **${cleanTitle}**\n\n${targetHint.nudge}${tipText}`;
-      setTimeout(() => {
-        setIsThinking(false);
-        streamMentorText(mentorNudge, 'coaching', targetHint.codeSnippet);
-      }, 300);
-      return;
-    }
-
-    // 2. Concept intent: user asked about concept / explain / theory
-    const isConceptRequest =
-      lower.includes('concept') ||
-      lower.includes('explain') ||
-      lower.includes('theory') ||
-      lower.includes('how does it work') ||
-      lower.includes('why');
-
-    if (isConceptRequest) {
-      const conceptText = `Concept: ${knowledge.conceptName}\n\n${knowledge.conceptExplanation}\n\nInterview Note: ${knowledge.interviewTrap}`;
-      setTimeout(() => {
-        setIsThinking(false);
-        streamMentorText(conceptText, 'coaching');
-      }, 300);
-      return;
-    }
-
-    // 3. Example intent: user asked for pattern / example / sample code
-    const isExampleRequest =
-      lower.includes('example') ||
-      lower.includes('pattern') ||
-      lower.includes('template') ||
-      lower.includes('sample') ||
-      lower.includes('show me');
-
-    if (isExampleRequest) {
-      const exampleIntro = "Here is an idiomatic structural pattern demonstrating how this concept functions. Adapt this logic to match your specific challenge:";
-      setTimeout(() => {
-        setIsThinking(false);
-        streamMentorText(exampleIntro, 'coaching', knowledge.patternExample);
-      }, 300);
-      return;
-    }
-
-    // 4. Conversational question: call backend AI tutor
+    // Directly query the backend AI Chatbot model for all custom questions & greetings
     try {
-      const history = messages.slice(-4).map((m) => ({
+      const history = messages.slice(-6).map((m) => ({
         role: m.sender === 'mentor' ? 'assistant' : 'user',
         content: m.fullText || m.text,
       }));
@@ -476,26 +412,24 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       if (tutorRes?.reply) {
         const cleanReply = tutorRes.reply
           .replace(/🐍\s*\**Byte\s*says:\**/gi, '')
-          .replace(/\*\*(.*?)\*\*/g, '$1')
           .trim();
         setIsThinking(false);
         streamMentorText(cleanReply, 'coaching');
         return;
       }
-    } catch {
-      // Fallback to intelligent local reasoning
+    } catch (err) {
+      console.warn('AI Chatbot request error, using fallback:', err);
     }
 
-    // 5. Intelligent code & problem context fallback
+    // Fallback if backend API is unreachable
+    const lower = prompt.trim().toLowerCase();
+    const knowledge = getMentorKnowledge(problem);
     let coachReply = '';
-    const cleanCode = code.trim();
 
-    if (!cleanCode) {
-      coachReply = `Your editor is currently empty. To get started on "${problem.title}", look at the objective: ${problem.objective}. Write your starting variable or logic, then click 'Run'!`;
-    } else if (lower.includes('right') || lower.includes('correct') || lower.includes('check')) {
-      coachReply = "Click the green 'Run' button (Ctrl+Enter) to execute your code against test cases. If any test case fails, I'll analyze the exact trace and output difference for you.";
+    if (lower.includes('hi') || lower.includes('hello') || lower.includes('hey')) {
+      coachReply = `Hello! 👋 Ready to tackle **${problem.title}**? I'm your AI Mentor. Ask me any question about logic, Python syntax, edge cases, or algorithm efficiency!`;
     } else {
-      coachReply = `Regarding "${prompt}": In Python, keep your logic modular and readable. Test your current code with 'Run', or ask me for a clue whenever you want direction!`;
+      coachReply = `Regarding **"${prompt}"**: For **${problem.title}**, focus on input transformation and optimal time complexity. Write out your code in \`solution.py\` and hit **Run** to verify!`;
     }
 
     setIsThinking(false);
