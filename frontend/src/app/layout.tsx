@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: 'Python — Developer Workspace',
   description: 'A focused, distraction-free engineering workspace to master essential Python coding fundamentals for technical job interviews.',
   keywords: ['Python', 'Technical Interview', 'Coding Workspace', 'Coding Interview', 'VS Code', 'Data Structures', 'Algorithms'],
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
