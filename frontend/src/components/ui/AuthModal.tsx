@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth-context';
 import { Button } from './Button';
 import {
   X, Lock, User as UserIcon, Mail, ShieldCheck,
-  AlertCircle, ArrowRight, Zap, CheckCircle2
+  AlertCircle, ArrowRight, Zap, CheckCircle2, Eye, EyeOff
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -25,6 +25,9 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
   const [signUpUsername, setSignUpUsername] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
+
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -248,13 +251,21 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 <div className="relative">
                   <Lock className="absolute left-3 top-2.5 h-4 w-4 text-[#8B949E]" />
                   <input
-                    type="password"
+                    type={showSignInPassword ? 'text' : 'password'}
                     required
                     value={signInPassword}
                     onChange={(e) => setSignInPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full h-9 pl-9 pr-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-sm text-[#E6EDF3] placeholder-[#6E7681] focus:outline-none focus:border-[#58A6FF] focus:ring-1 focus:ring-[#58A6FF]"
+                    className="w-full h-9 pl-9 pr-9 bg-[#0D1117] border border-[#30363D] rounded-lg text-sm text-[#E6EDF3] placeholder-[#6E7681] focus:outline-none focus:border-[#58A6FF] focus:ring-1 focus:ring-[#58A6FF]"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignInPassword(!showSignInPassword)}
+                    className="absolute right-3 top-2.5 text-[#8B949E] hover:text-[#E6EDF3] transition-colors"
+                    title={showSignInPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showSignInPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -351,14 +362,22 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 <div className="relative">
                   <Lock className="absolute left-3 top-2.5 h-4 w-4 text-[#8B949E]" />
                   <input
-                    type="password"
+                    type={showSignUpPassword ? 'text' : 'password'}
                     required
                     minLength={6}
                     value={signUpPassword}
                     onChange={(e) => setSignUpPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full h-9 pl-9 pr-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-sm text-[#E6EDF3] placeholder-[#6E7681] focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636]"
+                    className="w-full h-9 pl-9 pr-9 bg-[#0D1117] border border-[#30363D] rounded-lg text-sm text-[#E6EDF3] placeholder-[#6E7681] focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636]"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                    className="absolute right-3 top-2.5 text-[#8B949E] hover:text-[#E6EDF3] transition-colors"
+                    title={showSignUpPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showSignUpPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
