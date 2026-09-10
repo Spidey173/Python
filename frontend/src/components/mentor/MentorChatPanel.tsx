@@ -28,56 +28,127 @@ interface MentorChatPanelProps {
   onSendCustomPrompt: (prompt: string) => void;
 }
 
-// Clean Formatted Text Renderer (strips raw asterisks, formats bold/italic/code cleanly)
+// Rich Markdown Text Renderer supporting code blocks, bold, headers, lists, and quotes
 function renderFormattedText(text: string) {
   if (!text) return null;
 
-  const lines = text.split('\n');
+  // Check if text has code fences ```
+  const segments: Array<{ type: 'text' | 'code'; content: string; lang?: string }> = [];
+  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codeBlockRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      segments.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+    }
+    segments.push({ type: 'code', lang: match[1] || 'python', content: match[2].trimEnd() });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    segments.push({ type: 'text', content: text.slice(lastIndex) });
+  }
+
+  // Render inline text with bold, inline code, and links
+  const renderInline = (line: string, keyPrefix: string) => {
+    // Parse inline code `code`
+    const codeParts = line.split(/(`[^`]+`)/g);
+    return codeParts.map((part, pIdx) => {
+      if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+        return (
+          <code
+            key={`${keyPrefix}-code-${pIdx}`}
+            className="px-1.5 py-0.5 mx-0.5 rounded bg-[#0D1117] border border-[#30363D] font-mono text-[#58A6FF] text-xs"
+          >
+            {part.slice(1, -1)}
+          </code>
+        );
+      }
+
+      // Parse bold **bold**
+      const boldParts = part.split(/(\*\*[^*]+\*\*)/g);
+      return boldParts.map((bPart, bIdx) => {
+        if (bPart.startsWith('**') && bPart.endsWith('**') && bPart.length > 4) {
+          return (
+            <strong key={`${keyPrefix}-b-${bIdx}`} className="font-bold text-white">
+              {bPart.slice(2, -2)}
+            </strong>
+          );
+        }
+        return bPart;
+      });
+    });
+  };
 
   return (
-    <div className="space-y-1.5 leading-relaxed">
-      {lines.map((line, lIdx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return <div key={lIdx} className="h-1" />;
-
-        // Clean out literal raw ** and * from the text
-        const cleanText = trimmed
-          .replace(/\*\*(.*?)\*\*/g, '$1')
-          .replace(/\*(.*?)\*/g, '$1');
-
-        const isHeader = trimmed.startsWith('Tier ') || trimmed.startsWith('🧠') || trimmed.startsWith('💡') || trimmed.startsWith('**');
-        if (isHeader) {
+    <div className="space-y-2 leading-relaxed text-sm sm:text-base">
+      {segments.map((seg, sIdx) => {
+        if (seg.type === 'code') {
           return (
-            <div key={lIdx} className="font-bold text-[#E6EDF3] text-xs sm:text-sm tracking-wide pt-0.5">
-              {cleanText}
+            <div key={sIdx} className="my-2.5 rounded-lg border border-[#30363D] bg-[#0A0E17] overflow-hidden shadow-inner">
+              <div className="px-3 py-1 bg-[#161B22] border-b border-[#30363D] flex items-center justify-between text-[11px] font-mono text-[#8B949E]">
+                <span>{seg.lang || 'python'}</span>
+                <span className="text-[10px] text-[#58A6FF]">code snippet</span>
+              </div>
+              <pre className="p-3 font-mono text-xs text-[#7EE787] overflow-x-auto leading-relaxed select-text">
+                <code>{seg.content}</code>
+              </pre>
             </div>
           );
         }
 
-        const isQuestionOrNote = trimmed.startsWith('*') && trimmed.endsWith('*');
-        if (isQuestionOrNote) {
-          return (
-            <p key={lIdx} className="text-xs italic text-[#8B949E] pt-0.5">
-              {cleanText}
-            </p>
-          );
-        }
-
-        // Inline backticks `code` handling
-        const parts = cleanText.split(/(`[^`]+`)/g);
+        const lines = seg.content.split('\n');
         return (
-          <p key={lIdx} className="text-sm sm:text-base leading-relaxed">
-            {parts.map((part, pIdx) => {
-              if (part.startsWith('`') && part.endsWith('`')) {
+          <div key={sIdx} className="space-y-1.5">
+            {lines.map((line, lIdx) => {
+              const trimmed = line.trim();
+              if (!trimmed) return <div key={lIdx} className="h-1" />;
+
+              // Headers
+              if (trimmed.startsWith('### ')) {
                 return (
-                  <code key={pIdx} className="px-1.5 py-0.5 mx-0.5 rounded bg-[#0D1117] border border-[#30363D] font-mono text-[#58A6FF] text-xs sm:text-sm">
-                    {part.slice(1, -1)}
-                  </code>
+                  <h4 key={lIdx} className="font-bold text-[#58A6FF] text-sm sm:text-base pt-1">
+                    {renderInline(trimmed.slice(4), `h3-${lIdx}`)}
+                  </h4>
                 );
               }
-              return part;
+              if (trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
+                return (
+                  <h3 key={lIdx} className="font-extrabold text-[#E6EDF3] text-base sm:text-lg pt-1.5">
+                    {renderInline(trimmed.replace(/^#+\s*/, ''), `h2-${lIdx}`)}
+                  </h3>
+                );
+              }
+
+              // Blockquotes
+              if (trimmed.startsWith('> ')) {
+                return (
+                  <div
+                    key={lIdx}
+                    className="border-l-2 border-[#58A6FF] bg-[#161B22]/50 pl-3 py-1 my-1 rounded-r text-xs sm:text-sm text-[#8B949E]"
+                  >
+                    {renderInline(trimmed.slice(2), `quote-${lIdx}`)}
+                  </div>
+                );
+              }
+
+              // Bullet points
+              if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
+                return (
+                  <div key={lIdx} className="flex items-start gap-2 pl-2 text-sm">
+                    <span className="text-[#58A6FF] mt-1 shrink-0">•</span>
+                    <span>{renderInline(trimmed.slice(2), `bullet-${lIdx}`)}</span>
+                  </div>
+                );
+              }
+
+              return (
+                <p key={lIdx} className="text-sm sm:text-base leading-relaxed">
+                  {renderInline(line, `p-${lIdx}`)}
+                </p>
+              );
             })}
-          </p>
+          </div>
         );
       })}
     </div>
