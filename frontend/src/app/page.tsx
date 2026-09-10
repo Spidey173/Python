@@ -161,13 +161,20 @@ export default function DashboardPage() {
 
   // Find active problem to resume
   const currentProblem = useMemo(() => {
-    return allProblems.find((p) => p.id === lastActiveId) || allProblems[0] || {
-      id: 1,
-      title: 'Valid Palindrome',
-      chapter_title: 'Module 1: Strings & Text Manipulation',
-      difficulty: 'Easy',
-      level_number: 1,
-    };
+    let activeId = lastActiveId;
+    if (activeId >= 151 && activeId <= 220) {
+      activeId = activeId - 150;
+    }
+    return (
+      allProblems.find((p) => p.id === activeId || p.level_number === activeId) ||
+      allProblems[0] || {
+        id: 1,
+        title: 'Valid Palindrome',
+        chapter_title: 'Module 1: Strings & Text Manipulation',
+        difficulty: 'Easy',
+        level_number: 1,
+      }
+    );
   }, [allProblems, lastActiveId]);
 
   // Recommendations: First 3 unsolved problems
@@ -266,7 +273,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="text-sm sm:text-base text-[#8B949E] mt-1.5">
-              50 high-frequency DSA questions for tech interviews & campus placements • Real test suites
+              High-frequency DSA questions for tech interviews & campus placements • Real test suites
             </p>
           </div>
 
@@ -425,7 +432,7 @@ export default function DashboardPage() {
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-bold text-[#E6EDF3] tracking-tight">
-                Problem #{currentProblem.id}: {currentProblem.title}
+                Problem #{currentProblem.level_number || currentProblem.id}: {currentProblem.title}
               </h2>
 
               <p className="text-sm sm:text-base text-[#8B949E] leading-relaxed">

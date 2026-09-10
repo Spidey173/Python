@@ -193,7 +193,7 @@ export function CommandPalette({
         id: 'nav-curriculum',
         category: 'Navigation',
         title: 'Open Curriculum Explorer',
-        subtitle: 'Browse all 50 challenges across 10 modules',
+        subtitle: 'Browse all challenges across structured learning modules',
         icon: <BookOpen className="h-4 w-4 text-[#8B949E]" />,
         perform: () => { router.push('/quest'); onClose(); },
       },
