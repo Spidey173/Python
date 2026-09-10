@@ -426,8 +426,8 @@ export default function DashboardPage() {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => router.push(`/quest/${currentProblem.id}`)}
-                className="gap-2.5 font-semibold text-sm px-6 py-3 shadow-lg shadow-[#238636]/20"
+                onClick={() => router.push(`/quest/${currentProblem.level_number || currentProblem.id}`)}
+                className="gap-2.5 font-semibold text-sm px-6 py-3 shadow-lg shadow-[#238636]/20 cursor-pointer"
               >
                 <Play className="h-4 w-4 fill-current" />
                 <span>Resume Problem</span>
