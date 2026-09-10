@@ -32,19 +32,22 @@ export interface LearnerGuide {
   }>;
 }
 
+export function resolveNormalizedProblemId(problem?: ChallengeDetail | null): number {
+  if (!problem) return 1;
+  const rawId = problem.level_number || problem.id || 1;
+  if (rawId >= 151 && rawId <= 220) {
+    return rawId - 150;
+  }
+  return rawId;
+}
+
 /**
  * Inspects user code using syntax pattern matching to detect what method they used,
  * congratulating them and evaluating their approach for interview readiness.
  */
 export function analyzeUserSubmittedMethod(code: string, problem?: ChallengeDetail | null): UserMethodAnalysis {
   const cleanCode = code.trim();
-  const problemId = (problem?.level_number && problem.level_number >= 1 && problem.level_number <= 70)
-    ? problem.level_number
-    : (problem?.id && problem.id <= 70
-      ? problem.id
-      : (problem?.id && problem.id >= 151 && problem.id <= 220
-        ? problem.id - 150
-        : 1));
+  const problemId = resolveNormalizedProblemId(problem);
 
   // Level 1: Valid Palindrome
   if (problemId === 1) {
@@ -203,16 +206,10 @@ export function analyzeUserSubmittedMethod(code: string, problem?: ChallengeDeta
  * - Rank 3: First-Principles / Direct Simulation (65% Acceptance)
  */
 export function getProblemRankedSolutions(problem?: ChallengeDetail | null): RankedSolution[] {
-  // 1. Resolve normalized curriculum problem ID (1 to 50)
-  const pId = (problem?.level_number && problem.level_number >= 1 && problem.level_number <= 50)
-    ? problem.level_number
-    : (problem?.id && problem.id <= 50
-      ? problem.id
-      : (problem?.id && problem.id >= 151 && problem.id <= 200
-        ? problem.id - 150
-        : 1));
+  // 1. Resolve normalized curriculum problem ID (1 to 70+)
+  const pId = resolveNormalizedProblemId(problem);
 
-  // 2. Query verified 50-problem ranked catalog
+  // 2. Query verified ranked catalog
   if (ALL_50_RANKED_SOLUTIONS[pId] && ALL_50_RANKED_SOLUTIONS[pId].length >= 3) {
     return ALL_50_RANKED_SOLUTIONS[pId];
   }
@@ -298,13 +295,7 @@ export function getProblemRankedSolutions(problem?: ChallengeDetail | null): Ran
  * 2) Game-Like 4-Stage Interactive Walkthrough
  */
 export function getProblemLearnerGuide(problem?: ChallengeDetail | null): LearnerGuide {
-  const pId = (problem?.level_number && problem.level_number >= 1 && problem.level_number <= 50)
-    ? problem.level_number
-    : (problem?.id && problem.id <= 50
-      ? problem.id
-      : (problem?.id && problem.id >= 151 && problem.id <= 200
-        ? problem.id - 150
-        : 1));
+  const pId = resolveNormalizedProblemId(problem);
 
 
   if (pId === 1) {
