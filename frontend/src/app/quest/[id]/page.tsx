@@ -632,8 +632,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             <span className="text-[#30363D]">|</span>
             <button
               onClick={() => router.push(`/quest/${problemId + 1}`)}
-              disabled={problemId >= Math.max(allProblems.length, 70)}
-              className="text-[#8B949E] hover:text-[#E6EDF3] disabled:opacity-30 px-1.5 py-0.5 rounded transition-colors font-semibold"
+              disabled={problemId >= (allProblems.length > 0 ? allProblems.length : 70)}
+              className="text-[#8B949E] hover:text-[#E6EDF3] disabled:opacity-30 disabled:cursor-not-allowed px-1.5 py-0.5 rounded transition-colors font-semibold cursor-pointer"
               title="Next Challenge"
             >
               Next ›
