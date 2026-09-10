@@ -40,6 +40,10 @@ const MODULES = [
   { id: 8, title: 'Module 8: Matrices & 2D Grids' },
   { id: 9, title: 'Module 9: Sliding Window & Intermediate DSA' },
   { id: 10, title: 'Module 10: Advanced Interview Classics' },
+  { id: 11, title: 'Module 11: Top LeetCode - Arrays & Two Pointers' },
+  { id: 12, title: 'Module 12: Top LeetCode - Strings & Parsing' },
+  { id: 13, title: 'Module 13: Top LeetCode - Math & Numerical Logic' },
+  { id: 14, title: 'Module 14: Top LeetCode - Lists, Stacks & Dynamic Programming' },
 ];
 
 // All 50 Tech Interview Problems Index (40 Easy, 8 Medium, 2 Hard)
@@ -113,6 +117,27 @@ const PROBLEMS_INDEX = [
   { id: 48, title: 'Daily Temperatures (Monotonic Stack)', module: 10, difficulty: 'Medium' },
   { id: 49, title: 'Trapping Rain Water', module: 10, difficulty: 'Hard' },
   { id: 50, title: 'Sliding Window Maximum', module: 10, difficulty: 'Hard' },
+  // Advanced Top 20 LeetCode Classics (51..70)
+  { id: 51, title: 'Two Sum (LeetCode #1)', module: 11, difficulty: 'Easy' },
+  { id: 52, title: 'Container With Most Water (LeetCode #11)', module: 11, difficulty: 'Medium' },
+  { id: 53, title: '3Sum (LeetCode #15)', module: 11, difficulty: 'Medium' },
+  { id: 54, title: '3Sum Closest (LeetCode #16)', module: 11, difficulty: 'Medium' },
+  { id: 55, title: '4Sum (LeetCode #18)', module: 11, difficulty: 'Medium' },
+  { id: 56, title: 'Longest Substring Without Repeating Characters (LeetCode #3)', module: 12, difficulty: 'Medium' },
+  { id: 57, title: 'Longest Palindromic Substring (LeetCode #5)', module: 12, difficulty: 'Medium' },
+  { id: 58, title: 'Zigzag Conversion (LeetCode #6)', module: 12, difficulty: 'Medium' },
+  { id: 59, title: 'String to Integer (atoi) (LeetCode #8)', module: 12, difficulty: 'Medium' },
+  { id: 60, title: 'Longest Common Prefix (LeetCode #14)', module: 12, difficulty: 'Easy' },
+  { id: 61, title: 'Reverse Integer (LeetCode #7)', module: 13, difficulty: 'Medium' },
+  { id: 62, title: 'Palindrome Number (LeetCode #9)', module: 13, difficulty: 'Easy' },
+  { id: 63, title: 'Integer to Roman (LeetCode #12)', module: 13, difficulty: 'Medium' },
+  { id: 64, title: 'Roman to Integer (LeetCode #13)', module: 13, difficulty: 'Easy' },
+  { id: 65, title: 'Median of Two Sorted Arrays (LeetCode #4)', module: 13, difficulty: 'Hard' },
+  { id: 66, title: 'Add Two Numbers (LeetCode #2)', module: 14, difficulty: 'Medium' },
+  { id: 67, title: 'Remove Nth Node From End of List (LeetCode #19)', module: 14, difficulty: 'Medium' },
+  { id: 68, title: 'Valid Parentheses (LeetCode #20)', module: 14, difficulty: 'Easy' },
+  { id: 69, title: 'Letter Combinations of a Phone Number (LeetCode #17)', module: 14, difficulty: 'Medium' },
+  { id: 70, title: 'Regular Expression Matching (LeetCode #10)', module: 14, difficulty: 'Hard' },
 ];
 
 export function CommandPalette({

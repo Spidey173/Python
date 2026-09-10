@@ -11,17 +11,21 @@ import { DifficultyBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import {
   Search, CheckCircle2, Circle, ArrowRight, BookOpen,
-  Filter, Check, Code, Layers, SlidersHorizontal
+  Filter, Check, Code, Layers, SlidersHorizontal, Zap, Sparkles
 } from 'lucide-react';
 
 function CurriculumExplorerContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialModule = searchParams.get('module');
+  const initialTrack = searchParams.get('track');
   const { user } = useAuth();
 
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
+  const [activeTrack, setActiveTrack] = useState<'basics' | 'advanced' | 'all'>(
+    (initialTrack as 'basics' | 'advanced' | 'all') || 'basics'
+  );
   const [selectedModule, setSelectedModule] = useState<number | 'all'>(
     initialModule ? parseInt(initialModule, 10) : 'all'
   );
@@ -31,9 +35,9 @@ function CurriculumExplorerContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Instant Cache Hydration for 0ms load speed
+    // 1. Instant Cache Hydration for 0ms load speed with v3 key
     try {
-      const cached = localStorage.getItem('pq_cached_chapters_v2');
+      const cached = localStorage.getItem('pq_cached_chapters_v3');
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -50,7 +54,7 @@ function CurriculumExplorerContent() {
         const chaps = await api.getChapters().catch(() => []);
         if (Array.isArray(chaps) && chaps.length > 0) {
           try {
-            localStorage.setItem('pq_cached_chapters_v2', JSON.stringify(chaps));
+            localStorage.setItem('pq_cached_chapters_v3', JSON.stringify(chaps));
           } catch {
             // ignore
           }
@@ -80,16 +84,33 @@ function CurriculumExplorerContent() {
     return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
   }, [user]);
 
-  const allProblems = useMemo(() => {
-    return chapters.flatMap((c) => c.levels);
-  }, [chapters]);
+  // Track-scoped chapters (Basics: 1-10, Advanced: 11-14, All: 1-14)
+  const trackChapters = useMemo(() => {
+    if (activeTrack === 'basics') {
+      return chapters.filter((c) => c.chapter_id <= 10);
+    }
+    if (activeTrack === 'advanced') {
+      return chapters.filter((c) => c.chapter_id >= 11);
+    }
+    return chapters;
+  }, [chapters, activeTrack]);
 
-  const totalCount = allProblems.length;
-  const solvedCount = solvedIds.length;
+  // All problems within current track scope
+  const trackProblems = useMemo(() => {
+    return trackChapters.flatMap((c) => c.levels);
+  }, [trackChapters]);
 
-  // Filter problems
+  // Global counts for track headers
+  const trackTotalCount = trackProblems.length;
+  const trackSolvedCount = trackProblems.filter((p) => solvedIds.includes(p.id)).length;
+
+  const allProblemsTotal = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
+  const basicsCount = useMemo(() => chapters.filter((c) => c.chapter_id <= 10).flatMap((c) => c.levels).length, [chapters]);
+  const advancedCount = useMemo(() => chapters.filter((c) => c.chapter_id >= 11).flatMap((c) => c.levels).length, [chapters]);
+
+  // Filter problems within active track
   const filteredProblems = useMemo(() => {
-    return allProblems.filter((p) => {
+    return trackProblems.filter((p) => {
       const matchesModule = selectedModule === 'all' || p.chapter_id === selectedModule;
       const matchesDifficulty =
         difficultyFilter === 'all' || p.difficulty.toLowerCase() === difficultyFilter;
@@ -109,31 +130,77 @@ function CurriculumExplorerContent() {
 
       return matchesModule && matchesDifficulty && matchesStatus && matchesSearch;
     });
-  }, [allProblems, selectedModule, difficultyFilter, statusFilter, searchQuery, solvedIds]);
+  }, [trackProblems, selectedModule, difficultyFilter, statusFilter, searchQuery, solvedIds]);
 
   return (
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] flex flex-col min-h-0 overflow-hidden">
-      {/* Top Filter Sub-bar */}
-      <div className="h-14 border-b border-[#30363D] bg-[#161B22] px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shrink-0">
-        <div className="flex items-center gap-3 flex-1 max-w-md">
+      {/* Top Track Switcher & Filter Sub-bar */}
+      <div className="h-auto sm:h-14 border-b border-[#30363D] bg-[#161B22] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-0 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 shrink-0">
+        {/* Track Selector Pills (Basics vs Advanced vs All) */}
+        <div className="flex items-center p-1 bg-[#0D1117] border border-[#30363D] rounded-lg shrink-0">
+          <button
+            onClick={() => {
+              setActiveTrack('basics');
+              setSelectedModule('all');
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
+              activeTrack === 'basics'
+                ? 'bg-[#238636] text-white shadow-sm'
+                : 'text-[#8B949E] hover:text-[#E6EDF3]'
+            }`}
+          >
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span>Basics ({basicsCount || 50})</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTrack('advanced');
+              setSelectedModule('all');
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
+              activeTrack === 'advanced'
+                ? 'bg-[#1F6FEB] text-white shadow-sm'
+                : 'text-[#8B949E] hover:text-[#E6EDF3]'
+            }`}
+          >
+            <Zap className="h-3 w-3 text-amber-400" />
+            <span>Advanced ({advancedCount || 20})</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTrack('all');
+              setSelectedModule('all');
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+              activeTrack === 'all'
+                ? 'bg-[#21262D] text-white shadow-sm'
+                : 'text-[#8B949E] hover:text-[#E6EDF3]'
+            }`}
+          >
+            All ({allProblemsTotal.length || 70})
+          </button>
+        </div>
+
+        {/* Search input */}
+        <div className="flex items-center gap-2.5 flex-1 max-w-sm min-w-[200px]">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-[#8B949E]" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#8B949E]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search challenges by title or #..."
-              className="w-full h-9 pl-9 pr-3 bg-[#0D1117] border border-[#30363D] rounded-md text-sm text-[#E6EDF3] placeholder-[#8B949E] focus:outline-none focus:border-[#1F6FEB]"
+              placeholder="Search challenges or #..."
+              className="w-full h-8.5 pl-9 pr-3 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] placeholder-[#8B949E] focus:outline-none focus:border-[#1F6FEB]"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Difficulty Dropdown */}
+        {/* Filter Dropdowns */}
+        <div className="flex items-center gap-2 shrink-0">
           <select
             value={difficultyFilter}
             onChange={(e) => setDifficultyFilter(e.target.value as any)}
-            className="h-9 px-3 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
+            className="h-8.5 px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
           >
             <option value="all">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -141,11 +208,10 @@ function CurriculumExplorerContent() {
             <option value="hard">Hard</option>
           </select>
 
-          {/* Status Dropdown */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="h-9 px-3 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
+            className="h-8.5 px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
           >
             <option value="all">All Statuses</option>
             <option value="solved">Solved</option>
@@ -156,14 +222,14 @@ function CurriculumExplorerContent() {
 
       {/* Main Two-Column Layout */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
-        {/* Left Sidebar (288px): Modules list with larger font */}
+        {/* Left Sidebar (288px): Modules list for active track */}
         <aside className="w-72 border-r border-[#30363D] bg-[#161B22] flex flex-col min-h-0 shrink-0 hidden md:flex">
           <div className="p-4 border-b border-[#30363D] flex items-center justify-between shrink-0">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#8B949E]">
-              Modules ({chapters.length})
+              {activeTrack === 'basics' ? 'Basics Modules' : activeTrack === 'advanced' ? 'Advanced Modules' : 'All Modules'} ({trackChapters.length})
             </span>
             <span className="text-xs font-mono font-semibold text-[#8B949E]">
-              {solvedCount} / {totalCount} Solved
+              {trackSolvedCount} / {trackTotalCount} Solved
             </span>
           </div>
 
@@ -176,11 +242,11 @@ function CurriculumExplorerContent() {
                   : 'text-[#9198A1] hover:bg-[#21262D]/60 hover:text-white'
               }`}
             >
-              <span>All Challenges</span>
-              <span className="font-mono text-xs text-[#8B949E] font-semibold">{allProblems.length}</span>
+              <span>{activeTrack === 'basics' ? 'All Basics (50)' : activeTrack === 'advanced' ? 'All Advanced (20)' : 'All Challenges'}</span>
+              <span className="font-mono text-xs text-[#8B949E] font-semibold">{trackProblems.length}</span>
             </button>
 
-            {chapters.map((chap) => {
+            {trackChapters.map((chap) => {
               const chapLevels = chap.levels || [];
               const chapSolved = chapLevels.filter((l) => solvedIds.includes(l.id)).length;
               const isSelected = selectedModule === chap.chapter_id;
@@ -221,11 +287,18 @@ function CurriculumExplorerContent() {
           <div className="w-full space-y-4">
             {/* Table Header Summary */}
             <div className="flex items-center justify-between text-xs text-[#8B949E]">
-              <span>
-                Showing {filteredProblems.length} of {allProblems.length} problems
-              </span>
+              <div className="flex items-center gap-2">
+                <span>
+                  Showing {filteredProblems.length} of {trackProblems.length} {activeTrack === 'basics' ? 'Basics' : activeTrack === 'advanced' ? 'Advanced' : ''} problems
+                </span>
+                {activeTrack === 'advanced' && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30">
+                    LeetCode Classics
+                  </span>
+                )}
+              </div>
               <span className="font-mono">
-                {Math.round((solvedCount / (totalCount || 1)) * 100)}% Syllabus Complete
+                {Math.round((trackSolvedCount / (trackTotalCount || 1)) * 100)}% Section Complete
               </span>
             </div>
 
@@ -259,6 +332,7 @@ function CurriculumExplorerContent() {
                   filteredProblems.map((problem) => {
                     const isSolved = solvedIds.includes(problem.id);
                     const displayNum = problem.level_number || problem.id;
+                    const isAdvanced = displayNum >= 51 || problem.chapter_id >= 11;
 
                     return (
                       <div
@@ -275,7 +349,7 @@ function CurriculumExplorerContent() {
                           )}
                         </div>
 
-                        {/* Number: Clean 01 - 50 ordering */}
+                        {/* Number: Clean 01 - 70 ordering */}
                         <div className="col-span-1 font-mono text-xs text-[#8B949E] font-medium">
                           {String(displayNum).padStart(2, '0')}
                         </div>
@@ -283,6 +357,11 @@ function CurriculumExplorerContent() {
                         {/* Title */}
                         <div className="col-span-5 font-semibold text-[#E6EDF3] group-hover:text-[#58A6FF] transition-colors truncate pr-3 flex items-center gap-2">
                           <span className="truncate">{problem.title}</span>
+                          {isAdvanced && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 shrink-0">
+                              Advanced
+                            </span>
+                          )}
                         </div>
 
                         {/* Module */}
@@ -323,4 +402,3 @@ export default function CurriculumExplorerPage() {
     </Suspense>
   );
 }
-

@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-import jwt
+try:
+    import jwt
+except ImportError:
+    from jose import jwt
 import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer

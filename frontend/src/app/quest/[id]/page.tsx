@@ -29,7 +29,7 @@ import {
   Terminal, ChevronDown, ChevronUp, Copy, Trash2,
   Award, Sparkles, Trophy, Compass, ShieldCheck,
   CheckSquare, Layers, Circle, RefreshCw, Bot, Lock, Unlock,
-  Briefcase
+  Briefcase, Zap
 } from 'lucide-react';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -610,7 +610,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         {/* Left: Curriculum Back Link, Prev/Next Navigation, Challenge Info */}
         <div className="flex items-center gap-3 min-w-0">
           <Link
-            href="/quest"
+            href={`/quest?track=${problemId <= 50 ? 'basics' : 'advanced'}`}
             className="p-2 rounded-lg text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
             title="Back to Curriculum"
           >
@@ -632,7 +632,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             <span className="text-[#30363D]">|</span>
             <button
               onClick={() => router.push(`/quest/${problemId + 1}`)}
-              disabled={problemId >= (allProblems.length || 50)}
+              disabled={problemId >= Math.max(allProblems.length, 70)}
               className="text-[#8B949E] hover:text-[#E6EDF3] disabled:opacity-30 px-1.5 py-0.5 rounded transition-colors font-semibold"
               title="Next Challenge"
             >
@@ -645,6 +645,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               {problem?.title || 'Loading challenge...'}
             </span>
             {problem && <DifficultyBadge difficulty={problem.difficulty} size="md" />}
+            {(problemId >= 51 || (problem?.chapter_id && problem.chapter_id >= 11)) && (
+              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 font-semibold shrink-0">
+                <Zap className="h-3 w-3 text-amber-400" />
+                LeetCode #{problemId > 50 ? problemId - 50 : problemId}
+              </span>
+            )}
             {isCurrentProblemSolved && (
               <span className="flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold shrink-0">
                 <Check className="h-3.5 w-3.5" /> Solved

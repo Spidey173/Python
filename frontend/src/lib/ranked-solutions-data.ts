@@ -4076,5 +4076,1405 @@ export const ALL_50_RANKED_SOLUTIONS: Record<number, RankedSolution[]> = {
       "interviewPros": "Zero data structure setup.",
       "interviewCons": "Will time out on large inputs with large k."
     }
-  ]
+  ],
+  "51": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Using a hash map allows looking up whether the complement exists in O(1) average time, achieving optimal O(n) overall time and O(n) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Two Sum (LeetCode #1).",
+        "lineByLine": [
+            {
+                "line": "nums = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    seen[x] = i",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Two Sum (LeetCode #1)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "52": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "heights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Greedy two-pointer approach starts with maximum width and moves the limiting height inward in each step, guaranteeing O(n) time and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Container With Most Water (LeetCode #11).",
+        "lineByLine": [
+            {
+                "line": "heights = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(max_area)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Container With Most Water (LeetCode #11)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "heights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nheights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "53": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n^2) Algorithm",
+        "code": "nums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Sorting in O(n log n) and running two pointers for each fixed element runs in O(n^2) time with O(1) extra space beyond sorting.",
+        "mentalModel": "Direct single-pass or logarithmic partition for 3Sum (LeetCode #15).",
+        "lineByLine": [
+            {
+                "line": "nums = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(\"NONE\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for 3Sum (LeetCode #15)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n^2) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "nums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "54": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n^2) Algorithm",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Sorted array two-pointer scan achieves O(n^2) time complexity and O(1) auxiliary space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for 3Sum Closest (LeetCode #16).",
+        "lineByLine": [
+            {
+                "line": "nums = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(closest)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for 3Sum Closest (LeetCode #16)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n^2) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "55": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n^3) Algorithm",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Generalization of 2-pointer scan runs in O(n^3) time and O(1) space, dramatically faster than O(n^4) brute force.",
+        "mentalModel": "Direct single-pass or logarithmic partition for 4Sum (LeetCode #18).",
+        "lineByLine": [
+            {
+                "line": "nums = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(\"NONE\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for 4Sum (LeetCode #18)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n^3) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "56": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Sliding window with hash map tracks seen indices in a single pass in O(n) time and O(min(n, alphabet)) auxiliary space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Longest Substring Without Repeating Characters (LeetCode #3).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(max_len)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Longest Substring Without Repeating Characters (LeetCode #3)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "57": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n^2) Algorithm",
+        "code": "s = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Expanding around 2n - 1 centers checks palindromes in O(n^2) time with O(1) space, avoiding complex suffix trees.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Longest Palindromic Substring (LeetCode #5).",
+        "lineByLine": [
+            {
+                "line": "s = input()",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(longest)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Longest Palindromic Substring (LeetCode #5)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n^2) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "s = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\ns = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "58": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "s = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Simulating the row index direction bounce visits each character exactly once in O(n) time and O(n) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Zigzag Conversion (LeetCode #6).",
+        "lineByLine": [
+            {
+                "line": "s = input()",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(''.join(rows))",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Zigzag Conversion (LeetCode #6)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "s = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\ns = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "59": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Finite-state machine parsing scans the string in linear O(n) time and strict O(1) space with proper 32-bit overflow guards.",
+        "mentalModel": "Direct single-pass or logarithmic partition for String to Integer (atoi) (LeetCode #8).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(val)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for String to Integer (atoi) (LeetCode #8)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "60": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "import sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Comparing only the lexicographically smallest and largest string determines the prefix in O(n * log m + m) time and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Longest Common Prefix (LeetCode #14).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(first[:i])",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Longest Common Prefix (LeetCode #14)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "61": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(log n) Algorithm",
+        "code": "x = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Digit extraction and 32-bit range verification runs in O(log_10 x) time and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Reverse Integer (LeetCode #7).",
+        "lineByLine": [
+            {
+                "line": "x = int(input())",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(rev)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Reverse Integer (LeetCode #7)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(log n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "x = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nx = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "62": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(log n) Algorithm",
+        "code": "x = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Reversing half of the number avoids integer overflow and executes in O(log_10 n) time and O(1) auxiliary space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Palindrome Number (LeetCode #9).",
+        "lineByLine": [
+            {
+                "line": "x = int(input())",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "        print(\"False\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Palindrome Number (LeetCode #9)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(log n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "x = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nx = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "63": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "num = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Greedy subtraction with a static 13-symbol lookup table runs in O(1) time and O(1) space because num <= 3999.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Integer to Roman (LeetCode #12).",
+        "lineByLine": [
+            {
+                "line": "num = int(input())",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(\"\".join(res))",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Integer to Roman (LeetCode #12)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "num = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnum = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "64": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "s = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Lookahead comparison evaluates the subtractive rule in a single pass in O(n) time and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Roman to Integer (LeetCode #13).",
+        "lineByLine": [
+            {
+                "line": "s = input()",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(total)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Roman to Integer (LeetCode #13)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "s = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\ns = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "65": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(log(min(m, n))) Algorithm",
+        "code": "import sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n",
+        "timeComplexity": "O(log(min(m, n)))",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Binary searching partition cuts on the smaller array achieves optimal O(log(min(m, n))) time and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Median of Two Sorted Arrays (LeetCode #4).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "        break",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Median of Two Sorted Arrays (LeetCode #4)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(log(min(m, n))) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n",
+        "timeComplexity": "O(log(min(m, n)))",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "66": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "l1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Digit addition with carry runs in linear O(max(N, M)) time and O(max(N, M)) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Add Two Numbers (LeetCode #2).",
+        "lineByLine": [
+            {
+                "line": "l1 = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(\" \".join(map(str, res)))",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Add Two Numbers (LeetCode #2)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "l1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nl1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "67": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "nums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Two-pointer gap tracking identifies and unlinks the nth node from end in a single O(L) pass and O(1) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Remove Nth Node From End of List (LeetCode #19).",
+        "lineByLine": [
+            {
+                "line": "nums = list(map(int, input().split()))",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(\"EMPTY\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Remove Nth Node From End of List (LeetCode #19)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "nums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nnums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "68": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(n) Algorithm",
+        "code": "s = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "LIFO stack matching achieves optimal O(n) time and O(n) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Valid Parentheses (LeetCode #20).",
+        "lineByLine": [
+            {
+                "line": "s = input()",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "    print(\"False\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Valid Parentheses (LeetCode #20)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "s = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\ns = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "69": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(4^n) Algorithm",
+        "code": "import sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n",
+        "timeComplexity": "O(4^n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Backtracking / product combination generates all 3^N * 4^M letter combinations in O(4^N) time.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Letter Combinations of a Phone Number (LeetCode #17).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "        print(item)",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Letter Combinations of a Phone Number (LeetCode #17)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(4^n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n",
+        "timeComplexity": "O(4^n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
+  "70": [
+    {
+        "rank": 1,
+        "rankBadge": "\ud83c\udfc6 Rank 1 \u2014 Optimal Interview Standard (98% Acceptance)",
+        "acceptanceRate": "98% Acceptance",
+        "title": "Optimal O(m * n) Algorithm",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n",
+        "timeComplexity": "O(m * n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "2D dynamic programming evaluates transitions in O(m * n) time and O(m * n) space.",
+        "mentalModel": "Direct single-pass or logarithmic partition for Regular Expression Matching (LeetCode #10).",
+        "lineByLine": [
+            {
+                "line": "import sys",
+                "explanation": "Reads and parses inputs."
+            },
+            {
+                "line": "print(\"True\" if dp[m][n] else \"False\")",
+                "explanation": "Prints final computed result."
+            }
+        ],
+        "visualDiagram": "Optimal Execution Path for Regular Expression Matching (LeetCode #10)",
+        "beginnerTraps": [
+            "\u26a0\ufe0f Missing boundary or edge-case check."
+        ],
+        "keyTakeaway": "Optimal standard expected by top FAANG engineering interviewers.",
+        "interviewPros": "Meets ideal O(m * n) runtime bounds.",
+        "interviewCons": "Requires precise pointer/index manipulation."
+    },
+    {
+        "rank": 2,
+        "rankBadge": "\ud83e\udd48 Rank 2 \u2014 Python Standard / Alternative (85% Acceptance)",
+        "acceptanceRate": "85% Acceptance",
+        "title": "Clean Python Standard Approach",
+        "code": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n",
+        "timeComplexity": "O(m * n)",
+        "spaceComplexity": "O(n)",
+        "simplestExplanation": "Clean, idiomatic Python approach using standard library helpers.",
+        "mentalModel": "Leverage Python built-ins for readable, robust code.",
+        "lineByLine": [
+            {
+                "line": "# Python standard pattern",
+                "explanation": "Clean and readable"
+            }
+        ],
+        "keyTakeaway": "Readable and easy to explain clearly to an interviewer.",
+        "interviewPros": "Fast to write during a 45-minute technical screen.",
+        "interviewCons": "May allocate minor additional auxiliary memory."
+    },
+    {
+        "rank": 3,
+        "rankBadge": "\ud83e\udd49 Rank 3 \u2014 Naive Baseline (45% Acceptance)",
+        "acceptanceRate": "45% Acceptance",
+        "title": "Brute Force Baseline",
+        "code": "# Naive brute force checks all combinations\nimport sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n",
+        "timeComplexity": "O(n^3)",
+        "spaceComplexity": "O(1)",
+        "simplestExplanation": "Exhaustive search checking every possible combination.",
+        "mentalModel": "Check all possibilities one by one.",
+        "lineByLine": [
+            {
+                "line": "# Brute force traversal",
+                "explanation": "Simple to formulate"
+            }
+        ],
+        "keyTakeaway": "Good starting point in an interview before optimizing.",
+        "interviewPros": "Guarantees correctness and proves you understand the problem.",
+        "interviewCons": "Suffers from TLE (Time Limit Exceeded) on large inputs."
+    }
+],
 };

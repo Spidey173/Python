@@ -17,9 +17,9 @@ async def test_get_chapters_and_levels():
         response = await ac.get("/api/challenges/chapters")
     assert response.status_code == 200
     chapters = response.json()
-    assert len(chapters) == 10
+    assert len(chapters) == 14
     total_levels = sum(len(c["levels"]) for c in chapters)
-    assert total_levels == 50
+    assert total_levels == 70
     # First level should be unlocked
     assert chapters[0]["levels"][0]["locked"] is False
 

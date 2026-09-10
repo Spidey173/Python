@@ -704,4 +704,284 @@ export const ALL_50_MENTOR_KNOWLEDGE: Record<number, ProblemMentorKnowledge> = {
       { tier: 5, title: "Complete Code Blueprint", nudge: "Here is the clean, complete solution with step-by-step logic:", reflectionQuestion: "\ud83d\udca1 Tip: Read through the code comments, test it in the editor, and see all test cases pass!", codeSnippet: "from collections import deque\nnums = list(map(int, input().split()))\nk = int(input())\nif not nums or k == 0:\n    print(\"\")\nelse:\n    q = deque()\n    res = []\n    for i, x in enumerate(nums):\n        while q and q[0] <= i - k:\n            q.popleft()\n        while q and nums[q[-1]] <= x:\n            q.pop()\n        q.append(i)\n        if i >= k - 1:\n            res.append(nums[q[0]])\n    print(\" \".join(map(str, res)))" }
     ],
   },
+  51: {
+    greeting: "Welcome! Let's conquer Two Sum (LeetCode #1). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Arrays & Two Pointers",
+    conceptExplanation: "Using a hash map allows looking up whether the complement exists in O(1) average time, achieving optimal O(n) overall time and O(n) space.",
+    patternExample: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Two Sum (LeetCode #1): Read space-separated integers on line 1, and target on line 2. Return the indices of the two numbers such that they add up to target (0-indexed, ascending). Print the two indices separated by a space.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Use a hash map (dict in Python) to store the complement (target - num) and its index.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "As you scan through the array, if the current number is already in the map, you found the pair!", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "nums = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 0 1", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n" }
+    ],
+  },
+  52: {
+    greeting: "Welcome! Let's conquer Container With Most Water (LeetCode #11). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Arrays & Two Pointers",
+    conceptExplanation: "Greedy two-pointer approach starts with maximum width and moves the limiting height inward in each step, guaranteeing O(n) time and O(1) space.",
+    patternExample: "heights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Container With Most Water (LeetCode #11): Read space-separated integers representing heights. Calculate the maximum area of water the container can store: min(h[l], h[r]) * (r - l). Print the maximum integer area.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Start with the widest container: one pointer at left = 0, one at right = len(heights) - 1.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "To possibly find a larger area, move the pointer that points to the SHORTER height inward.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "heights = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 49", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "heights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n" }
+    ],
+  },
+  53: {
+    greeting: "Welcome! Let's conquer 3Sum (LeetCode #15). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Arrays & Two Pointers",
+    conceptExplanation: "Sorting in O(n log n) and running two pointers for each fixed element runs in O(n^2) time with O(1) extra space beyond sorting.",
+    patternExample: "nums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for 3Sum (LeetCode #15): Read space-separated integers. Find all unique triplets that sum to 0. Print each triplet sorted ascending on its own line (space-separated), and print the triplets sorted lexicographically. If none, print 'NONE'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Sort the array first. This enables two-pointer search and makes duplicate avoidance straightforward.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Fix the first element nums[i]. If nums[i] > 0, break early. Use two pointers for the remaining pair.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "nums = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: -1 -1 2\n-1 0 1", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "nums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n" }
+    ],
+  },
+  54: {
+    greeting: "Welcome! Let's conquer 3Sum Closest (LeetCode #16). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Arrays & Two Pointers",
+    conceptExplanation: "Sorted array two-pointer scan achieves O(n^2) time complexity and O(1) auxiliary space.",
+    patternExample: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for 3Sum Closest (LeetCode #16): Read space-separated integers on line 1, and target on line 2. Return the sum of the three integers that is closest to target. Print the integer sum.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Sort the array. Fix the first element and use two pointers for the rest.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Keep track of the closest sum seen so far by minimizing abs(current_sum - target).", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "nums = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 2", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n" }
+    ],
+  },
+  55: {
+    greeting: "Welcome! Let's conquer 4Sum (LeetCode #18). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Arrays & Two Pointers",
+    conceptExplanation: "Generalization of 2-pointer scan runs in O(n^3) time and O(1) space, dramatically faster than O(n^4) brute force.",
+    patternExample: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for 4Sum (LeetCode #18): Read space-separated integers on line 1, and target on line 2. Print all unique quadruplets sorted ascending on separate lines (space-separated). If none, print 'NONE'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Sort nums. Fix the first two elements with two nested loops, then use two pointers for the remaining two elements.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Carefully skip duplicate elements at each level to avoid duplicate quadruplets.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "nums = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: -2 -1 1 2\n-2 0 0 2\n-1 0 0 1", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n" }
+    ],
+  },
+  56: {
+    greeting: "Welcome! Let's conquer Longest Substring Without Repeating Characters (LeetCode #3). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Strings & Parsing",
+    conceptExplanation: "Sliding window with hash map tracks seen indices in a single pass in O(n) time and O(min(n, alphabet)) auxiliary space.",
+    patternExample: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Longest Substring Without Repeating Characters (LeetCode #3): Read a string from standard input. Find the length of the longest contiguous substring without repeating characters. Print the integer length.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Maintain a sliding window [start, end] and a hash map of character -> most recent index.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "When a character is repeated within the current window, move `start = seen[char] + 1`.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 3", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n" }
+    ],
+  },
+  57: {
+    greeting: "Welcome! Let's conquer Longest Palindromic Substring (LeetCode #5). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Strings & Parsing",
+    conceptExplanation: "Expanding around 2n - 1 centers checks palindromes in O(n^2) time with O(1) space, avoiding complex suffix trees.",
+    patternExample: "s = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Longest Palindromic Substring (LeetCode #5): Read a string s from standard input. Find and print the longest contiguous palindromic substring. If multiple exist of the same length, return the first one.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "A palindrome can have an odd center (single char) or even center (pair of chars). There are 2n - 1 total centers.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Expand outward from each center while s[left] == s[right].", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "s = input()" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: bab", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "s = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n" }
+    ],
+  },
+  58: {
+    greeting: "Welcome! Let's conquer Zigzag Conversion (LeetCode #6). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Strings & Parsing",
+    conceptExplanation: "Simulating the row index direction bounce visits each character exactly once in O(n) time and O(n) space.",
+    patternExample: "s = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Zigzag Conversion (LeetCode #6): Read string s on line 1, and integer numRows on line 2. Print the string formed by reading the zigzag pattern row by row.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "If num_rows == 1 or num_rows >= len(s), return s directly.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Simulate the bounce: keep track of the current row and a step (+1 going down, -1 going up).", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "s = input()" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: PAHNAPLSIIGYIR", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "s = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n" }
+    ],
+  },
+  59: {
+    greeting: "Welcome! Let's conquer String to Integer (atoi) (LeetCode #8). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Strings & Parsing",
+    conceptExplanation: "Finite-state machine parsing scans the string in linear O(n) time and strict O(1) space with proper 32-bit overflow guards.",
+    patternExample: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for String to Integer (atoi) (LeetCode #8): Read a string from input. Parse leading whitespace, optional sign (+/-), consecutive digits, and clamp within [-2^31, 2^31 - 1]. Print the parsed integer.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Strip leading whitespace first. Check if the remaining string starts with '+' or '-'.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Read digits one by one. Stop at the first non-digit.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 42", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n" }
+    ],
+  },
+  60: {
+    greeting: "Welcome! Let's conquer Longest Common Prefix (LeetCode #14). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Strings & Parsing",
+    conceptExplanation: "Comparing only the lexicographically smallest and largest string determines the prefix in O(n * log m + m) time and O(1) space.",
+    patternExample: "import sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Longest Common Prefix (LeetCode #14): Read space-separated strings from input. Find the longest common prefix shared by all words. Print the prefix string (or empty if none).", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Sort the strings: the common prefix of the entire array must be the common prefix between the first and last alphabetically sorted string!", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Alternatively, use vertical scanning comparing characters at index i across all strings.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: fl", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n" }
+    ],
+  },
+  61: {
+    greeting: "Welcome! Let's conquer Reverse Integer (LeetCode #7). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Math & Numerical Logic",
+    conceptExplanation: "Digit extraction and 32-bit range verification runs in O(log_10 x) time and O(1) space.",
+    patternExample: "x = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Reverse Integer (LeetCode #7): Read an integer x. Reverse its digits while preserving the sign. If the reversed value exceeds [-2^31, 2^31 - 1], print 0.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Track the sign: sign = -1 if x < 0 else 1. Work with abs(x).", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Pop digits with x % 10 and push into rev = rev * 10 + digit. Check 32-bit bounds before returning.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "x = int(input())" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 321", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "x = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n" }
+    ],
+  },
+  62: {
+    greeting: "Welcome! Let's conquer Palindrome Number (LeetCode #9). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Math & Numerical Logic",
+    conceptExplanation: "Reversing half of the number avoids integer overflow and executes in O(log_10 n) time and O(1) auxiliary space.",
+    patternExample: "x = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Palindrome Number (LeetCode #9): Read an integer x. Return True if it reads identically forwards and backwards. Print 'True' or 'False'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Negative numbers are never palindromes because of the leading minus sign.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Numbers ending in 0 (except 0 itself) cannot be palindromes.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "x = int(input())" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: True", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "x = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n" }
+    ],
+  },
+  63: {
+    greeting: "Welcome! Let's conquer Integer to Roman (LeetCode #12). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Math & Numerical Logic",
+    conceptExplanation: "Greedy subtraction with a static 13-symbol lookup table runs in O(1) time and O(1) space because num <= 3999.",
+    patternExample: "num = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Integer to Roman (LeetCode #12): Read an integer num (1 <= num <= 3999). Convert it to a Roman numeral string and print it.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "List value-symbol pairs in descending order: (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), etc.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Iterate greedily: while num >= value, append symbol and subtract value from num.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "num = int(input())" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: MMMDCCXLIX", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "num = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n" }
+    ],
+  },
+  64: {
+    greeting: "Welcome! Let's conquer Roman to Integer (LeetCode #13). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Math & Numerical Logic",
+    conceptExplanation: "Lookahead comparison evaluates the subtractive rule in a single pass in O(n) time and O(1) space.",
+    patternExample: "s = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Roman to Integer (LeetCode #13): Read a Roman numeral string. Convert and print the integer value.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Use a map of Roman characters: {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "If the current character value is less than the next character value, subtract it; otherwise, add it.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "s = input()" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 1994", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "s = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n" }
+    ],
+  },
+  65: {
+    greeting: "Welcome! Let's conquer Median of Two Sorted Arrays (LeetCode #4). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Math & Numerical Logic",
+    conceptExplanation: "Binary searching partition cuts on the smaller array achieves optimal O(log(min(m, n))) time and O(1) space.",
+    patternExample: "import sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Median of Two Sorted Arrays (LeetCode #4): Read space-separated integers for nums1 on line 1, and nums2 on line 2. Find the median of the combined sorted sequence. Print formatted as a float to 1 decimal place (e.g. '2.0' or '2.5').", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Partition both arrays such that the left half has equal or 1 more element than the right half.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Binary search on the smaller array for the partition cut position i in [0, m].", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 2.0", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n" }
+    ],
+  },
+  66: {
+    greeting: "Welcome! Let's conquer Add Two Numbers (LeetCode #2). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Lists, Stacks & Dynamic Programming",
+    conceptExplanation: "Digit addition with carry runs in linear O(max(N, M)) time and O(max(N, M)) space.",
+    patternExample: "l1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Add Two Numbers (LeetCode #2): Read space-separated digits of l1 on line 1, and l2 on line 2 (both in reverse order). Add the numbers and print the resulting digits in reverse order separated by space.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Simulate addition column-by-column: sum = val1 + val2 + carry.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Carry for next position is sum // 10, digit to output is sum % 10.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "l1 = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 7 0 8", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "l1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n" }
+    ],
+  },
+  67: {
+    greeting: "Welcome! Let's conquer Remove Nth Node From End of List (LeetCode #19). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Lists, Stacks & Dynamic Programming",
+    conceptExplanation: "Two-pointer gap tracking identifies and unlinks the nth node from end in a single O(L) pass and O(1) space.",
+    patternExample: "nums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Remove Nth Node From End of List (LeetCode #19): Read space-separated integers on line 1, and n on line 2. Remove the nth element from the end. Print the remaining elements separated by space. If list becomes empty, print 'EMPTY'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Use two pointers (fast and slow). Advance `fast` by n steps ahead of `slow`.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "When `fast` reaches the end, `slow` is located right before the node to be removed.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "nums = list(map(int, input().split()))" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: 1 2 3 5", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "nums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n" }
+    ],
+  },
+  68: {
+    greeting: "Welcome! Let's conquer Valid Parentheses (LeetCode #20). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Lists, Stacks & Dynamic Programming",
+    conceptExplanation: "LIFO stack matching achieves optimal O(n) time and O(n) space.",
+    patternExample: "s = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Valid Parentheses (LeetCode #20): Read string s containing brackets. Print 'True' if all brackets are properly paired and closed in sequence, otherwise 'False'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Push opening brackets onto a stack.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "When encountering a closing bracket, check if the stack top matches. If empty or mismatched, return False.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "s = input()" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: True", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "s = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n" }
+    ],
+  },
+  69: {
+    greeting: "Welcome! Let's conquer Letter Combinations of a Phone Number (LeetCode #17). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Lists, Stacks & Dynamic Programming",
+    conceptExplanation: "Backtracking / product combination generates all 3^N * 4^M letter combinations in O(4^N) time.",
+    patternExample: "import sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Letter Combinations of a Phone Number (LeetCode #17): Read a string of digits (2-9). Generate all possible letter combinations in lexicographical order. Print each combination on a new line. If empty input, print 'NONE'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Map each digit to its keypad letters: '2' -> 'abc', '3' -> 'def', etc.", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "Use backtracking or itertools.product to compute the Cartesian product of the letter sets.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n" }
+    ],
+  },
+  70: {
+    greeting: "Welcome! Let's conquer Regular Expression Matching (LeetCode #10). I'll guide you step-by-step with clear logic and optimal complexity!",
+    conceptName: "Top LeetCode - Lists, Stacks & Dynamic Programming",
+    conceptExplanation: "2D dynamic programming evaluates transitions in O(m * n) time and O(m * n) space.",
+    patternExample: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n",
+    interviewTrap: "Watch out for boundary conditions, empty inputs, and duplicate elements.",
+    hints: [
+      { tier: 1, title: "The Problem Goal", nudge: "Understand the problem goal for Regular Expression Matching (LeetCode #10): Read string s on line 1, and pattern p on line 2. Determine if the pattern covers the entire input string. Print 'True' or 'False'.", reflectionQuestion: "💡 Tip: State the inputs and expected outputs clearly before coding." },
+      { tier: 2, title: "Algorithmic Clue", nudge: "Use 2D Dynamic Programming: dp[i][j] is True if s[:i] matches p[:j].", reflectionQuestion: "💡 Tip: Can a hash map or two pointers avoid nested loops?" },
+      { tier: 3, title: "Implementation Pointer", nudge: "If p[j-1] == '*', it can match 0 occurrences (dp[i][j-2]) or 1+ occurrences if preceding char matches.", reflectionQuestion: "💡 Tip: Trace with a small example on paper.", codeSnippet: "import sys" },
+      { tier: 4, title: "Edge Case Guard", nudge: "Verify edge cases and format output to match expected answer: True", reflectionQuestion: "💡 Tip: Test with extreme values (zero, negatives, empty input)." },
+      { tier: 5, title: "Complete Solution Blueprint", nudge: "Here is the optimal Python 3 implementation with comments:", reflectionQuestion: "💡 Tip: Run your code against the visible test cases in the Terminal!", codeSnippet: "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n" }
+    ],
+  },
 };

@@ -38,11 +38,11 @@ export interface LearnerGuide {
  */
 export function analyzeUserSubmittedMethod(code: string, problem?: ChallengeDetail | null): UserMethodAnalysis {
   const cleanCode = code.trim();
-  const problemId = (problem?.level_number && problem.level_number >= 1 && problem.level_number <= 50)
+  const problemId = (problem?.level_number && problem.level_number >= 1 && problem.level_number <= 70)
     ? problem.level_number
-    : (problem?.id && problem.id <= 50
+    : (problem?.id && problem.id <= 70
       ? problem.id
-      : (problem?.id && problem.id >= 151 && problem.id <= 200
+      : (problem?.id && problem.id >= 151 && problem.id <= 220
         ? problem.id - 150
         : 1));
 
