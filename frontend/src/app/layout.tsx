@@ -6,7 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 export const metadata: Metadata = {
   title: 'Python — Developer Workspace',
   description: 'A focused, distraction-free engineering workspace to master essential Python coding fundamentals for technical job interviews.',
-  keywords: ['Python', 'Technical Interview', 'Coding Workspace', 'LeetCode', 'VS Code', 'Data Structures', 'Algorithms'],
+  keywords: ['Python', 'Technical Interview', 'Coding Workspace', 'Coding Interview', 'VS Code', 'Data Structures', 'Algorithms'],
 };
 
 export default function RootLayout({

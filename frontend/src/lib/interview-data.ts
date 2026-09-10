@@ -211,7 +211,7 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
         "id": "q2",
         "category": "Python Standard Library",
-        "question": "Why is `s == s[::-1]` unacceptable in a senior interview even though it passes on LeetCode?",
+        "question": "Why is `s == s[::-1]` unacceptable in a senior interview in a technical interview?",
         "whatInterviewerChecks": "Python heap memory allocation awareness and string immutability.",
         "bestReplyScript": "In Python, strings are immutable objects. Evaluating `s[::-1]` forces CPython to allocate a brand-new string of length N on the heap and copy every single character. That makes space complexity O(N). Additionally, `s[::-1]` doesn't filter out non-alphanumeric characters or handle mixed casing like 'RaceCar'. The Two-Pointer approach uses O(1) extra space and handles all cleaning on-the-fly.",
         "keyPoints": [
@@ -19543,2404 +19543,2910 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       }
     ]
   },
-  "51": {
+"51": {
     "problemId": 51,
-    "problemTitle": "Two Sum (LeetCode #1)",
+    "problemTitle": "Two Sum",
     "difficulty": "Easy",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Apple",
-        "Uber"
+      "Google",
+      "Meta",
+      "Amazon",
+      "Microsoft"
     ],
     "tracing": {
-        "code": "1: nums = list(map(int, input().split()))\n2: target = int(input())\n3: \n4: seen = {}\n5: for i, x in enumerate(nums):\n6:     diff = target - x\n7:     if diff in seen:\n8:         print(f\"{seen[diff]} {i}\")\n9:         break\n10:     seen[x] = i",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Two Sum (LeetCode #1)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 5,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 10,
-                "vars": {
-                    "output": "0 1"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: nums = list(map(int, input().split()))\n2: target = int(input())\n3: seen = {}\n4: for i, x in enumerate(nums):\n5:     diff = target - x\n6:     if diff in seen:\n7:         print(f\"{seen[diff]} {i}\")\n8:         break\n9:     seen[x] = i",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums": "[2, 7, 11, 15]",
+            "target": "9",
+            "seen": "{}"
+          },
+          "explanation": "Read input array [2, 7, 11, 15] and target 9."
+        },
+        {
+          "step": 2,
+          "lineNumber": 4,
+          "vars": {
+            "i": "0",
+            "x": "2",
+            "diff": "7",
+            "seen": "{}"
+          },
+          "explanation": "First element 2. diff = 9 - 2 = 7. Not in seen."
+        },
+        {
+          "step": 3,
+          "lineNumber": 9,
+          "vars": {
+            "seen": "{2: 0}"
+          },
+          "explanation": "Store {2: 0} in seen map."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "i": "1",
+            "x": "7",
+            "diff": "2",
+            "seen": "{2: 0}"
+          },
+          "explanation": "Second element 7. diff = 9 - 7 = 2. 2 is in seen!"
+        },
+        {
+          "step": 5,
+          "lineNumber": 7,
+          "vars": {
+            "output": "\"0 1\""
+          },
+          "explanation": "Print '0 1' and break."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-51",
-            "question": "How would you explain your Two Sum (LeetCode #1) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Two Sum (LeetCode #1) by employing the optimal Easy standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Using a hash map allows looking up whether the complement exists in O(1) average time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nseen = {}\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        print(f\"{seen[diff]} {i}\")\n        break\n    seen[x] = i\n"
-        },
-        {
-            "id": "q2-51",
-            "question": "What are the most common edge cases to test for Two Sum (LeetCode #1)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-51",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-51",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-51",
+        "question": "How do you explain Two Sum in 30 seconds to an interviewer?",
+        "category": "30-Second Interview Pitch",
+        "whatInterviewerChecks": "Concision, Big-O clarity, and problem grasp.",
+        "bestReplyScript": "I solve Two Sum in a single pass using a hash map. For each number x, I check if (target - x) exists in the map. If it does, I return its index and the current index immediately. Otherwise, I store x and its index. This yields optimal O(n) time and O(n) auxiliary space.",
+        "keyPoints": [
+          "O(n) time, O(n) space",
+          "Complement lookup (target - x)",
+          "Single pass avoids self-matching"
+        ],
+        "codeSnippet": "seen = {}\nfor i, x in enumerate(nums):\n    if target - x in seen:\n        return [seen[target - x], i]\n    seen[x] = i"
+      },
+      {
+        "id": "q2-51",
+        "question": "What if the input contains duplicate numbers, such as [3, 3] with target 6?",
+        "category": "Edge Cases & Invariants",
+        "whatInterviewerChecks": "Understanding dictionary key collisions.",
+        "bestReplyScript": "Our single-pass approach handles duplicates naturally! When processing the first 3 at index 0, the map is empty so seen[3] = 0 is stored. At the second 3 (index 1), diff is 3, which is found in the map at index 0. It returns [0, 1] before ever overwriting the key.",
+        "keyPoints": [
+          "Check happens before insertion",
+          "No key overwrite occurs",
+          "Naturally returns [0, 1]"
+        ]
+      },
+      {
+        "id": "q3-51",
+        "question": "Can we solve Two Sum with strictly O(1) auxiliary space?",
+        "category": "Trade-offs & Alternatives",
+        "whatInterviewerChecks": "Knowledge of time-space tradeoffs.",
+        "bestReplyScript": "If extra space is forbidden, we can either use O(n\u00b2) brute force nested loops, or if we only need to return values (not original indices), sort the array in-place and use two pointers in O(n log n) time and O(1) space. Returning original indices in O(1) space strictly requires O(n\u00b2) brute force.",
+        "keyPoints": [
+          "Hash map is O(n) space",
+          "Two pointers need sorting",
+          "Original indices require O(n) space if sorted"
+        ]
+      },
+      {
+        "id": "q4-51",
+        "question": "How does this approach handle negative numbers and zeroes?",
+        "category": "Data Correctness",
+        "whatInterviewerChecks": "Robustness across arithmetic edge cases.",
+        "bestReplyScript": "Because subtraction (target - x) correctly handles negative signs (e.g. target 0 with x = -3 yields diff = 3), and hash maps look up exact integer equality regardless of sign, negative numbers and zeroes are handled seamlessly without special casing.",
+        "keyPoints": [
+          "Algebraic subtraction works for all signs",
+          "Hash table checks signed integer equality",
+          "No special branches required"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-51",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-51",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-51",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-51",
+        "title": "Two-Pass Hash Map Self-Matching",
+        "description": "Pre-populating the whole map first can cause an element to match itself when target == 2 * x.",
+        "badSnippet": "seen = {x: i for i, x in enumerate(nums)}\nfor i, x in enumerate(nums):\n    if target - x in seen: # BUG: matches itself!\n        print(f\"{i} {seen[target - x]}\"); break",
+        "failingInput": "nums = [3, 2, 4], target = 6",
+        "consequence": "At index 0 (value 3), target - 3 = 3 which is in seen at index 0. Prints '0 0' instead of '1 2'.",
+        "howToFix": "Use a single pass checking `if diff in seen` before adding `seen[x] = i`."
+      },
+      {
+        "id": "m2-51",
+        "title": "Sorting In-Place Without Original Indices",
+        "description": "Sorting nums alters element positions, making indices returned invalid for the original array.",
+        "badSnippet": "nums.sort()\nl, r = 0, len(nums) - 1\nwhile l < r:\n    if nums[l] + nums[r] == target:\n        print(f\"{l} {r}\"); break # BUG: sorted indices!",
+        "failingInput": "nums = [3, 2, 4], target = 6",
+        "consequence": "Array becomes [2, 3, 4], prints sorted indices '0 2' instead of original indices '1 2'.",
+        "howToFix": "Pair each element with `enumerate(nums)` before sorting."
+      },
+      {
+        "id": "m3-51",
+        "title": "Printing Python List Instead of Space-Separated",
+        "description": "Printing a list object `[0, 1]` instead of space-separated strings `0 1`.",
+        "badSnippet": "print([seen[diff], i]) # BUG: outputs '[0, 1]'",
+        "failingInput": "nums = [2, 7, 11, 15], target = 9",
+        "consequence": "Output format mismatch in automated interview test graders.",
+        "howToFix": "Use `print(f\"{seen[diff]} {i}\")`."
+      }
     ]
-},
+  },
   "52": {
     "problemId": 52,
-    "problemTitle": "Container With Most Water (LeetCode #11)",
+    "problemTitle": "Container With Most Water",
     "difficulty": "Medium",
     "companyTags": [
-        "Microsoft",
-        "Amazon",
-        "Bloomberg",
-        "Cisco"
+      "Meta",
+      "Google",
+      "Amazon",
+      "Apple"
     ],
     "tracing": {
-        "code": "1: heights = list(map(int, input().split()))\n2: \n3: l, r = 0, len(heights) - 1\n4: max_area = 0\n5: \n6: while l < r:\n7:     w = r - l\n8:     h = min(heights[l], heights[r])\n9:     area = w * h\n10:     if area > max_area:\n11:         max_area = area\n12:     if heights[l] < heights[r]:\n13:         l += 1\n14:     else:\n15:         r -= 1\n16: \n17: print(max_area)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Container With Most Water (LeetCode #11)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 8,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 17,
-                "vars": {
-                    "output": "49"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: l, r = 0, len(heights) - 1\n2: max_area = 0\n3: while l < r:\n4:     area = (r - l) * min(heights[l], heights[r])\n5:     max_area = max(max_area, area)\n6:     if heights[l] < heights[r]: l += 1\n7:     else: r -= 1\n8: print(max_area)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "l": "0",
+            "r": "8",
+            "max_area": "0"
+          },
+          "explanation": "Pointers at 0 (val 1) and 8 (val 7)."
+        },
+        {
+          "step": 2,
+          "lineNumber": 4,
+          "vars": {
+            "w": "8",
+            "h": "1",
+            "area": "8",
+            "max_area": "8"
+          },
+          "explanation": "Width 8, height 1. Area = 8."
+        },
+        {
+          "step": 3,
+          "lineNumber": 6,
+          "vars": {
+            "heights[0]": "1",
+            "heights[8]": "7",
+            "action": "l += 1"
+          },
+          "explanation": "1 < 7, so move left pointer to 1."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "l": "1",
+            "r": "8",
+            "w": "7",
+            "h": "7",
+            "area": "49",
+            "max_area": "49"
+          },
+          "explanation": "Width 7, height 7. Area = 49! New max."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "action": "r -= 1"
+          },
+          "explanation": "heights[8]=7 <= heights[1]=8, move right pointer inward."
+        },
+        {
+          "step": 6,
+          "lineNumber": 8,
+          "vars": {
+            "max_area": "49"
+          },
+          "explanation": "Pointers meet. Max area is 49."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-52",
-            "question": "How would you explain your Container With Most Water (LeetCode #11) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Container With Most Water (LeetCode #11) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Greedy two-pointer approach starts with maximum width and moves the limiting height inward in each step, guaranteeing O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "heights = list(map(int, input().split()))\n\nl, r = 0, len(heights) - 1\nmax_area = 0\n\nwhile l < r:\n    w = r - l\n    h = min(heights[l], heights[r])\n    area = w * h\n    if area > max_area:\n        max_area = area\n    if heights[l] < heights[r]:\n        l += 1\n    else:\n        r -= 1\n\nprint(max_area)\n"
-        },
-        {
-            "id": "q2-52",
-            "question": "What are the most common edge cases to test for Container With Most Water (LeetCode #11)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-52",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-52",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-52",
+        "question": "Why does moving the shorter pointer guarantee we do not miss a larger area?",
+        "category": "Algorithmic Proof",
+        "whatInterviewerChecks": "Mathematical rigor.",
+        "bestReplyScript": "Area is width times the minimum of the two heights: (r - l) * min(h[l], h[r]). Moving either pointer inward decreases width. If we were to move the taller wall, the height would still be capped by the shorter wall, guaranteeing a strictly smaller area. The ONLY way to achieve a larger area with smaller width is to find a taller replacement for the shorter wall.",
+        "keyPoints": [
+          "Width always decreases",
+          "Limiting height caps capacity",
+          "Moving taller wall cannot increase area"
+        ]
+      },
+      {
+        "id": "q2-52",
+        "question": "What if both lines have equal height?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Symmetry and tie-breaking.",
+        "bestReplyScript": "If heights[l] == heights[r], we can move either pointer (or both)! To beat the current area with smaller width, we would need BOTH new lines to be taller than the current height. Moving either one is mathematically sound.",
+        "keyPoints": [
+          "Symmetric tie-breaker",
+          "Both lines must be replaced",
+          "Arbitrary choice like r -= 1 is valid"
+        ]
+      },
+      {
+        "id": "q3-52",
+        "question": "How does this differ from Trapping Rain Water?",
+        "category": "Pattern Recognition",
+        "whatInterviewerChecks": "Differentiating single container vs elevation profile.",
+        "bestReplyScript": "Container With Most Water finds the single largest rectangular volume between two lines, ignoring interior bars. Trapping Rain Water sums the trapped water above every bar based on left-max and right-max barriers.",
+        "keyPoints": [
+          "Container is single max pair",
+          "Trapping Rain Water is cumulative sum",
+          "Both use two pointers but compute different metrics"
+        ]
+      },
+      {
+        "id": "q4-52",
+        "question": "What are the key test cases for this problem?",
+        "category": "Testing & QA",
+        "whatInterviewerChecks": "Edge case awareness.",
+        "bestReplyScript": "1) Array of length 2; 2) Flat array where all bars are identical; 3) Strictly increasing staircase; 4) Deep V-shape with tall edges and flat middle.",
+        "keyPoints": [
+          "Minimal length 2",
+          "Identical heights",
+          "Monotonic arrays"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-52",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-52",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-52",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-52",
+        "title": "Moving Taller Pointer Inward",
+        "description": "Advancing the taller height pointer instead of the shorter height pointer.",
+        "badSnippet": "if heights[l] > heights[r]: # BUG: moves taller line\n    l += 1\nelse:\n    r -= 1",
+        "failingInput": "heights = [1, 8, 6, 2, 5, 4, 8, 3, 7]",
+        "consequence": "Misses optimal container [8, ..., 7] of area 49 because it discards the taller boundary too early.",
+        "howToFix": "Move the shorter pointer: `if heights[l] < heights[r]: l += 1`."
+      },
+      {
+        "id": "m2-52",
+        "title": "Subtracting Heights Instead of Finding Minimum",
+        "description": "Taking the difference of heights instead of the minimum vertical height.",
+        "badSnippet": "area = (r - l) * abs(heights[r] - heights[l]) # BUG: difference instead of min",
+        "failingInput": "heights = [1, 1]",
+        "consequence": "Calculates area = 1 * 0 = 0 instead of 1 * 1 = 1.",
+        "howToFix": "Use `min(heights[l], heights[r])` for water capacity."
+      },
+      {
+        "id": "m3-52",
+        "title": "Terminating Early on Equal Heights",
+        "description": "Breaking when heights are equal instead of moving a pointer.",
+        "badSnippet": "if heights[l] == heights[r]: break # BUG: stops too early",
+        "failingInput": "heights = [2, 3, 4, 5, 18, 17, 6]",
+        "consequence": "Terminates before discovering tall interior pairs like [18, 17].",
+        "howToFix": "Advance either pointer when heights are equal."
+      }
     ]
-},
+  },
   "53": {
     "problemId": 53,
-    "problemTitle": "3Sum (LeetCode #15)",
+    "problemTitle": "3Sum",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Apple",
-        "Uber"
+      "Meta",
+      "Amazon",
+      "Microsoft",
+      "Uber"
     ],
     "tracing": {
-        "code": "1: nums = list(map(int, input().split()))\n2: nums.sort()\n3: triplets = []\n4: n = len(nums)\n5: \n6: for i in range(n - 2):\n7:     if nums[i] > 0:\n8:         break\n9:     if i > 0 and nums[i] == nums[i - 1]:\n10:         continue\n11:     l, r = i + 1, n - 1\n12:     while l < r:\n13:         s = nums[i] + nums[l] + nums[r]\n14:         if s < 0:\n15:             l += 1\n16:         elif s > 0:\n17:             r -= 1\n18:         else:\n19:             triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n20:             l += 1\n21:             r -= 1\n22:             while l < r and nums[l] == nums[l - 1]:\n23:                 l += 1\n24:             while l < r and nums[r] == nums[r + 1]:\n25:                 r -= 1\n26: \n27: if triplets:\n28:     for t in triplets:\n29:         print(t)\n30: else:\n31:     print(\"NONE\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for 3Sum (LeetCode #15)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 15,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 31,
-                "vars": {
-                    "output": "-1 -1 2\n-1 0 1"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: nums.sort()\n2: for i in range(n-2):\n3:     l, r = i+1, n-1\n4:     while l < r:\n5:         s = nums[i] + nums[l] + nums[r]\n6:         if s == 0: triplets.append(...); l += 1; r -= 1\n7:         elif s < 0: l += 1\n8:         else: r -= 1",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums": "[-4, -1, -1, 0, 1, 2]"
+          },
+          "explanation": "Sorted input array."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "i": "0",
+            "nums[i]": "-4",
+            "l": "1",
+            "r": "5"
+          },
+          "explanation": "Fix -4. Sums range from -4 + -1 + 2 = -3 to -4 + 1 + 2 = -1 (all < 0)."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "i": "1",
+            "nums[i]": "-1",
+            "l": "2",
+            "r": "5"
+          },
+          "explanation": "Fix -1. l points to -1 (idx 2), r points to 2 (idx 5)."
+        },
+        {
+          "step": 4,
+          "lineNumber": 5,
+          "vars": {
+            "sum": "-1 + -1 + 2 = 0",
+            "triplet": "[-1, -1, 2]"
+          },
+          "explanation": "Sum is 0! Found first valid triplet [-1, -1, 2]."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "l": "3",
+            "r": "4",
+            "sum": "-1 + 0 + 1 = 0",
+            "triplet": "[-1, 0, 1]"
+          },
+          "explanation": "Advance pointers. Next sum is 0! Found [-1, 0, 1]."
+        },
+        {
+          "step": 6,
+          "lineNumber": 8,
+          "vars": {
+            "triplets": "\"[-1 -1 2, -1 0 1]\""
+          },
+          "explanation": "Output all unique triplets."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-53",
-            "question": "How would you explain your 3Sum (LeetCode #15) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve 3Sum (LeetCode #15) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Sorting in O(n log n) and running two pointers for each fixed element runs in O(n^2) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "nums = list(map(int, input().split()))\nnums.sort()\ntriplets = []\nn = len(nums)\n\nfor i in range(n - 2):\n    if nums[i] > 0:\n        break\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    l, r = i + 1, n - 1\n    while l < r:\n        s = nums[i] + nums[l] + nums[r]\n        if s < 0:\n            l += 1\n        elif s > 0:\n            r -= 1\n        else:\n            triplets.append(f\"{nums[i]} {nums[l]} {nums[r]}\")\n            l += 1\n            r -= 1\n            while l < r and nums[l] == nums[l - 1]:\n                l += 1\n            while l < r and nums[r] == nums[r + 1]:\n                r -= 1\n\nif triplets:\n    for t in triplets:\n        print(t)\nelse:\n    print(\"NONE\")\n"
-        },
-        {
-            "id": "q2-53",
-            "question": "What are the most common edge cases to test for 3Sum (LeetCode #15)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-53",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-53",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-53",
+        "question": "How do you avoid duplicate triplets without using an auxiliary set?",
+        "category": "Deduplication Strategy",
+        "whatInterviewerChecks": "Pointer manipulation precision.",
+        "bestReplyScript": "By sorting the array first! We skip duplicate outer elements using `if i > 0 and nums[i] == nums[i - 1]: continue`. Once a matching triplet is found with two pointers, we advance `l` past identical values (`while l < r and nums[l] == nums[l-1]: l += 1`) and decrement `r` past identical values. This guarantees every combination is unique in O(1) extra space.",
+        "keyPoints": [
+          "Sort first",
+          "Skip duplicates at outer loop",
+          "Skip duplicates on left and right pointers"
+        ]
+      },
+      {
+        "id": "q2-53",
+        "question": "Can we optimize the outer loop to break early?",
+        "category": "Pruning Optimization",
+        "whatInterviewerChecks": "Early exit awareness.",
+        "bestReplyScript": "Yes! Since the array is sorted, if `nums[i] > 0`, the sum of any three numbers from index i onwards will strictly exceed 0 (as all following numbers are also positive). We can break the outer loop immediately when nums[i] > 0.",
+        "keyPoints": [
+          "nums[i] > 0 implies all following numbers are positive",
+          "Sum can never equal zero",
+          "Breaks outer loop early"
+        ]
+      },
+      {
+        "id": "q3-53",
+        "question": "Why is 3Sum O(n\u00b2) and not O(n log n)?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Big-O mastery.",
+        "bestReplyScript": "Sorting takes O(n log n). Then, the outer loop runs n times, and inside each iteration, the two pointers traverse the remaining array in O(n) linear time. Multiplying the outer loop by the inner pointer scan gives O(n * n) = O(n\u00b2), which dominates the initial O(n log n) sort.",
+        "keyPoints": [
+          "O(n log n) sort",
+          "n outer iterations * O(n) two-pointer scan",
+          "Total time is O(n\u00b2)"
+        ]
+      },
+      {
+        "id": "q4-53",
+        "question": "What if no triplet sums to zero?",
+        "category": "Output Specification",
+        "whatInterviewerChecks": "Handling empty results according to spec.",
+        "bestReplyScript": "The problem specification requires printing 'NONE' if no valid triplet exists. We check if our collected triplets list is non-empty before printing; if empty, we print 'NONE'.",
+        "keyPoints": [
+          "Check list emptiness",
+          "Print 'NONE' as fallback"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-53",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-53",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-53",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-53",
+        "title": "Using `nums[i] == nums[i+1]` to Skip Outer Duplicates",
+        "description": "Checking `nums[i] == nums[i+1]` skips the first occurrence of a number instead of the subsequent duplicate occurrences.",
+        "badSnippet": "if nums[i] == nums[i + 1]: continue # BUG: skips before evaluating!",
+        "failingInput": "nums = [-1, -1, 2]",
+        "consequence": "Skips the first -1 and misses the only valid triplet [-1, -1, 2].",
+        "howToFix": "Check `if i > 0 and nums[i] == nums[i - 1]: continue`."
+      },
+      {
+        "id": "m2-53",
+        "title": "Missing Inner Pointer Duplicate Skip",
+        "description": "Only incrementing l and decrementing r by 1 after a match without skipping duplicate values.",
+        "badSnippet": "triplets.append(...)\nl += 1\nr -= 1 # BUG: next elements might be identical, producing duplicate triplets",
+        "failingInput": "nums = [-2, 0, 0, 2, 2]",
+        "consequence": "Outputs duplicate triplet '-2 0 2' twice.",
+        "howToFix": "Use while loops to advance l and decrement r while adjacent values match."
+      },
+      {
+        "id": "m3-53",
+        "title": "Missing 'NONE' on Empty Output",
+        "description": "Printing nothing when no triplet sums to 0 instead of printing 'NONE'.",
+        "badSnippet": "# Only prints if found, leaves stdout empty if none",
+        "failingInput": "nums = [1, 2, 3]",
+        "consequence": "Test runner expects 'NONE', fails assertion.",
+        "howToFix": "Add `if not triplets: print('NONE')`."
+      }
     ]
-},
+  },
   "54": {
     "problemId": 54,
-    "problemTitle": "3Sum Closest (LeetCode #16)",
+    "problemTitle": "3Sum Closest",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Microsoft",
+      "Bloomberg",
+      "Google"
     ],
     "tracing": {
-        "code": "1: nums = list(map(int, input().split()))\n2: target = int(input())\n3: \n4: nums.sort()\n5: n = len(nums)\n6: closest = nums[0] + nums[1] + nums[2]\n7: \n8: for i in range(n - 2):\n9:     l, r = i + 1, n - 1\n10:     while l < r:\n11:         curr = nums[i] + nums[l] + nums[r]\n12:         if abs(curr - target) < abs(closest - target):\n13:             closest = curr\n14:         if curr < target:\n15:             l += 1\n16:         elif curr > target:\n17:             r -= 1\n18:         else:\n19:             closest = target\n20:             break\n21:     if closest == target:\n22:         break\n23: \n24: print(closest)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for 3Sum Closest (LeetCode #16)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 12,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 24,
-                "vars": {
-                    "output": "2"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: nums.sort()\n2: closest = sum(nums[:3])\n3: for i in range(n-2):\n4:     l, r = i+1, n-1\n5:     while l < r:\n6:         curr = nums[i] + nums[l] + nums[r]\n7:         if abs(curr - target) < abs(closest - target): closest = curr\n8:         if curr < target: l += 1\n9:         elif curr > target: r -= 1\n10:        else: break",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums": "[-4, -1, 1, 2]",
+            "target": "1"
+          },
+          "explanation": "Sort array."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "closest": "-4 + -1 + 1 = -4"
+          },
+          "explanation": "Initialize closest to first 3 elements."
+        },
+        {
+          "step": 3,
+          "lineNumber": 3,
+          "vars": {
+            "i": "0 (-4)",
+            "l": "1 (-1)",
+            "r": "3 (2)"
+          },
+          "explanation": "curr = -4 + -1 + 2 = -3. Distance = 4. closest updated to -3."
+        },
+        {
+          "step": 4,
+          "lineNumber": 8,
+          "vars": {
+            "curr": "-3 < target 1",
+            "action": "l += 1"
+          },
+          "explanation": "curr < target, advance left pointer to 2 (val 1)."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "i": "1 (-1)",
+            "l": "2 (1)",
+            "r": "3 (2)",
+            "curr": "2"
+          },
+          "explanation": "curr = -1 + 1 + 2 = 2. Distance = |2 - 1| = 1. closest updated to 2!"
+        },
+        {
+          "step": 6,
+          "lineNumber": 10,
+          "vars": {
+            "final_closest": "2"
+          },
+          "explanation": "Loop finishes, closest sum to target 1 is 2."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-54",
-            "question": "How would you explain your 3Sum Closest (LeetCode #16) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve 3Sum Closest (LeetCode #16) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Sorted array two-pointer scan achieves O(n^2) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nclosest = nums[0] + nums[1] + nums[2]\n\nfor i in range(n - 2):\n    l, r = i + 1, n - 1\n    while l < r:\n        curr = nums[i] + nums[l] + nums[r]\n        if abs(curr - target) < abs(closest - target):\n            closest = curr\n        if curr < target:\n            l += 1\n        elif curr > target:\n            r -= 1\n        else:\n            closest = target\n            break\n    if closest == target:\n        break\n\nprint(closest)\n"
-        },
-        {
-            "id": "q2-54",
-            "question": "What are the most common edge cases to test for 3Sum Closest (LeetCode #16)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-54",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-54",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-54",
+        "question": "How should you initialize the `closest` variable safely?",
+        "category": "Implementation Safety",
+        "whatInterviewerChecks": "Defensive coding habits.",
+        "bestReplyScript": "Never initialize `closest` to 0 or infinity (float('inf')), because the target could be negative or far away, leading to false comparisons. Always initialize `closest = nums[0] + nums[1] + nums[2]` using the first three elements of the sorted array.",
+        "keyPoints": [
+          "Don't initialize to 0",
+          "Initialize to nums[0] + nums[1] + nums[2]",
+          "Guarantees a valid real candidate sum from the array"
+        ]
+      },
+      {
+        "id": "q2-54",
+        "question": "Can we terminate early if current sum equals target?",
+        "category": "Optimization",
+        "whatInterviewerChecks": "Early exit logic.",
+        "bestReplyScript": "Yes! If `curr == target`, the distance is 0, which is the theoretical minimum distance possible. We can immediately return or break both loops.",
+        "keyPoints": [
+          "Distance 0 is optimal",
+          "Break out of search immediately"
+        ]
+      },
+      {
+        "id": "q3-54",
+        "question": "Why is the time complexity O(n\u00b2)?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Big-O proof.",
+        "bestReplyScript": "Sorting takes O(n log n). The outer loop runs n times, and inside, the two pointers traverse at most n elements. Total operations are O(n log n + n\u00b2) = O(n\u00b2).",
+        "keyPoints": [
+          "O(n log n) sorting",
+          "O(n\u00b2) two-pointer loop",
+          "Total O(n\u00b2)"
+        ]
+      },
+      {
+        "id": "q4-54",
+        "question": "How does 3Sum Closest differ from 3Sum?",
+        "category": "Pattern Comparison",
+        "whatInterviewerChecks": "Algorithmic differences.",
+        "bestReplyScript": "In 3Sum, we must find ALL unique triplets summing to exactly 0, which requires skipping duplicates. In 3Sum Closest, we only need to return ONE integer representing the closest sum, so duplicate skipping is an optional optimization rather than a correctness requirement.",
+        "keyPoints": [
+          "3Sum returns all unique triplets",
+          "3Sum Closest returns single integer sum",
+          "Distance tracking replaces exact equality check"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-54",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-54",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-54",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-54",
+        "title": "Initializing `closest = 0`",
+        "description": "Initializing closest to 0 instead of a real triplet sum causes bugs when target is large.",
+        "badSnippet": "closest = 0 # BUG: 0 might not be achievable by any triplet",
+        "failingInput": "nums = [1, 1, 1, 0], target = -100",
+        "consequence": "Triplets sum to 2 or 3. Code outputs 0 because abs(0 - (-100)) is never updated if condition is flawed.",
+        "howToFix": "Initialize `closest = nums[0] + nums[1] + nums[2]`."
+      },
+      {
+        "id": "m2-54",
+        "title": "Moving Both Pointers Inward on Distance Improvement",
+        "description": "Moving both pointers when distance improves instead of following directional sum comparison.",
+        "badSnippet": "if abs(curr - target) < abs(closest - target):\n    closest = curr\n    l += 1; r -= 1 # BUG: wrong directional decision",
+        "failingInput": "nums = [-1, 2, 1, -4], target = 1",
+        "consequence": "Skips valid combinations that could be even closer.",
+        "howToFix": "Base pointer movement on `if curr < target: l += 1 else: r -= 1`."
+      },
+      {
+        "id": "m3-54",
+        "title": "Forgetting to Sort Before Using Two Pointers",
+        "description": "Applying two pointers on unsorted array.",
+        "badSnippet": "# nums.sort() omitted!\nl, r = i + 1, n - 1",
+        "failingInput": "nums = [4, 0, 5, -5, 3, 3, 0, -4, -5]",
+        "consequence": "Directional assumptions fail completely, producing wildly inaccurate closest sum.",
+        "howToFix": "Call `nums.sort()` before running two pointers."
+      }
     ]
-},
+  },
   "55": {
     "problemId": 55,
-    "problemTitle": "4Sum (LeetCode #18)",
+    "problemTitle": "4Sum",
     "difficulty": "Medium",
     "companyTags": [
-        "Microsoft",
-        "Amazon",
-        "Bloomberg",
-        "Cisco"
+      "Amazon",
+      "Google",
+      "Apple",
+      "Uber"
     ],
     "tracing": {
-        "code": "1: nums = list(map(int, input().split()))\n2: target = int(input())\n3: \n4: nums.sort()\n5: n = len(nums)\n6: quads = []\n7: \n8: for i in range(n - 3):\n9:     if i > 0 and nums[i] == nums[i - 1]:\n10:         continue\n11:     for j in range(i + 1, n - 2):\n12:         if j > i + 1 and nums[j] == nums[j - 1]:\n13:             continue\n14:         l, r = j + 1, n - 1\n15:         while l < r:\n16:             s = nums[i] + nums[j] + nums[l] + nums[r]\n17:             if s < target:\n18:                 l += 1\n19:             elif s > target:\n20:                 r -= 1\n21:             else:\n22:                 quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n23:                 l += 1\n24:                 r -= 1\n25:                 while l < r and nums[l] == nums[l - 1]:\n26:                     l += 1\n27:                 while l < r and nums[r] == nums[r + 1]:\n28:                     r -= 1\n29: \n30: if quads:\n31:     for q in quads:\n32:         print(q)\n33: else:\n34:     print(\"NONE\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for 4Sum (LeetCode #18)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 17,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 34,
-                "vars": {
-                    "output": "-2 -1 1 2\n-2 0 0 2\n-1 0 0 1"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: nums.sort()\n2: for i in range(n-3):\n3:   for j in range(i+1, n-2):\n4:     l, r = j+1, n-1\n5:     while l < r:\n6:       s = nums[i]+nums[j]+nums[l]+nums[r]\n7:       if s == target: append; l+=1; r-=1",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums": "[-2, -1, 0, 0, 1, 2]",
+            "target": "0"
+          },
+          "explanation": "Sort array."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "i": "0 (-2)",
+            "j": "1 (-1)",
+            "l": "2 (0)",
+            "r": "5 (2)"
+          },
+          "explanation": "Fix -2 and -1. s = -2 + -1 + 0 + 2 = -1 < 0. Advance l."
+        },
+        {
+          "step": 3,
+          "lineNumber": 6,
+          "vars": {
+            "l": "4 (1)",
+            "s": "-2 + -1 + 1 + 2 = 0"
+          },
+          "explanation": "Found match: [-2, -1, 1, 2]!"
+        },
+        {
+          "step": 4,
+          "lineNumber": 3,
+          "vars": {
+            "i": "0 (-2)",
+            "j": "2 (0)",
+            "l": "3 (0)",
+            "r": "5 (2)"
+          },
+          "explanation": "Next pair: -2, 0, 0, 2 -> sum = 0. Match [-2, 0, 0, 2]!"
+        },
+        {
+          "step": 5,
+          "lineNumber": 7,
+          "vars": {
+            "quads": "[-2 -1 1 2, -2 0 0 2, -1 0 0 1]"
+          },
+          "explanation": "All unique quadruplets gathered."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-55",
-            "question": "How would you explain your 4Sum (LeetCode #18) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve 4Sum (LeetCode #18) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Generalization of 2-pointer scan runs in O(n^3) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "nums = list(map(int, input().split()))\ntarget = int(input())\n\nnums.sort()\nn = len(nums)\nquads = []\n\nfor i in range(n - 3):\n    if i > 0 and nums[i] == nums[i - 1]:\n        continue\n    for j in range(i + 1, n - 2):\n        if j > i + 1 and nums[j] == nums[j - 1]:\n            continue\n        l, r = j + 1, n - 1\n        while l < r:\n            s = nums[i] + nums[j] + nums[l] + nums[r]\n            if s < target:\n                l += 1\n            elif s > target:\n                r -= 1\n            else:\n                quads.append(f\"{nums[i]} {nums[j]} {nums[l]} {nums[r]}\")\n                l += 1\n                r -= 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                while l < r and nums[r] == nums[r + 1]:\n                    r -= 1\n\nif quads:\n    for q in quads:\n        print(q)\nelse:\n    print(\"NONE\")\n"
-        },
-        {
-            "id": "q2-55",
-            "question": "What are the most common edge cases to test for 4Sum (LeetCode #18)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-55",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-55",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-55",
+        "question": "How do you generalize 2Sum, 3Sum, and 4Sum into a general K-Sum algorithm?",
+        "category": "Algorithmic Generalization",
+        "whatInterviewerChecks": "Recursive design skills.",
+        "bestReplyScript": "We use recursion! Base case is K == 2, which we solve in O(n) using two pointers on the sorted array. For K > 2, we loop through the array, fix the first element, and recursively call KSum with K - 1, target - nums[i], starting from index i + 1. Duplicate skipping is applied at each recursive layer.",
+        "keyPoints": [
+          "K == 2 base case with two pointers",
+          "Recursive KSum(k - 1, target - nums[i])",
+          "Deduplication at every depth"
+        ]
+      },
+      {
+        "id": "q2-55",
+        "question": "Why is the duplicate check for j `if j > i + 1 and nums[j] == nums[j - 1]`?",
+        "category": "Edge Cases & Off-by-One",
+        "whatInterviewerChecks": "Loop boundary precision.",
+        "bestReplyScript": "The condition `j > i + 1` ensures that the FIRST element of the inner loop (when j == i + 1) is never skipped, even if it happens to be equal to nums[i]! We only want to skip subsequent duplicate values of j.",
+        "keyPoints": [
+          "j == i + 1 is the first valid candidate",
+          "Only skip when j > i + 1 and matches previous j",
+          "Prevents false skips on valid repeated values"
+        ]
+      },
+      {
+        "id": "q3-55",
+        "question": "What is the time and space complexity of optimal 4Sum?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Big-O mastery.",
+        "bestReplyScript": "Sorting is O(n log n). Two nested loops iterate O(n\u00b2), and the innermost two-pointer scan takes O(n). Multiplying gives O(n\u00b3) overall time complexity. Auxiliary space is O(1) beyond sorting and the output array.",
+        "keyPoints": [
+          "O(n\u00b3) time",
+          "O(1) auxiliary space",
+          "Optimal for comparison-based search"
+        ]
+      },
+      {
+        "id": "q4-55",
+        "question": "Can integer overflow occur during summation in 4Sum?",
+        "category": "Language Internals & Systems",
+        "whatInterviewerChecks": "Systems awareness and type safety.",
+        "bestReplyScript": "In languages with fixed 32-bit signed integers (like C++ or Java), four large integers near 10\u2079 will sum to 4 * 10\u2079, overflowing a 32-bit signed int (max ~2 * 10\u2079) into negative values. In C++/Java, we must cast to 64-bit `long long`. In Python, integers have arbitrary precision, so overflow does not crash the program, but type awareness is essential in interviews.",
+        "keyPoints": [
+          "4 * 10\u2079 exceeds 32-bit signed int max",
+          "Cast to long in C++/Java",
+          "Python handles arbitrarily large integers"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-55",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-55",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-55",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-55",
+        "title": "Checking `j > 0` instead of `j > i + 1`",
+        "description": "Checking `j > 0` in the inner loop compares `nums[j]` with `nums[i]`, skipping the first candidate if it matches nums[i].",
+        "badSnippet": "if j > 0 and nums[j] == nums[j - 1]: continue # BUG: compares across loops!",
+        "failingInput": "nums = [2, 2, 2, 2, 2], target = 8",
+        "consequence": "Skips valid quadruplets because index 1 matches index 0.",
+        "howToFix": "Use `if j > i + 1 and nums[j] == nums[j - 1]: continue`."
+      },
+      {
+        "id": "m2-55",
+        "title": "Not Skipping Duplicates on Two Pointers",
+        "description": "Only doing `l += 1; r -= 1` without skipping identical adjacent elements.",
+        "badSnippet": "quads.append(...); l += 1; r -= 1 # BUG: duplicates produced",
+        "failingInput": "nums = [-2, 0, 0, 0, 2], target = 0",
+        "consequence": "Emits identical quadruplet multiple times.",
+        "howToFix": "Add while loops to advance l and decrement r past duplicates."
+      },
+      {
+        "id": "m3-55",
+        "title": "Omitting 'NONE' on Empty Match",
+        "description": "Not printing 'NONE' when no quadruplet sums to target.",
+        "badSnippet": "for q in quads: print(q) # BUG: nothing printed if empty",
+        "failingInput": "nums = [1, 2, 3, 4], target = 100",
+        "consequence": "Automated grader expects 'NONE', fails on empty stdout.",
+        "howToFix": "Add `if not quads: print('NONE')`."
+      }
     ]
-},
+  },
   "56": {
     "problemId": 56,
-    "problemTitle": "Longest Substring Without Repeating Characters (LeetCode #3)",
+    "problemTitle": "Longest Substring Without Repeating Characters",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Apple",
-        "Uber"
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: import sys\n2: lines = sys.stdin.read().splitlines()\n3: s = lines[0] if lines else \"\"\n4: \n5: seen = {}\n6: start = 0\n7: max_len = 0\n8: \n9: for end, char in enumerate(s):\n10:     if char in seen and seen[char] >= start:\n11:         start = seen[char] + 1\n12:     seen[char] = end\n13:     max_len = max(max_len, end - start + 1)\n14: \n15: print(max_len)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Longest Substring Without Repeating Characters (LeetCode #3)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 7,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 15,
-                "vars": {
-                    "output": "3"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: seen = {}; start = 0; max_len = 0\n2: for end, char in enumerate(s):\n3:     if char in seen and seen[char] >= start:\n4:         start = seen[char] + 1\n5:     seen[char] = end\n6:     max_len = max(max_len, end - start + 1)\n7: print(max_len)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "s": "\"abcabcbb\"",
+            "start": "0",
+            "max_len": "0"
+          },
+          "explanation": "Initialize empty state."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "end": "0",
+            "char": "'a'",
+            "seen": "{'a': 0}",
+            "window": "\"a\"",
+            "max_len": "1"
+          },
+          "explanation": "First char 'a' -> window [0..0], length 1."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "end": "1",
+            "char": "'b'",
+            "seen": "{'a': 0, 'b': 1}",
+            "window": "\"ab\"",
+            "max_len": "2"
+          },
+          "explanation": "Second char 'b' -> window [0..1], length 2."
+        },
+        {
+          "step": 4,
+          "lineNumber": 2,
+          "vars": {
+            "end": "2",
+            "char": "'c'",
+            "seen": "{'a': 0, 'b': 1, 'c': 2}",
+            "window": "\"abc\"",
+            "max_len": "3"
+          },
+          "explanation": "Third char 'c' -> window [0..2], length 3."
+        },
+        {
+          "step": 5,
+          "lineNumber": 3,
+          "vars": {
+            "end": "3",
+            "char": "'a'",
+            "seen['a']": "0",
+            "start": "1",
+            "window": "\"bca\"",
+            "max_len": "3"
+          },
+          "explanation": "'a' is in seen at 0 >= start 0! Jump start to 0 + 1 = 1. Window is now 'bca'."
+        },
+        {
+          "step": 6,
+          "lineNumber": 7,
+          "vars": {
+            "max_len": "3"
+          },
+          "explanation": "Remaining duplicates do not exceed 3. Final answer is 3."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-56",
-            "question": "How would you explain your Longest Substring Without Repeating Characters (LeetCode #3) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Longest Substring Without Repeating Characters (LeetCode #3) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Sliding window with hash map tracks seen indices in a single pass in O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\nseen = {}\nstart = 0\nmax_len = 0\n\nfor end, char in enumerate(s):\n    if char in seen and seen[char] >= start:\n        start = seen[char] + 1\n    seen[char] = end\n    max_len = max(max_len, end - start + 1)\n\nprint(max_len)\n"
-        },
-        {
-            "id": "q2-56",
-            "question": "What are the most common edge cases to test for Longest Substring Without Repeating Characters (LeetCode #3)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-56",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-56",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-56",
+        "question": "Why is the condition `seen[char] >= start` necessary?",
+        "category": "Algorithmic Precision",
+        "whatInterviewerChecks": "Understanding window boundaries.",
+        "bestReplyScript": "Because our hash map retains positions of characters seen throughout the entire string! If a character was seen at index 2, but our window has already moved past it (e.g. `start = 5`), that character is no longer inside the current active window. Without checking `seen[char] >= start`, we would mistakenly jump `start` BACKWARD to index 3, corrupting the window.",
+        "keyPoints": [
+          "Hash map keeps global history",
+          "Characters before start are outside the current window",
+          "Prevents start pointer from moving backward"
+        ]
+      },
+      {
+        "id": "q2-56",
+        "question": "What is the space complexity if the alphabet includes all Unicode characters?",
+        "category": "Space Complexity",
+        "whatInterviewerChecks": "Alphabet size bounds (\u03a3).",
+        "bestReplyScript": "The space complexity is O(min(n, \u03a3)), where n is the length of the string and \u03a3 is the size of the character set. For standard lowercase English, \u03a3 = 26. For ASCII, \u03a3 = 128. For general Unicode, the dictionary size can grow up to min(n, total_unique_unicode_characters).",
+        "keyPoints": [
+          "O(min(n, \u03a3))",
+          "Bounded by alphabet size",
+          "O(1) if character set is fixed (e.g. 128 ASCII)"
+        ]
+      },
+      {
+        "id": "q3-56",
+        "question": "How do you handle empty or whitespace-only strings?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Input sanitization.",
+        "bestReplyScript": "For an empty string, the loop does not run and `max_len` remains 0. For strings with spaces or repeated characters like '   ', the first space gives length 1, and subsequent spaces jump start forward, correctly reporting max length 1.",
+        "keyPoints": [
+          "Empty string returns 0",
+          "Spaces are valid characters",
+          "Consistent handling with no special cases"
+        ]
+      },
+      {
+        "id": "q4-56",
+        "question": "Can this be solved using an array instead of a hash map?",
+        "category": "Low-Level Optimization",
+        "whatInterviewerChecks": "Performance optimization in C/C++ or low-level systems.",
+        "bestReplyScript": "Yes! If the character set is standard ASCII, we can allocate a fixed-size integer array of size 128 or 256 initialized to -1. Indexing `arr[ord(char)]` provides O(1) direct memory access with zero hashing overhead or collision management.",
+        "keyPoints": [
+          "Fixed array of size 128/256",
+          "Direct indexing via ord(char)",
+          "Zero hash collision overhead"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-56",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-56",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-56",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-56",
+        "title": "Jumping `start` Backward",
+        "description": "Failing to check `seen[char] >= start` pulls `start` back to an old index.",
+        "badSnippet": "if char in seen: # BUG: does not check if inside current window!\n    start = seen[char] + 1",
+        "failingInput": "s = \"abba\"",
+        "consequence": "At second 'a' (idx 3), jumps start back to 1 (first 'a' + 1), including the duplicate 'b' inside the window.",
+        "howToFix": "Use `if char in seen and seen[char] >= start: start = seen[char] + 1`."
+      },
+      {
+        "id": "m2-56",
+        "title": "Crashing on Empty Input",
+        "description": "Using `sys.stdin.read().split()[0]` on empty input causes IndexError.",
+        "badSnippet": "s = sys.stdin.read().split()[0] # BUG: crashes if input is empty",
+        "failingInput": "s = \"\"",
+        "consequence": "Throws IndexError: list index out of range.",
+        "howToFix": "Use `lines = sys.stdin.read().splitlines(); s = lines[0] if lines else ''`."
+      },
+      {
+        "id": "m3-56",
+        "title": "Window Length Off-by-One",
+        "description": "Calculating window size as `end - start` instead of `end - start + 1`.",
+        "badSnippet": "max_len = max(max_len, end - start) # BUG: undercounts by 1",
+        "failingInput": "s = \"a\"",
+        "consequence": "Outputs 0 instead of 1 for a single character string.",
+        "howToFix": "Use `end - start + 1` for inclusive range size."
+      }
     ]
-},
+  },
   "57": {
     "problemId": 57,
-    "problemTitle": "Longest Palindromic Substring (LeetCode #5)",
+    "problemTitle": "Longest Palindromic Substring",
     "difficulty": "Medium",
     "companyTags": [
-        "Microsoft",
-        "Amazon",
-        "Bloomberg",
-        "Cisco"
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Google"
     ],
     "tracing": {
-        "code": "1: s = input()\n2: \n3: if not s:\n4:     print(\"\")\n5: else:\n6:     def expand(l, r):\n7:         while l >= 0 and r < len(s) and s[l] == s[r]:\n8:             l -= 1\n9:             r += 1\n10:         return s[l + 1:r]\n11: \n12:     longest = \"\"\n13:     for i in range(len(s)):\n14:         p1 = expand(i, i)\n15:         if len(p1) > len(longest):\n16:             longest = p1\n17:         p2 = expand(i, i + 1)\n18:         if len(p2) > len(longest):\n19:             longest = p2\n20: \n21:     print(longest)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Longest Palindromic Substring (LeetCode #5)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 10,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 21,
-                "vars": {
-                    "output": "bab"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: def expand(l, r): ...\n2: for i in range(len(s)):\n3:     p1 = expand(i, i)\n4:     p2 = expand(i, i+1)\n5:     longest = max(longest, p1, p2, key=len)\n6: print(longest)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 2,
+          "vars": {
+            "s": "\"babad\"",
+            "i": "0 ('b')",
+            "longest": "\"\""
+          },
+          "explanation": "Odd center at 0: \"b\" (len 1). Even center (0,1): none. longest=\"b\"."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "i": "1 ('a')",
+            "odd_center": "expand(1, 1)",
+            "result": "\"bab\""
+          },
+          "explanation": "Expand from 'a': s[0]=='b' matches s[2]=='b'. Palindrome \"bab\" (len 3)."
+        },
+        {
+          "step": 3,
+          "lineNumber": 5,
+          "vars": {
+            "longest": "\"bab\""
+          },
+          "explanation": "Update longest to \"bab\"."
+        },
+        {
+          "step": 4,
+          "lineNumber": 3,
+          "vars": {
+            "i": "2 ('b')",
+            "odd_center": "expand(2, 2)",
+            "result": "\"aba\""
+          },
+          "explanation": "Expand from 'b': \"aba\" (len 3). Does not strictly exceed len 3."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "final_longest": "\"bab\""
+          },
+          "explanation": "Completed all centers. Returns \"bab\"."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-57",
-            "question": "How would you explain your Longest Palindromic Substring (LeetCode #5) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Longest Palindromic Substring (LeetCode #5) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Expanding around 2n - 1 centers checks palindromes in O(n^2) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "s = input()\n\nif not s:\n    print(\"\")\nelse:\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        return s[l + 1:r]\n\n    longest = \"\"\n    for i in range(len(s)):\n        p1 = expand(i, i)\n        if len(p1) > len(longest):\n            longest = p1\n        p2 = expand(i, i + 1)\n        if len(p2) > len(longest):\n            longest = p2\n\n    print(longest)\n"
-        },
-        {
-            "id": "q2-57",
-            "question": "What are the most common edge cases to test for Longest Palindromic Substring (LeetCode #5)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-57",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-57",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-57",
+        "question": "Why are there 2n - 1 centers in expand-around-center?",
+        "category": "Theoretical Rigor",
+        "whatInterviewerChecks": "Understanding odd vs even palindromes.",
+        "bestReplyScript": "A palindrome can be centered on a single character (e.g. 'aba', odd length) or centered between two adjacent characters (e.g. 'abba', even length). There are n possible single-character centers and n - 1 possible between-character centers. Adding them together gives n + (n - 1) = 2n - 1 total centers to check.",
+        "keyPoints": [
+          "n odd centers at each index",
+          "n - 1 even centers between adjacent pairs",
+          "Total 2n - 1 possible reflection axes"
+        ]
+      },
+      {
+        "id": "q2-57",
+        "question": "Why is Expand Around Center preferred over 2D Dynamic Programming?",
+        "category": "Trade-offs & Optimization",
+        "whatInterviewerChecks": "Practical performance considerations.",
+        "bestReplyScript": "Both algorithms have O(n\u00b2) worst-case time complexity. However, Expand Around Center uses strictly O(1) auxiliary space, whereas DP requires an O(n\u00b2) boolean table that causes cache misses and Memory Limit Exceeded for large n. Furthermore, Expand Around Center often terminates expansion early on mismatches, making its average time much faster.",
+        "keyPoints": [
+          "O(1) space vs O(n\u00b2) space",
+          "Better CPU cache locality",
+          "Early termination on mismatched characters"
+        ]
+      },
+      {
+        "id": "q3-57",
+        "question": "Is there a linear O(n) algorithm for this problem?",
+        "category": "Advanced Algorithms",
+        "whatInterviewerChecks": "Awareness of Manacher's Algorithm.",
+        "bestReplyScript": "Yes! Manacher's Algorithm solves Longest Palindromic Substring in linear O(n) time and O(n) space by inserting boundary delimiters (#) and reusing previously computed palindrome radii using symmetry mirroring, avoiding redundant character comparisons.",
+        "keyPoints": [
+          "Manacher's Algorithm achieves O(n) time",
+          "Uses palindrome symmetry to skip redundant expansions",
+          "Usually not required to code from scratch in a 45-min interview"
+        ]
+      },
+      {
+        "id": "q4-57",
+        "question": "What if multiple palindromic substrings have the same maximum length?",
+        "category": "Specification",
+        "whatInterviewerChecks": "Following problem ties specification.",
+        "bestReplyScript": "Standard interview convention specifies returning the first occurring substring of maximum length. We enforce this using `if len(candidate) > len(longest):` with strict inequality (`>`), preserving earlier occurrences.",
+        "keyPoints": [
+          "Strict inequality preserves first occurrence",
+          "Consistent deterministic behavior"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-57",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-57",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-57",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-57",
+        "title": "Forgetting Even-Length Palindromes",
+        "description": "Only calling `expand(i, i)` and omitting `expand(i, i + 1)`.",
+        "badSnippet": "longest = expand(i, i) # BUG: misses even palindromes like 'bb'",
+        "failingInput": "s = \"cbbd\"",
+        "consequence": "Returns 'b' instead of 'bb'.",
+        "howToFix": "Always check both `expand(i, i)` and `expand(i, i + 1)`."
+      },
+      {
+        "id": "m2-57",
+        "title": "Off-by-One Slicing on Expansion Exit",
+        "description": "Returning `s[l:r + 1]` instead of `s[l + 1:r]` when expansion loop exits.",
+        "badSnippet": "while l >= 0 and r < len(s) and s[l] == s[r]:\n    l -= 1; r += 1\nreturn s[l:r + 1] # BUG: includes mismatched characters!",
+        "failingInput": "s = \"babad\"",
+        "consequence": "Includes the characters that caused the while-loop to terminate.",
+        "howToFix": "Return `s[l + 1:r]` to back up past the mismatched characters."
+      },
+      {
+        "id": "m3-57",
+        "title": "Crashing on Empty String",
+        "description": "Not checking if input string is empty before accessing `s[0]`.",
+        "badSnippet": "s = input()\nlongest = s[0] # BUG: IndexError on empty string",
+        "failingInput": "s = \"\"",
+        "consequence": "Crashes with IndexError: string index out of range.",
+        "howToFix": "Add `if not s: print(''); return` guard."
+      }
     ]
-},
+  },
   "58": {
     "problemId": 58,
-    "problemTitle": "Zigzag Conversion (LeetCode #6)",
+    "problemTitle": "Zigzag Conversion",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Google",
+      "PayPal",
+      "Bloomberg"
     ],
     "tracing": {
-        "code": "1: s = input()\n2: num_rows = int(input())\n3: \n4: if num_rows == 1 or num_rows >= len(s):\n5:     print(s)\n6: else:\n7:     rows = [''] * num_rows\n8:     curr = 0\n9:     step = 1\n10: \n11:     for char in s:\n12:         rows[curr] += char\n13:         if curr == 0:\n14:             step = 1\n15:         elif curr == num_rows - 1:\n16:             step = -1\n17:         curr += step\n18: \n19:     print(''.join(rows))",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Zigzag Conversion (LeetCode #6)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 9,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 19,
-                "vars": {
-                    "output": "PAHNAPLSIIGYIR"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: rows = [''] * num_rows\n2: curr = 0; step = 1\n3: for char in s:\n4:     rows[curr] += char\n5:     if curr == 0: step = 1\n6:     elif curr == num_rows - 1: step = -1\n7:     curr += step\n8: print(''.join(rows))",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "s": "\"PAYPALISHIRING\"",
+            "num_rows": "3",
+            "rows": "['', '', '']"
+          },
+          "explanation": "Initialize 3 row buckets."
+        },
+        {
+          "step": 2,
+          "lineNumber": 4,
+          "vars": {
+            "char": "'P'",
+            "curr": "0",
+            "rows": "['P', '', '']",
+            "step": "1"
+          },
+          "explanation": "'P' to row 0. Step is +1."
+        },
+        {
+          "step": 3,
+          "lineNumber": 4,
+          "vars": {
+            "char": "'A'",
+            "curr": "1",
+            "rows": "['P', 'A', '']",
+            "step": "1"
+          },
+          "explanation": "'A' to row 1. Step is +1."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "char": "'Y'",
+            "curr": "2",
+            "rows": "['P', 'A', 'Y']",
+            "step": "-1"
+          },
+          "explanation": "'Y' to row 2 (bottom boundary!). Reverses step to -1."
+        },
+        {
+          "step": 5,
+          "lineNumber": 4,
+          "vars": {
+            "char": "'P'",
+            "curr": "1",
+            "rows": "['P', 'AP', 'Y']",
+            "step": "-1"
+          },
+          "explanation": "'P' to row 1 (moving up)."
+        },
+        {
+          "step": 6,
+          "lineNumber": 8,
+          "vars": {
+            "result": "\"PAHNAPLSIIGYIR\""
+          },
+          "explanation": "Joined rows produce final converted string."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-58",
-            "question": "How would you explain your Zigzag Conversion (LeetCode #6) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Zigzag Conversion (LeetCode #6) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Simulating the row index direction bounce visits each character exactly once in O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "s = input()\nnum_rows = int(input())\n\nif num_rows == 1 or num_rows >= len(s):\n    print(s)\nelse:\n    rows = [''] * num_rows\n    curr = 0\n    step = 1\n\n    for char in s:\n        rows[curr] += char\n        if curr == 0:\n            step = 1\n        elif curr == num_rows - 1:\n            step = -1\n        curr += step\n\n    print(''.join(rows))\n"
-        },
-        {
-            "id": "q2-58",
-            "question": "What are the most common edge cases to test for Zigzag Conversion (LeetCode #6)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-58",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-58",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-58",
+        "question": "What happens if num_rows == 1?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Boundary condition handling.",
+        "bestReplyScript": "If num_rows == 1, there is no bouncing; all characters stay on row 0. Without an explicit guard (`if num_rows == 1: return s`), `curr == num_rows - 1` triggers immediately and causes oscillating step increments that crash or corrupt indexing. Handling `num_rows == 1` as an early exit ensures O(1) instantaneous return.",
+        "keyPoints": [
+          "num_rows == 1 has no vertical dimension",
+          "Must return original string s directly",
+          "Prevents infinite or broken step oscillation"
+        ]
+      },
+      {
+        "id": "q2-58",
+        "question": "What is the time complexity of the row-bucket solution?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "String builder cost in Python.",
+        "bestReplyScript": "We iterate through the string of length n once. In Python, appending characters to a list or string inside an array takes amortized O(1) time. Finally, `''.join(rows)` concatenates all n characters in O(n) time. Total time complexity is strictly linear O(n).",
+        "keyPoints": [
+          "Single pass over n characters",
+          "Amortized O(1) per character",
+          "Final join is O(n), total O(n)"
+        ]
+      },
+      {
+        "id": "q3-58",
+        "question": "How does the mathematical cycle formula determine diagonal positions?",
+        "category": "Mathematical Formulation",
+        "whatInterviewerChecks": "Geometric formula derivation.",
+        "bestReplyScript": "A full zigzag cycle goes down `num_rows - 1` steps and back up `num_rows - 1` steps, making the cycle length `2 * num_rows - 2`. For a vertical character at index `i`, its paired diagonal counterpart in the same cycle is reflected across the bottom row, given by formula `i + cycle - 2 * r`.",
+        "keyPoints": [
+          "Cycle length = 2 * num_rows - 2",
+          "Diagonal character index = i + cycle - 2 * r",
+          "Top and bottom rows do not have diagonal characters"
+        ]
+      },
+      {
+        "id": "q4-58",
+        "question": "How would you handle very large strings that do not fit in memory?",
+        "category": "Systems & Streaming",
+        "whatInterviewerChecks": "Scalability.",
+        "bestReplyScript": "Instead of buffering all rows in memory, we can use the mathematical cycle approach to stream the output row by row. For each row r from 0 to num_rows - 1, we read characters from disk at calculated periodic offsets, flushing to the output stream immediately, keeping RAM usage to O(1).",
+        "keyPoints": [
+          "Stream output row-by-row",
+          "Seek offsets directly on disk",
+          "O(1) memory footprint"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-58",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-58",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-58",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-58",
+        "title": "Infinite Loop on `num_rows = 1`",
+        "description": "Failing to handle `num_rows = 1` causes `curr` to bounce infinitely at row 0.",
+        "badSnippet": "# Missing num_rows == 1 guard!\nstep = 1\nfor char in s:\n    rows[curr] += char\n    if curr == 0: step = 1\n    elif curr == num_rows - 1: step = -1",
+        "failingInput": "s = \"AB\", num_rows = 1",
+        "consequence": "curr becomes 1, causing IndexError: list index out of range on rows of size 1.",
+        "howToFix": "Add `if num_rows == 1 or num_rows >= len(s): print(s); return` at start."
+      },
+      {
+        "id": "m2-58",
+        "title": "Using `if` instead of `elif` for Boundary Check",
+        "description": "Using two independent `if` statements can immediately undo the step change when num_rows = 2.",
+        "badSnippet": "if curr == 0: step = 1\nif curr == num_rows - 1: step = -1 # BUG: flips step twice when num_rows=2",
+        "failingInput": "s = \"ABC\", num_rows = 2",
+        "consequence": "Direction gets corrupted on small row counts.",
+        "howToFix": "Use `if ... elif ...` to ensure only one boundary check executes."
+      },
+      {
+        "id": "m3-58",
+        "title": "Allocating Massive Sparse Matrix",
+        "description": "Creating an `n x num_rows` full matrix filled with empty spaces.",
+        "badSnippet": "grid = [[' ']*len(s) for _ in range(num_rows)] # BUG: Memory Limit Exceeded",
+        "failingInput": "s of length 100,000 with num_rows = 1000",
+        "consequence": "Allocates 100 million entries, crashing with Memory Limit Exceeded (MLE).",
+        "howToFix": "Use `rows = [''] * num_rows` to only store non-empty characters."
+      }
     ]
-},
+  },
   "59": {
     "problemId": 59,
-    "problemTitle": "String to Integer (atoi) (LeetCode #8)",
+    "problemTitle": "String to Integer (atoi)",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Microsoft",
+      "Bloomberg",
+      "Apple"
     ],
     "tracing": {
-        "code": "1: import sys\n2: lines = sys.stdin.read().splitlines()\n3: s = lines[0] if lines else \"\"\n4: \n5: s = s.lstrip()\n6: if not s:\n7:     print(0)\n8: else:\n9:     sign = 1\n10:     idx = 0\n11:     if s[0] == '-':\n12:         sign = -1\n13:         idx = 1\n14:     elif s[0] == '+':\n15:         idx = 1\n16: \n17:     val = 0\n18:     while idx < len(s) and s[idx].isdigit():\n19:         val = val * 10 + int(s[idx])\n20:         idx += 1\n21: \n22:     val = sign * val\n23:     INT_MIN = -2**31\n24:     INT_MAX = 2**31 - 1\n25:     if val < INT_MIN:\n26:         val = INT_MIN\n27:     elif val > INT_MAX:\n28:         val = INT_MAX\n29: \n30:     print(val)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for String to Integer (atoi) (LeetCode #8)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 15,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 30,
-                "vars": {
-                    "output": "42"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: s = s.lstrip()\n2: sign, idx = (1, 0) if s[0] != '-' else (-1, 1)\n3: val = 0\n4: while idx < len(s) and s[idx].isdigit():\n5:     val = val * 10 + int(s[idx]); idx += 1\n6: val = max(INT_MIN, min(INT_MAX, sign * val))\n7: print(val)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "input": "\"   -042\"",
+            "s": "\"-042\""
+          },
+          "explanation": "lstrip() trims leading spaces."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "s[0]": "'-'",
+            "sign": "-1",
+            "idx": "1"
+          },
+          "explanation": "Sign is negative, idx starts at 1."
+        },
+        {
+          "step": 3,
+          "lineNumber": 5,
+          "vars": {
+            "s[1]": "'0'",
+            "val": "0"
+          },
+          "explanation": "val = 0 * 10 + 0 = 0."
+        },
+        {
+          "step": 4,
+          "lineNumber": 5,
+          "vars": {
+            "s[2]": "'4'",
+            "val": "4"
+          },
+          "explanation": "val = 0 * 10 + 4 = 4."
+        },
+        {
+          "step": 5,
+          "lineNumber": 5,
+          "vars": {
+            "s[3]": "'2'",
+            "val": "42"
+          },
+          "explanation": "val = 4 * 10 + 2 = 42."
+        },
+        {
+          "step": 6,
+          "lineNumber": 6,
+          "vars": {
+            "val": "-42"
+          },
+          "explanation": "Apply sign: -42. Within 32-bit limits. Output -42."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-59",
-            "question": "How would you explain your String to Integer (atoi) (LeetCode #8) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve String to Integer (atoi) (LeetCode #8) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Finite-state machine parsing scans the string in linear O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if lines else \"\"\n\ns = s.lstrip()\nif not s:\n    print(0)\nelse:\n    sign = 1\n    idx = 0\n    if s[0] == '-':\n        sign = -1\n        idx = 1\n    elif s[0] == '+':\n        idx = 1\n\n    val = 0\n    while idx < len(s) and s[idx].isdigit():\n        val = val * 10 + int(s[idx])\n        idx += 1\n\n    val = sign * val\n    INT_MIN = -2**31\n    INT_MAX = 2**31 - 1\n    if val < INT_MIN:\n        val = INT_MIN\n    elif val > INT_MAX:\n        val = INT_MAX\n\n    print(val)\n"
-        },
-        {
-            "id": "q2-59",
-            "question": "What are the most common edge cases to test for String to Integer (atoi) (LeetCode #8)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-59",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-59",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-59",
+        "question": "How do you detect 32-bit integer overflow before multiplying?",
+        "category": "Low-Level Safety",
+        "whatInterviewerChecks": "Systems awareness in languages like C/C++.",
+        "bestReplyScript": "In languages like C or C++ where integer overflow causes undefined behavior, we cannot simply let the number overflow and check afterwards. Before multiplying `val * 10`, we check: `if val > INT_MAX // 10 or (val == INT_MAX // 10 and digit > INT_MAX % 10): return INT_MAX if sign == 1 else INT_MIN`. In Python, integers have arbitrary precision, so checking after accumulation is mathematically safe.",
+        "keyPoints": [
+          "Check before multiplication in C/C++",
+          "val > INT_MAX // 10 check",
+          "Python supports arbitrary precision"
+        ]
+      },
+      {
+        "id": "q2-59",
+        "question": "What are the essential edge cases for atoi?",
+        "category": "Edge Cases & QA",
+        "whatInterviewerChecks": "Comprehensive test coverage.",
+        "bestReplyScript": "1) Whitespace only (e.g. '   ') -> 0; 2) Sign only (e.g. '+', '-') -> 0; 3) Leading zeroes (e.g. '000042') -> 42; 4) Non-digit trailing characters (e.g. '4193 with words') -> 4193; 5) Words before digits (e.g. 'words 42') -> 0; 6) 32-bit overflows beyond -2\u00b3\u00b9 and 2\u00b3\u00b9 - 1.",
+        "keyPoints": [
+          "Trailing non-digits ignored",
+          "Leading non-digits abort parsing",
+          "Overflow clamping"
+        ]
+      },
+      {
+        "id": "q3-59",
+        "question": "Why does `int(\"1337c0d3\")` throw ValueError, but atoi must return 1337?",
+        "category": "Specification Difference",
+        "whatInterviewerChecks": "Understanding C standard library `atoi` behavior.",
+        "bestReplyScript": "Python's built-in `int()` requires the entire string to be a valid base-10 number. The C standard library `atoi` reads characters sequentially and simply terminates conversion at the first invalid character, keeping whatever valid prefix was read. Our manual parser implements the C-style specification.",
+        "keyPoints": [
+          "Python int() enforces full string validity",
+          "C atoi stops at first non-digit",
+          "Manual parser satisfies C atoi contract"
+        ]
+      },
+      {
+        "id": "q4-59",
+        "question": "Can `+` and `-` both appear together?",
+        "category": "Grammar & Parsing",
+        "whatInterviewerChecks": "Sign uniqueness.",
+        "bestReplyScript": "No, valid format permits at most ONE sign character immediately following the whitespace. If both appear (e.g. '+-12' or '-+1'), the second character is not a digit, so parsing terminates and yields 0.",
+        "keyPoints": [
+          "At most one sign permitted",
+          "+-12 is invalid and yields 0"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-59",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-59",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-59",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-59",
+        "title": "Passing Full String to `int()` Directly",
+        "description": "Calling `int(s)` directly without parsing prefix digits.",
+        "badSnippet": "val = int(s) # BUG: ValueError on '1337c0d3' or '42 words'",
+        "failingInput": "s = \"1337c0d3\"",
+        "consequence": "Crashes with ValueError: invalid literal for int() with base 10.",
+        "howToFix": "Parse digit by digit using `while idx < len(s) and s[idx].isdigit()`."
+      },
+      {
+        "id": "m2-59",
+        "title": "Forgetting 32-Bit Range Clamping",
+        "description": "Returning arbitrary large integer without clamping to [-2\u00b3\u00b9, 2\u00b3\u00b9 - 1].",
+        "badSnippet": "return sign * val # BUG: returns 9999999999999999999",
+        "failingInput": "s = \"-91283472332\"",
+        "consequence": "Returns -91283472332 instead of clamped minimum -2147483648.",
+        "howToFix": "Clamp using `max(-2**31, min(2**31 - 1, val))`."
+      },
+      {
+        "id": "m3-59",
+        "title": "Empty String Index Crash on `s[0]`",
+        "description": "Checking `if s[0] == '-'` before verifying string is non-empty.",
+        "badSnippet": "s = s.lstrip()\nif s[0] == '-': # BUG: IndexError if s was just spaces",
+        "failingInput": "s = \"   \"",
+        "consequence": "Crashes with IndexError: string index out of range.",
+        "howToFix": "Add `if not s: print(0); return` immediately after lstrip()."
+      }
     ]
-},
+  },
   "60": {
     "problemId": 60,
-    "problemTitle": "Longest Common Prefix (LeetCode #14)",
+    "problemTitle": "Longest Common Prefix",
     "difficulty": "Easy",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Adobe"
     ],
     "tracing": {
-        "code": "1: import sys\n2: line = sys.stdin.read().strip()\n3: strs = line.split() if line else []\n4: \n5: if not strs:\n6:     print(\"\")\n7: else:\n8:     strs.sort()\n9:     first, last = strs[0], strs[-1]\n10:     i = 0\n11:     while i < len(first) and i < len(last) and first[i] == last[i]:\n12:         i += 1\n13:     print(first[:i])",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Longest Common Prefix (LeetCode #14)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 6,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 13,
-                "vars": {
-                    "output": "fl"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: strs.sort()\n2: first, last = strs[0], strs[-1]\n3: i = 0\n4: while i < len(first) and i < len(last) and first[i] == last[i]: i += 1\n5: print(first[:i])",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "strs": "['flower', 'flow', 'flight']"
+          },
+          "explanation": "Input array."
+        },
+        {
+          "step": 2,
+          "lineNumber": 1,
+          "vars": {
+            "sorted": "['flight', 'flow', 'flower']"
+          },
+          "explanation": "Sort lexicographically."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "first": "'flight'",
+            "last": "'flower'"
+          },
+          "explanation": "Extreme boundaries: 'flight' and 'flower'."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "i": "0",
+            "first[0]": "'f'",
+            "last[0]": "'f'"
+          },
+          "explanation": "f == f -> i = 1."
+        },
+        {
+          "step": 5,
+          "lineNumber": 4,
+          "vars": {
+            "i": "1",
+            "first[1]": "'l'",
+            "last[1]": "'l'"
+          },
+          "explanation": "l == l -> i = 2."
+        },
+        {
+          "step": 6,
+          "lineNumber": 4,
+          "vars": {
+            "i": "2",
+            "first[2]": "'i'",
+            "last[2]": "'o'"
+          },
+          "explanation": "'i' != 'o' -> loop breaks. Common prefix: 'fl'."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-60",
-            "question": "How would you explain your Longest Common Prefix (LeetCode #14) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Longest Common Prefix (LeetCode #14) by employing the optimal Easy standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Comparing only the lexicographically smallest and largest string determines the prefix in O(n * log m + m) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\nline = sys.stdin.read().strip()\nstrs = line.split() if line else []\n\nif not strs:\n    print(\"\")\nelse:\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    print(first[:i])\n"
-        },
-        {
-            "id": "q2-60",
-            "question": "What are the most common edge cases to test for Longest Common Prefix (LeetCode #14)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-60",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-60",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-60",
+        "question": "Why does comparing only the first and last strings after sorting guarantee correctness?",
+        "category": "Mathematical Proof",
+        "whatInterviewerChecks": "Understanding lexicographical properties.",
+        "bestReplyScript": "In lexicographical ordering, strings are sorted by character order. If the first string and the last string both start with prefix P, then EVERY string positioned between them in the sorted sequence must also start with P. Therefore, the common prefix of the entire list is strictly identical to the common prefix of the first and last elements.",
+        "keyPoints": [
+          "Lexicographical sorting orders strings monotonically",
+          "If first and last share P, all intermediate strings share P",
+          "Reduces N comparisons to a single pair comparison"
+        ]
+      },
+      {
+        "id": "q2-60",
+        "question": "Between Sort Extremes and Vertical Scanning, which is better in practice?",
+        "category": "Trade-offs",
+        "whatInterviewerChecks": "Algorithmic decision making.",
+        "bestReplyScript": "Vertical Scanning is better in practice when the common prefix is short! If the first column differs, Vertical Scanning terminates in O(n) operations, whereas sorting takes O(n \u00b7 m log n). Sorting is superior when simplicity of code is prioritized.",
+        "keyPoints": [
+          "Vertical Scanning terminates early in O(n)",
+          "Sorting takes O(n \u00b7 m log n)",
+          "Vertical scan has optimal theoretical complexity"
+        ]
+      },
+      {
+        "id": "q3-60",
+        "question": "What if there is no common prefix?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Empty prefix handling.",
+        "bestReplyScript": "If the first characters do not match, the loop terminates at `i = 0`, and `first[:0]` evaluates to empty string `''`, which is correctly printed.",
+        "keyPoints": [
+          "i = 0 yields empty string",
+          "Prints blank line as required by spec"
+        ]
+      },
+      {
+        "id": "q4-60",
+        "question": "How would you solve this if strings are constantly inserted into an active database?",
+        "category": "Data Structures & Scale",
+        "whatInterviewerChecks": "Trie (Prefix Tree) knowledge.",
+        "bestReplyScript": "We would insert words into a Trie (Prefix Tree). The longest common prefix corresponds to walking down from the root while every node has exactly one child and is not an end-of-word marker. Tries support dynamic insertions and prefix queries in O(length) time.",
+        "keyPoints": [
+          "Trie data structure",
+          "Walk until branching factor > 1",
+          "Ideal for dynamic dictionary queries"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-60",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-60",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-60",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-60",
+        "title": "Index Out of Bounds in Vertical Scan",
+        "description": "Checking `s[i]` without first ensuring `i < len(s)`.",
+        "badSnippet": "for i in range(len(strs[0])):\n    for s in strs[1:]:\n        if s[i] != strs[0][i]: # BUG: crashes if s is shorter than strs[0]!",
+        "failingInput": "strs = [\"flower\", \"flow\"]",
+        "consequence": "At index 4, accessing flow[4] throws IndexError: string index out of range.",
+        "howToFix": "Check `if i == len(s) or s[i] != strs[0][i]:`."
+      },
+      {
+        "id": "m2-60",
+        "title": "Failing on Single Word Input",
+        "description": "Assuming there are at least two words.",
+        "badSnippet": "s1, s2 = strs[0], strs[1] # BUG: IndexError on ['a']",
+        "failingInput": "strs = [\"a\"]",
+        "consequence": "Crashes on single-word inputs.",
+        "howToFix": "If len(strs) == 1, immediately return strs[0]."
+      },
+      {
+        "id": "m3-60",
+        "title": "Splitting by Space in Multi-Word Inputs",
+        "description": "Using raw `input().split()` when empty input is provided.",
+        "badSnippet": "strs = input().split()\nfirst = strs[0] # BUG: IndexError on empty input",
+        "failingInput": "Empty input line",
+        "consequence": "Crashes with IndexError.",
+        "howToFix": "Verify `if not strs: print(''); sys.exit(0)`."
+      }
     ]
-},
+  },
   "61": {
     "problemId": 61,
-    "problemTitle": "Reverse Integer (LeetCode #7)",
+    "problemTitle": "Reverse Integer",
     "difficulty": "Medium",
     "companyTags": [
-        "Microsoft",
-        "Amazon",
-        "Bloomberg",
-        "Cisco"
+      "Amazon",
+      "Bloomberg",
+      "Apple",
+      "Google"
     ],
     "tracing": {
-        "code": "1: x = int(input())\n2: \n3: sign = -1 if x < 0 else 1\n4: rev = int(str(abs(x))[::-1]) * sign\n5: \n6: if rev < -2**31 or rev > 2**31 - 1:\n7:     print(0)\n8: else:\n9:     print(rev)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Reverse Integer (LeetCode #7)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 4,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 9,
-                "vars": {
-                    "output": "321"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: sign = -1 if x < 0 else 1; x = abs(x)\n2: rev = 0\n3: while x != 0:\n4:     digit = x % 10; x //= 10\n5:     rev = rev * 10 + digit\n6: rev *= sign\n7: if rev < INT_MIN or rev > INT_MAX: print(0)\n8: else: print(rev)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "x": "-123",
+            "sign": "-1",
+            "abs(x)": "123"
+          },
+          "explanation": "Extract negative sign, set x = 123."
+        },
+        {
+          "step": 2,
+          "lineNumber": 4,
+          "vars": {
+            "digit": "3",
+            "x": "12",
+            "rev": "3"
+          },
+          "explanation": "Pop 3 -> rev = 3."
+        },
+        {
+          "step": 3,
+          "lineNumber": 4,
+          "vars": {
+            "digit": "2",
+            "x": "1",
+            "rev": "32"
+          },
+          "explanation": "Pop 2 -> rev = 32."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "digit": "1",
+            "x": "0",
+            "rev": "321"
+          },
+          "explanation": "Pop 1 -> rev = 321. Loop terminates."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "rev": "-321"
+          },
+          "explanation": "Multiply by sign: -321. Within 32-bit limits. Print -321."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-61",
-            "question": "How would you explain your Reverse Integer (LeetCode #7) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Reverse Integer (LeetCode #7) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Digit extraction and 32-bit range verification runs in O(log_10 x) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "x = int(input())\n\nsign = -1 if x < 0 else 1\nrev = int(str(abs(x))[::-1]) * sign\n\nif rev < -2**31 or rev > 2**31 - 1:\n    print(0)\nelse:\n    print(rev)\n"
-        },
-        {
-            "id": "q2-61",
-            "question": "What are the most common edge cases to test for Reverse Integer (LeetCode #7)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-61",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-61",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-61",
+        "question": "Why does Python's modulo behavior on negative numbers require `abs(x)`?",
+        "category": "Language Internals",
+        "whatInterviewerChecks": "Understanding Python's floor division semantics.",
+        "bestReplyScript": "In Python, modulo follows floor division towards negative infinity: `-123 // 10 = -13` and `-123 % 10 = 7`, not `-3`! In C/C++, modulo truncates towards zero. To guarantee predictable decimal digit extraction in Python, we must always work with `abs(x)` and reapply the sign at the end.",
+        "keyPoints": [
+          "Python % follows floor division",
+          "-123 % 10 equals 7 in Python",
+          "abs(x) guarantees true decimal digit extraction"
+        ]
+      },
+      {
+        "id": "q2-61",
+        "question": "Why does reversing 1534236469 output 0?",
+        "category": "Overflow Handling",
+        "whatInterviewerChecks": "32-bit boundary checking.",
+        "bestReplyScript": "Reversing 1534236469 produces 9646324351. In a 32-bit signed integer system, the maximum allowable positive value is 2\u00b3\u00b9 - 1 = 2,147,483,647. Since 9,646,324,351 exceeds this maximum, integer overflow occurs. Per the problem specification, overflow conditions must output 0.",
+        "keyPoints": [
+          "32-bit max is 2,147,483,647",
+          "9.6 billion overflows 32 bits",
+          "Must output 0 on overflow"
+        ]
+      },
+      {
+        "id": "q3-61",
+        "question": "How are trailing zeroes handled, like 120 reversing to 21?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Leading zero elimination.",
+        "bestReplyScript": "When popping digits: first digit is `120 % 10 = 0`, giving `rev = 0`. Next digit is `12 % 10 = 2`, giving `rev = 0 * 10 + 2 = 2`. The leading zero is naturally absorbed by the mathematical accumulation `rev * 10`.",
+        "keyPoints": [
+          "rev = 0 * 10 + next_digit absorbs leading zeroes",
+          "120 naturally becomes 21"
+        ]
+      },
+      {
+        "id": "q4-61",
+        "question": "What is the time complexity in terms of the input value?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Logarithmic relation to input size.",
+        "bestReplyScript": "An integer x has roughly `log\u2081\u2080(x)` decimal digits. Each iteration of the while loop divides x by 10, removing one digit. Thus, the loop runs in O(log\u2081\u2080 x) iterations. For a 32-bit integer, log\u2081\u2080(2\u00b3\u00b9) \u2248 10 iterations at most, which is strictly O(1) in practical computing.",
+        "keyPoints": [
+          "O(log\u2081\u2080 x) operations",
+          "At most 10 iterations for 32-bit integers",
+          "O(1) memory"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-61",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-61",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-61",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-61",
+        "title": "String Slicing Without Handling Minus Sign",
+        "description": "Calling `str(x)[::-1]` directly on negative numbers places the '-' at the end of the string.",
+        "badSnippet": "rev = int(str(x)[::-1]) # BUG: \"-123\" becomes \"321-\", crashing int()",
+        "failingInput": "x = -123",
+        "consequence": "Crashes with ValueError: invalid literal for int() with base 10: '321-'.",
+        "howToFix": "Use `sign = -1 if x < 0 else 1` and reverse `str(abs(x))`."
+      },
+      {
+        "id": "m2-61",
+        "title": "Missing 32-Bit Overflow Clamp",
+        "description": "Returning reversed numbers without checking if they exceed 32-bit limits.",
+        "badSnippet": "# Missing overflow check, returns rev directly",
+        "failingInput": "x = 1534236469",
+        "consequence": "Returns 9646324351 instead of 0.",
+        "howToFix": "Add `if rev < -2**31 or rev > 2**31 - 1: print(0)`."
+      },
+      {
+        "id": "m3-61",
+        "title": "Python Modulo on Negative Numbers",
+        "description": "Using `x % 10` directly while `x < 0` produces mathematical complement instead of digit.",
+        "badSnippet": "while x != 0:\n    rev = rev * 10 + x % 10 # BUG: -123 % 10 is 7!\n    x //= 10",
+        "failingInput": "x = -123",
+        "consequence": "Produces corrupted arithmetic result.",
+        "howToFix": "Store sign and apply `x = abs(x)` before loop."
+      }
     ]
-},
+  },
   "62": {
     "problemId": 62,
-    "problemTitle": "Palindrome Number (LeetCode #9)",
+    "problemTitle": "Palindrome Number",
     "difficulty": "Easy",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: x = int(input())\n2: \n3: if x < 0 or (x % 10 == 0 and x != 0):\n4:     print(\"False\")\n5: else:\n6:     rev = 0\n7:     while x > rev:\n8:         rev = rev * 10 + x % 10\n9:         x //= 10\n10:     if x == rev or x == rev // 10:\n11:         print(\"True\")\n12:     else:\n13:         print(\"False\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Palindrome Number (LeetCode #9)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 6,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 13,
-                "vars": {
-                    "output": "True"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: if x < 0 or (x % 10 == 0 and x != 0): return False\n2: rev = 0\n3: while x > rev:\n4:     rev = rev * 10 + x % 10; x //= 10\n5: return x == rev or x == rev // 10",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "x": "121"
+          },
+          "explanation": "121 > 0 and 121 % 10 != 0. Valid candidate."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "x": "12",
+            "rev": "1"
+          },
+          "explanation": "x = 12, rev = 1. (x > rev: 12 > 1)."
+        },
+        {
+          "step": 3,
+          "lineNumber": 4,
+          "vars": {
+            "x": "1",
+            "rev": "12"
+          },
+          "explanation": "x = 1, rev = 12. Now x (1) <= rev (12). Loop ends."
+        },
+        {
+          "step": 4,
+          "lineNumber": 5,
+          "vars": {
+            "check_odd": "rev // 10 = 1 == x (1)"
+          },
+          "explanation": "Middle digit 2 is ignored: x == rev // 10 (1 == 1) -> True!"
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-62",
-            "question": "How would you explain your Palindrome Number (LeetCode #9) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Palindrome Number (LeetCode #9) by employing the optimal Easy standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Reversing half of the number avoids integer overflow and executes in O(log_10 n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "x = int(input())\n\nif x < 0 or (x % 10 == 0 and x != 0):\n    print(\"False\")\nelse:\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    if x == rev or x == rev // 10:\n        print(\"True\")\n    else:\n        print(\"False\")\n"
-        },
-        {
-            "id": "q2-62",
-            "question": "What are the most common edge cases to test for Palindrome Number (LeetCode #9)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-62",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-62",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-62",
+        "question": "Why is `x % 10 == 0 and x != 0` checked upfront?",
+        "category": "Boundary Invariant",
+        "whatInterviewerChecks": "Leading zero logic.",
+        "bestReplyScript": "A non-zero number ending in 0 (like 10, 100, 20) can never be a palindrome because no positive integer starts with a leading zero! If we did not check this, 10 would give `x = 1, rev = 0` and then `rev * 10 + 0 = 0`, falsely reporting equality. 0 itself IS a palindrome, which is why `x != 0` is required.",
+        "keyPoints": [
+          "Numbers ending in 0 cannot be palindromes",
+          "Leading zeroes do not exist in standard integers",
+          "0 is a valid palindrome"
+        ]
+      },
+      {
+        "id": "q2-62",
+        "question": "How does `x == rev // 10` work for odd-length palindromes?",
+        "category": "Mathematical Mechanics",
+        "whatInterviewerChecks": "Middle digit elimination.",
+        "bestReplyScript": "In an odd-length palindrome like 12321, the middle digit (3) does not affect symmetry. When the while loop finishes, `x = 12` and `rev = 123`. We can simply discard the middle digit using integer division `rev // 10 = 12`. Comparing `x == rev // 10` (12 == 12) confirms palindrome symmetry.",
+        "keyPoints": [
+          "Middle digit does not affect symmetry",
+          "rev // 10 discards middle digit",
+          "Enables unified handling of odd and even lengths"
+        ]
+      },
+      {
+        "id": "q3-62",
+        "question": "Why is half-reversal better than full reversal?",
+        "category": "Systems Safety",
+        "whatInterviewerChecks": "Integer overflow awareness.",
+        "bestReplyScript": "In systems programming languages with 32-bit signed integers, reversing a number like 2,147,483,647 would produce a 10-digit number exceeding 2\u00b3\u00b9 - 1, causing an integer overflow crash before the comparison can occur. By stopping at the halfway point, the reversed value can never exceed 5 digits, guaranteeing zero risk of overflow.",
+        "keyPoints": [
+          "Prevents 32-bit integer overflow",
+          "Cuts loop iterations in half",
+          "Safe across all programming languages"
+        ]
+      },
+      {
+        "id": "q4-62",
+        "question": "Why are negative numbers never palindromes?",
+        "category": "Specification",
+        "whatInterviewerChecks": "Sign character semantics.",
+        "bestReplyScript": "Negative numbers contain a leading minus sign (e.g. -121). Reading backwards produces `121-`, which does not match `-121` because of the misplaced sign. Therefore, all negative numbers are immediately False.",
+        "keyPoints": [
+          "Leading minus sign breaks symmetry",
+          "Immediate False for all x < 0"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-62",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-62",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-62",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-62",
+        "title": "Failing on Multiples of 10",
+        "description": "Forgetting to exclude numbers ending in 0.",
+        "badSnippet": "if x < 0: return False\n# Missing x % 10 == 0 check!",
+        "failingInput": "x = 10",
+        "consequence": "While loop terminates with x = 1, rev = 0. rev // 10 check gives 0 == 0, mistakenly returning True for 10!",
+        "howToFix": "Add `if x < 0 or (x % 10 == 0 and x != 0): print('False'); return`."
+      },
+      {
+        "id": "m2-62",
+        "title": "Loop Termination Condition Error",
+        "description": "Using `while x != 0` instead of `while x > rev`.",
+        "badSnippet": "while x != 0: # BUG: reverses entire number, x becomes 0!",
+        "failingInput": "x = 121",
+        "consequence": "At loop exit, x is 0, so `x == rev` compares 0 to 121 (False).",
+        "howToFix": "Use `while x > rev:` to stop at the midpoint."
+      },
+      {
+        "id": "m3-62",
+        "title": "Printing Lowercase 'false' in Python",
+        "description": "Printing raw boolean or lowercase string that fails test assertions.",
+        "badSnippet": "print(\"false\") # BUG: test expects 'False' with capital F",
+        "failingInput": "x = -121",
+        "consequence": "Case mismatch with test runner.",
+        "howToFix": "Print `\"False\"` or `\"True\"`."
+      }
     ]
-},
+  },
   "63": {
     "problemId": 63,
-    "problemTitle": "Integer to Roman (LeetCode #12)",
+    "problemTitle": "Integer to Roman",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Adobe",
+      "Microsoft",
+      "Apple"
     ],
     "tracing": {
-        "code": "1: num = int(input())\n2: \n3: mapping = [\n4:     (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n5:     (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n6:     (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n7: ]\n8: \n9: res = []\n10: for val, sym in mapping:\n11:     if num == 0:\n12:         break\n13:     count = num // val\n14:     if count > 0:\n15:         res.append(sym * count)\n16:         num -= val * count\n17: \n18: print(\"\".join(res))",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Integer to Roman (LeetCode #12)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 9,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 18,
-                "vars": {
-                    "output": "MMMDCCXLIX"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: for val, sym in mapping:\n2:     count = num // val\n3:     if count > 0: res.append(sym * count); num -= val * count\n4: print(''.join(res))",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "num": "58",
+            "val": "50 ('L')",
+            "count": "1"
+          },
+          "explanation": "58 // 50 = 1. Append 'L', num becomes 8."
+        },
+        {
+          "step": 2,
+          "lineNumber": 1,
+          "vars": {
+            "num": "8",
+            "val": "5 ('V')",
+            "count": "1"
+          },
+          "explanation": "8 // 5 = 1. Append 'V', num becomes 3."
+        },
+        {
+          "step": 3,
+          "lineNumber": 1,
+          "vars": {
+            "num": "3",
+            "val": "1 ('I')",
+            "count": "3"
+          },
+          "explanation": "3 // 1 = 3. Append 'III', num becomes 0."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "res": "\"LVIII\""
+          },
+          "explanation": "Joined result: \"LVIII\"."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-63",
-            "question": "How would you explain your Integer to Roman (LeetCode #12) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Integer to Roman (LeetCode #12) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Greedy subtraction with a static 13-symbol lookup table runs in O(1) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "num = int(input())\n\nmapping = [\n    (1000, \"M\"), (900, \"CM\"), (500, \"D\"), (400, \"CD\"),\n    (100, \"C\"), (90, \"XC\"), (50, \"L\"), (40, \"XL\"),\n    (10, \"X\"), (9, \"IX\"), (5, \"V\"), (4, \"IV\"), (1, \"I\")\n]\n\nres = []\nfor val, sym in mapping:\n    if num == 0:\n        break\n    count = num // val\n    if count > 0:\n        res.append(sym * count)\n        num -= val * count\n\nprint(\"\".join(res))\n"
-        },
-        {
-            "id": "q2-63",
-            "question": "What are the most common edge cases to test for Integer to Roman (LeetCode #12)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-63",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-63",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-63",
+        "question": "Why is the time complexity O(1) instead of O(n)?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Input domain constraints.",
+        "bestReplyScript": "Because the problem specifies the input integer is bounded between 1 and 3999! The mapping array has a fixed size of 13 entries. The maximum number of symbols appended for any number in this range is 15 (for 3888: MMMDCCCLXXXVIII). Since the loop runs at most 13 times and the output length is capped at 15, both time and space complexity are strictly constant O(1).",
+        "keyPoints": [
+          "Input domain is strictly 1 to 3999",
+          "Loop iterates at most 13 times",
+          "Maximum string length is 15 characters"
+        ]
+      },
+      {
+        "id": "q2-63",
+        "question": "Why are 900, 400, 90, 40, 9, and 4 included as discrete symbols?",
+        "category": "Algorithmic Design",
+        "whatInterviewerChecks": "Subtractive notation rules.",
+        "bestReplyScript": "Roman numeral rules forbid four identical consecutive symbols (e.g. IIII is written as IV, and VIIII as IX). By including the 6 subtractive pairs directly in our lookup table, the greedy choice property holds unconditionally: taking the largest possible value at each step is guaranteed to produce the correct Roman representation without complex exception branches.",
+        "keyPoints": [
+          "Prevents 4 consecutive identical characters",
+          "Greedy choice property holds with 13 symbols",
+          "Eliminates special case branching"
+        ]
+      },
+      {
+        "id": "q3-63",
+        "question": "Could this approach be extended to numbers larger than 3999?",
+        "category": "Domain Extension",
+        "whatInterviewerChecks": "Historical Roman numeral Vinculum notation.",
+        "bestReplyScript": "Traditional Roman numerals topped out at 3999 because M (1000) was the largest standard letter. For numbers >= 4000, Romans used an overline (Vinculum) to represent multiplication by 1000 (e.g. V\u0304 = 5000). In modern computing, numbers above 3999 are not standardized in basic ASCII Roman numerals.",
+        "keyPoints": [
+          "Standard Roman numerals stop at 3999",
+          "Vinculum notation for >= 4000"
+        ]
+      },
+      {
+        "id": "q4-63",
+        "question": "Why use division (`num // val`) instead of a while loop (`num -= val`)?",
+        "category": "Code Quality",
+        "whatInterviewerChecks": "Arithmetic efficiency.",
+        "bestReplyScript": "Division computes the exact repetition count in a single arithmetic operation, allowing `res.append(sym * count)` instead of looping up to 3 times per symbol. This reduces CPU branch instructions and makes the code cleaner.",
+        "keyPoints": [
+          "Single division computes count",
+          "sym * count replaces loop iterations",
+          "Fewer branch checks"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-63",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-63",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-63",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-63",
+        "title": "Omitting Subtractive Combinations",
+        "description": "Only including base symbols (M, D, C, L, X, V, I) and omitting IV, IX, XL, XC, CD, CM.",
+        "badSnippet": "mapping = [(1000, 'M'), (500, 'D'), (100, 'C'), (50, 'L'), (10, 'X'), (5, 'V'), (1, 'I')]",
+        "failingInput": "num = 4",
+        "consequence": "Outputs 'IIII' instead of 'IV'. For 9, outputs 'VIIII' instead of 'IX'.",
+        "howToFix": "Include all 13 values: 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1."
+      },
+      {
+        "id": "m2-63",
+        "title": "Unsorted Mapping Order",
+        "description": "Putting smaller values before larger values in the list.",
+        "badSnippet": "mapping = [(1, 'I'), (4, 'IV'), ..., (1000, 'M')] # BUG: greedy requires descending!",
+        "failingInput": "num = 15",
+        "consequence": "Greedy choice picks 1s first, converting 15 to 'IIIIIIIIIIIIIII'.",
+        "howToFix": "Order pairs strictly descending from 1000 down to 1."
+      },
+      {
+        "id": "m3-63",
+        "title": "String Concatenation in Tight Loop",
+        "description": "Using `res += sym` creates intermediate immutable strings.",
+        "badSnippet": "res = ''\nfor val, sym in mapping:\n    res += sym * count # Repeated heap allocations",
+        "failingInput": "num = 3888",
+        "consequence": "Unnecessary string allocations and garbage collection overhead.",
+        "howToFix": "Collect tokens in a list `res = []` and call `''.join(res)`."
+      }
     ]
-},
+  },
   "64": {
     "problemId": 64,
-    "problemTitle": "Roman to Integer (LeetCode #13)",
+    "problemTitle": "Roman to Integer",
     "difficulty": "Easy",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Apple",
+      "Google",
+      "Microsoft"
     ],
     "tracing": {
-        "code": "1: s = input()\n2: \n3: vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n4: total = 0\n5: n = len(s)\n6: \n7: for i in range(n):\n8:     if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n9:         total -= vals[s[i]]\n10:     else:\n11:         total += vals[s[i]]\n12: \n13: print(total)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Roman to Integer (LeetCode #13)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 6,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 13,
-                "vars": {
-                    "output": "1994"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: total = 0\n2: for i in range(n):\n3:     if i+1 < n and vals[s[i]] < vals[s[i+1]]: total -= vals[s[i]]\n4:     else: total += vals[s[i]]\n5: print(total)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "s": "\"MCMXCIV\"",
+            "total": "0"
+          },
+          "explanation": "Initialize total at 0."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "i": "0 ('M')",
+            "next": "'C'",
+            "vals": "1000 >= 100"
+          },
+          "explanation": "M >= C -> total += 1000 -> 1000."
+        },
+        {
+          "step": 3,
+          "lineNumber": 3,
+          "vars": {
+            "i": "1 ('C')",
+            "next": "'M'",
+            "vals": "100 < 1000"
+          },
+          "explanation": "C < M! Subtractive pair -> total -= 100 -> 900."
+        },
+        {
+          "step": 4,
+          "lineNumber": 3,
+          "vars": {
+            "i": "2 ('M')",
+            "next": "'X'",
+            "vals": "1000 >= 10"
+          },
+          "explanation": "M >= X -> total += 1000 -> 1900."
+        },
+        {
+          "step": 5,
+          "lineNumber": 3,
+          "vars": {
+            "i": "3 ('X')",
+            "next": "'C'",
+            "vals": "10 < 100"
+          },
+          "explanation": "X < C! Subtractive pair -> total -= 10 -> 1890."
+        },
+        {
+          "step": 6,
+          "lineNumber": 4,
+          "vars": {
+            "total": "1994"
+          },
+          "explanation": "Remaining characters 'C', 'I', 'V' evaluated. Final total: 1994."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-64",
-            "question": "How would you explain your Roman to Integer (LeetCode #13) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Roman to Integer (LeetCode #13) by employing the optimal Easy standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Lookahead comparison evaluates the subtractive rule in a single pass in O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "s = input()\n\nvals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\ntotal = 0\nn = len(s)\n\nfor i in range(n):\n    if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:\n        total -= vals[s[i]]\n    else:\n        total += vals[s[i]]\n\nprint(total)\n"
-        },
-        {
-            "id": "q2-64",
-            "question": "What are the most common edge cases to test for Roman to Integer (LeetCode #13)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-64",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-64",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-64",
+        "question": "How does lookahead comparison handle subtractive pairs?",
+        "category": "Algorithmic Invariant",
+        "whatInterviewerChecks": "Understanding mathematical equivalence.",
+        "bestReplyScript": "In subtractive notation like 'IV' (value 4), 'I' (1) is subtracted and 'V' (5) is added: `-1 + 5 = 4`. Because arithmetic addition is commutative and associative, subtracting `vals[s[i]]` when it is strictly less than `vals[s[i+1]]` mathematically achieves the exact subtraction without needing to read characters in chunks of two.",
+        "keyPoints": [
+          "vals[s[i]] < vals[s[i+1]] triggers subtraction",
+          "-1 + 5 = 4 equivalence",
+          "Processes one character per loop iteration cleanly"
+        ]
+      },
+      {
+        "id": "q2-64",
+        "question": "What is the time complexity?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Big-O mastery.",
+        "bestReplyScript": "We loop through the string of length n once. Dictionary lookups take O(1) time. The entire traversal runs in linear O(n) time and strictly O(1) auxiliary space.",
+        "keyPoints": [
+          "O(n) linear scan",
+          "O(1) dictionary lookups",
+          "O(1) extra space"
+        ]
+      },
+      {
+        "id": "q3-64",
+        "question": "Why is the boundary check `i + 1 < n` required?",
+        "category": "Edge Cases & Safety",
+        "whatInterviewerChecks": "Index bounds checking.",
+        "bestReplyScript": "For the very last character at index `n - 1`, there is no `s[i + 1]`. Without checking `i + 1 < n`, accessing `s[i + 1]` raises an IndexError: string index out of range. The last character is always added, never subtracted.",
+        "keyPoints": [
+          "Last character has no lookahead neighbor",
+          "Must be guarded with i + 1 < n",
+          "Last character is always added"
+        ]
+      },
+      {
+        "id": "q4-64",
+        "question": "Can Roman numerals have consecutive subtractive pairs like 'IIV'?",
+        "category": "Domain Rules",
+        "whatInterviewerChecks": "Roman numeral grammar constraints.",
+        "bestReplyScript": "No, standard Roman numeral grammar only permits one subtractive prefix per numeral (3 is III, 4 is IV, never IIV). Our lookahead logic complies with valid Roman numeral input constraints.",
+        "keyPoints": [
+          "At most one subtractive prefix",
+          "Standard Roman grammar guarantees validity"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-64",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-64",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-64",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-64",
+        "title": "IndexError on Last Character Lookahead",
+        "description": "Checking `vals[s[i]] < vals[s[i+1]]` without verifying `i + 1 < n`.",
+        "badSnippet": "if vals[s[i]] < vals[s[i + 1]]: # BUG: IndexError when i == n - 1",
+        "failingInput": "s = \"III\"",
+        "consequence": "Crashes on the last character with IndexError: string index out of range.",
+        "howToFix": "Check `if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:`."
+      },
+      {
+        "id": "m2-64",
+        "title": "Double Incrementing on Subtractive Pairs",
+        "description": "Incrementing i in loop AND adding `i += 1` inside branch, skipping characters.",
+        "badSnippet": "if vals[s[i]] < vals[s[i+1]]:\n    total += vals[s[i+1]] - vals[s[i]]\n    i += 1 # BUG: for loop in Python ignores manual i += 1!",
+        "failingInput": "s = \"MCMXCIV\"",
+        "consequence": "Python for-loop does not respect manual i modifications, resulting in double-counting.",
+        "howToFix": "Use single-character subtraction `total -= vals[s[i]]` without modifying loop index."
+      },
+      {
+        "id": "m3-64",
+        "title": "Missing Strip on Input String",
+        "description": "Trailing newline or carriage return character `\\n` causes KeyError in vals map.",
+        "badSnippet": "s = input() # BUG: might contain trailing '\\r' or '\\n'",
+        "failingInput": "s = \"IV\\n\"",
+        "consequence": "Raises KeyError: '\\n'.",
+        "howToFix": "Use `s = input().strip()`."
+      }
     ]
-},
+  },
   "65": {
     "problemId": 65,
-    "problemTitle": "Median of Two Sorted Arrays (LeetCode #4)",
+    "problemTitle": "Median of Two Sorted Arrays",
     "difficulty": "Hard",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Apple",
-        "Uber"
+      "Google",
+      "Netflix",
+      "Apple",
+      "Amazon"
     ],
     "tracing": {
-        "code": "1: import sys\n2: \n3: lines = sys.stdin.read().splitlines()\n4: nums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\n5: nums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n6: \n7: if len(nums1) > len(nums2):\n8:     nums1, nums2 = nums2, nums1\n9: \n10: m, n = len(nums1), len(nums2)\n11: imin, imax, half_len = 0, m, (m + n + 1) // 2\n12: \n13: while imin <= imax:\n14:     i = (imin + imax) // 2\n15:     j = half_len - i\n16:     if i < m and nums2[j - 1] > nums1[i]:\n17:         imin = i + 1\n18:     elif i > 0 and nums1[i - 1] > nums2[j]:\n19:         imax = i - 1\n20:     else:\n21:         if i == 0: max_of_left = nums2[j - 1]\n22:         elif j == 0: max_of_left = nums1[i - 1]\n23:         else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n24: \n25:         if (m + n) % 2 == 1:\n26:             print(f\"{float(max_of_left):.1f}\")\n27:             break\n28: \n29:         if i == m: min_of_right = nums2[j]\n30:         elif j == n: min_of_right = nums1[i]\n31:         else: min_of_right = min(nums1[i], nums2[j])\n32: \n33:         median = (max_of_left + min_of_right) / 2.0\n34:         print(f\"{median:.1f}\")\n35:         break",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Median of Two Sorted Arrays (LeetCode #4)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 17,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 35,
-                "vars": {
-                    "output": "2.0"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: if len(nums1) > len(nums2): swap(nums1, nums2)\n2: imin, imax, half = 0, m, (m+n+1)//2\n3: while imin <= imax:\n4:     i = (imin+imax)//2; j = half - i\n5:     if i < m and nums2[j-1] > nums1[i]: imin = i + 1\n6:     elif i > 0 and nums1[i-1] > nums2[j]: imax = i - 1\n7:     else: compute median and break",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums1": "[1, 3]",
+            "nums2": "[2]",
+            "swap": "True -> nums1=[2], nums2=[1, 3]"
+          },
+          "explanation": "Swap so nums1 is smaller array (len 1 vs 2)."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "m": "1",
+            "n": "2",
+            "half": "(1+2+1)//2 = 2",
+            "imin": "0",
+            "imax": "1"
+          },
+          "explanation": "Search range [0, 1]. half_len = 2."
+        },
+        {
+          "step": 3,
+          "lineNumber": 4,
+          "vars": {
+            "i": "0",
+            "j": "2"
+          },
+          "explanation": "Cut i=0, j=2. nums2[j-1]=nums2[1]=3 > nums1[i]=2. imin = i + 1 = 1."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "i": "1",
+            "j": "1"
+          },
+          "explanation": "Cut i=1, j=1. nums1[0]=2, nums2[0]=1. Satisfies partition condition!"
+        },
+        {
+          "step": 5,
+          "lineNumber": 7,
+          "vars": {
+            "max_left": "max(nums1[0], nums2[0]) = 2",
+            "median": "2.0"
+          },
+          "explanation": "Odd length total (3). Median is max_of_left = 2.0."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-65",
-            "question": "How would you explain your Median of Two Sorted Arrays (LeetCode #4) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Median of Two Sorted Arrays (LeetCode #4) by employing the optimal Hard standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Binary searching partition cuts on the smaller array achieves optimal O(log(min(m, n))) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\n\nlines = sys.stdin.read().splitlines()\nnums1 = list(map(int, lines[0].split())) if len(lines) > 0 and lines[0].strip() else []\nnums2 = list(map(int, lines[1].split())) if len(lines) > 1 and lines[1].strip() else []\n\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1\n\nm, n = len(nums1), len(nums2)\nimin, imax, half_len = 0, m, (m + n + 1) // 2\n\nwhile imin <= imax:\n    i = (imin + imax) // 2\n    j = half_len - i\n    if i < m and nums2[j - 1] > nums1[i]:\n        imin = i + 1\n    elif i > 0 and nums1[i - 1] > nums2[j]:\n        imax = i - 1\n    else:\n        if i == 0: max_of_left = nums2[j - 1]\n        elif j == 0: max_of_left = nums1[i - 1]\n        else: max_of_left = max(nums1[i - 1], nums2[j - 1])\n\n        if (m + n) % 2 == 1:\n            print(f\"{float(max_of_left):.1f}\")\n            break\n\n        if i == m: min_of_right = nums2[j]\n        elif j == n: min_of_right = nums1[i]\n        else: min_of_right = min(nums1[i], nums2[j])\n\n        median = (max_of_left + min_of_right) / 2.0\n        print(f\"{median:.1f}\")\n        break\n"
-        },
-        {
-            "id": "q2-65",
-            "question": "What are the most common edge cases to test for Median of Two Sorted Arrays (LeetCode #4)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-65",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-65",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-65",
+        "question": "Why must we binary search on the smaller array rather than the larger array?",
+        "category": "Algorithmic Invariant",
+        "whatInterviewerChecks": "Boundary safety and index validity.",
+        "bestReplyScript": "Because `j = (m + n + 1) // 2 - i`. If we binary search on the larger array (where m > n), `i` can be larger than `half_len`, causing `j` to become negative! By strictly ensuring `nums1` is the smaller array (m <= n), `j` is mathematically guaranteed to always fall within valid bounds `[0, n]`. Furthermore, searching the smaller array guarantees optimal runtime O(log(min(m, n))).",
+        "keyPoints": [
+          "Guarantees j is always non-negative and <= n",
+          "Prevents index out of bounds",
+          "Achieves optimal O(log(min(m, n))) runtime"
+        ]
+      },
+      {
+        "id": "q2-65",
+        "question": "What happens when one of the input arrays is empty?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Edge case robustness.",
+        "bestReplyScript": "If one array is empty (e.g. nums1 = []), it becomes the smaller array (m = 0). The binary search immediately sets `i = 0` and `j = (n + 1) // 2`. The boundary checks correctly set `max_of_left = nums2[j-1]` and `min_of_right = nums2[j]`, seamlessly returning the median of nums2 with zero crashes.",
+        "keyPoints": [
+          "i = 0 immediately",
+          "Correctly delegates entirely to the non-empty array",
+          "Handles empty arrays seamlessly"
+        ]
+      },
+      {
+        "id": "q3-65",
+        "question": "Why is `half_len` defined as `(m + n + 1) // 2` with `+ 1`?",
+        "category": "Mathematical Formulation",
+        "whatInterviewerChecks": "Odd vs even length balancing.",
+        "bestReplyScript": "Adding 1 before integer dividing by 2 ensures that for odd total lengths, the left half receives exactly one more element than the right half. Consequently, for odd totals, the median is ALWAYS simply `max_of_left`, eliminating messy conditional branches.",
+        "keyPoints": [
+          "Left half holds equal or 1 more element",
+          "Odd length median is always max_of_left",
+          "Unifies odd and even formula"
+        ]
+      },
+      {
+        "id": "q4-65",
+        "question": "How do you handle edge boundary values when a cut is at index 0 or length m?",
+        "category": "Boundary Values",
+        "whatInterviewerChecks": "Infinity guards.",
+        "bestReplyScript": "When `i == 0`, no elements from nums1 are on the left, so `max_of_left` comes exclusively from `nums2[j-1]`. When `i == m`, no elements from nums1 are on the right, so `min_of_right` comes exclusively from `nums2[j]`. In languages like C++, we can also use `-infinity` and `+infinity` guards.",
+        "keyPoints": [
+          "i == 0 means left side has no nums1 elements",
+          "i == m means right side has no nums1 elements",
+          "Conditional selection avoids out-of-bounds"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-65",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-65",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-65",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-65",
+        "title": "Negative `j` from Searching Larger Array",
+        "description": "Failing to swap arrays when `len(nums1) > len(nums2)` causes `j` to become negative.",
+        "badSnippet": "# Missing if len(nums1) > len(nums2): swap!\ni = (imin + imax) // 2\nj = half_len - i # BUG: j < 0 when m > n",
+        "failingInput": "nums1 = [1, 2, 3, 4, 5, 6], nums2 = [7]",
+        "consequence": "j becomes negative, indexing nums2 from the back and corrupting partition logic.",
+        "howToFix": "Add `if len(nums1) > len(nums2): nums1, nums2 = nums2, nums1`."
+      },
+      {
+        "id": "m2-65",
+        "title": "Crashing on Empty Input Lines",
+        "description": "Using `input().split()` on blank lines raises ValueError or IndexError.",
+        "badSnippet": "nums1 = list(map(int, input().split())) # Crashes if line is empty",
+        "failingInput": "nums1 = [], nums2 = [1]",
+        "consequence": "Crashes on empty test cases.",
+        "howToFix": "Use `sys.stdin.read().splitlines()` with empty string fallbacks."
+      },
+      {
+        "id": "m3-65",
+        "title": "Integer Division Instead of Float for Even Medians",
+        "description": "Using `// 2` instead of `/ 2.0` truncates fractional medians like 2.5 to 2.",
+        "badSnippet": "median = (max_left + min_right) // 2 # BUG: truncates 2.5 to 2",
+        "failingInput": "nums1 = [1, 2], nums2 = [3, 4]",
+        "consequence": "Prints '2.0' instead of '2.5'.",
+        "howToFix": "Use `(max_of_left + min_of_right) / 2.0` and format to 1 decimal place."
+      }
     ]
-},
+  },
   "66": {
     "problemId": 66,
-    "problemTitle": "Add Two Numbers (LeetCode #2)",
+    "problemTitle": "Add Two Numbers",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: l1 = list(map(int, input().split()))\n2: l2 = list(map(int, input().split()))\n3: \n4: i, j = 0, 0\n5: carry = 0\n6: res = []\n7: \n8: while i < len(l1) or j < len(l2) or carry:\n9:     val1 = l1[i] if i < len(l1) else 0\n10:     val2 = l2[j] if j < len(l2) else 0\n11:     total = val1 + val2 + carry\n12:     carry = total // 10\n13:     res.append(total % 10)\n14:     i += 1\n15:     j += 1\n16: \n17: print(\" \".join(map(str, res)))",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Add Two Numbers (LeetCode #2)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 8,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 17,
-                "vars": {
-                    "output": "7 0 8"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: while i < len(l1) or j < len(l2) or carry:\n2:     total = val1 + val2 + carry\n3:     carry = total // 10; res.append(total % 10)\n4:     i += 1; j += 1\n5: print(' '.join(map(str, res)))",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "l1": "[2, 4, 3]",
+            "l2": "[5, 6, 4]",
+            "carry": "0"
+          },
+          "explanation": "Start addition at index 0."
+        },
+        {
+          "step": 2,
+          "lineNumber": 2,
+          "vars": {
+            "val1": "2",
+            "val2": "5",
+            "total": "7",
+            "carry": "0",
+            "res": "[7]"
+          },
+          "explanation": "Col 0: 2 + 5 = 7. Digit 7, carry 0."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "val1": "4",
+            "val2": "6",
+            "total": "10",
+            "carry": "1",
+            "res": "[7, 0]"
+          },
+          "explanation": "Col 1: 4 + 6 = 10. Digit 0, carry 1."
+        },
+        {
+          "step": 4,
+          "lineNumber": 2,
+          "vars": {
+            "val1": "3",
+            "val2": "4",
+            "total": "8",
+            "carry": "0",
+            "res": "[7, 0, 8]"
+          },
+          "explanation": "Col 2: 3 + 4 + 1 = 8. Digit 8, carry 0."
+        },
+        {
+          "step": 5,
+          "lineNumber": 5,
+          "vars": {
+            "output": "\"7 0 8\""
+          },
+          "explanation": "Loop terminates. Prints '7 0 8'."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-66",
-            "question": "How would you explain your Add Two Numbers (LeetCode #2) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Add Two Numbers (LeetCode #2) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Digit addition with carry runs in linear O(max(N, M)) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "l1 = list(map(int, input().split()))\nl2 = list(map(int, input().split()))\n\ni, j = 0, 0\ncarry = 0\nres = []\n\nwhile i < len(l1) or j < len(l2) or carry:\n    val1 = l1[i] if i < len(l1) else 0\n    val2 = l2[j] if j < len(l2) else 0\n    total = val1 + val2 + carry\n    carry = total // 10\n    res.append(total % 10)\n    i += 1\n    j += 1\n\nprint(\" \".join(map(str, res)))\n"
-        },
-        {
-            "id": "q2-66",
-            "question": "What are the most common edge cases to test for Add Two Numbers (LeetCode #2)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-66",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-66",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-66",
+        "question": "Why is the loop condition `or carry` crucial?",
+        "category": "Edge Cases & Safety",
+        "whatInterviewerChecks": "Carry overflow handling.",
+        "bestReplyScript": "Consider adding [5] and [5]. Both lists have length 1. After processing the first digits, `5 + 5 = 10`, leaving `carry = 1`. Both lists are now exhausted (i == 1, j == 1). Without `or carry`, the while loop would terminate prematurely, producing `[0]` instead of the correct answer `[0, 1]` (representing 10). Including `or carry` ensures that any trailing carry creates a new most significant digit.",
+        "keyPoints": [
+          "5 + 5 = 10 requires new node for carry",
+          "Prevents losing the most significant carried 1",
+          "Handles numbers growing by 1 digit"
+        ]
+      },
+      {
+        "id": "q2-66",
+        "question": "Why are digits stored in reverse order in this problem?",
+        "category": "Data Structure Design",
+        "whatInterviewerChecks": "Understanding computational direction.",
+        "bestReplyScript": "Because standard positional addition starts at the least significant digit (ones place) and moves to higher places (tens, hundreds). Storing digits in reverse order means the head of each list is the ones place, allowing single-pass linear addition from left to right without needing to reverse the lists first.",
+        "keyPoints": [
+          "Addition proceeds from least significant to most significant",
+          "Head of list is ones place",
+          "Enables single-pass streaming without reversal"
+        ]
+      },
+      {
+        "id": "q3-66",
+        "question": "What if the two input numbers have drastically different lengths?",
+        "category": "Boundary Handling",
+        "whatInterviewerChecks": "Padding shorter numbers.",
+        "bestReplyScript": "Our implementation uses `val1 = l1[i] if i < len(l1) else 0`. When the shorter list runs out, its missing digits are treated as 0. The loop continues seamlessly, adding 0 and propagating any carry into the remaining digits of the longer number.",
+        "keyPoints": [
+          "Missing digits are treated as 0",
+          "Seamless continuation for disparate lengths",
+          "No IndexError risk"
+        ]
+      },
+      {
+        "id": "q4-66",
+        "question": "What is the maximum length of the output list compared to inputs of length N and M?",
+        "category": "Space Bounds",
+        "whatInterviewerChecks": "Maximum size bounds.",
+        "bestReplyScript": "The maximum possible length is `max(N, M) + 1`. A sum can exceed the maximum length of its inputs by at most 1 digit (for example, 99 + 1 = 100, where inputs of length 2 and 1 produce length 3).",
+        "keyPoints": [
+          "Max length is max(N, M) + 1",
+          "Carried 1 can add at most 1 digit"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-66",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-66",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-66",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-66",
+        "title": "Dropping the Final Carry",
+        "description": "Omitting `or carry` in the while condition drops the leading digit.",
+        "badSnippet": "while i < len(l1) or j < len(l2): # BUG: drops carry if both lists end!",
+        "failingInput": "l1 = [5], l2 = [5]",
+        "consequence": "Outputs '0' instead of '0 1'.",
+        "howToFix": "Use `while i < len(l1) or j < len(l2) or carry:`."
+      },
+      {
+        "id": "m2-66",
+        "title": "64-Bit Integer Overflow in Python-to-C Transpilers",
+        "description": "Converting to integers directly fails in languages without native BigInt.",
+        "badSnippet": "total = int(''.join(...)) + int(''.join(...)) # Fails on 100-digit numbers in C++",
+        "failingInput": "Numbers with 100 digits",
+        "consequence": "Overflow crash in compiled environments.",
+        "howToFix": "Use digit-by-digit columnar addition."
+      },
+      {
+        "id": "m3-66",
+        "title": "IndexError on Unequal Length Arrays",
+        "description": "Accessing `l1[i]` without checking `i < len(l1)`.",
+        "badSnippet": "total = l1[i] + l2[j] + carry # BUG: IndexError when len(l1) != len(l2)",
+        "failingInput": "l1 = [1, 8], l2 = [0]",
+        "consequence": "Raises IndexError: list index out of range at index 1.",
+        "howToFix": "Use ternary check `l1[i] if i < len(l1) else 0`."
+      }
     ]
-},
+  },
   "67": {
     "problemId": 67,
-    "problemTitle": "Remove Nth Node From End of List (LeetCode #19)",
+    "problemTitle": "Remove Nth Node From End of List",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: nums = list(map(int, input().split()))\n2: n = int(input())\n3: \n4: idx_to_remove = len(nums) - n\n5: del nums[idx_to_remove]\n6: \n7: if nums:\n8:     print(\" \".join(map(str, nums)))\n9: else:\n10:     print(\"EMPTY\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Remove Nth Node From End of List (LeetCode #19)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 5,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 10,
-                "vars": {
-                    "output": "1 2 3 5"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: idx = len(nums) - n\n2: del nums[idx]\n3: if nums: print(' '.join(map(str, nums)))\n4: else: print('EMPTY')",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "nums": "[1, 2, 3, 4, 5]",
+            "n": "2"
+          },
+          "explanation": "Array length 5, n = 2."
+        },
+        {
+          "step": 2,
+          "lineNumber": 1,
+          "vars": {
+            "idx": "5 - 2 = 3",
+            "val_to_remove": "nums[3] = 4"
+          },
+          "explanation": "Target index is 3 (value 4)."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "nums": "[1, 2, 3, 5]"
+          },
+          "explanation": "Element 4 deleted."
+        },
+        {
+          "step": 4,
+          "lineNumber": 3,
+          "vars": {
+            "output": "\"1 2 3 5\""
+          },
+          "explanation": "List is non-empty, print remaining elements."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-67",
-            "question": "How would you explain your Remove Nth Node From End of List (LeetCode #19) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Remove Nth Node From End of List (LeetCode #19) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Two-pointer gap tracking identifies and unlinks the nth node from end in a single O(L) pass and O(1) space. time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "nums = list(map(int, input().split()))\nn = int(input())\n\nidx_to_remove = len(nums) - n\ndel nums[idx_to_remove]\n\nif nums:\n    print(\" \".join(map(str, nums)))\nelse:\n    print(\"EMPTY\")\n"
-        },
-        {
-            "id": "q2-67",
-            "question": "What are the most common edge cases to test for Remove Nth Node From End of List (LeetCode #19)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-67",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-67",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-67",
+        "question": "How do two pointers achieve a single pass in a singly linked list?",
+        "category": "Two Pointers Technique",
+        "whatInterviewerChecks": "Linked list runner technique.",
+        "bestReplyScript": "We use a dummy head node pointing to head. We advance pointer `fast` by n + 1 steps from the dummy node, creating an exact gap of n nodes between `slow` and `fast`. Then, we move both `slow` and `fast` forward one step at a time until `fast` hits null. At that moment, `slow` is guaranteed to be standing right before the node to be deleted! We simply update `slow.next = slow.next.next` in O(1).",
+        "keyPoints": [
+          "Dummy head handles head deletion",
+          "Advance fast by n + 1 steps to create gap",
+          "When fast is null, slow is at predecessor"
+        ]
+      },
+      {
+        "id": "q2-67",
+        "question": "Why is a dummy node essential in linked list implementations?",
+        "category": "Data Structure Design",
+        "whatInterviewerChecks": "Edge case prevention (deleting head).",
+        "bestReplyScript": "Without a dummy node, deleting the head node (when n == length) requires an explicit special branch because `head` has no predecessor. A dummy node placed before `head` acts as a permanent predecessor, unifying head deletion with internal node deletion under the exact same code logic.",
+        "keyPoints": [
+          "Dummy node provides predecessor for head",
+          "Eliminates special case for deleting head",
+          "Standard best practice in linked list manipulation"
+        ]
+      },
+      {
+        "id": "q3-67",
+        "question": "What if the list contains only 1 element and n = 1?",
+        "category": "Edge Cases",
+        "whatInterviewerChecks": "Empty list handling.",
+        "bestReplyScript": "Deleting the only element leaves the list completely empty. Per the problem specification, when the resulting list is empty, we must output the string 'EMPTY'.",
+        "keyPoints": [
+          "Single element list becomes empty",
+          "Must output 'EMPTY'"
+        ]
+      },
+      {
+        "id": "q4-67",
+        "question": "What is the time complexity in a linked list vs an array?",
+        "category": "Complexity Comparison",
+        "whatInterviewerChecks": "Understanding memory layout.",
+        "bestReplyScript": "In a linked list, unlinking a node (`slow.next = slow.next.next`) takes strictly O(1) time once found, making total time O(L) with zero element shifting. In an array, deleting at an index requires shifting all subsequent elements left, which also takes O(L) time. Both are O(L) overall, but linked lists perform zero copy operations.",
+        "keyPoints": [
+          "Linked list unlinks in O(1)",
+          "Array shifts elements in O(L)",
+          "Both achieve O(L) total time"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-67",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-67",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-67",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-67",
+        "title": "Crashing When Removing Head Element",
+        "description": "Failing to handle `n == len(nums)` properly in linked list pointers.",
+        "badSnippet": "idx = len(nums) - n\n# In linked lists: slow.next without dummy crashes if n == len",
+        "failingInput": "nums = [1, 2], n = 2",
+        "consequence": "Throws AttributeError: 'NoneType' object has no attribute 'next'.",
+        "howToFix": "Use dummy node pointing to head."
+      },
+      {
+        "id": "m2-67",
+        "title": "Printing Empty String Instead of 'EMPTY'",
+        "description": "Printing blank output when all elements are removed.",
+        "badSnippet": "print(' '.join(map(str, nums))) # BUG: prints empty string if nums is empty",
+        "failingInput": "nums = [1], n = 1",
+        "consequence": "Test runner expects 'EMPTY', fails test.",
+        "howToFix": "Check `if not nums: print('EMPTY')`."
+      },
+      {
+        "id": "m3-67",
+        "title": "1-Indexed Offset Mistake",
+        "description": "Deleting `len(nums) - n - 1` instead of `len(nums) - n`.",
+        "badSnippet": "del nums[len(nums) - n - 1] # BUG: deletes one position too far to the left",
+        "failingInput": "nums = [1, 2, 3, 4, 5], n = 2",
+        "consequence": "Removes 3 instead of 4.",
+        "howToFix": "Use `len(nums) - n`."
+      }
     ]
-},
+  },
   "68": {
     "problemId": 68,
-    "problemTitle": "Valid Parentheses (LeetCode #20)",
+    "problemTitle": "Valid Parentheses II",
     "difficulty": "Easy",
     "companyTags": [
-        "Microsoft",
-        "Amazon",
-        "Bloomberg",
-        "Cisco"
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: s = input()\n2: \n3: mapping = {')': '(', '}': '{', ']': '['}\n4: stack = []\n5: valid = True\n6: \n7: for char in s:\n8:     if char in mapping:\n9:         top = stack.pop() if stack else '#'\n10:         if mapping[char] != top:\n11:             valid = False\n12:             break\n13:     else:\n14:         stack.append(char)\n15: \n16: if valid and not stack:\n17:     print(\"True\")\n18: else:\n19:     print(\"False\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Valid Parentheses (LeetCode #20)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 9,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 19,
-                "vars": {
-                    "output": "True"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: for char in s:\n2:     if char in mapping: top = stack.pop(); check(top)\n3:     else: stack.append(char)\n4: return not stack",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "s": "\"()[]{}\"",
+            "stack": "[]"
+          },
+          "explanation": "Start empty stack."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "char": "'('",
+            "stack": "['(']"
+          },
+          "explanation": "Push '('."
+        },
+        {
+          "step": 3,
+          "lineNumber": 2,
+          "vars": {
+            "char": "')'",
+            "top": "'('",
+            "match": "True",
+            "stack": "[]"
+          },
+          "explanation": "Pop '(' matching ')'. Stack empty."
+        },
+        {
+          "step": 4,
+          "lineNumber": 3,
+          "vars": {
+            "char": "'['",
+            "stack": "['[']"
+          },
+          "explanation": "Push '['."
+        },
+        {
+          "step": 5,
+          "lineNumber": 2,
+          "vars": {
+            "char": "']'",
+            "top": "'['",
+            "match": "True",
+            "stack": "[]"
+          },
+          "explanation": "Pop '[' matching ']'. Stack empty."
+        },
+        {
+          "step": 6,
+          "lineNumber": 4,
+          "vars": {
+            "final_stack": "[]",
+            "result": "True"
+          },
+          "explanation": "All pairs matched. Stack empty -> True."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-68",
-            "question": "How would you explain your Valid Parentheses (LeetCode #20) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Valid Parentheses (LeetCode #20) by employing the optimal Easy standard pattern. We eliminate redundant nested loops, reducing runtime complexity to LIFO stack matching achieves optimal O(n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "s = input()\n\nmapping = {')': '(', '}': '{', ']': '['}\nstack = []\nvalid = True\n\nfor char in s:\n    if char in mapping:\n        top = stack.pop() if stack else '#'\n        if mapping[char] != top:\n            valid = False\n            break\n    else:\n        stack.append(char)\n\nif valid and not stack:\n    print(\"True\")\nelse:\n    print(\"False\")\n"
-        },
-        {
-            "id": "q2-68",
-            "question": "What are the most common edge cases to test for Valid Parentheses (LeetCode #20)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-68",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-68",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-68",
+        "question": "Why must the stack be empty at the end for the string to be valid?",
+        "category": "Invariants",
+        "whatInterviewerChecks": "Handling dangling open brackets.",
+        "bestReplyScript": "Consider the input `\"(((\"`. No closing bracket is ever encountered, so no mismatch error triggers inside the loop. However, the brackets are never closed! Checking `not stack` at the end ensures that every opened bracket found its corresponding closing counterpart.",
+        "keyPoints": [
+          "Catches unclosed opening brackets",
+          "String like '(((' has no mismatches but is invalid",
+          "not stack verifies all opened brackets were closed"
+        ]
+      },
+      {
+        "id": "q2-68",
+        "question": "Why is a stack preferred over simple integer counters?",
+        "category": "Data Structure Selection",
+        "whatInterviewerChecks": "Understanding nesting constraints.",
+        "bestReplyScript": "If there was only one type of bracket (e.g. only `()`), an integer counter incremented on `(` and decremented on `)` would be optimal in O(1) space. However, with MULTIPLE bracket types `()`, `[]`, `{}`), order matters! In `\"([)]\"`, the counts for each bracket type are equal, but the brackets are crossed and improperly nested. A stack enforces the LIFO ordering required to ensure the most recently opened bracket is closed first.",
+        "keyPoints": [
+          "Counter only works for single bracket type",
+          "Multiple types require order enforcement",
+          "Crossed brackets like ([)] fail counters but are caught by stack"
+        ]
+      },
+      {
+        "id": "q3-68",
+        "question": "What is the sentinel technique used in `stack.pop() if stack else '#'`?",
+        "category": "Defensive Coding",
+        "whatInterviewerChecks": "Avoiding try/except or nested conditionals.",
+        "bestReplyScript": "If the stack is empty when a closing bracket arrives (e.g. `s = \")(\"`), popping would raise an IndexError. By checking `if stack else '#'`, we return a dummy sentinel character `#` that is guaranteed never to match any valid opening bracket. This cleanly fails the equality check without throwing exceptions.",
+        "keyPoints": [
+          "Prevents IndexError on empty stack",
+          "Sentinel never matches valid brackets",
+          "Eliminates messy try/except blocks"
+        ]
+      },
+      {
+        "id": "q4-68",
+        "question": "What is the worst-case space complexity?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Worst-case bounds.",
+        "bestReplyScript": "In the worst case where the string contains all opening brackets (e.g. `\"(((((\"`), all n characters are pushed onto the stack, requiring O(n) auxiliary space.",
+        "keyPoints": [
+          "All opening brackets pushes n elements",
+          "Worst-case space is O(n)"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-68",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-68",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-68",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-68",
+        "title": "IndexError on Closing Bracket First",
+        "description": "Calling `stack.pop()` without checking if stack is non-empty.",
+        "badSnippet": "if char in mapping:\n    top = stack.pop() # BUG: crashes if stack is empty!",
+        "failingInput": "s = \"]\"",
+        "consequence": "Crashes with IndexError: pop from empty list.",
+        "howToFix": "Use `top = stack.pop() if stack else '#'`."
+      },
+      {
+        "id": "m2-68",
+        "title": "Forgetting `not stack` Check at End",
+        "description": "Only checking `valid` flag and not checking if stack is empty.",
+        "badSnippet": "if valid: print('True') # BUG: returns True on '((('!",
+        "failingInput": "s = \"((\"",
+        "consequence": "Returns True for unclosed brackets.",
+        "howToFix": "Check `if valid and not stack:`."
+      },
+      {
+        "id": "m3-68",
+        "title": "Using Integer Counters for Multiple Bracket Types",
+        "description": "Counting parentheses, brackets, and braces with separate integers.",
+        "badSnippet": "paren_cnt, brace_cnt = 0, 0 # BUG: fails to detect crossed nesting",
+        "failingInput": "s = \"([)]\"",
+        "consequence": "Counts are balanced, falsely returning True for crossed brackets.",
+        "howToFix": "Use a LIFO stack to enforce nesting order."
+      }
     ]
-},
+  },
   "69": {
     "problemId": 69,
-    "problemTitle": "Letter Combinations of a Phone Number (LeetCode #17)",
+    "problemTitle": "Letter Combinations of a Phone Number",
     "difficulty": "Medium",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Amazon",
-        "Microsoft"
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta"
     ],
     "tracing": {
-        "code": "1: import sys\n2: line = sys.stdin.read().strip()\n3: \n4: if not line:\n5:     print(\"NONE\")\n6: else:\n7:     phone = {\n8:         '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n9:         '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n10:     }\n11: \n12:     res = ['']\n13:     for d in line:\n14:         if d in phone:\n15:             res = [prev + char for prev in res for char in phone[d]]\n16: \n17:     res.sort()\n18:     for item in res:\n19:         print(item)",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Letter Combinations of a Phone Number (LeetCode #17)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 9,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 19,
-                "vars": {
-                    "output": "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: res = ['']\n2: for d in line:\n3:     res = [prev + char for prev in res for char in phone[d]]\n4: print(res)",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "input": "\"23\"",
+            "res": "['']"
+          },
+          "explanation": "Start with empty seed prefix."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "digit": "'2'",
+            "letters": "'abc'",
+            "res": "['a', 'b', 'c']"
+          },
+          "explanation": "Expand digit '2'."
+        },
+        {
+          "step": 3,
+          "lineNumber": 3,
+          "vars": {
+            "digit": "'3'",
+            "letters": "'def'",
+            "count": "9"
+          },
+          "explanation": "Cross each of ['a','b','c'] with ['d','e','f']."
+        },
+        {
+          "step": 4,
+          "lineNumber": 4,
+          "vars": {
+            "res": "['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']"
+          },
+          "explanation": "Sorted combinations printed line by line."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-69",
-            "question": "How would you explain your Letter Combinations of a Phone Number (LeetCode #17) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Letter Combinations of a Phone Number (LeetCode #17) by employing the optimal Medium standard pattern. We eliminate redundant nested loops, reducing runtime complexity to Backtracking / product combination generates all 3^N * 4^M letter combinations in O(4^N) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\nline = sys.stdin.read().strip()\n\nif not line:\n    print(\"NONE\")\nelse:\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n\n    res = ['']\n    for d in line:\n        if d in phone:\n            res = [prev + char for prev in res for char in phone[d]]\n\n    res.sort()\n    for item in res:\n        print(item)\n"
-        },
-        {
-            "id": "q2-69",
-            "question": "What are the most common edge cases to test for Letter Combinations of a Phone Number (LeetCode #17)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-69",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-69",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-69",
+        "question": "Why is the time complexity O(4\u207f)?",
+        "category": "Complexity Analysis",
+        "whatInterviewerChecks": "Branching factor derivation.",
+        "bestReplyScript": "On a telephone keypad, most digits map to 3 letters, but 7 ('pqrs') and 9 ('wxyz') map to 4 letters. In the worst case where all digits in the input string are 7s or 9s, each step branches 4 times. For a string of length n, the total number of leaves in the decision tree is 4\u207f. Generating and printing each string takes O(n) time, so total worst-case time complexity is O(n \u00b7 4\u207f).",
+        "keyPoints": [
+          "7 and 9 have 4 letters each",
+          "Worst-case branching factor is 4",
+          "Total combinations bounded by 4\u207f"
+        ]
+      },
+      {
+        "id": "q2-69",
+        "question": "What is the difference in auxiliary space between Backtracking and Iterative expansion?",
+        "category": "Space Trade-offs",
+        "whatInterviewerChecks": "Stack vs Heap allocation awareness.",
+        "bestReplyScript": "Recursive Backtracking operates with O(n) auxiliary call stack memory (plus the output array), because it traverses depth-first down a single path of length n. Iterative expansion buffers all intermediate combinations in heap memory at every level, requiring O(4\u207f) working memory.",
+        "keyPoints": [
+          "Backtracking uses O(n) call stack space",
+          "Iterative expansion buffers full intermediate arrays in heap",
+          "Backtracking is more memory-efficient when streaming"
+        ]
+      },
+      {
+        "id": "q3-69",
+        "question": "What if the input contains digits '0' or '1'?",
+        "category": "Specification & Edge Cases",
+        "whatInterviewerChecks": "Handling non-alphabetical keypad buttons.",
+        "bestReplyScript": "On standard telephone keypads, '0' and '1' do not map to letters. If valid input constraints specify digits '2'-'9', we can ignore or reject them. In our implementation, we guard with `if d in phone:`, safely skipping any unmapped digits.",
+        "keyPoints": [
+          "0 and 1 have no letters",
+          "Guard with if d in phone:",
+          "Safely skips unmapped keys"
+        ]
+      },
+      {
+        "id": "q4-69",
+        "question": "How should empty input be handled?",
+        "category": "Output Specification",
+        "whatInterviewerChecks": "Handling null/empty inputs per spec.",
+        "bestReplyScript": "The problem specification requires outputting 'NONE' when the input string is empty. We strip input and check `if not line: print('NONE')` before initiating any expansion.",
+        "keyPoints": [
+          "Empty string prints 'NONE'",
+          "Checked upfront before expansion"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-69",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-69",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-69",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-69",
+        "title": "Printing Empty String Instead of 'NONE'",
+        "description": "Failing to check for empty input and printing nothing.",
+        "badSnippet": "# Missing if not line check, loop runs on '' and prints nothing",
+        "failingInput": "line = \"\"",
+        "consequence": "Test runner expects 'NONE', fails assertion.",
+        "howToFix": "Add `if not line: print('NONE'); sys.exit(0)`."
+      },
+      {
+        "id": "m2-69",
+        "title": "Printing Python List Instead of Lines",
+        "description": "Printing `print(res)` which outputs `['ad', 'ae', ...]`, rather than each combination on a new line.",
+        "badSnippet": "print(res) # BUG: outputs python list brackets",
+        "failingInput": "line = \"23\"",
+        "consequence": "Format mismatch in automated test grader.",
+        "howToFix": "Loop through sorted array: `for item in res: print(item)`."
+      },
+      {
+        "id": "m3-69",
+        "title": "Forgetting to Backtrack in DFS",
+        "description": "Omitting `path.pop()` causes subsequent branches to keep accumulating letters from previous paths.",
+        "badSnippet": "path.append(char)\nbacktrack(idx + 1, path)\n# Missing path.pop()!",
+        "failingInput": "line = \"23\"",
+        "consequence": "Path length grows uncontrollably, e.g. 'adebf...'.",
+        "howToFix": "Always unchoose with `path.pop()` after recursive call."
+      }
     ]
-},
+  },
   "70": {
     "problemId": 70,
-    "problemTitle": "Regular Expression Matching (LeetCode #10)",
+    "problemTitle": "Regular Expression Matching",
     "difficulty": "Hard",
     "companyTags": [
-        "Google",
-        "Meta",
-        "Apple",
-        "Uber"
+      "Google",
+      "Meta",
+      "Amazon",
+      "Microsoft"
     ],
     "tracing": {
-        "code": "1: import sys\n2: lines = sys.stdin.read().splitlines()\n3: s = lines[0] if len(lines) > 0 else \"\"\n4: p = lines[1] if len(lines) > 1 else \"\"\n5: \n6: m, n = len(s), len(p)\n7: dp = [[False] * (n + 1) for _ in range(m + 1)]\n8: dp[0][0] = True\n9: \n10: for j in range(2, n + 1):\n11:     if p[j - 1] == '*':\n12:         dp[0][j] = dp[0][j - 2]\n13: \n14: for i in range(1, m + 1):\n15:     for j in range(1, n + 1):\n16:         if p[j - 1] == '*':\n17:             dp[i][j] = dp[i][j - 2]\n18:             if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n19:                 dp[i][j] = dp[i][j] or dp[i - 1][j]\n20:         elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n21:             dp[i][j] = dp[i - 1][j - 1]\n22: \n23: print(\"True\" if dp[m][n] else \"False\")",
-        "steps": [
-            {
-                "step": 1,
-                "lineNumber": 1,
-                "vars": {
-                    "input": "initial_data"
-                },
-                "explanation": "Read and prepare standard input for Regular Expression Matching (LeetCode #10)."
-            },
-            {
-                "step": 2,
-                "lineNumber": 11,
-                "vars": {
-                    "state": "active_processing"
-                },
-                "explanation": "Execute main algorithmic traversal and data structure updates."
-            },
-            {
-                "step": 3,
-                "lineNumber": 23,
-                "vars": {
-                    "output": "True"
-                },
-                "explanation": "Format and print final computed result."
-            }
-        ]
+      "code": "1: dp[0][0] = True\n2: for j in range(2, n+1):\n3:     if p[j-1] == '*': dp[0][j] = dp[0][j-2]\n4: for i in range(1, m+1):\n5:     for j in range(1, n+1):\n6:         if p[j-1] == '*': dp[i][j] = dp[i][j-2] or (match and dp[i-1][j])\n7:         elif match: dp[i][j] = dp[i-1][j-1]",
+      "steps": [
+        {
+          "step": 1,
+          "lineNumber": 1,
+          "vars": {
+            "s": "\"aab\"",
+            "p": "\"c*a*b\""
+          },
+          "explanation": "Base state dp[0][0] = True (empty string matches empty pattern)."
+        },
+        {
+          "step": 2,
+          "lineNumber": 3,
+          "vars": {
+            "j": "2 ('*')",
+            "dp[0][2]": "dp[0][0] = True"
+          },
+          "explanation": "'c*' matches empty string (0 'c's)."
+        },
+        {
+          "step": 3,
+          "lineNumber": 3,
+          "vars": {
+            "j": "4 ('*')",
+            "dp[0][4]": "dp[0][2] = True"
+          },
+          "explanation": "'c*a*' matches empty string."
+        },
+        {
+          "step": 4,
+          "lineNumber": 6,
+          "vars": {
+            "i": "1 ('a')",
+            "j": "4 ('*')",
+            "dp[1][4]": "True"
+          },
+          "explanation": "'a' matches preceding char 'a' in 'a*'. dp[1][4] = True."
+        },
+        {
+          "step": 5,
+          "lineNumber": 6,
+          "vars": {
+            "i": "2 ('a')",
+            "j": "4 ('*')",
+            "dp[2][4]": "True"
+          },
+          "explanation": "'aa' matches 'c*a*'. dp[2][4] = True."
+        },
+        {
+          "step": 6,
+          "lineNumber": 7,
+          "vars": {
+            "i": "3 ('b')",
+            "j": "5 ('b')",
+            "dp[3][5]": "True"
+          },
+          "explanation": "'b' matches 'b'. dp[3][5] = dp[2][4] = True! Complete match."
+        }
+      ]
     },
     "questions": [
-        {
-            "id": "q1-70",
-            "question": "How would you explain your Regular Expression Matching (LeetCode #10) solution in 30 seconds to an interviewer?",
-            "category": "30-Second Interview Pitch",
-            "whatInterviewerChecks": "Verbal communication, Big-O mastery, and clarity of thought.",
-            "bestReplyScript": "I solve Regular Expression Matching (LeetCode #10) by employing the optimal Hard standard pattern. We eliminate redundant nested loops, reducing runtime complexity to 2D dynamic programming evaluates transitions in O(m * n) time with minimal auxiliary memory.",
-            "keyPoints": [
-                "State the time and space complexity upfront",
-                "Explain the core data structure or two-pointer invariant",
-                "Highlight boundary and edge case handling"
-            ],
-            "codeSnippet": "import sys\nlines = sys.stdin.read().splitlines()\ns = lines[0] if len(lines) > 0 else \"\"\np = lines[1] if len(lines) > 1 else \"\"\n\nm, n = len(s), len(p)\ndp = [[False] * (n + 1) for _ in range(m + 1)]\ndp[0][0] = True\n\nfor j in range(2, n + 1):\n    if p[j - 1] == '*':\n        dp[0][j] = dp[0][j - 2]\n\nfor i in range(1, m + 1):\n    for j in range(1, n + 1):\n        if p[j - 1] == '*':\n            dp[i][j] = dp[i][j - 2]\n            if p[j - 2] == '.' or p[j - 2] == s[i - 1]:\n                dp[i][j] = dp[i][j] or dp[i - 1][j]\n        elif p[j - 1] == '.' or p[j - 1] == s[i - 1]:\n            dp[i][j] = dp[i - 1][j - 1]\n\nprint(\"True\" if dp[m][n] else \"False\")\n"
-        },
-        {
-            "id": "q2-70",
-            "question": "What are the most common edge cases to test for Regular Expression Matching (LeetCode #10)?",
-            "category": "Edge Cases & Testing",
-            "whatInterviewerChecks": "Thoroughness and bug prevention instinct.",
-            "bestReplyScript": "I always test empty inputs, single-element collections, duplicate values, extreme boundary numbers (e.g. 32-bit integer limits), and negative numbers where applicable.",
-            "keyPoints": [
-                "Empty or null inputs",
-                "Duplicate values and zeroes",
-                "Boundary size limits"
-            ]
-        },
-        {
-            "id": "q3-70",
-            "question": "How does your approach compare to a naive brute-force baseline?",
-            "category": "Trade-offs & Alternatives",
-            "whatInterviewerChecks": "Understanding computational complexity trade-offs.",
-            "bestReplyScript": "A brute-force solution checks all possible combinations, resulting in quadratic or exponential time which causes Time Limit Exceeded (TLE). Our approach uses an intelligent data structure or pointer traversal to prune redundant states.",
-            "keyPoints": [
-                "Brute force suffers from TLE on 10^5 inputs",
-                "Optimal approach avoids unnecessary re-computations",
-                "Memory vs speed trade-off is balanced"
-            ]
-        },
-        {
-            "id": "q4-70",
-            "question": "What is the space complexity of your solution and can it be optimized further?",
-            "category": "Space Complexity & Scalability",
-            "whatInterviewerChecks": "Memory footprint awareness in production systems.",
-            "bestReplyScript": "Our solution uses auxiliary space proportional to the data structure needed. In production, we stream or reuse buffers to avoid unnecessary heap allocation.",
-            "keyPoints": [
-                "Auxiliary heap memory vs in-place mutation",
-                "Garbage collection overhead considerations",
-                "Streaming input handling for large scale"
-            ]
-        }
+      {
+        "id": "q1-70",
+        "question": "What is the meaning of `*` in this problem versus standard Unix shell globbing?",
+        "category": "Problem Disambiguation",
+        "whatInterviewerChecks": "Understanding regex grammar.",
+        "bestReplyScript": "In shell globbing (like `ls *.py`), `*` stands on its own and matches zero or more of ANY character. In regular expressions, `*` NEVER stands on its own: it modifies the single preceding element, representing zero or more repetitions of THAT specific element. The regex equivalent of glob `*` is `.*`.",
+        "keyPoints": [
+          "Regex * modifies the preceding character",
+          "Shell * matches anything on its own",
+          "Regex .* equals shell wildcard *"
+        ]
+      },
+      {
+        "id": "q2-70",
+        "question": "Why does the '*' transition have two branches in the DP formula?",
+        "category": "State Transition Proof",
+        "whatInterviewerChecks": "Dynamic programming logic.",
+        "bestReplyScript": "Because '*' can represent zero occurrences OR one or more occurrences. Branch 1: Zero occurrences is modeled by `dp[i][j - 2]`, which completely ignores the character and the '*'. Branch 2: Multiple occurrences is modeled by `dp[i - 1][j]`, which consumes one character from `s` while keeping the regex pattern at `j` so the '*' can continue matching further repetitions.",
+        "keyPoints": [
+          "dp[i][j-2] represents 0 occurrences",
+          "dp[i-1][j] represents 1+ occurrences",
+          "OR combination models both possibilities"
+        ]
+      },
+      {
+        "id": "q3-70",
+        "question": "Why must the 0-th row be initialized for '*' characters before the nested loops?",
+        "category": "Base Cases & Initialization",
+        "whatInterviewerChecks": "Empty string matching.",
+        "bestReplyScript": "An empty string `s = \"\"` can still match non-empty patterns if every element is starred, such as `\"a*b*c*\"`. Initializing the 0-th row `dp[0][j] = dp[0][j - 2]` propagates `True` across all consecutive starred blocks for empty string inputs.",
+        "keyPoints": [
+          "Empty string can match patterns like a*b*",
+          "dp[0][j] = dp[0][j - 2] handles empty string base cases"
+        ]
+      },
+      {
+        "id": "q4-70",
+        "question": "Can space complexity be optimized to O(n)?",
+        "category": "Space Optimization",
+        "whatInterviewerChecks": "Rolling array optimization.",
+        "bestReplyScript": "Yes! Notice that computing row `i` only requires values from the previous row `i - 1` (specifically `dp[i-1][j]` and `dp[i-1][j-1]`) and the current row `i` (`dp[i][j-2]`). By using two 1D arrays (`prev_dp` and `curr_dp`), we can reduce auxiliary space from O(m \u00b7 n) to O(n).",
+        "keyPoints": [
+          "Only current and previous rows are needed",
+          "Rolling array reduces space to O(n)",
+          "Time remains O(m \u00b7 n)"
+        ]
+      }
     ],
     "mistakes": [
-        {
-            "id": "m1-70",
-            "title": "Off-By-One Indexing Error",
-            "description": "Failing to properly account for boundary indices when traversing or slicing.",
-            "badSnippet": "for i in range(len(nums)): nums[i+1] ... # IndexError on last element",
-            "failingInput": "Arrays of length 1 or 2",
-            "consequence": "IndexError: list index out of range crash in production.",
-            "howToFix": "Ensure loops terminate at len - 1 or use guarded pointer checks."
-        },
-        {
-            "id": "m2-70",
-            "title": "Handling Duplicates Incorrectly",
-            "description": "Not skipping duplicate elements can cause duplicate results or infinite loops.",
-            "badSnippet": "if num in seen: pass # Fails to advance pointers",
-            "failingInput": "Inputs with repeated duplicate values (e.g. [2, 2, 2, 2])",
-            "consequence": "Produces duplicate answers or wrong counts.",
-            "howToFix": "Use while loops to advance past identical adjacent elements."
-        },
-        {
-            "id": "m3-70",
-            "title": "Integer Overflow / Underflow in 32-bit Systems",
-            "description": "While Python handles arbitrarily large integers, interviewers frequently test if you know 32-bit signed limits [-2^31, 2^31 - 1].",
-            "badSnippet": "return x * 10 # Can exceed 32-bit int bounds",
-            "failingInput": "Values close to 2147483647 or -2147483648",
-            "consequence": "Fails platform constraints in standard C++/Java based interview runners.",
-            "howToFix": "Explicitly clamp the result between -2**31 and 2**31 - 1."
-        }
+      {
+        "id": "m1-70",
+        "title": "Treating '*' as Independent Wildcard",
+        "description": "Failing to look back at `p[j - 2]` when evaluating '*'.",
+        "badSnippet": "if p[j - 1] == '*': dp[i][j] = dp[i - 1][j] # BUG: matches anything like globbing!",
+        "failingInput": "s = \"ab\", p = \"b*\"",
+        "consequence": "Falsely matches 'ab' with 'b*'.",
+        "howToFix": "Check preceding character `p[j - 2]` and branch 0 occurrences (`dp[i][j - 2]`) and 1+ occurrences."
+      },
+      {
+        "id": "m2-70",
+        "title": "IndexError on `p[j - 2]`",
+        "description": "Accessing `p[j - 2]` without ensuring `j >= 2`.",
+        "badSnippet": "dp[i][j] = dp[i][j - 2] # BUG: if j < 2, crashes or negative index wraps",
+        "failingInput": "p = \"*\"",
+        "consequence": "Invalid regex pattern or negative index wrapping.",
+        "howToFix": "Ensure valid regex syntax where '*' is always preceded by a character."
+      },
+      {
+        "id": "m3-70",
+        "title": "Crashing on Blank Line Input",
+        "description": "Using `input()` twice directly when string or pattern is empty.",
+        "badSnippet": "s = input()\np = input() # BUG: EOFError on empty lines",
+        "failingInput": "s = \"\", p = \"a*\"",
+        "consequence": "EOFError on empty inputs.",
+        "howToFix": "Use `sys.stdin.read().splitlines()` with safe fallbacks."
+      }
     ]
-},
+  }
 };

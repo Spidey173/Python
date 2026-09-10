@@ -293,7 +293,7 @@ function CurriculumExplorerContent() {
                 </span>
                 {activeTrack === 'advanced' && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30">
-                    LeetCode Classics
+                    Advanced Track
                   </span>
                 )}
               </div>

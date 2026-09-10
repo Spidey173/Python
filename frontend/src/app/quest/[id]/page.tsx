@@ -648,7 +648,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             {(problemId >= 51 || (problem?.chapter_id && problem.chapter_id >= 11)) && (
               <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 font-semibold shrink-0">
                 <Zap className="h-3 w-3 text-amber-400" />
-                LeetCode #{problemId > 50 ? problemId - 50 : problemId}
+                Advanced
               </span>
             )}
             {isCurrentProblemSolved && (
