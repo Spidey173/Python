@@ -114,6 +114,24 @@ export const api = {
   },
 
   async chatWithTutor(message: string, code?: string, challengeId?: number, history: Array<{ role: string; content: string }> = []): Promise<{ reply: string; socratic_hint?: string }> {
+    // 1. Direct call to the Next.js Serverless AI Tutor route
+    try {
+      const res = await fetch('/api/ai/tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.reply) {
+          return data;
+        }
+      }
+    } catch (e) {
+      console.warn('Next.js /api/ai/tutor error, falling back to backend:', e);
+    }
+
+    // 2. Fallback to external backend API if configured
     return request('/ai/tutor', {
       method: 'POST',
       body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),

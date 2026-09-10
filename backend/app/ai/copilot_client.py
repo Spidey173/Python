@@ -80,7 +80,71 @@ async def chat_with_ai_tutor(
     """
     Converses with Byte, the Cyber Snake AI tutor.
     """
-    if settings.COPILOT_API_KEY:
+    # 1. Groq Ultra-Fast 120B AI
+    if settings.GROQ_API_KEY:
+        try:
+            messages = [{"role": "system", "content": SYSTEM_TUTOR_PROMPT}]
+            if challenge_info:
+                messages.append({"role": "system", "content": f"Active Challenge context: {challenge_info}"})
+            if code:
+                messages.append({"role": "system", "content": f"Student's current code:\n```python\n{code}\n```"})
+            if chat_history:
+                for h in chat_history[-6:]:
+                    messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
+            messages.append({"role": "user", "content": message})
+
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                        "Content-Type": "application/json",
+                        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                    },
+                    json={
+                        "model": settings.GROQ_MODEL or "openai/gpt-oss-120b",
+                        "messages": messages,
+                        "temperature": 0.7,
+                        "max_tokens": 800,
+                    }
+                )
+                if resp.status_code == 200:
+                    return resp.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            print("Groq API call error:", e)
+
+    # 2. Google Gemini 3.6 Flash
+    if settings.GEMINI_API_KEY:
+        try:
+            contents = [
+                {"role": "user", "parts": [{"text": f"System Instruction: {SYSTEM_TUTOR_PROMPT}\n\nChallenge: {challenge_info}\nCode:\n```python\n{code}\n```"}]},
+                {"role": "model", "parts": [{"text": "Understood! I am Byte, your encouraging Python DSA tutor ready to assist."}]},
+            ]
+            if chat_history:
+                for h in chat_history[-6:]:
+                    contents.append({
+                        "role": "model" if h.get("role") in ["assistant", "mentor"] else "user",
+                        "parts": [{"text": h.get("content", "")}],
+                    })
+            contents.append({"role": "user", "parts": [{"text": message}]})
+
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent",
+                    headers={
+                        "Content-Type": "application/json",
+                        "x-goog-api-key": settings.GEMINI_API_KEY,
+                    },
+                    json={"contents": contents}
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    return data["candidates"][0]["content"]["parts"][0]["text"]
+        except Exception as e:
+            print("Gemini API call error:", e)
+
+    # 3. Generic OpenAI / Copilot API
+    if settings.COPILOT_API_KEY and "github_pat" not in settings.COPILOT_API_KEY and "api.github.com" not in settings.COPILOT_API_BASE:
         try:
             messages = [{"role": "system", "content": SYSTEM_TUTOR_PROMPT}]
             if challenge_info:
