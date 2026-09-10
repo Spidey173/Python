@@ -227,39 +227,7 @@ export default function DashboardPage() {
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] py-7 px-4 sm:px-6 lg:px-8">
       <div className="w-full space-y-7">
 
-        {/* 1. Guest Session Transparent Banner */}
-        {isGuest && (
-          <div className="rounded-xl border border-[#30363D] bg-gradient-to-r from-[#161B22] via-[#1C2128] to-[#161B22] p-4 sm:px-5 sm:py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 shadow-md">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#D29922]/15 text-[#D29922] border border-[#D29922]/30 shrink-0">
-                <Zap className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-[#E6EDF3]">Guest Coding Active</span>
-                  <span className="text-xs uppercase font-mono px-2 py-0.5 rounded bg-[#3FB950]/15 text-[#3FB950] border border-[#3FB950]/30 font-medium">
-                    No Sign-Up Required
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#8B949E] mt-0.5">
-                  You can code immediately without logging in. All your submissions, streak, and performance metrics are tracked live in your browser.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => {
-                  setAuthTab('signup');
-                  setAuthModalOpen(true);
-                }}
-                className="px-4 py-2 text-xs sm:text-sm font-medium text-white bg-[#238636] hover:bg-[#2EA043] rounded-md transition-colors flex items-center gap-1.5"
-              >
-                <span>Save Progress to Cloud</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
+
 
         {/* 2. Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#21262D] pb-6">

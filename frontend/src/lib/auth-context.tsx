@@ -68,15 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('pq_token', data.access_token);
     setToken(data.access_token);
     setUser(data.user);
-    // Sync guest solved IDs into user backend session
-    try {
-      const localSolved = await persistence.getSolvedIds();
-      for (const id of localSolved) {
-        await api.submitCode(id, '# Solved in guest session', 1).catch(() => {});
-      }
-    } catch {
-      // ignore sync errors
-    }
   };
 
   const register = async (username: string, email: string, pass: string) => {
@@ -84,15 +75,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('pq_token', data.access_token);
     setToken(data.access_token);
     setUser(data.user);
-    // Sync guest solved IDs into new user account
-    try {
-      const localSolved = await persistence.getSolvedIds();
-      for (const id of localSolved) {
-        await api.submitCode(id, '# Solved in guest session', 1).catch(() => {});
-      }
-    } catch {
-      // ignore sync errors
-    }
   };
 
   const guestLogin = async () => {
