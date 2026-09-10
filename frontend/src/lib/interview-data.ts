@@ -19543,7 +19543,7 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       }
     ]
   },
-"51": {
+  "51": {
     "problemId": 51,
     "problemTitle": "Two Sum",
     "difficulty": "Easy",
@@ -19608,53 +19608,203 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-51",
-        "question": "How do you explain Two Sum in 30 seconds to an interviewer?",
-        "category": "30-Second Interview Pitch",
-        "whatInterviewerChecks": "Concision, Big-O clarity, and problem grasp.",
-        "bestReplyScript": "I solve Two Sum in a single pass using a hash map. For each number x, I check if (target - x) exists in the map. If it does, I return its index and the current index immediately. Otherwise, I store x and its index. This yields optimal O(n) time and O(n) auxiliary space.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How would you explain your Two Sum solution in 30 seconds to an interviewer?",
+        "whatInterviewerChecks": "Verbal clarity, algorithmic confidence, and concise explanation of hash-based complement lookup.",
+        "bestReplyScript": "I solve Two Sum in a single pass using a hash map to store previously seen numbers and their indices. For each element x at index i, I compute the required complement: diff = target - x. If diff is already in our map, we immediately return [seen[diff], i]. Otherwise, we record seen[x] = i and continue. This achieves optimal O(N) time complexity and O(N) space complexity.",
         "keyPoints": [
-          "O(n) time, O(n) space",
-          "Complement lookup (target - x)",
-          "Single pass avoids self-matching"
+          "One-pass hash map",
+          "Complement diff = target - x",
+          "O(N) time and O(N) space",
+          "Early exit on first match"
         ],
-        "codeSnippet": "seen = {}\nfor i, x in enumerate(nums):\n    if target - x in seen:\n        return [seen[target - x], i]\n    seen[x] = i"
+        "codeSnippet": "def twoSum(nums: list[int], target: int) -> list[int]:\n    seen = {}\n    for i, x in enumerate(nums):\n        diff = target - x\n        if diff in seen:\n            return [seen[diff], i]\n        seen[x] = i\n    return []"
       },
       {
-        "id": "q2-51",
-        "question": "What if the input contains duplicate numbers, such as [3, 3] with target 6?",
-        "category": "Edge Cases & Invariants",
-        "whatInterviewerChecks": "Understanding dictionary key collisions.",
-        "bestReplyScript": "Our single-pass approach handles duplicates naturally! When processing the first 3 at index 0, the map is empty so seen[3] = 0 is stored. At the second 3 (index 1), diff is 3, which is found in the map at index 0. It returns [0, 1] before ever overwriting the key.",
+        "id": "q2",
+        "category": "Algorithm & Optimization",
+        "question": "Why is the single-pass hash map preferred over a two-pass hash map?",
+        "whatInterviewerChecks": "Understanding pass efficiency, duplicate handling, and avoid self-pairing.",
+        "bestReplyScript": "In a two-pass approach, pass 1 populates the entire dictionary, and pass 2 searches for target - nums[i]. The two-pass approach requires an extra condition: seen[diff] != i to ensure an element isn't paired with itself. A single-pass approach naturally avoids self-pairing because we search the map *before* inserting the current element, while also stopping early the instant the complement is encountered.",
         "keyPoints": [
-          "Check happens before insertion",
-          "No key overwrite occurs",
-          "Naturally returns [0, 1]"
-        ]
+          "Single-pass avoids self-pairing naturally",
+          "Single-pass stops early on first match",
+          "Two-pass requires full map creation before any match checks"
+        ],
+        "codeSnippet": "# \u274c Two-Pass (Extra loop & self-pair check):\n# seen = {x: i for i, x in enumerate(nums)}\n# for i, x in enumerate(nums):\n#     if target - x in seen and seen[target - x] != i:\n#         return [i, seen[target - x]]\n\n# \u2705 One-Pass (Clean & halts early):\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        return [seen[diff], i]\n    seen[x] = i"
       },
       {
-        "id": "q3-51",
-        "question": "Can we solve Two Sum with strictly O(1) auxiliary space?",
-        "category": "Trade-offs & Alternatives",
-        "whatInterviewerChecks": "Knowledge of time-space tradeoffs.",
-        "bestReplyScript": "If extra space is forbidden, we can either use O(n\u00b2) brute force nested loops, or if we only need to return values (not original indices), sort the array in-place and use two pointers in O(n log n) time and O(1) space. Returning original indices in O(1) space strictly requires O(n\u00b2) brute force.",
+        "id": "q3",
+        "category": "Python Internals",
+        "question": "How does Python's `dict` achieve O(1) average lookup time under the hood?",
+        "whatInterviewerChecks": "Knowledge of CPython hash tables, hash functions, and compact dictionary architecture.",
+        "bestReplyScript": "CPython's dictionary is implemented as an open-addressing hash table. In Python 3.6+, it uses a split-array compact architecture: a sparse indices table and a dense entries table preserving insertion order. When looking up a key, CPython calls hash(key), masks it with the table size to find an index, and checks for identity (k1 is k2) or equality (k1 == k2). On average, key lookup takes O(1) time.",
         "keyPoints": [
-          "Hash map is O(n) space",
-          "Two pointers need sorting",
-          "Original indices require O(n) space if sorted"
-        ]
+          "Compact dict layout since Python 3.6",
+          "Open addressing with perturbation probing",
+          "Calls hash(k) then checks equality k1 == k2",
+          "Average O(1) read/write"
+        ],
+        "codeSnippet": "# CPython internally computes:\n# index = hash(key) & (size - 1)\n# If collision occurs, probes with: perturb >>= 5; index = (5 * index + 1 + perturb) & mask"
       },
       {
-        "id": "q4-51",
-        "question": "How does this approach handle negative numbers and zeroes?",
-        "category": "Data Correctness",
-        "whatInterviewerChecks": "Robustness across arithmetic edge cases.",
-        "bestReplyScript": "Because subtraction (target - x) correctly handles negative signs (e.g. target 0 with x = -3 yields diff = 3), and hash maps look up exact integer equality regardless of sign, negative numbers and zeroes are handled seamlessly without special casing.",
+        "id": "q4",
+        "category": "Data Structure Mechanics",
+        "question": "What happens when hash collisions occur in Python dictionaries, and could Two Sum degrade to O(N\u00b2)?",
+        "whatInterviewerChecks": "Worst-case hash map complexity and collision resolution.",
+        "bestReplyScript": "When two distinct keys produce the same initial bucket index, CPython uses pseudo-random probing via a perturbation formula: `i = (5*i + perturb + 1) & mask`. If an adversary crafts inputs where all keys hash to the same bucket, lookups degrade to O(N), making Two Sum O(N\u00b2). However, Python 3 employs SipHash with a randomized per-process secret seed, preventing algorithmic complexity attacks in standard execution.",
         "keyPoints": [
-          "Algebraic subtraction works for all signs",
-          "Hash table checks signed integer equality",
-          "No special branches required"
-        ]
+          "Perturbation recurrence formula",
+          "SipHash random seed per process",
+          "Theoretical worst-case O(N\u00b2), practical O(N)"
+        ],
+        "codeSnippet": "# Python randomized hash seed prevents predictable collisions:\nimport sys\nprint(sys.hash_info.algorithm)  # 'siphash24' or 'fnv'"
+      },
+      {
+        "id": "q5",
+        "category": "Alternative Patterns",
+        "question": "If the input array is already sorted, how would you solve Two Sum in O(1) space?",
+        "whatInterviewerChecks": "Two-pointer technique on sorted arrays.",
+        "bestReplyScript": "If the array is sorted, we use the Two-Pointer pattern. Place `left = 0` and `right = len(nums) - 1`. While `left < right`, compute `current_sum = nums[left] + nums[right]`. If `current_sum == target`, return [left, right]. If `current_sum < target`, increment `left` to increase the sum; if `current_sum > target`, decrement `right` to decrease the sum. This achieves O(N) time and O(1) auxiliary space.",
+        "keyPoints": [
+          "Two pointers from both ends",
+          "O(N) time and O(1) space",
+          "Only works if array is already sorted"
+        ],
+        "codeSnippet": "def twoSum_sorted(nums: list[int], target: int) -> list[int]:\n    left, right = 0, len(nums) - 1\n    while left < right:\n        s = nums[left] + nums[right]\n        if s == target:\n            return [left, right]\n        elif s < target:\n            left += 1\n        else:\n            right -= 1\n    return []"
+      },
+      {
+        "id": "q6",
+        "category": "Edge Cases & Pitfalls",
+        "question": "How does your code handle duplicate values, e.g. nums = [3, 3] and target = 6?",
+        "whatInterviewerChecks": "Dictionary overwrite vs lookup order validation.",
+        "bestReplyScript": "When `nums = [3, 3]` and `target = 6`, at index 0 (`x = 3`), `seen` is empty, so we record `seen[3] = 0`. At index 1 (`x = 3`), `diff = 6 - 3 = 3`. Because 3 is already in `seen` with index 0, the condition `diff in seen` evaluates to True *before* `seen[3]` can be overwritten! We return [0, 1] immediately. This demonstrates why single-pass lookup before insertion handles identical pairs seamlessly.",
+        "keyPoints": [
+          "Check happens before overwrite",
+          "seen[3] == 0 matched at index 1",
+          "Returns [0, 1] perfectly"
+        ],
+        "codeSnippet": "nums = [3, 3]\ntarget = 6\nseen = {}\n# i = 0: diff = 3 -> not in seen -> seen[3] = 0\n# i = 1: diff = 3 -> in seen! -> returns [seen[3], 1] == [0, 1]"
+      },
+      {
+        "id": "q7",
+        "category": "Python Language Nuance",
+        "question": "Why does `enumerate()` matter in Python, and how does it compare to `range(len(nums))`?",
+        "whatInterviewerChecks": "Idiomatic Python usage and iterator efficiency.",
+        "bestReplyScript": "`enumerate(nums)` yields pairs of `(index, value)` directly from the list iterator at C-level speed. Using `for i in range(len(nums)): x = nums[i]` requires calling `len()`, constructing a range generator, and performing manual index lookups `nums[i]` on every iteration. `enumerate()` is more pythonic, readable, and avoids indexing overhead.",
+        "keyPoints": [
+          "Yields (index, value) tuples directly",
+          "C-level iterator efficiency",
+          "Avoids repetitive nums[i] index lookups"
+        ],
+        "codeSnippet": "# \u2705 Pythonic and efficient:\nfor i, x in enumerate(nums):\n    pass\n\n# \u274c Less idiomatic, redundant indexing:\nfor i in range(len(nums)):\n    x = nums[i]"
+      },
+      {
+        "id": "q8",
+        "category": "Memory & Space Complexity",
+        "question": "What is the exact memory overhead of storing N elements in a Python dictionary?",
+        "whatInterviewerChecks": "Understanding hash table resizing and memory footprint.",
+        "bestReplyScript": "A Python dictionary does not allocate memory on a per-element basis. It allocates bucket arrays in powers of two (8, 16, 32, ...). When the table reaches 2/3 fullness (load factor ~0.66), CPython reallocates a larger table and re-indexes existing entries. For N elements, auxiliary space is strictly O(N), requiring roughly 36 to 48 bytes per entry on 64-bit platforms.",
+        "keyPoints": [
+          "Resize trigger at 2/3 load factor",
+          "Power-of-two table capacity",
+          "O(N) auxiliary space in RAM"
+        ],
+        "codeSnippet": "import sys\nd = {}\nprint([sys.getsizeof(d) for _ in range(5)]) # Memory steps as capacity resizes"
+      },
+      {
+        "id": "q9",
+        "category": "Type Handling & Constraints",
+        "question": "Can integer values in Python cause 32-bit or 64-bit integer overflow during addition?",
+        "whatInterviewerChecks": "Python's arbitrary precision integer model.",
+        "bestReplyScript": "In Python 3, integers have arbitrary precision (represented by `PyLongObject`). Unlike C++ or Java where numbers over 2^31-1 overflow into negatives, Python integers dynamically allocate more memory digits as numbers grow. Therefore, `target - x` will never cause overflow in Python, though the time complexity of arithmetic on massive numbers (> 4300 digits) becomes O(log N).",
+        "keyPoints": [
+          "Arbitrary precision in Python 3",
+          "No 32-bit / 64-bit overflow bugs",
+          "PyLongObject handles digit allocation dynamically"
+        ],
+        "codeSnippet": "big = 10**30\nprint(big + big) # Works cleanly without overflow!"
+      },
+      {
+        "id": "q10",
+        "category": "System Design / Scale",
+        "question": "How would you solve Two Sum if the input dataset contains 10 billion integers on disk and cannot fit in RAM?",
+        "whatInterviewerChecks": "External memory algorithms, map-reduce, and hashing partitioning.",
+        "bestReplyScript": "We partition the dataset into K buckets on disk using a hash function on the value: `bucket_id = hash(x) % K`. Notice that for any value `x`, its complement `target - x` will always map to a deterministic bucket: `hash(target - x) % K`. We stream numbers from disk into their respective bucket files. Then we process paired bucket files in RAM sequentially. If `target` is even and `x == target / 2`, a single bucket handles internal pairs.",
+        "keyPoints": [
+          "Hash partitioning into disk buckets",
+          "Complement mapping bucket_id = hash(target - x) % K",
+          "Process paired chunks in RAM sequentially"
+        ],
+        "codeSnippet": "# Disk bucket partitioning:\n# File 1: numbers hashing to bucket b\n# File 2: numbers hashing to bucket (target - b)\n# Process File 1 and File 2 in RAM using standard Two Sum hash map"
+      },
+      {
+        "id": "q11",
+        "category": "Variant Follow-up",
+        "question": "How would you modify the solution to return all unique pairs that sum up to target?",
+        "whatInterviewerChecks": "Handling duplicates and producing unique pair sets.",
+        "bestReplyScript": "To return all unique value pairs, we can sort the array and use the two-pointer technique while skipping duplicate values on both pointers. Alternatively, with a hash set, for each number we check if `target - x` is in our set. To prevent duplicate pairs like (2, 4) and (4, 2), we can store canonical tuples `(min(x, diff), max(x, diff))` in a result set.",
+        "keyPoints": [
+          "Sort + two-pointer skipping duplicates",
+          "Or canonical tuples in a result set (min, max)",
+          "O(N log N) or O(N) with set"
+        ],
+        "codeSnippet": "def allUniquePairs(nums: list[int], target: int) -> set[tuple[int, int]]:\n    seen = set()\n    res = set()\n    for x in nums:\n        diff = target - x\n        if diff in seen:\n            res.add((min(x, diff), max(x, diff)))\n        seen.add(x)\n    return res"
+      },
+      {
+        "id": "q12",
+        "category": "Concurrency & GIL",
+        "question": "Can Two Sum be accelerated using Python's `threading` module?",
+        "whatInterviewerChecks": "Understanding Python's Global Interpreter Lock (GIL) and CPU-bound tasks.",
+        "bestReplyScript": "Because Two Sum is a CPU-bound algorithmic task, Python's `threading` module will not achieve true parallel speedup due to the Global Interpreter Lock (GIL), which permits only one thread to execute Python bytecode at a time. To parallelize Two Sum, we must use `multiprocessing` to bypass the GIL, or compile the loop via Cython, Numba, or C extensions without GIL constraints.",
+        "keyPoints": [
+          "CPU-bound tasks are constrained by the GIL",
+          "threading gives no speedup for CPU loops",
+          "Use multiprocessing or C extensions for true parallelism"
+        ],
+        "codeSnippet": "# Multithreading won't speed up pure CPU loops:\n# from multiprocessing import Pool  # Use multiprocessing instead!"
+      },
+      {
+        "id": "q13",
+        "category": "Testing & Testability",
+        "question": "What 5 test cases would you write to thoroughly validate a Two Sum implementation?",
+        "whatInterviewerChecks": "Quality engineering and defensive testing mindset.",
+        "bestReplyScript": "I would test: 1) Standard positive integers `[2, 7, 11, 15], 9` -> `[0, 1]`; 2) Two identical elements adding to target `[3, 3], 6` -> `[0, 1]`; 3) Negative numbers `[-1, -2, -3, -4, -5], -8` -> `[2, 4]`; 4) Target with zero `[0, 4, 3, 0], 0` -> `[0, 3]`; 5) No valid pair exists -> `[]` or exception handling.",
+        "keyPoints": [
+          "Standard positive case",
+          "Duplicate identical values",
+          "Negative numbers",
+          "Zeros adding to zero",
+          "No pair found"
+        ],
+        "codeSnippet": "assert twoSum([2, 7, 11, 15], 9) == [0, 1]\nassert twoSum([3, 3], 6) == [0, 1]\nassert twoSum([-3, 4, 3, 90], 0) == [0, 2]"
+      },
+      {
+        "id": "q14",
+        "category": "Pythonic Clean Code",
+        "question": "How should function signatures be typed per PEP 484 for Two Sum in modern Python 3.12?",
+        "whatInterviewerChecks": "Modern type annotations and clean code standards.",
+        "bestReplyScript": "In Python 3.9+, standard built-in collections can be used directly for generic typing without importing from `typing`. The modern signature is: `def two_sum(nums: list[int], target: int) -> list[int]:`. We use lowercase snake_case for PEP 8 compliance and type hints to allow static type checkers like mypy to catch mismatched arguments.",
+        "keyPoints": [
+          "Use built-in list[int] (Python 3.9+)",
+          "Snake_case naming per PEP 8",
+          "Enables static verification via mypy"
+        ],
+        "codeSnippet": "def two_sum(nums: list[int], target: int) -> list[int]:\n    # Fully typed modern Python 3\n    ..."
+      },
+      {
+        "id": "q15",
+        "category": "Senior Trade-Off Decision",
+        "question": "Under what circumstance would you choose the O(N\u00b2) brute force over the O(N) hash map?",
+        "whatInterviewerChecks": "Real-world engineering trade-offs (memory constraints vs CPU cycles).",
+        "bestReplyScript": "In deeply embedded systems or microcontroller environments (e.g. MicroPython on a sensor with 4KB of RAM), allocating a dynamic hash table with 1,000 entries could trigger an Out-Of-Memory (OOM) crash. If N is tiny (e.g. N <= 20) and memory is critically constrained, the brute-force two-loop solution uses strictly O(1) memory and may execute faster due to CPU cache locality and zero heap allocations.",
+        "keyPoints": [
+          "Extremely low memory / embedded constraints",
+          "Tiny N (N <= 20) where cache locality beats hash overhead",
+          "Zero heap allocation requirement"
+        ],
+        "codeSnippet": "# When N < 20 and memory budget is 0 bytes:\nfor i in range(len(nums)):\n    for j in range(i + 1, len(nums)):\n        if nums[i] + nums[j] == target:\n            return [i, j]"
       }
     ],
     "mistakes": [
@@ -19764,52 +19914,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-52",
-        "question": "Why does moving the shorter pointer guarantee we do not miss a larger area?",
-        "category": "Algorithmic Proof",
-        "whatInterviewerChecks": "Mathematical rigor.",
-        "bestReplyScript": "Area is width times the minimum of the two heights: (r - l) * min(h[l], h[r]). Moving either pointer inward decreases width. If we were to move the taller wall, the height would still be capped by the shorter wall, guaranteeing a strictly smaller area. The ONLY way to achieve a larger area with smaller width is to find a taller replacement for the shorter wall.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How would you explain Container With Most Water in 30 seconds?",
+        "whatInterviewerChecks": "Greedy two-pointer logic and area formula breakdown.",
+        "bestReplyScript": "We place two pointers at opposite ends of the array, `left = 0` and `right = len(height) - 1`. At each step, the water volume is `(right - left) * min(height[left], height[right])`. To maximize area as width shrinks, our only hope of finding a larger area is finding a taller line. Therefore, we greedily advance the pointer pointing to the shorter line inward. We repeat until pointers meet in O(N) time and O(1) space.",
         "keyPoints": [
-          "Width always decreases",
-          "Limiting height caps capacity",
-          "Moving taller wall cannot increase area"
-        ]
+          "Two pointers from ends",
+          "Width decreases by 1 each step",
+          "Move shorter line pointer inward",
+          "O(N) time & O(1) space"
+        ],
+        "codeSnippet": "def maxArea(height: list[int]) -> int:\n    l, r = 0, len(height) - 1\n    max_water = 0\n    while l < r:\n        w = r - l\n        h = min(height[l], height[r])\n        max_water = max(max_water, w * h)\n        if height[l] < height[r]:\n            l += 1\n        else:\n            r -= 1\n    return max_water"
       },
       {
-        "id": "q2-52",
-        "question": "What if both lines have equal height?",
-        "category": "Edge Cases",
-        "whatInterviewerChecks": "Symmetry and tie-breaking.",
-        "bestReplyScript": "If heights[l] == heights[r], we can move either pointer (or both)! To beat the current area with smaller width, we would need BOTH new lines to be taller than the current height. Moving either one is mathematically sound.",
+        "id": "q2",
+        "category": "Mathematical Proof",
+        "question": "Why is it mathematically guaranteed that moving the taller pointer will never find a larger area?",
+        "whatInterviewerChecks": "Proof by contradiction and invariant reasoning.",
+        "bestReplyScript": "Let the width be W = right - left, and height[left] < height[right]. The area is W * height[left]. If we were to move the taller line `right` to some `k < right`, the new width is strictly smaller: W' < W. The new height is `min(height[left], height[k]) <= height[left]`. Thus, any new area would be at most W' * height[left] < W * height[left]. Moving the taller line is provably strictly inferior.",
         "keyPoints": [
-          "Symmetric tie-breaker",
-          "Both lines must be replaced",
-          "Arbitrary choice like r -= 1 is valid"
-        ]
+          "Width strictly decreases",
+          "Height is capped by the shorter line",
+          "Moving taller line can only decrease area",
+          "Proof by contradiction"
+        ],
+        "codeSnippet": "# Proof: If height[l] < height[r]:\n# New area with (r - 1) = (w - 1) * min(height[l], height[r - 1])\n# <= (w - 1) * height[l] < w * height[l] (old area)!"
       },
       {
-        "id": "q3-52",
-        "question": "How does this differ from Trapping Rain Water?",
-        "category": "Pattern Recognition",
-        "whatInterviewerChecks": "Differentiating single container vs elevation profile.",
-        "bestReplyScript": "Container With Most Water finds the single largest rectangular volume between two lines, ignoring interior bars. Trapping Rain Water sums the trapped water above every bar based on left-max and right-max barriers.",
+        "id": "q3",
+        "category": "Complexity & Big-O",
+        "question": "What are the exact time and space complexities of this two-pointer approach?",
+        "whatInterviewerChecks": "Strict step-counting analysis.",
+        "bestReplyScript": "The initial distance between pointers is N - 1. In every single iteration of the while loop, exactly one pointer moves inward (`left += 1` or `right -= 1`). The distance decreases by 1 in each step. The loop executes at most N - 1 times, making time complexity strictly O(N). We only store a few integer pointers and variables (`l, r, max_water, w, h`), so auxiliary space is O(1).",
         "keyPoints": [
-          "Container is single max pair",
-          "Trapping Rain Water is cumulative sum",
-          "Both use two pointers but compute different metrics"
-        ]
+          "Loop runs N - 1 times",
+          "Strictly O(N) time",
+          "O(1) auxiliary space",
+          "Zero allocations"
+        ],
+        "codeSnippet": "# Total steps = N - 1 -> O(N) time, O(1) space"
       },
       {
-        "id": "q4-52",
-        "question": "What are the key test cases for this problem?",
-        "category": "Testing & QA",
-        "whatInterviewerChecks": "Edge case awareness.",
-        "bestReplyScript": "1) Array of length 2; 2) Flat array where all bars are identical; 3) Strictly increasing staircase; 4) Deep V-shape with tall edges and flat middle.",
+        "id": "q4",
+        "category": "Edge Cases & Boundaries",
+        "question": "What happens if height[left] == height[right]? Which pointer should you move?",
+        "whatInterviewerChecks": "Edge case understanding when lines have identical height.",
+        "bestReplyScript": "When `height[left] == height[right]`, you can move either pointer (or even both inward simultaneously). Because both lines have the same height H, any container formed between `left` and an interior line, or `right` and an interior line, would have width < (right - left) and height <= H, producing a smaller area. Moving either pointer preserves correctness.",
         "keyPoints": [
-          "Minimal length 2",
-          "Identical heights",
-          "Monotonic arrays"
-        ]
+          "Either pointer can be moved",
+          "Or move both l += 1 and r -= 1",
+          "Does not compromise correctness"
+        ],
+        "codeSnippet": "if height[l] < height[r]:\n    l += 1\nelif height[r] < height[l]:\n    r -= 1\nelse:\n    l += 1  # or r -= 1, or both!"
+      },
+      {
+        "id": "q5",
+        "category": "Performance Optimization",
+        "question": "How can you optimize the two-pointer loop to skip redundant shorter lines faster?",
+        "whatInterviewerChecks": "Loop skipping optimization for duplicate or descending heights.",
+        "bestReplyScript": "After moving a pointer, if the newly reached line is shorter than or equal to the previous line height, it cannot possibly produce a larger area with the decreased width. We can fast-forward `left` past any lines `<= h` and fast-backward `right` past any lines `<= h` using inner while loops. While worst-case time remains O(N), this drastically cuts CPU cycles on flat or monotonically descending inputs.",
+        "keyPoints": [
+          "Skip lines <= current boundary height",
+          "Width decreased, so shorter lines cannot win",
+          "Improves real-world runtime"
+        ],
+        "codeSnippet": "while l < r:\n    h = min(height[l], height[r])\n    max_water = max(max_water, (r - l) * h)\n    while l < r and height[l] <= h: l += 1\n    while l < r and height[r] <= h: r -= 1"
+      },
+      {
+        "id": "q6",
+        "category": "Comparison With Other Problems",
+        "question": "How is Container With Most Water fundamentally different from Trapping Rain Water?",
+        "whatInterviewerChecks": "Distinguishing between 2-line containers and elevation-map trapped pools.",
+        "bestReplyScript": "In Container With Most Water, we choose *exactly two lines* to form a single bounding container, ignoring all bars in between. In Trapping Rain Water, the bars represent physical terrain where water collects in cavities between elevations. Trapping Rain Water requires computing `min(max_left, max_right) - height[i]` at every individual index, whereas Container With Most Water maximizes a single geometric rectangle.",
+        "keyPoints": [
+          "Container = Pick 2 lines for single pool",
+          "Trapping = Aggregate water trapped across terrain",
+          "Different mathematical formulas"
+        ],
+        "codeSnippet": "# Container: area = (r - l) * min(height[l], height[r])\n# Trapping: water[i] = max(0, min(left_max[i], right_max[i]) - height[i])"
+      },
+      {
+        "id": "q7",
+        "category": "Python Built-in Overhead",
+        "question": "Does calling `min()` and `max()` in Python add overhead in a tight loop of 100,000 iterations?",
+        "whatInterviewerChecks": "CPython function call overhead vs inline conditional expressions.",
+        "bestReplyScript": "Yes. In CPython, `min()` and `max()` are built-in functions that incur Python callable frame overhead and argument tuple processing. Replacing `min(a, b)` with an inline ternary `a if a < b else b` avoids the function call and executes up to 30-40% faster in a tight loop of 100,000 iterations.",
+        "keyPoints": [
+          "Built-in function call overhead",
+          "Ternary operator executes faster in tight loops",
+          "Micro-optimization for competitive programming"
+        ],
+        "codeSnippet": "# Micro-optimized without min/max call overhead:\nh = height[l] if height[l] < height[r] else height[r]\narea = (r - l) * h\nif area > max_water:\n    max_water = area"
+      },
+      {
+        "id": "q8",
+        "category": "Data Validation & Defensive Coding",
+        "question": "What minimum array length is required for this problem, and how should you validate inputs?",
+        "whatInterviewerChecks": "Handling constraints and defensive precondition checks.",
+        "bestReplyScript": "A container requires at least two vertical lines to hold water, so `len(height) >= 2`. If `len(height) < 2`, no container can be formed and we should return 0. Furthermore, all height values must be non-negative integers (`height[i] >= 0`).",
+        "keyPoints": [
+          "Minimum length is 2",
+          "Empty or 1-element lists return 0",
+          "Non-negative height constraint"
+        ],
+        "codeSnippet": "if not height or len(height) < 2:\n    return 0"
+      },
+      {
+        "id": "q9",
+        "category": "Python Memory Layout",
+        "question": "How is a Python list of integers stored in memory, and does it affect cache locality for two pointers?",
+        "whatInterviewerChecks": "CPython list implementation (`PyListObject`) and CPU cache lines.",
+        "bestReplyScript": "A Python `list` is an array of pointers (`PyObject**`) to integer objects (`PyLongObject`) scattered across heap memory. Unlike C/C++ arrays where contiguous primitive integers fit in a single CPU cache line, Python two-pointer traversal involves pointer dereferencing. However, since small integers (-5 to 256) are pre-allocated in CPython, cache locality is relatively good.",
+        "keyPoints": [
+          "Array of PyObject pointers",
+          "Pointers dereferenced on access",
+          "Small integers (-5 to 256) are cached"
+        ],
+        "codeSnippet": "# CPython array of pointers:\n# [ptr0, ptr1, ptr2] -> each points to a PyLongObject on heap"
+      },
+      {
+        "id": "q10",
+        "category": "Brute Force Comparison",
+        "question": "Why does the brute force O(N\u00b2) solution fail on large inputs, and what is the exact iteration count?",
+        "whatInterviewerChecks": "Combinatorial math and quadratic scaling limits.",
+        "bestReplyScript": "The brute-force checks all pairs: `N * (N - 1) / 2` pairs. For N = 100,000, that is `100,000 * 99,999 / 2 \u2248 5 * 10^9` operations. In Python, a typical CPU executes ~10^7 simple bytecode instructions per second, so 5 billion operations would take ~500 seconds, resulting in a Time Limit Exceeded (TLE) error. The two-pointer O(N) approach runs in ~0.02 seconds.",
+        "keyPoints": [
+          "N(N - 1) / 2 pairs for brute force",
+          "5 * 10^9 operations for N = 100k",
+          "TLE threshold ~ 10^7 ops/sec"
+        ],
+        "codeSnippet": "# Brute force O(N^2):\n# for i in range(n):\n#     for j in range(i + 1, n): ... -> TLE on N > 10,000"
+      },
+      {
+        "id": "q11",
+        "category": "Alternative 3D Extension",
+        "question": "How would you generalize this problem to 3 dimensions (2D grid of pillar heights)?",
+        "whatInterviewerChecks": "Extension to Trapping Rain Water II using Priority Queues.",
+        "bestReplyScript": "In 3D, water is bounded in a grid where every cell has a height. A two-pointer approach no longer suffices because water can spill in 4 directions (up, down, left, right). The 3D problem is solved using a Min-Heap (Priority Queue) starting with all perimeter cells, greedily expanding inward and maintaining the minimum boundary height, taking O(R * C * log(R * C)) time.",
+        "keyPoints": [
+          "3D requires tracking a 2D boundary",
+          "Min-Heap priority queue",
+          "Greedy inward BFS expansion"
+        ],
+        "codeSnippet": "# 3D generalization uses heapq:\n# import heapq\n# heap = [(height[r][c], r, c) for perimeter cells]"
+      },
+      {
+        "id": "q12",
+        "category": "Property-Based Testing",
+        "question": "What invariant must hold true across every single step of the while loop?",
+        "whatInterviewerChecks": "Loop invariants and formal verification.",
+        "bestReplyScript": "The loop invariant is: 'The maximum water container formed by any pair of lines involving already-discarded lines has already been evaluated and is <= max_water'. Because any discarded line could never form a larger container with any remaining line in the active window, the search space is safely pruned without missing the global maximum.",
+        "keyPoints": [
+          "Loop invariant maintains validity of pruned space",
+          "Discarded lines provably cannot form a better pair",
+          "Guarantees global optimum"
+        ],
+        "codeSnippet": "# Invariant: optimal_solution in range [l, r] OR already recorded in max_water"
+      },
+      {
+        "id": "q13",
+        "category": "Monotonicity Concept",
+        "question": "Why does greedy choice work here without needing backtracking or dynamic programming?",
+        "whatInterviewerChecks": "Understanding when greedy choice property applies.",
+        "bestReplyScript": "Greedy choice works because the width dimension is strictly monotonic: it decreases by exactly 1 at every step. Because width always shrinks, the only way to get a larger area is if the height increases. Since the height of the container is bounded by the shorter line, moving the taller line can NEVER increase height. Therefore, the decision to discard the shorter line is optimal and irreversible.",
+        "keyPoints": [
+          "Monotonically shrinking width",
+          "Height bounded by min(h1, h2)",
+          "No backtracking needed because discarded lines cannot beat current max"
+        ],
+        "codeSnippet": "# No backtracking necessary -> Strictly forward linear O(N) path"
+      },
+      {
+        "id": "q14",
+        "category": "Real-world Applications",
+        "question": "Where does this two-pointer boundary-reduction pattern appear in real-world software engineering?",
+        "whatInterviewerChecks": "Practical system engineering and algorithmic pattern transfer.",
+        "bestReplyScript": "This pattern appears in computer graphics and computational geometry (finding the largest bounding box or viewport clipping), network packet buffering (maximizing bandwidth capacity between two throttling nodes), and financial portfolio risk bounds (maximizing risk-adjusted return across time horizons).",
+        "keyPoints": [
+          "Viewport clipping in graphics",
+          "Bandwidth capacity optimization",
+          "Time-series bounding boxes"
+        ],
+        "codeSnippet": "# Geometric bounding box optimization uses similar two-pointer sweeps"
+      },
+      {
+        "id": "q15",
+        "category": "Refactoring & Production Code",
+        "question": "How would you structure this code for readability and maintainability in an enterprise codebase?",
+        "whatInterviewerChecks": "Clean architecture, naming conventions, and docstrings.",
+        "bestReplyScript": "In enterprise code, we write clear docstrings explaining the algorithmic invariant, validate inputs defensively, and use descriptive variable names like `left_idx`, `right_idx`, and `max_water_volume` rather than single-letter names.",
+        "keyPoints": [
+          "Descriptive variable names",
+          "PEP 257 docstring",
+          "Defensive validation"
+        ],
+        "codeSnippet": "def compute_max_water_container(heights: list[int]) -> int:\n    \"\"\"Compute maximum water volume using O(N) two-pointer scan.\"\"\"\n    if len(heights) < 2:\n        return 0\n    left_idx, right_idx = 0, len(heights) - 1\n    max_volume = 0\n    while left_idx < right_idx:\n        width = right_idx - left_idx\n        current_height = min(heights[left_idx], heights[right_idx])\n        max_volume = max(max_volume, width * current_height)\n        if heights[left_idx] < heights[right_idx]:\n            left_idx += 1\n        else:\n            right_idx -= 1\n    return max_volume"
       }
     ],
     "mistakes": [
@@ -19917,51 +20217,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-53",
-        "question": "How do you avoid duplicate triplets without using an auxiliary set?",
-        "category": "Deduplication Strategy",
-        "whatInterviewerChecks": "Pointer manipulation precision.",
-        "bestReplyScript": "By sorting the array first! We skip duplicate outer elements using `if i > 0 and nums[i] == nums[i - 1]: continue`. Once a matching triplet is found with two pointers, we advance `l` past identical values (`while l < r and nums[l] == nums[l-1]: l += 1`) and decrement `r` past identical values. This guarantees every combination is unique in O(1) extra space.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain 3Sum in 30 seconds to an interviewer?",
+        "whatInterviewerChecks": "Problem reduction to Two Sum II and duplicate skipping strategy.",
+        "bestReplyScript": "I solve 3Sum by first sorting the array in O(N log N) time. Then, I iterate with index i from 0 to N-3. If nums[i] > 0, we can break early since three positive numbers cannot sum to zero. For each i, if i > 0 and nums[i] == nums[i-1], we skip it to avoid duplicate triplets. We then run a Two-Pointer search on the remaining subarray with `left = i + 1` and `right = N - 1` looking for `nums[left] + nums[right] == -nums[i]`. When found, we record the triplet and advance both pointers past duplicate values. Total time is O(N\u00b2), and space is O(1) beyond sorting.",
         "keyPoints": [
-          "Sort first",
-          "Skip duplicates at outer loop",
-          "Skip duplicates on left and right pointers"
-        ]
+          "Sort array first",
+          "Fix index i, two pointers for left and right",
+          "Skip duplicates at i, left, and right",
+          "O(N\u00b2) time & O(1) space"
+        ],
+        "codeSnippet": "def threeSum(nums: list[int]) -> list[list[int]]:\n    nums.sort()\n    res = []\n    for i in range(len(nums) - 2):\n        if nums[i] > 0: break\n        if i > 0 and nums[i] == nums[i-1]: continue\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            s = nums[i] + nums[l] + nums[r]\n            if s == 0:\n                res.append([nums[i], nums[l], nums[r]])\n                while l < r and nums[l] == nums[l+1]: l += 1\n                while l < r and nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n            elif s < 0: l += 1\n            else: r -= 1\n    return res"
       },
       {
-        "id": "q2-53",
-        "question": "Can we optimize the outer loop to break early?",
-        "category": "Pruning Optimization",
-        "whatInterviewerChecks": "Early exit awareness.",
-        "bestReplyScript": "Yes! Since the array is sorted, if `nums[i] > 0`, the sum of any three numbers from index i onwards will strictly exceed 0 (as all following numbers are also positive). We can break the outer loop immediately when nums[i] > 0.",
+        "id": "q2",
+        "category": "Duplicate Elimination",
+        "question": "Why do we skip duplicates using `i > 0 and nums[i] == nums[i-1]` instead of `nums[i] == nums[i+1]`?",
+        "whatInterviewerChecks": "Critical boundary logic preventing missed solutions.",
+        "bestReplyScript": "Checking `nums[i] == nums[i+1]` skips the first occurrence before exploring it, which incorrectly prevents valid triplets with duplicate elements like `[-1, -1, 2]` where the first and second elements are identical. Checking `i > 0 and nums[i] == nums[i-1]` ensures we fully explore all solutions using the first occurrence, and only skip redundant subproblems on subsequent occurrences.",
         "keyPoints": [
-          "nums[i] > 0 implies all following numbers are positive",
-          "Sum can never equal zero",
-          "Breaks outer loop early"
-        ]
+          "Checking nums[i] == nums[i-1] allows [-1, -1, 2]",
+          "Checking nums[i] == nums[i+1] skips valid pairs",
+          "Crucial difference in two-pointer search"
+        ],
+        "codeSnippet": "# \u274c WRONG (misses [-1, -1, 2]):\n# if nums[i] == nums[i+1]: continue\n\n# \u2705 CORRECT (processes first -1, skips second -1):\nif i > 0 and nums[i] == nums[i-1]:\n    continue"
       },
       {
-        "id": "q3-53",
-        "question": "Why is 3Sum O(n\u00b2) and not O(n log n)?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Big-O mastery.",
-        "bestReplyScript": "Sorting takes O(n log n). Then, the outer loop runs n times, and inside each iteration, the two pointers traverse the remaining array in O(n) linear time. Multiplying the outer loop by the inner pointer scan gives O(n * n) = O(n\u00b2), which dominates the initial O(n log n) sort.",
+        "id": "q3",
+        "category": "Early Exit Optimization",
+        "question": "Why can we safely `break` the outer loop if `nums[i] > 0`?",
+        "whatInterviewerChecks": "Understanding sorted array properties.",
+        "bestReplyScript": "Because the array is sorted in ascending order, if `nums[i] > 0`, then all subsequent numbers `nums[l]` and `nums[r]` must also be strictly greater than 0. The sum of three positive numbers `nums[i] + nums[l] + nums[r]` will always be strictly greater than zero, making it impossible to sum to 0. Breaking early avoids unnecessary loop iterations.",
         "keyPoints": [
-          "O(n log n) sort",
-          "n outer iterations * O(n) two-pointer scan",
-          "Total time is O(n\u00b2)"
-        ]
+          "Array is sorted",
+          "Sum of 3 positive numbers > 0",
+          "Break terminates early"
+        ],
+        "codeSnippet": "if nums[i] > 0:\n    break  # Impossible to sum to 0 anymore!"
       },
       {
-        "id": "q4-53",
-        "question": "What if no triplet sums to zero?",
-        "category": "Output Specification",
-        "whatInterviewerChecks": "Handling empty results according to spec.",
-        "bestReplyScript": "The problem specification requires printing 'NONE' if no valid triplet exists. We check if our collected triplets list is non-empty before printing; if empty, we print 'NONE'.",
+        "id": "q4",
+        "category": "Time Complexity Breakdown",
+        "question": "What is the exact time complexity, including sorting?",
+        "whatInterviewerChecks": "Asymptotic analysis combining sorting and nested loops.",
+        "bestReplyScript": "Sorting `nums` with Timsort takes O(N log N) time. The outer loop runs up to N times. For each outer iteration, the inner two-pointer loop scans the remaining elements at most N times in O(N). Thus, the nested loops take O(N\u00b2) time. Since O(N\u00b2) dominates O(N log N), the total time complexity is strictly O(N\u00b2).",
         "keyPoints": [
-          "Check list emptiness",
-          "Print 'NONE' as fallback"
-        ]
+          "Sorting is O(N log N)",
+          "Nested loops are O(N\u00b2)",
+          "Total time = O(N\u00b2)"
+        ],
+        "codeSnippet": "# Total Time: O(N log N) + O(N^2) = O(N^2)"
+      },
+      {
+        "id": "q5",
+        "category": "Space Complexity & Timsort",
+        "question": "What is the auxiliary space complexity of 3Sum in Python?",
+        "whatInterviewerChecks": "CPython's Timsort memory requirements.",
+        "bestReplyScript": "In Python, `nums.sort()` uses Timsort, which requires up to O(N) auxiliary space in the worst case to store temporary merge runs. If in-place modification of `nums` is forbidden and we use `sorted(nums)`, we allocate an additional O(N) list. The two pointers themselves use O(1) space. Thus, auxiliary space is O(N) due to Python sorting.",
+        "keyPoints": [
+          "Timsort uses O(N) auxiliary space",
+          "Sorting creates merge runs in memory",
+          "Pointers use O(1) space"
+        ],
+        "codeSnippet": "# Python's Timsort uses O(N) temporary buffer memory"
+      },
+      {
+        "id": "q6",
+        "category": "Hash Set vs Two Pointers",
+        "question": "Could we solve 3Sum with a Hash Set instead of sorting? What are the trade-offs?",
+        "whatInterviewerChecks": "Evaluating hash-based vs two-pointer approaches.",
+        "bestReplyScript": "Yes. We can iterate through i and j, looking for `-(nums[i] + nums[j])` in a set. However, without sorting, handling duplicate triplets requires sorting each triplet tuple and storing them in a set of tuples, incurring substantial memory overhead and hash computation costs. The two-pointer approach on a sorted array avoids hash sets completely and runs significantly faster in practice.",
+        "keyPoints": [
+          "Hash set requires storing sorted tuples in a set",
+          "Higher memory overhead for hash table",
+          "Two pointers is more cache-friendly and uses less RAM"
+        ],
+        "codeSnippet": "# Hash Set alternative (higher memory overhead):\n# seen_triplets = set()\n# for i in range(n):\n#     seen = set()\n#     for j in range(i+1, n): ... seen_triplets.add(tuple(sorted(...)))"
+      },
+      {
+        "id": "q7",
+        "category": "Python List vs Set Performance",
+        "question": "Why shouldn't you do `if triplet not in res: res.append(triplet)` when `res` is a list?",
+        "whatInterviewerChecks": "Understanding O(M) linear search in lists degrading overall complexity.",
+        "bestReplyScript": "If `res` is a list, evaluating `triplet not in res` performs a linear scan over all previously found triplets. If there are M triplets (where M can be O(N\u00b2)), doing this check on every match degrades the time complexity from O(N\u00b2) to O(N\u00b3)! That is why we sort first and use pointer increments to skip duplicates in O(1) time.",
+        "keyPoints": [
+          "'in list' takes linear O(M) time",
+          "Degrades complexity to O(N\u00b3)",
+          "Skipping pointers avoids linear membership checks"
+        ],
+        "codeSnippet": "# \u274c DANGEROUS O(N^3) trap:\n# if [a, b, c] not in res:  # O(len(res)) scan every time!\n#     res.append([a, b, c])"
+      },
+      {
+        "id": "q8",
+        "category": "Edge Cases & Boundaries",
+        "question": "What happens if all numbers are zeros, e.g. nums = [0, 0, 0, 0, 0]?",
+        "whatInterviewerChecks": "Testing duplicate suppression on all-zero arrays.",
+        "bestReplyScript": "If `nums = [0, 0, 0, 0, 0]`, at `i = 0`, `nums[0] = 0`. The two pointers find `nums[1] + nums[4] == 0`, adding `[0, 0, 0]`. The inner while loops then skip all identical 0s for `left` and `right`. In the outer loop, subsequent `i = 1, 2, ...` see `nums[i] == nums[i-1]` and skip immediately. The output correctly contains exactly one triplet: `[[0, 0, 0]]`.",
+        "keyPoints": [
+          "Finds first [0, 0, 0]",
+          "Inner skips advance past all zeros",
+          "Outer skip prevents duplicate i",
+          "Returns exactly [[0, 0, 0]]"
+        ],
+        "codeSnippet": "assert threeSum([0, 0, 0, 0, 0]) == [[0, 0, 0]]"
+      },
+      {
+        "id": "q9",
+        "category": "Python Slicing Overhead",
+        "question": "Why shouldn't you slice the array inside the loop like `for x in nums[i+1:]`?",
+        "whatInterviewerChecks": "Slicing memory allocation overhead.",
+        "bestReplyScript": "In Python, `nums[i+1:]` creates a shallow copy of the sublist on the heap. Doing this inside an outer loop of N iterations allocates O(N\u00b2) total memory and wastes CPU time copying pointers. Using index pointers `left = i + 1` directly operates over the original array with zero allocations.",
+        "keyPoints": [
+          "nums[i+1:] allocates new heap list",
+          "Repeated slicing costs O(N\u00b2) memory",
+          "Pointers avoid any copying"
+        ],
+        "codeSnippet": "# \u274c Allocates O(N) memory every iteration:\n# sub = nums[i+1:]\n\n# \u2705 O(1) memory pointer:\nleft = i + 1"
+      },
+      {
+        "id": "q10",
+        "category": "Generalization: K-Sum",
+        "question": "How does this solution generalize to 4Sum, 5Sum, or arbitrary K-Sum?",
+        "whatInterviewerChecks": "Recursive reduction from K-Sum to 2-Sum.",
+        "bestReplyScript": "Any K-Sum problem can be reduced to (K-1)-Sum recursively by fixing the first element and recursing until K == 2, where we apply the two-pointer Two Sum algorithm. The base case K=2 runs in O(N), giving total time O(N^(K-1)). For 3Sum, K=3 -> O(N\u00b2). For 4Sum, K=4 -> O(N\u00b3).",
+        "keyPoints": [
+          "K-Sum reduces recursively to (K-1)-Sum",
+          "Base case is 2-Sum using two pointers",
+          "General time complexity O(N^(K-1))"
+        ],
+        "codeSnippet": "# K-Sum recursive skeleton:\n# def kSum(nums, target, k, start):\n#     if k == 2: return twoSum(nums, target, start)\n#     for i in range(start, len(nums)): ... kSum(..., k - 1, i + 1)"
+      },
+      {
+        "id": "q11",
+        "category": "Memory Leaks & Circular Refs",
+        "question": "Can storing triplets in a list cause memory leaks or circular references in Python?",
+        "whatInterviewerChecks": "Garbage collection and reference counting understanding.",
+        "bestReplyScript": "No. Triplets contain primitive integers (`int`), which have no references to parent containers. Python's reference counting garbage collector will immediately deallocate the list when it goes out of scope, with no cyclic references that would require the cyclic garbage collector (`gc`).",
+        "keyPoints": [
+          "Integers are leaf nodes in GC graph",
+          "No cyclic references possible",
+          "Immediate reference count reclamation"
+        ],
+        "codeSnippet": "# Leaf objects like ints deallocate instantaneously via refcount"
+      },
+      {
+        "id": "q12",
+        "category": "Test Suite Architecture",
+        "question": "What edge cases must be included in a test suite for 3Sum?",
+        "whatInterviewerChecks": "Defensive testing edge-case coverage.",
+        "bestReplyScript": "The test suite must cover: 1) Less than 3 elements `[1, 2]` -> `[]`; 2) No zero sum possible `[1, 2, 3]` -> `[]`; 3) Multiple zeros `[0, 0, 0]` -> `[[0, 0, 0]]`; 4) Negatives and positives with duplicates `[-1, 0, 1, 2, -1, -4]` -> `[[-1, -1, 2], [-1, 0, 1]]`; 5) All identical negative and positive pairs `[-2, 0, 0, 2, 2]`.",
+        "keyPoints": [
+          "Length < 3",
+          "No valid triplets",
+          "All zeros",
+          "Mixed negatives and duplicates"
+        ],
+        "codeSnippet": "def test_3sum():\n    assert threeSum([]) == []\n    assert threeSum([0]) == []\n    assert threeSum([0, 0, 0]) == [[0, 0, 0]]\n    assert threeSum([-1, 0, 1, 2, -1, -4]) == [[-1, -1, 2], [-1, 0, 1]]"
+      },
+      {
+        "id": "q13",
+        "category": "Concurrency & Multi-Processing",
+        "question": "Can the outer loop of 3Sum be parallelized across multiple CPU cores?",
+        "whatInterviewerChecks": "Data decomposition and lock-free parallel programming.",
+        "bestReplyScript": "Yes! Because the outer loop fixes `nums[i]` and searches the remaining elements independently, each iteration `i` can be dispatched to a worker process via Python's `multiprocessing.Pool`. Since `nums` is read-only after sorting, worker processes can read from shared memory (`multiprocessing.shared_memory`) without locking, achieving linear speedup across CPU cores.",
+        "keyPoints": [
+          "Independent subproblems per index i",
+          "Shared read-only memory",
+          "multiprocessing.Pool for multi-core speedup"
+        ],
+        "codeSnippet": "# Parallelizing 3Sum outer loop with multiprocessing:\n# with Pool() as pool:\n#     results = pool.map(search_two_sum_for_i, range(len(nums) - 2))"
+      },
+      {
+        "id": "q14",
+        "category": "Code Quality & Cleanliness",
+        "question": "How do you avoid variable shadowing when naming indices in two-pointer algorithms?",
+        "whatInterviewerChecks": "PEP 8 standards and avoiding naming collisions.",
+        "bestReplyScript": "In Python, using `l` (lowercase L) can be confused with the digit `1` in certain IDE fonts, which violates PEP 8. In production code, use `left` and `right` instead of `l` and `r`. Similarly, avoid using `sum` as a variable name since it shadows Python's built-in `sum()` function.",
+        "keyPoints": [
+          "Avoid 'l' which looks like '1' (PEP 8)",
+          "Never name variables 'sum' (shadows built-in sum())",
+          "Use current_sum and left / right"
+        ],
+        "codeSnippet": "# \u274c Bad names:\n# l, r = 0, n - 1\n# sum = nums[i] + nums[l] + nums[r]  # Shadows built-in sum!\n\n# \u2705 Clean names:\nleft, right = 0, n - 1\ncurrent_sum = nums[i] + nums[left] + nums[right]"
+      },
+      {
+        "id": "q15",
+        "category": "Big-O Comparison Matrix",
+        "question": "Summarize the Time and Space trade-offs between Brute Force, Hash Set, and Two Pointers for 3Sum.",
+        "whatInterviewerChecks": "Comprehensive comparative mastery of all 3 approaches.",
+        "bestReplyScript": "1) Brute Force: 3 nested loops, O(N\u00b3) time, O(1) space, but fails on N > 500. 2) Hash Set: O(N\u00b2) time, O(N) auxiliary space, but suffers from hash collisions, memory allocation, and duplicate set sorting overhead. 3) Sorted Two Pointers: O(N\u00b2) time, O(1) auxiliary space (O(N) sort), zero hash overhead, excellent CPU cache locality, and clean duplicate skipping. Two Pointers is the undisputed industry standard.",
+        "keyPoints": [
+          "Brute force: O(N\u00b3) / O(1)",
+          "Hash set: O(N\u00b2) / O(N) with high memory overhead",
+          "Two pointers: O(N\u00b2) / O(1) - optimal standard"
+        ],
+        "codeSnippet": "# Best: Sorted Two Pointers -> O(N^2) time, O(1) auxiliary space"
       }
     ],
     "mistakes": [
@@ -20066,51 +20517,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-54",
-        "question": "How should you initialize the `closest` variable safely?",
-        "category": "Implementation Safety",
-        "whatInterviewerChecks": "Defensive coding habits.",
-        "bestReplyScript": "Never initialize `closest` to 0 or infinity (float('inf')), because the target could be negative or far away, leading to false comparisons. Always initialize `closest = nums[0] + nums[1] + nums[2]` using the first three elements of the sorted array.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain 3Sum Closest in 30 seconds to an interviewer?",
+        "whatInterviewerChecks": "Adaptation of Two Pointers to optimization distance minimization.",
+        "bestReplyScript": "We sort the array first in O(N log N). We initialize `closest_sum = nums[0] + nums[1] + nums[2]`. Then we iterate with index `i` from 0 to N-2, using two pointers `left = i + 1` and `right = N - 1`. At each step, compute `current_sum = nums[i] + nums[left] + nums[right]`. If `|current_sum - target| < |closest_sum - target|`, update `closest_sum`. If `current_sum == target`, return immediately. If `current_sum < target`, increment `left`; else decrement `right`. Total time is O(N\u00b2) and auxiliary space is O(1).",
         "keyPoints": [
-          "Don't initialize to 0",
-          "Initialize to nums[0] + nums[1] + nums[2]",
-          "Guarantees a valid real candidate sum from the array"
-        ]
+          "Sort array first",
+          "Track closest_sum by absolute difference",
+          "Two pointers move based on comparison to target",
+          "Early exit if exact match found"
+        ],
+        "codeSnippet": "def threeSumClosest(nums: list[int], target: int) -> int:\n    nums.sort()\n    closest = nums[0] + nums[1] + nums[2]\n    for i in range(len(nums) - 2):\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            s = nums[i] + nums[l] + nums[r]\n            if abs(s - target) < abs(closest - target):\n                closest = s\n            if s < target: l += 1\n            elif s > target: r -= 1\n            else: return target\n    return closest"
       },
       {
-        "id": "q2-54",
-        "question": "Can we terminate early if current sum equals target?",
-        "category": "Optimization",
-        "whatInterviewerChecks": "Early exit logic.",
-        "bestReplyScript": "Yes! If `curr == target`, the distance is 0, which is the theoretical minimum distance possible. We can immediately return or break both loops.",
+        "id": "q2",
+        "category": "Initialization Pitfall",
+        "question": "Why is initializing `closest = float('inf')` a bug trap in 3Sum Closest?",
+        "whatInterviewerChecks": "Difference between returning minimum distance vs returning the sum itself.",
+        "bestReplyScript": "If you initialize `closest = float('inf')`, and the problem asks you to return the closest *sum* (not the distance), then if all numbers are negative and target is negative, you must do arithmetic comparisons with infinity. Initializing `closest = nums[0] + nums[1] + nums[2]` guarantees that `closest` is always a valid triplet sum from the input, eliminating infinity edge cases and type conversion bugs.",
         "keyPoints": [
-          "Distance 0 is optimal",
-          "Break out of search immediately"
-        ]
+          "Problem asks for the sum, not the distance",
+          "nums[0] + nums[1] + nums[2] is always a valid triplet",
+          "Avoids infinity comparison bugs"
+        ],
+        "codeSnippet": "# \u2705 Always initialize with a real triplet:\nclosest = nums[0] + nums[1] + nums[2]"
       },
       {
-        "id": "q3-54",
-        "question": "Why is the time complexity O(n\u00b2)?",
+        "id": "q3",
+        "category": "Loop Direction Logic",
+        "question": "How do you decide whether to increment `left` or decrement `right`?",
+        "whatInterviewerChecks": "Understanding monotonic direction relative to target.",
+        "bestReplyScript": "We compare `current_sum` to `target`. Because the array is sorted, if `current_sum < target`, the only way to get closer to the target is to increase the sum, which requires moving `left` to a larger value (`left += 1`). If `current_sum > target`, we must decrease the sum, which requires moving `right` to a smaller value (`right -= 1`). If `current_sum == target`, distance is 0, which cannot be beaten, so we exit immediately.",
+        "keyPoints": [
+          "Compare sum to target (not to closest)",
+          "sum < target -> left += 1",
+          "sum > target -> right -= 1",
+          "sum == target -> return target"
+        ],
+        "codeSnippet": "if s < target:\n    l += 1\nelif s > target:\n    r -= 1\nelse:\n    return target  # Distance is 0, cannot get closer!"
+      },
+      {
+        "id": "q4",
+        "category": "Duplicate Skipping Optimization",
+        "question": "Can we skip duplicates in 3Sum Closest like we do in 3Sum?",
+        "whatInterviewerChecks": "Optimization without missing closest candidates.",
+        "bestReplyScript": "Yes. In the outer loop, if `i > 0 and nums[i] == nums[i-1]`, we can safely skip it because the exact same subarray search space was already explored with a wider window. Inside the two-pointer loop, after evaluating the sum, if we decide to move `left`, we can skip duplicate values of `nums[left]`. This cuts runtime significantly on arrays with repeated values while preserving the closest distance.",
+        "keyPoints": [
+          "Outer loop duplicate skip is safe",
+          "Inner loop can skip identical heights",
+          "Preserves optimality while pruning iterations"
+        ],
+        "codeSnippet": "if i > 0 and nums[i] == nums[i-1]:\n    continue"
+      },
+      {
+        "id": "q5",
         "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Big-O proof.",
-        "bestReplyScript": "Sorting takes O(n log n). The outer loop runs n times, and inside, the two pointers traverse at most n elements. Total operations are O(n log n + n\u00b2) = O(n\u00b2).",
+        "question": "What is the time complexity and can it be solved faster than O(N\u00b2)?",
+        "whatInterviewerChecks": "3SUM hardness conjecture in computational complexity.",
+        "bestReplyScript": "Sorting is O(N log N). The outer loop runs N times, and the inner two-pointer loop runs N times, yielding strictly O(N\u00b2) time. In computational complexity theory, the 3SUM conjecture posits that no algorithm can solve 3Sum or 3Sum Closest in truly sub-quadratic time O(N^(2-\u03b5)) without specialized word-RAM assumptions. Therefore, O(N\u00b2) is optimal for interview purposes.",
         "keyPoints": [
-          "O(n log n) sorting",
-          "O(n\u00b2) two-pointer loop",
-          "Total O(n\u00b2)"
-        ]
+          "O(N\u00b2) time complexity",
+          "3SUM conjecture states sub-quadratic is unlikely",
+          "O(1) auxiliary space"
+        ],
+        "codeSnippet": "# Time: O(N^2), Space: O(1)"
       },
       {
-        "id": "q4-54",
-        "question": "How does 3Sum Closest differ from 3Sum?",
-        "category": "Pattern Comparison",
-        "whatInterviewerChecks": "Algorithmic differences.",
-        "bestReplyScript": "In 3Sum, we must find ALL unique triplets summing to exactly 0, which requires skipping duplicates. In 3Sum Closest, we only need to return ONE integer representing the closest sum, so duplicate skipping is an optional optimization rather than a correctness requirement.",
+        "id": "q6",
+        "category": "Floating Point & Precision",
+        "question": "Does Python handle negative integer differences correctly with `abs()`?",
+        "whatInterviewerChecks": "Arithmetic correctness with signed distances.",
+        "bestReplyScript": "Yes. Python's built-in `abs()` correctly computes the absolute value for arbitrarily large positive or negative integers. For example, `abs(-5 - (-2)) = abs(-3) = 3`. Because Python integers do not overflow, there is no risk of `abs(INT_MIN)` undefined behavior as found in C or C++.",
         "keyPoints": [
-          "3Sum returns all unique triplets",
-          "3Sum Closest returns single integer sum",
-          "Distance tracking replaces exact equality check"
-        ]
+          "abs() works seamlessly on arbitrary precision ints",
+          "No INT_MIN overflow risk in Python",
+          "Correctly computes Euclidean distance on the number line"
+        ],
+        "codeSnippet": "assert abs(-10 - (-5)) == 5\nassert abs(-2147483648) == 2147483648"
+      },
+      {
+        "id": "q7",
+        "category": "Edge Cases",
+        "question": "What are the key edge cases for 3Sum Closest?",
+        "whatInterviewerChecks": "Boundary test coverage.",
+        "bestReplyScript": "1) Exactly 3 elements: `nums = [1, 2, 3], target = 100` -> returns 6; 2) Exact match exists: returns `target` immediately; 3) All negative numbers: `nums = [-5, -4, -3, -2], target = -10` -> returns -10 or closest negative; 4) Large positive and negative values balancing out; 5) Multiple equidistant answers (problem specifies exactly one unique answer).",
+        "keyPoints": [
+          "len(nums) == 3",
+          "Exact match (distance = 0)",
+          "All negative values",
+          "Large distance gap"
+        ],
+        "codeSnippet": "assert threeSumClosest([0, 0, 0], 1) == 0\nassert threeSumClosest([1, 1, 1, 0], -100) == 2"
+      },
+      {
+        "id": "q8",
+        "category": "Binary Search Alternative",
+        "question": "Could we use binary search instead of two pointers for 3Sum Closest?",
+        "whatInterviewerChecks": "Evaluating alternative O(N\u00b2 log N) binary search pattern.",
+        "bestReplyScript": "Yes. For every pair (i, j), we could use `bisect` to binary search for the element closest to `target - (nums[i] + nums[j])` in the remaining subarray. However, binary search takes O(log N) per pair, making total time O(N\u00b2 log N), which is strictly slower than the two-pointer approach at O(N\u00b2). Two pointers is both faster and simpler.",
+        "keyPoints": [
+          "Binary search takes O(N\u00b2 log N)",
+          "Two pointers takes O(N\u00b2)",
+          "Two pointers is asymptotically superior"
+        ],
+        "codeSnippet": "# Bisect approach: O(N^2 log N) - slower than Two Pointers O(N^2)"
+      },
+      {
+        "id": "q9",
+        "category": "Python `math.isclose` vs `abs()`",
+        "question": "Why shouldn't you use `math.isclose()` for this problem?",
+        "whatInterviewerChecks": "Understanding integer distance vs floating point relative tolerance.",
+        "bestReplyScript": "`math.isclose()` is designed for floating-point equality comparisons with relative and absolute tolerances (`rel_tol`, `abs_tol`) to avoid rounding errors. Here, we are working with discrete integers and need to minimize exact numeric distance `abs(a - b)`. Using `math.isclose()` adds unnecessary floating-point conversion and does not return the numeric difference.",
+        "keyPoints": [
+          "math.isclose is for float equality",
+          "abs() is exact for integer distance",
+          "Avoid floating point conversion"
+        ],
+        "codeSnippet": "# Use abs(current_sum - target), not math.isclose"
+      },
+      {
+        "id": "q10",
+        "category": "Tie-Breaking Behavior",
+        "question": "If two sums have the exact same distance (e.g. diff = -2 and diff = +2), does the problem guarantee a single answer?",
+        "whatInterviewerChecks": "Reading problem constraints carefully.",
+        "bestReplyScript": "Yes, standard problem specifications guarantee that each input has exactly one unique closest triplet sum. If ties were possible, the prompt would specify whether to prefer the smaller or larger sum, which can be handled with a tie-breaking conditional: `if dist < min_dist or (dist == min_dist and s < closest): closest = s`.",
+        "keyPoints": [
+          "Problem guarantees unique answer",
+          "Ties can be handled with secondary comparison",
+          "Always clarify tie-breaking rules with interviewer"
+        ],
+        "codeSnippet": "# If tie-breaker requested:\n# if dist < min_dist or (dist == min_dist and s < closest): closest = s"
+      },
+      {
+        "id": "q11",
+        "category": "Memory Allocation & Variables",
+        "question": "How many total variables are allocated on the stack during execution?",
+        "whatInterviewerChecks": "Stack frame memory consumption.",
+        "bestReplyScript": "Only 5 primitive integer references: `closest`, `i`, `l`, `r`, and `s`. No auxiliary data structures, lists, or heap buffers are allocated. In CPython, local variables in functions are indexed via fast local arrays (`FAST_LOAD`), making variable access extremely fast.",
+        "keyPoints": [
+          "5 local variable references",
+          "Zero heap allocations",
+          "CPython LOAD_FAST bytecode optimization"
+        ],
+        "codeSnippet": "# Local variables use LOAD_FAST in CPython bytecode -> near C-level speed"
+      },
+      {
+        "id": "q12",
+        "category": "Early Termination Pruning",
+        "question": "How can you prune the search space early if the smallest possible sum in an iteration exceeds target?",
+        "whatInterviewerChecks": "Advanced branch-and-bound pruning in sorted arrays.",
+        "bestReplyScript": "At any index i, the minimum possible sum with `nums[i]` is `nums[i] + nums[i+1] + nums[i+2]`. If this minimum sum is greater than `target` and its distance `min_sum - target` is greater than or equal to our best distance so far, then all subsequent triplets in the loop will only be even larger. We can immediately break out of the entire outer loop, saving thousands of iterations.",
+        "keyPoints": [
+          "min_sum = nums[i] + nums[i+1] + nums[i+2]",
+          "If min_sum > target and distance >= best, break outer loop",
+          "Branch-and-bound optimization"
+        ],
+        "codeSnippet": "min_sum = nums[i] + nums[i+1] + nums[i+2]\nif min_sum > target:\n    if abs(min_sum - target) < abs(closest - target):\n        closest = min_sum\n    break  # All future sums will be even bigger!"
+      },
+      {
+        "id": "q13",
+        "category": "Maximum Bound Pruning",
+        "question": "Can you also prune using the largest possible sum for index i?",
+        "whatInterviewerChecks": "Dual-sided pruning logic.",
+        "bestReplyScript": "Yes! The maximum possible sum using `nums[i]` is `max_sum = nums[i] + nums[-1] + nums[-2]`. If `max_sum < target`, then no triplet using `nums[i]` can reach `target`. We update `closest` with `max_sum` if it's closer, and `continue` to the next `i` immediately without running the inner while loop.",
+        "keyPoints": [
+          "max_sum = nums[i] + nums[-1] + nums[-2]",
+          "If max_sum < target, update closest and continue",
+          "Skips entire inner while loop"
+        ],
+        "codeSnippet": "max_sum = nums[i] + nums[-1] + nums[-2]\nif max_sum < target:\n    if abs(max_sum - target) < abs(closest - target):\n        closest = max_sum\n    continue  # Skip inner two-pointer scan!"
+      },
+      {
+        "id": "q14",
+        "category": "Defensive Invariants",
+        "question": "How would you write an automated invariant check using Python's `assert` statement?",
+        "whatInterviewerChecks": "Defensive programming and assertion contracts.",
+        "bestReplyScript": "We can assert that `len(nums) >= 3` at the function entrypoint, and assert that the returned `closest` sum was formed by a valid triplet. In test suites, we can assert that our O(N\u00b2) result matches a reference O(N\u00b3) brute force result for randomized small arrays.",
+        "keyPoints": [
+          "assert len(nums) >= 3",
+          "Cross-validate against brute force in fuzz tests",
+          "Contract validation"
+        ],
+        "codeSnippet": "assert len(nums) >= 3, '3Sum requires at least 3 elements'"
+      },
+      {
+        "id": "q15",
+        "category": "Interview Communication",
+        "question": "What is the biggest mistake candidates make when explaining 3Sum Closest?",
+        "whatInterviewerChecks": "Communication pitfalls and interview awareness.",
+        "bestReplyScript": "The biggest mistake is moving the pointers based on comparison to `closest` rather than `target`. If `current_sum` is closer than `closest`, some candidates mistakenly compare `current_sum` with `closest` to decide which pointer to move. The pointers must ALWAYS move based on `current_sum < target` or `current_sum > target` because the array is sorted relative to number line values, not relative to closeness.",
+        "keyPoints": [
+          "Pointers MUST move based on target, not closest",
+          "Common candidate confusion",
+          "Target defines number line direction"
+        ],
+        "codeSnippet": "# \u274c WRONG: if current_sum < closest: l += 1\n# \u2705 CORRECT: if current_sum < target: l += 1"
       }
     ],
     "mistakes": [
@@ -20208,52 +20810,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-55",
-        "question": "How do you generalize 2Sum, 3Sum, and 4Sum into a general K-Sum algorithm?",
-        "category": "Algorithmic Generalization",
-        "whatInterviewerChecks": "Recursive design skills.",
-        "bestReplyScript": "We use recursion! Base case is K == 2, which we solve in O(n) using two pointers on the sorted array. For K > 2, we loop through the array, fix the first element, and recursively call KSum with K - 1, target - nums[i], starting from index i + 1. Duplicate skipping is applied at each recursive layer.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain 4Sum in 30 seconds to an interviewer?",
+        "whatInterviewerChecks": "Extension of 3Sum to 4Sum with duplicate suppression.",
+        "bestReplyScript": "I solve 4Sum by sorting the array first in O(N log N). Then I run two nested loops for indices i and j (where j = i + 1) to fix the first two numbers. For the remaining two numbers, I run a Two-Pointer scan with `left = j + 1` and `right = N - 1`. At every level, we skip duplicate values for i, j, left, and right to guarantee unique quadruplets. Total time complexity is O(N\u00b3) and auxiliary space is O(1).",
         "keyPoints": [
-          "K == 2 base case with two pointers",
-          "Recursive KSum(k - 1, target - nums[i])",
-          "Deduplication at every depth"
-        ]
+          "Sort array first",
+          "Two nested loops (i, j) + two pointers (left, right)",
+          "Duplicate skipping at all 4 levels",
+          "O(N\u00b3) time & O(1) space"
+        ],
+        "codeSnippet": "def fourSum(nums: list[int], target: int) -> list[list[int]]:\n    nums.sort()\n    res = []\n    n = len(nums)\n    for i in range(n - 3):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        for j in range(i + 1, n - 2):\n            if j > i + 1 and nums[j] == nums[j-1]: continue\n            l, r = j + 1, n - 1\n            while l < r:\n                s = nums[i] + nums[j] + nums[l] + nums[r]\n                if s == target:\n                    res.append([nums[i], nums[j], nums[l], nums[r]])\n                    while l < r and nums[l] == nums[l+1]: l += 1\n                    while l < r and nums[r] == nums[r-1]: r -= 1\n                    l += 1; r -= 1\n                elif s < target: l += 1\n                else: r -= 1\n    return res"
       },
       {
-        "id": "q2-55",
-        "question": "Why is the duplicate check for j `if j > i + 1 and nums[j] == nums[j - 1]`?",
-        "category": "Edge Cases & Off-by-One",
-        "whatInterviewerChecks": "Loop boundary precision.",
-        "bestReplyScript": "The condition `j > i + 1` ensures that the FIRST element of the inner loop (when j == i + 1) is never skipped, even if it happens to be equal to nums[i]! We only want to skip subsequent duplicate values of j.",
+        "id": "q2",
+        "category": "Duplicate Skipping Boundary",
+        "question": "Why is the inner loop duplicate check `j > i + 1 and nums[j] == nums[j-1]` and NOT `j > 0`?",
+        "whatInterviewerChecks": "Subtle boundary condition in nested loops.",
+        "bestReplyScript": "If you wrote `j > 0 and nums[j] == nums[j-1]`, then whenever `j = i + 1` (the very first element of the inner loop) happens to equal `nums[i]`, it would mistakenly skip it! For example, in `[2, 2, 2, 2]`, `i = 0` (`nums[0] = 2`) and `j = 1` (`nums[1] = 2`). Because `j > i + 1` is false on the first iteration of j, it correctly allows `nums[j]` to equal `nums[i]`, enabling quadruplets with repeated values.",
         "keyPoints": [
-          "j == i + 1 is the first valid candidate",
-          "Only skip when j > i + 1 and matches previous j",
-          "Prevents false skips on valid repeated values"
-        ]
+          "j > i + 1 only checks duplicates within j's loop",
+          "Allows nums[j] to equal nums[i]",
+          "Prevents missing quadruplets like [2, 2, 2, 2]"
+        ],
+        "codeSnippet": "# \u2705 Allows first element of j to match nums[i]:\nif j > i + 1 and nums[j] == nums[j-1]:\n    continue"
       },
       {
-        "id": "q3-55",
-        "question": "What is the time and space complexity of optimal 4Sum?",
+        "id": "q3",
+        "category": "Early Exit Pruning",
+        "question": "How can you optimize 4Sum by 10x using min and max bound pruning?",
+        "whatInterviewerChecks": "Branch-and-bound pruning in high-order loops.",
+        "bestReplyScript": "Before running the inner loops: 1) Min-sum check: if `nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target`, then because the array is sorted, the smallest possible sum in this iteration exceeds target, so we can `break` the outer loop entirely. 2) Max-sum check: if `nums[i] + nums[-1] + nums[-2] + nums[-3] < target`, then the largest possible sum with `nums[i]` is too small, so we can `continue` to the next i. Applying this at both loop levels prunes >90% of iterations.",
+        "keyPoints": [
+          "Min-sum break: sum of 4 smallest > target -> break",
+          "Max-sum continue: sum of current + 3 largest < target -> continue",
+          "Cuts runtime dramatically"
+        ],
+        "codeSnippet": "# Min bound check:\nif nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target: break\n# Max bound check:\nif nums[i] + nums[-1] + nums[-2] + nums[-3] < target: continue"
+      },
+      {
+        "id": "q4",
         "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Big-O mastery.",
-        "bestReplyScript": "Sorting is O(n log n). Two nested loops iterate O(n\u00b2), and the innermost two-pointer scan takes O(n). Multiplying gives O(n\u00b3) overall time complexity. Auxiliary space is O(1) beyond sorting and the output array.",
+        "question": "What are the exact time and space complexities of 4Sum?",
+        "whatInterviewerChecks": "Asymptotic analysis across sorting, nested loops, and two pointers.",
+        "bestReplyScript": "Sorting takes O(N log N). The outer loop runs O(N) times, the middle loop runs O(N) times, and the inner two-pointer search runs O(N) times. Combined, they take O(N * N * N) = O(N\u00b3) time. Auxiliary space is O(1) beyond sorting (O(N) for Timsort). If we output M quadruplets, the output storage is O(M).",
         "keyPoints": [
-          "O(n\u00b3) time",
-          "O(1) auxiliary space",
-          "Optimal for comparison-based search"
-        ]
+          "Time: O(N\u00b3)",
+          "Auxiliary Space: O(1) (excluding output)",
+          "Timsort space: O(N)"
+        ],
+        "codeSnippet": "# Time: O(N^3)\n# Space: O(1) auxiliary"
       },
       {
-        "id": "q4-55",
-        "question": "Can integer overflow occur during summation in 4Sum?",
-        "category": "Language Internals & Systems",
-        "whatInterviewerChecks": "Systems awareness and type safety.",
-        "bestReplyScript": "In languages with fixed 32-bit signed integers (like C++ or Java), four large integers near 10\u2079 will sum to 4 * 10\u2079, overflowing a 32-bit signed int (max ~2 * 10\u2079) into negative values. In C++/Java, we must cast to 64-bit `long long`. In Python, integers have arbitrary precision, so overflow does not crash the program, but type awareness is essential in interviews.",
+        "id": "q5",
+        "category": "Recursive Generalization",
+        "question": "How do you write a generic K-Sum solver that solves 2Sum, 3Sum, 4Sum, and 10Sum with the same code?",
+        "whatInterviewerChecks": "Recursive problem decomposition and generalized DSA pattern.",
+        "bestReplyScript": "We sort the array once. Then we define `kSum(nums, target, k, start)`. If `k == 2`, we run the two-pointer Two Sum algorithm on `nums[start:]`. For any `k > 2`, we loop `i` from `start` to `len(nums) - k`, skip duplicates, and recursively call `kSum(nums, target - nums[i], k - 1, i + 1)`. We prepend `nums[i]` to all returned tuples.",
         "keyPoints": [
-          "4 * 10\u2079 exceeds 32-bit signed int max",
-          "Cast to long in C++/Java",
-          "Python handles arbitrarily large integers"
-        ]
+          "Recursive kSum function",
+          "Base case k == 2 uses two pointers",
+          "Generalizes to any K in O(N^(k-1)) time"
+        ],
+        "codeSnippet": "def kSum(nums, target, k, start):\n    res = []\n    if k == 2:\n        l, r = start, len(nums) - 1\n        while l < r:\n            s = nums[l] + nums[r]\n            if s == target:\n                res.append([nums[l], nums[r]])\n                while l < r and nums[l] == nums[l+1]: l += 1\n                while l < r and nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n            elif s < target: l += 1\n            else: r -= 1\n        return res\n    for i in range(start, len(nums) - k + 1):\n        if i > start and nums[i] == nums[i-1]: continue\n        for subset in kSum(nums, target - nums[i], k - 1, i + 1):\n            res.append([nums[i]] + subset)\n    return res"
+      },
+      {
+        "id": "q6",
+        "category": "Hash Map Pair Alternative",
+        "question": "Can 4Sum be solved in O(N\u00b2) time using a pair-sum hash map?",
+        "whatInterviewerChecks": "Understanding trade-offs of pair-sum hashing and index overlap.",
+        "bestReplyScript": "You can precompute all pair sums `nums[a] + nums[b]` and store them in a hash map `map[sum] = [(a, b), ...]`. Then find pairs of pairs where `sum1 + sum2 == target`. However, checking that all 4 indices `(a, b, c, d)` are distinct and eliminating duplicate value quadruplets requires extensive post-processing. In the worst case (e.g. all zeros), there are O(N\u00b2) pairs with the same sum, causing the combination step to degrade back to O(N\u2074) time with high memory overhead. The sorted two-pointer O(N\u00b3) approach is far superior in practice.",
+        "keyPoints": [
+          "Pair hash map theoretically sounds O(N\u00b2)",
+          "Worst case degrades to O(N\u2074) on repeated sums",
+          "Sorted two pointers O(N\u00b3) is cleaner and uses O(1) memory"
+        ],
+        "codeSnippet": "# Pair hash map has index overlap checks and O(N^2) memory footprint"
+      },
+      {
+        "id": "q7",
+        "category": "Python Integer Overflow in 4Sum",
+        "question": "In Java/C++, 4Sum can overflow 32-bit signed integers when summing 4 numbers. Does Python suffer from this?",
+        "whatInterviewerChecks": "Cross-language integer model comparison.",
+        "bestReplyScript": "In Java and C++, summing four numbers near 10^9 exceeds `2^31 - 1 = 2,147,483,647`, causing integer overflow into negative values unless cast to `long` (64-bit). In Python 3, integers have arbitrary precision (`PyLongObject`), so `nums[i] + nums[j] + nums[l] + nums[r]` will never overflow. Python handles arbitrarily large values automatically.",
+        "keyPoints": [
+          "Java/C++ requires long to prevent overflow",
+          "Python 3 arbitrary precision prevents overflow",
+          "Safe on all large integer inputs"
+        ],
+        "codeSnippet": "# In Java: long sum = (long)nums[i] + nums[j] + nums[l] + nums[r];\n# In Python: sum = nums[i] + nums[j] + nums[l] + nums[r]  # Automatically safe!"
+      },
+      {
+        "id": "q8",
+        "category": "Edge Cases & Minimum Inputs",
+        "question": "What are the key edge cases for 4Sum?",
+        "whatInterviewerChecks": "Testing coverage on 4Sum.",
+        "bestReplyScript": "1) Fewer than 4 elements: `len(nums) < 4` -> `[]`; 2) Exactly 4 elements summing to target; 3) All identical numbers `[2, 2, 2, 2, 2], target = 8` -> `[[2, 2, 2, 2]]`; 4) Large target out of reach; 5) Negative and positive mixtures with multiple distinct quadruplets.",
+        "keyPoints": [
+          "len(nums) < 4 returns []",
+          "Identical elements [2, 2, 2, 2]",
+          "Negative target values",
+          "No valid quadruplet exists"
+        ],
+        "codeSnippet": "assert fourSum([1, 2, 3], 6) == []\nassert fourSum([2, 2, 2, 2, 2], 8) == [[2, 2, 2, 2]]"
+      },
+      {
+        "id": "q9",
+        "category": "Python Generator vs List Return",
+        "question": "How would you convert 4Sum into a generator using `yield` for memory efficiency?",
+        "whatInterviewerChecks": "Python generators and streaming evaluation.",
+        "bestReplyScript": "Instead of accumulating quadruplets in a `res` list in RAM, we can replace `res.append(...)` with `yield [nums[i], nums[j], nums[l], nums[r]]`. This turns the function into a generator that yields quadruplets on demand via `next()`. This reduces memory overhead to strict O(1) for consumers streaming millions of quadruplets.",
+        "keyPoints": [
+          "Use yield instead of res.append()",
+          "Returns a generator iterator",
+          "O(1) memory footprint for consumer"
+        ],
+        "codeSnippet": "def fourSum_stream(nums, target):\n    nums.sort()\n    n = len(nums)\n    for i in range(n - 3):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        for j in range(i + 1, n - 2):\n            if j > i + 1 and nums[j] == nums[j-1]: continue\n            l, r = j + 1, n - 1\n            while l < r:\n                s = nums[i] + nums[j] + nums[l] + nums[r]\n                if s == target:\n                    yield [nums[i], nums[j], nums[l], nums[r]]\n                    while l < r and nums[l] == nums[l+1]: l += 1\n                    while l < r and nums[r] == nums[r-1]: r -= 1\n                    l += 1; r -= 1\n                elif s < target: l += 1\n                else: r -= 1"
+      },
+      {
+        "id": "q10",
+        "category": "Sorting Stability in Python",
+        "question": "Does the stability of Python's Timsort affect the correctness of 4Sum?",
+        "whatInterviewerChecks": "Understanding stable vs unstable sorting in algorithm pipelines.",
+        "bestReplyScript": "No. Stability means equal elements maintain their relative original order. For 4Sum, all elements in each equivalence class are identical values (e.g. multiple `2`s). Because we only care about the values and skip duplicate values, whether two identical numbers swapped positions during sorting has zero effect on the output.",
+        "keyPoints": [
+          "Stability preserves relative order of equal keys",
+          "4Sum only inspects scalar integer values",
+          "Any valid sort algorithm works correctly"
+        ],
+        "codeSnippet": "# Timsort is stable, but 4Sum works on any O(N log N) sort"
+      },
+      {
+        "id": "q11",
+        "category": "Comparison to 4Sum II",
+        "question": "How does this problem differ from '4Sum II' where 4 separate arrays are given?",
+        "whatInterviewerChecks": "Problem differentiation and knowing when hash maps are optimal.",
+        "bestReplyScript": "In 4Sum II, you are given four separate arrays A, B, C, D and need to find the number of tuples `(i, j, k, l)` such that `A[i] + B[j] + C[k] + D[l] == 0`. Because the indices come from 4 independent lists, there are NO index overlap constraints! You can hash all pair sums of A and B into a hash map in O(N\u00b2), and then check complements against C and D in O(N\u00b2), solving 4Sum II in O(N\u00b2) time. Standard 4Sum has overlap constraints from a single array, requiring O(N\u00b3).",
+        "keyPoints": [
+          "4Sum II uses 4 independent arrays",
+          "No index overlap restrictions in 4Sum II",
+          "4Sum II is O(N\u00b2) with hash map, standard 4Sum is O(N\u00b3)"
+        ],
+        "codeSnippet": "# 4Sum II (4 separate lists): O(N^2) via collections.Counter(a + b for a in A for b in B)"
+      },
+      {
+        "id": "q12",
+        "category": "CPython Loop Optimization",
+        "question": "Why is caching `len(nums)` in a variable `n` beneficial in CPython?",
+        "whatInterviewerChecks": "Python bytecode instruction minimization.",
+        "bestReplyScript": "In CPython, calling `len(nums)` inside loop boundary checks emits `LOAD_GLOBAL (len)` and `CALL_FUNCTION` bytecode instructions every time. Assigning `n = len(nums)` beforehand stores the length in a local variable, which CPython accesses in 1 clock cycle using `LOAD_FAST`.",
+        "keyPoints": [
+          "len() is a global function call in bytecode",
+          "Local variables use LOAD_FAST",
+          "Micro-optimization for deep loops"
+        ],
+        "codeSnippet": "# \u2705 Store length once:\nn = len(nums)\nfor i in range(n - 3): ..."
+      },
+      {
+        "id": "q13",
+        "category": "Unit Testing & Assertions",
+        "question": "How do you test quadruplet uniqueness and order-independence in unit tests?",
+        "whatInterviewerChecks": "Writing robust test assertions for unordered lists of lists.",
+        "bestReplyScript": "Because the problem allows returning quadruplets in any order, comparing lists directly with `assert result == expected` can cause false test failures if ordering differs. The robust way to test is converting both the result and expected outputs to sets of sorted tuples: `assert {tuple(sorted(q)) for q in result} == {tuple(sorted(q)) for q in expected}`.",
+        "keyPoints": [
+          "Convert to sets of sorted tuples",
+          "Ignores inner and outer ordering",
+          "Prevents false test failures"
+        ],
+        "codeSnippet": "def normalize(quads):\n    return {tuple(sorted(q)) for q in quads}\n\nassert normalize(fourSum(nums, target)) == normalize(expected)"
+      },
+      {
+        "id": "q14",
+        "category": "Memory Footprint of Output",
+        "question": "What is the maximum number of quadruplets that 4Sum can return for an array of size N?",
+        "whatInterviewerChecks": "Combinatorial upper bound.",
+        "bestReplyScript": "The maximum number of quadruplets is given by the combination formula `C(N, 4) = N * (N - 1) * (N - 2) * (N - 3) / 24 = O(N\u2074)`. For an array of all zeros `[0]*N` and `target = 0`, duplicate suppression reduces the output to exactly 1 quadruplet `[[0, 0, 0, 0]]`. But if combinations are distinct, output can be up to O(N\u00b3).",
+        "keyPoints": [
+          "C(N, 4) maximum possible combinations",
+          "Duplicate suppression prunes repeated values",
+          "Output size bounded by O(N\u00b3) distinct quadruplets"
+        ],
+        "codeSnippet": "# Max combinations: math.comb(N, 4)"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "What is the key takeaway an interviewer wants to hear at the conclusion of 4Sum?",
+        "whatInterviewerChecks": "Executive summary and synthesis of algorithmic paradigms.",
+        "bestReplyScript": "The key takeaway is recognizing that 4Sum is not a new problem: it is an elegant recursive extension of Two Sum and 3Sum. By sorting up-front, we reduce time complexity by an order of magnitude (from O(N\u2074) to O(N\u00b3)), eliminate duplicate quadruplets in O(1) space without expensive hash sets, and unlock aggressive branch-and-bound pruning with min/max boundary checks.",
+        "keyPoints": [
+          "Recursive reduction to 2-Sum",
+          "Sorting replaces hash sets with O(1) duplicate skipping",
+          "Min/Max pruning cuts real-world runtimes"
+        ],
+        "codeSnippet": "# Executive Summary: Sorting + Two Pointers turns O(N^4) brute force into O(N^3) optimal pipeline"
       }
     ],
     "mistakes": [
@@ -20370,52 +21121,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-56",
-        "question": "Why is the condition `seen[char] >= start` necessary?",
-        "category": "Algorithmic Precision",
-        "whatInterviewerChecks": "Understanding window boundaries.",
-        "bestReplyScript": "Because our hash map retains positions of characters seen throughout the entire string! If a character was seen at index 2, but our window has already moved past it (e.g. `start = 5`), that character is no longer inside the current active window. Without checking `seen[char] >= start`, we would mistakenly jump `start` BACKWARD to index 3, corrupting the window.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Longest Substring Without Repeating Characters in 30 seconds?",
+        "whatInterviewerChecks": "Sliding window with hash map jump mechanics.",
+        "bestReplyScript": "I solve this using an optimized Sliding Window technique with a hash map. We maintain a window `[left, right]` where `right` expands character by character. We store the last seen index of each character in a dictionary `seen`. If the current character was already seen inside our active window (`seen[char] >= left`), we jump `left` to `seen[char] + 1` to immediately evict the duplicate. At each step, we update `max_len = max(max_len, right - left + 1)`. This guarantees single-pass O(N) time and O(min(N, M)) space where M is the character set size.",
         "keyPoints": [
-          "Hash map keeps global history",
-          "Characters before start are outside the current window",
-          "Prevents start pointer from moving backward"
-        ]
+          "Sliding window [left, right]",
+          "seen dict tracks last seen index",
+          "Jump left = seen[c] + 1 on duplicate",
+          "O(N) time and O(min(N, M)) space"
+        ],
+        "codeSnippet": "def lengthOfLongestSubstring(s: str) -> int:\n    seen = {}\n    left = 0\n    max_len = 0\n    for right, c in enumerate(s):\n        if c in seen and seen[c] >= left:\n            left = seen[c] + 1\n        seen[c] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len"
       },
       {
-        "id": "q2-56",
-        "question": "What is the space complexity if the alphabet includes all Unicode characters?",
-        "category": "Space Complexity",
-        "whatInterviewerChecks": "Alphabet size bounds (\u03a3).",
-        "bestReplyScript": "The space complexity is O(min(n, \u03a3)), where n is the length of the string and \u03a3 is the size of the character set. For standard lowercase English, \u03a3 = 26. For ASCII, \u03a3 = 128. For general Unicode, the dictionary size can grow up to min(n, total_unique_unicode_characters).",
+        "id": "q2",
+        "category": "Critical Logic Trap",
+        "question": "Why is the condition `seen[c] >= left` strictly required when jumping the left pointer?",
+        "whatInterviewerChecks": "Understanding stale indices in dictionary memory.",
+        "bestReplyScript": "The dictionary keeps the index of every character ever encountered. If a character was seen earlier in the string but *outside* our current window (i.e. `seen[c] < left`), we must NOT jump `left` backward! For example, in 'tmmzuxt', at the second 't', the previous 't' was at index 0, but `left` is already at index 2 (after 'm'). If we didn't check `seen[c] >= left`, `left` would jump backward from 2 to 1, re-introducing previously evicted duplicates!",
         "keyPoints": [
-          "O(min(n, \u03a3))",
-          "Bounded by alphabet size",
-          "O(1) if character set is fixed (e.g. 128 ASCII)"
-        ]
+          "Dictionary holds stale indices from outside active window",
+          "Jumping backward re-introduces duplicates",
+          "seen[c] >= left ensures left pointer only moves forward"
+        ],
+        "codeSnippet": "# Example: s = 'abba'\n# At second 'a', seen['a'] = 0, but left = 2 (after 'b').\n# Without seen['a'] >= left, left jumps back to 1 -> INCORRECT!"
       },
       {
-        "id": "q3-56",
-        "question": "How do you handle empty or whitespace-only strings?",
+        "id": "q3",
+        "category": "Hash Set vs Last-Seen Index Map",
+        "question": "What is the performance difference between using a Hash Set vs a Hash Map for sliding window?",
+        "whatInterviewerChecks": "O(2N) step-by-step eviction vs O(N) index-jumping.",
+        "bestReplyScript": "With a Hash Set, when a duplicate is found at `right`, you must increment `left` one step at a time in an inner while loop and remove characters until the duplicate is evicted: `window.remove(s[left]); left += 1`. This visits each character at most twice (2N steps). With an index Hash Map, you jump `left = seen[c] + 1` in exactly 1 operation. The index map executes in strictly N steps with fewer loop overheads.",
+        "keyPoints": [
+          "Set approach takes 2N steps (step-by-step eviction)",
+          "Map approach takes N steps (direct index jump)",
+          "Map approach avoids inner while loop"
+        ],
+        "codeSnippet": "# Set approach (O(2N)):\n# while s[r] in char_set: char_set.remove(s[l]); l += 1\n# Map approach (O(N)):\n# if c in seen and seen[c] >= l: l = seen[c] + 1"
+      },
+      {
+        "id": "q4",
+        "category": "Space Complexity & Alphabet Bounds",
+        "question": "What is the upper bound on space complexity for ASCII vs Unicode strings?",
+        "whatInterviewerChecks": "Alphabet size bounds on auxiliary space.",
+        "bestReplyScript": "Space complexity is O(min(N, M)), where N is the length of string `s` and M is the size of the character set. For standard ASCII, M <= 128 (or 256 for extended ASCII). For lowercase English letters, M <= 26. Thus, for ASCII, space is bounded by O(1) constant memory (at most 128 entries). For full Unicode, M can be up to 1,114,112 characters, bounded by N.",
+        "keyPoints": [
+          "O(min(N, M)) space",
+          "ASCII: M <= 128 -> strict O(1) space",
+          "Unicode: up to O(N)"
+        ],
+        "codeSnippet": "# ASCII alphabet limit:\n# max_entries = 128 -> O(1) space"
+      },
+      {
+        "id": "q5",
+        "category": "Array Table Micro-Optimization",
+        "question": "If the string is strictly ASCII, how can you replace the Python dictionary with an array for 2x speed?",
+        "whatInterviewerChecks": "Direct array indexing using `ord()`.",
+        "bestReplyScript": "We can allocate a fixed array `last_seen = [-1] * 128`. For each character, we access its index in O(1) using `ord(c)`. An array lookup in CPython bypasses hash computations and collision resolution, executing roughly 2x faster than a dictionary lookup with zero hash overhead.",
+        "keyPoints": [
+          "last_seen = [-1] * 128",
+          "Direct indexing via ord(c)",
+          "Eliminates hash overhead"
+        ],
+        "codeSnippet": "def lengthOfLongestSubstring_ascii(s: str) -> int:\n    last_seen = [-1] * 128\n    left = 0\n    max_len = 0\n    for right, c in enumerate(s):\n        code = ord(c)\n        if last_seen[code] >= left:\n            left = last_seen[code] + 1\n        last_seen[code] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len"
+      },
+      {
+        "id": "q6",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Input sanitization.",
-        "bestReplyScript": "For an empty string, the loop does not run and `max_len` remains 0. For strings with spaces or repeated characters like '   ', the first space gives length 1, and subsequent spaces jump start forward, correctly reporting max length 1.",
+        "question": "What edge cases must you test for Longest Substring Without Repeating Characters?",
+        "whatInterviewerChecks": "Comprehensive boundary testing.",
+        "bestReplyScript": "1) Empty string `''` -> returns 0; 2) Single character `'a'` -> returns 1; 3) All identical characters `'bbbbb'` -> returns 1; 4) All unique characters `'abcdef'` -> returns 6; 5) Palindromic duplicates `'abba'` (tests stale left jump trap); 6) Long string with spaces and symbols `'pwwkew'` -> returns 3 ('wke').",
         "keyPoints": [
           "Empty string returns 0",
-          "Spaces are valid characters",
-          "Consistent handling with no special cases"
-        ]
+          "Single char returns 1",
+          "All same chars returns 1",
+          "'abba' tests stale pointer trap"
+        ],
+        "codeSnippet": "assert lengthOfLongestSubstring('') == 0\nassert lengthOfLongestSubstring(' ') == 1\nassert lengthOfLongestSubstring('abba') == 2"
       },
       {
-        "id": "q4-56",
-        "question": "Can this be solved using an array instead of a hash map?",
-        "category": "Low-Level Optimization",
-        "whatInterviewerChecks": "Performance optimization in C/C++ or low-level systems.",
-        "bestReplyScript": "Yes! If the character set is standard ASCII, we can allocate a fixed-size integer array of size 128 or 256 initialized to -1. Indexing `arr[ord(char)]` provides O(1) direct memory access with zero hashing overhead or collision management.",
+        "id": "q7",
+        "category": "Substring vs Subsequence",
+        "question": "What is the difference between a Substring and a Subsequence in interview terminology?",
+        "whatInterviewerChecks": "Clarifying fundamental DSA definitions.",
+        "bestReplyScript": "A Substring is a *contiguous* sequence of characters within a string (e.g. 'pwke' is NOT a substring of 'pwwkew', but 'wke' is). A Subsequence is derived by deleting zero or more characters without changing the order of the remaining characters (e.g. 'pwke' IS a valid subsequence). This problem strictly asks for a contiguous Substring.",
         "keyPoints": [
-          "Fixed array of size 128/256",
-          "Direct indexing via ord(char)",
-          "Zero hash collision overhead"
-        ]
+          "Substring = contiguous characters",
+          "Subsequence = relative order preserved, can skip characters",
+          "This problem requires contiguous sliding window"
+        ],
+        "codeSnippet": "# 'pwke' is subsequence of 'pwwkew', but 'wke' is the longest unique substring"
+      },
+      {
+        "id": "q8",
+        "category": "Python String Iteration Mechanics",
+        "question": "How does `enumerate(s)` unpack characters in Python 3 string objects?",
+        "whatInterviewerChecks": "CPython string iterator implementation.",
+        "bestReplyScript": "In Python 3, strings are stored in one of three compact representations depending on character codepoint: `PyUnicode_1BYTE_KIND` (Latin-1/ASCII), `2BYTE_KIND` (BMP), or `4BYTE_KIND`. Iterating with `enumerate(s)` returns 1-character string objects created via CPython's character caching mechanism (ASCII chars 0-255 are singletons), ensuring low allocation overhead.",
+        "keyPoints": [
+          "Compact string representation (PEP 393)",
+          "ASCII 0-255 characters are singletons",
+          "Iterating produces cached 1-char strings"
+        ],
+        "codeSnippet": "# CPython caches single-character ASCII strings in memory:\na = 'x'; b = 'x'\nassert a is b  # True! Same object in memory"
+      },
+      {
+        "id": "q9",
+        "category": "Return the Substring Itself",
+        "question": "How would you modify the code to return the actual longest unique substring, not just its length?",
+        "whatInterviewerChecks": "Tracking window start index and max length coordinates.",
+        "bestReplyScript": "Instead of only tracking `max_len`, we maintain `best_start = 0`. Whenever `right - left + 1 > max_len`, we update `max_len = right - left + 1` and `best_start = left`. At the end of the loop, we return the slice `s[best_start : best_start + max_len]`. This avoids slicing strings during the loop.",
+        "keyPoints": [
+          "Track best_start index alongside max_len",
+          "Update best_start when new max found",
+          "Slice string once at the very end: s[best_start : best_start + max_len]"
+        ],
+        "codeSnippet": "def findLongestUniqueSubstring(s: str) -> str:\n    seen = {}\n    left = best_start = max_len = 0\n    for right, c in enumerate(s):\n        if c in seen and seen[c] >= left:\n            left = seen[c] + 1\n        seen[c] = right\n        if right - left + 1 > max_len:\n            max_len = right - left + 1\n            best_start = left\n    return s[best_start : best_start + max_len]"
+      },
+      {
+        "id": "q10",
+        "category": "At Most K Distinct Characters",
+        "question": "How does this pattern adapt to 'Longest Substring with At Most K Distinct Characters'?",
+        "whatInterviewerChecks": "Sliding window generalization with frequency count maps.",
+        "bestReplyScript": "Instead of a last-seen index map, we use a frequency map `counts = collections.defaultdict(int)`. Expand `right` and increment `counts[s[right]]`. While `len(counts) > k`, decrement `counts[s[left]]`; if count hits 0, `del counts[s[left]]`, and increment `left`. This is the canonical template for sliding window with frequency constraints.",
+        "keyPoints": [
+          "Frequency map counts occurrences",
+          "Window shrinks when len(counts) > k",
+          "del counts[key] when count reaches 0"
+        ],
+        "codeSnippet": "# At Most K Distinct:\n# counts[s[r]] += 1\n# while len(counts) > k:\n#     counts[s[l]] -= 1\n#     if counts[s[l]] == 0: del counts[s[l]]\n#     l += 1"
+      },
+      {
+        "id": "q11",
+        "category": "Two-Pointer Invariant",
+        "question": "What is the sliding window invariant that must hold at the end of every loop iteration?",
+        "whatInterviewerChecks": "Formal reasoning on sliding window correctness.",
+        "bestReplyScript": "The invariant is: 'The substring `s[left : right + 1]` contains only unique characters, and `max_len` stores the length of the longest unique substring ending at or before index `right`'. By induction, after `right` reaches `len(s) - 1`, `max_len` holds the global maximum.",
+        "keyPoints": [
+          "Window contains zero duplicate characters",
+          "Invariant holds inductively",
+          "Covers all valid ending positions"
+        ],
+        "codeSnippet": "# Invariant: len(set(s[left:right+1])) == (right - left + 1)"
+      },
+      {
+        "id": "q12",
+        "category": "Streaming Input Follow-up",
+        "question": "How would you solve this if the characters arrive one-by-one from a network socket stream of unknown length?",
+        "whatInterviewerChecks": "Streaming sliding window without random index access.",
+        "bestReplyScript": "Since we cannot index `s` backwards in a stream, we maintain a FIFO `collections.deque` representing the current window and a hash set for O(1) membership check. When char `c` arrives: while `c in char_set`, pop left from deque and remove from set. Then append `c` to deque, add to set, and update `max_len = max(max_len, len(deque))`. Memory is bounded by alphabet size M.",
+        "keyPoints": [
+          "collections.deque for stream window",
+          "Set for O(1) membership",
+          "O(M) memory bound where M is alphabet size"
+        ],
+        "codeSnippet": "from collections import deque\n\ndef stream_unique_window():\n    window = deque()\n    char_set = set()\n    max_len = 0\n    # on char c arriving from socket:\n    # while c in char_set: char_set.remove(window.popleft())\n    # window.append(c); char_set.add(c)\n    # max_len = max(max_len, len(window))"
+      },
+      {
+        "id": "q13",
+        "category": "Python `max()` in Sliding Window",
+        "question": "Can `max(max_len, right - left + 1)` be micro-optimized to avoid function call overhead?",
+        "whatInterviewerChecks": "Inline conditional optimization.",
+        "bestReplyScript": "Yes. Calling `max()` inside an iteration of 500,000 characters adds Python function call overhead. Using an explicit if-statement `curr_len = right - left + 1; if curr_len > max_len: max_len = curr_len` runs ~25% faster in CPython.",
+        "keyPoints": [
+          "Function call overhead in Python",
+          "Explicit if-statement executes faster in CPython",
+          "Micro-optimization for high-throughput loops"
+        ],
+        "codeSnippet": "curr_len = right - left + 1\nif curr_len > max_len:\n    max_len = curr_len"
+      },
+      {
+        "id": "q14",
+        "category": "Brute Force Complexity",
+        "question": "Why is the brute-force solution O(N\u00b3) and at what input size does it time out?",
+        "whatInterviewerChecks": "Understanding exponential scaling of nested substring checks.",
+        "bestReplyScript": "Brute force checks all substrings: there are O(N\u00b2) substrings. For each substring of length L, checking whether all characters are unique by converting to a set or checking pairs takes O(L) = O(N) time. Total time is O(N\u00b3). For N = 5,000, N\u00b3 = 1.25 * 10^11 operations, which would take hours in Python. Sliding window solves it in 0.005 seconds.",
+        "keyPoints": [
+          "O(N\u00b2) substrings * O(N) uniqueness check = O(N\u00b3)",
+          "Times out on N > 1,000",
+          "Sliding window drops complexity to O(N)"
+        ],
+        "codeSnippet": "# Brute force O(N^3):\n# for i in range(n):\n#     for j in range(i+1, n+1):\n#         if len(set(s[i:j])) == j - i: max_len = max(...)"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Summary & Key Patterns",
+        "question": "What broad class of interview problems does this sliding window pattern unlock?",
+        "whatInterviewerChecks": "Pattern recognition and algorithmic mental models.",
+        "bestReplyScript": "This pattern unlocks all 'dynamic-size sliding window with hash map' problems: Minimum Window Substring, Longest Substring with At Most Two Distinct Characters, Max Consecutive Ones III, Subarray Product Less Than K, and Permutation in String. The core mental model is: expand `right` to include, shrink `left` when condition violates, and update answer on valid windows.",
+        "keyPoints": [
+          "Universal Sliding Window mental model",
+          "Expand right to consume, shrink left to satisfy invariant",
+          "Transfers across 15+ top interview questions"
+        ],
+        "codeSnippet": "# Universal Template:\n# for right, x in enumerate(stream):\n#     add_to_window(x)\n#     while window_invalid(): remove_from_window(stream[left]); left += 1\n#     update_result()"
       }
     ],
     "mistakes": [
@@ -20511,51 +21411,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-57",
-        "question": "Why are there 2n - 1 centers in expand-around-center?",
-        "category": "Theoretical Rigor",
-        "whatInterviewerChecks": "Understanding odd vs even palindromes.",
-        "bestReplyScript": "A palindrome can be centered on a single character (e.g. 'aba', odd length) or centered between two adjacent characters (e.g. 'abba', even length). There are n possible single-character centers and n - 1 possible between-character centers. Adding them together gives n + (n - 1) = 2n - 1 total centers to check.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Longest Palindromic Substring in 30 seconds?",
+        "whatInterviewerChecks": "Expand Around Center vs Dynamic Programming.",
+        "bestReplyScript": "A palindrome mirrors around its center. In a string of length N, there are 2N - 1 possible centers: N single-character centers for odd palindromes (like 'aba') and N - 1 between-character centers for even palindromes (like 'abba'). We iterate through all 2N - 1 centers and expand outward as long as characters match: `s[left] == s[right]`. We record the longest boundary. This runs in O(N\u00b2) time and strictly O(1) auxiliary space, which outperforms the O(N\u00b2) space of DP.",
         "keyPoints": [
-          "n odd centers at each index",
-          "n - 1 even centers between adjacent pairs",
-          "Total 2n - 1 possible reflection axes"
-        ]
+          "2N - 1 centers (odd and even)",
+          "Expand outward while s[left] == s[right]",
+          "O(N\u00b2) time and O(1) space",
+          "Better than O(N\u00b2) DP space"
+        ],
+        "codeSnippet": "def longestPalindrome(s: str) -> str:\n    if not s:\n        return ''\n    start = end = 0\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1; r += 1\n        return l + 1, r - 1\n    for i in range(len(s)):\n        l1, r1 = expand(i, i)       # Odd\n        l2, r2 = expand(i, i + 1)   # Even\n        if r1 - l1 > end - start: start, end = l1, r1\n        if r2 - l2 > end - start: start, end = l2, r2\n    return s[start : end + 1]"
       },
       {
-        "id": "q2-57",
-        "question": "Why is Expand Around Center preferred over 2D Dynamic Programming?",
-        "category": "Trade-offs & Optimization",
-        "whatInterviewerChecks": "Practical performance considerations.",
-        "bestReplyScript": "Both algorithms have O(n\u00b2) worst-case time complexity. However, Expand Around Center uses strictly O(1) auxiliary space, whereas DP requires an O(n\u00b2) boolean table that causes cache misses and Memory Limit Exceeded for large n. Furthermore, Expand Around Center often terminates expansion early on mismatches, making its average time much faster.",
+        "id": "q2",
+        "category": "Center Enumeration",
+        "question": "Why are there exactly 2N - 1 centers in a string of length N?",
+        "whatInterviewerChecks": "Mathematical counting of odd vs even centers.",
+        "bestReplyScript": "A palindrome can have an odd length or an even length. For odd-length palindromes, the center is an actual character at index `i` (there are N such characters: indices 0 to N-1). For even-length palindromes, the center is the gap between index `i` and `i + 1` (there are N - 1 such adjacent pairs). Summing them: `N + (N - 1) = 2N - 1` total centers.",
         "keyPoints": [
-          "O(1) space vs O(n\u00b2) space",
-          "Better CPU cache locality",
-          "Early termination on mismatched characters"
-        ]
+          "N character centers for odd palindromes",
+          "N - 1 gap centers for even palindromes",
+          "Total = 2N - 1 centers"
+        ],
+        "codeSnippet": "# Total centers = N (odd) + (N - 1) (even) = 2N - 1"
       },
       {
-        "id": "q3-57",
-        "question": "Is there a linear O(n) algorithm for this problem?",
-        "category": "Advanced Algorithms",
-        "whatInterviewerChecks": "Awareness of Manacher's Algorithm.",
-        "bestReplyScript": "Yes! Manacher's Algorithm solves Longest Palindromic Substring in linear O(n) time and O(n) space by inserting boundary delimiters (#) and reusing previously computed palindrome radii using symmetry mirroring, avoiding redundant character comparisons.",
+        "id": "q3",
+        "category": "Boundary Off-by-One Trap",
+        "question": "Why does the helper function return `l + 1` and `r - 1` after the while loop terminates?",
+        "whatInterviewerChecks": "Pointer overshoot when while loop exits.",
+        "bestReplyScript": "The while loop condition is `while l >= 0 and r < len(s) and s[l] == s[r]`. Inside the loop, it expands: `l -= 1; r += 1`. The loop ONLY exits when `s[l] != s[r]` or pointers go out of bounds. This means `l` has gone 1 step too far to the left, and `r` has gone 1 step too far to the right. To recover the valid palindrome boundary, we must step back: `l + 1` and `r - 1`.",
         "keyPoints": [
-          "Manacher's Algorithm achieves O(n) time",
-          "Uses palindrome symmetry to skip redundant expansions",
-          "Usually not required to code from scratch in a 45-min interview"
-        ]
+          "Loop terminates on mismatch or out-of-bounds",
+          "Pointers have overshot by 1 step in each direction",
+          "l + 1 and r - 1 recovers exact valid palindrome range"
+        ],
+        "codeSnippet": "# Overshoot correction:\nwhile l >= 0 and r < len(s) and s[l] == s[r]:\n    l -= 1; r += 1\nreturn l + 1, r - 1  # Step back inward!"
       },
       {
-        "id": "q4-57",
-        "question": "What if multiple palindromic substrings have the same maximum length?",
-        "category": "Specification",
-        "whatInterviewerChecks": "Following problem ties specification.",
-        "bestReplyScript": "Standard interview convention specifies returning the first occurring substring of maximum length. We enforce this using `if len(candidate) > len(longest):` with strict inequality (`>`), preserving earlier occurrences.",
+        "id": "q4",
+        "category": "Dynamic Programming Alternative",
+        "question": "How does the Dynamic Programming approach work, and why is Expand Around Center preferred?",
+        "whatInterviewerChecks": "DP recurrence relation vs O(1) space expand method.",
+        "bestReplyScript": "The DP state is `dp[i][j] = True` if `s[i:j+1]` is a palindrome. Base cases: all length 1 strings are True; length 2 are True if `s[i] == s[i+1]`. For length >= 3, `dp[i][j] = (s[i] == s[j]) and dp[i+1][j-1]`. While DP takes O(N\u00b2) time, it allocates an N x N boolean matrix, requiring O(N\u00b2) space. For N = 1,000, that is 1 million booleans. Expand Around Center runs in the same O(N\u00b2) time with strictly O(1) space, making it vastly superior.",
         "keyPoints": [
-          "Strict inequality preserves first occurrence",
-          "Consistent deterministic behavior"
-        ]
+          "DP recurrence: dp[i][j] = (s[i] == s[j]) and dp[i+1][j-1]",
+          "DP requires O(N\u00b2) memory table",
+          "Expand Around Center uses O(1) memory and is faster in practice"
+        ],
+        "codeSnippet": "# DP Table (O(N^2) Space):\n# dp[i][j] = (s[i] == s[j]) and (j - i < 2 or dp[i+1][j-1])"
+      },
+      {
+        "id": "q5",
+        "category": "Linear Time: Manacher's Algorithm",
+        "question": "Can Longest Palindromic Substring be solved in strictly O(N) linear time? Explain Manacher's Algorithm.",
+        "whatInterviewerChecks": "Advanced theoretical knowledge of Manacher's Algorithm.",
+        "bestReplyScript": "Yes, Manacher's Algorithm solves it in O(N) time. It first transforms the string by inserting sentinel delimiters (e.g. `'#a#b#a#'`) so all palindromes have odd lengths. It maintains the rightmost palindrome boundary `R` and its center `C`. For any index `i < R`, it mirrors `i` across `C` as `i_mirror = 2*C - i` and initializes radius `P[i] = min(R - i, P[i_mirror])`. It only expands when necessary, ensuring the right boundary `R` moves strictly forward, achieving O(N) linear time.",
+        "keyPoints": [
+          "Manacher's Algorithm runs in strictly O(N) time",
+          "Uses delimiter '#' to unify odd/even lengths",
+          "Reuses palindrome radii from mirrored positions across center"
+        ],
+        "codeSnippet": "# Manacher's intuition: reuse symmetry across center C\n# i_mirror = 2 * C - i\n# P[i] = min(R - i, P[i_mirror])"
+      },
+      {
+        "id": "q6",
+        "category": "Edge Cases",
+        "question": "What edge cases must be tested for Longest Palindromic Substring?",
+        "whatInterviewerChecks": "Boundary and duplicate testing.",
+        "bestReplyScript": "1) Single character `'a'` -> `'a'`; 2) Two identical characters `'bb'` -> `'bb'`; 3) Two distinct characters `'ab'` -> `'a'` or `'b'`; 4) All identical characters `'aaaa'` -> `'aaaa'`; 5) Entire string is palindrome `'racecar'` -> `'racecar'`; 6) No multi-char palindrome exists `'abcdef'` -> any 1 character.",
+        "keyPoints": [
+          "Length 1 returns itself",
+          "Even palindrome like 'bb'",
+          "No palindrome > 1 char returns first char",
+          "All same chars"
+        ],
+        "codeSnippet": "assert longestPalindrome('a') == 'a'\nassert longestPalindrome('cbbd') == 'bb'\nassert longestPalindrome('babad') in ('bab', 'aba')"
+      },
+      {
+        "id": "q7",
+        "category": "Memory Allocation During Expansion",
+        "question": "Why shouldn't you slice strings inside the `expand` function?",
+        "whatInterviewerChecks": "Heap allocation overhead in tight inner loops.",
+        "bestReplyScript": "If you do `sub = s[l:r+1]` inside the expansion while loop, Python allocates a new string object on the heap on *every single expansion step*. In an O(N\u00b2) loop, this causes O(N\u00b3) character copies and triggers heavy garbage collection. Instead, compare characters directly via indices `s[l] == s[r]` and slice the string exactly ONCE when returning.",
+        "keyPoints": [
+          "Slicing in loop causes O(N\u00b3) heap allocation",
+          "Compare indices directly: s[l] == s[r]",
+          "Slice string only once at the end"
+        ],
+        "codeSnippet": "# \u274c BAD: sub = s[l:r+1]  # Allocates new string every step!\n# \u2705 GOOD: s[l] == s[r]   # Pointer comparison in O(1)"
+      },
+      {
+        "id": "q8",
+        "category": "Python String Immutability & Slicing",
+        "question": "How does Python 3 slice `s[start : end + 1]` execute at the C level?",
+        "whatInterviewerChecks": "CPython string slicing memory copying (`PyUnicode_Substring`).",
+        "bestReplyScript": "In CPython, calling `s[start:end+1]` invokes `PyUnicode_Substring()`. Because Python strings are immutable, it allocates a new `PyUnicodeObject` of length `end - start + 1` and copies the bytes from the source buffer using `memcpy()`. Since this slice is done only once at the end of the function, total slice time is O(L) where L is palindrome length.",
+        "keyPoints": [
+          "Calls PyUnicode_Substring at C level",
+          "Uses memcpy to copy bytes into new string",
+          "Executed only once at the return statement"
+        ],
+        "codeSnippet": "# Single slice at return:\nreturn s[start : end + 1]  # O(L) single copy"
+      },
+      {
+        "id": "q9",
+        "category": "Early Exit Optimization",
+        "question": "Can you stop searching if the remaining centers cannot possibly beat the current maximum?",
+        "whatInterviewerChecks": "Branch-and-bound pruning for center expansion.",
+        "bestReplyScript": "Yes! If the current maximum length found is `max_len`, and the distance from center `i` to the end of the string is `(len(s) - i) <= max_len // 2`, then even if the expansion extends all the way to the end of the string, its total length cannot exceed `max_len`. We can safely break the loop early.",
+        "keyPoints": [
+          "Remaining distance to edge <= max_len // 2",
+          "Cannot beat existing palindrome",
+          "Break terminates outer loop early"
+        ],
+        "codeSnippet": "if (len(s) - i) <= (end - start + 1) // 2:\n    break"
+      },
+      {
+        "id": "q10",
+        "category": "Palindromic Substrings Count",
+        "question": "How easily can this code be modified to solve 'Count All Palindromic Substrings'?",
+        "whatInterviewerChecks": "Algorithmic pattern adaptability.",
+        "bestReplyScript": "Extremely easily! In 'Count Palindromic Substrings', every valid expansion step corresponds to finding one additional unique palindromic substring. Instead of tracking `max_len`, we maintain a `count = 0`, and inside `expand(l, r)` we do `count += 1` on every successful character match. Total count of all expansions gives the answer in O(N\u00b2) time and O(1) space.",
+        "keyPoints": [
+          "Every expansion match = 1 palindrome",
+          "Increment count on each step of while loop",
+          "Solves Count Palindromes in same O(N\u00b2) time"
+        ],
+        "codeSnippet": "def countSubstrings(s: str) -> int:\n    count = 0\n    def expand(l, r):\n        nonlocal count\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            count += 1\n            l -= 1; r += 1\n    for i in range(len(s)):\n        expand(i, i)\n        expand(i, i + 1)\n    return count"
+      },
+      {
+        "id": "q11",
+        "category": "Worst-case Input Analysis",
+        "question": "What is the worst-case input for Expand Around Center, and what is its exact iteration count?",
+        "whatInterviewerChecks": "Worst-case scenario identification.",
+        "bestReplyScript": "The worst-case input is a string of all identical characters, e.g. `'a' * N`. At every center, the expansion extends all the way to the boundaries of the string. The total number of character comparisons is `sum_{i=1}^N i = N * (N + 1) / 2 = O(N\u00b2)`. For N = 1,000, it performs ~500,000 comparisons, which executes in under 0.05 seconds in Python.",
+        "keyPoints": [
+          "All identical characters like 'aaaaa'",
+          "N(N+1)/2 comparisons",
+          "Still executes within 50ms for N = 1000"
+        ],
+        "codeSnippet": "# 'a' * 1000 causes full expansion at all centers -> worst-case O(N^2)"
+      },
+      {
+        "id": "q12",
+        "category": "Best-case Input Analysis",
+        "question": "What is the best-case input for Expand Around Center?",
+        "whatInterviewerChecks": "Best-case complexity recognition.",
+        "bestReplyScript": "The best-case input is a string with all distinct characters, e.g. `'abcdefgh'`. At every odd center `expand(i, i)`, the first comparison `s[i] == s[i]` succeeds, and the very next comparison `s[i-1] == s[i+1]` immediately fails. At every even center `expand(i, i+1)`, `s[i] != s[i+1]` fails on the very first check. The loop exits in O(1) per center, achieving O(N) total best-case time!",
+        "keyPoints": [
+          "All distinct characters",
+          "Fails immediately after center check",
+          "Best-case runtime drops to O(N)"
+        ],
+        "codeSnippet": "# 'abcdef' -> 0 expansions beyond 1 char -> O(N) time"
+      },
+      {
+        "id": "q13",
+        "category": "Recursion vs Iteration",
+        "question": "Why shouldn't you implement the expansion recursively in Python?",
+        "whatInterviewerChecks": "Python recursion limit and stack frame overhead.",
+        "bestReplyScript": "A recursive expansion function adds a Python stack frame for every single character expansion. For a string of 1,000 identical characters, recursion depth would reach 1,000, risking `RecursionError: maximum recursion depth exceeded`. An iterative `while` loop runs with zero stack frames and uses O(1) space.",
+        "keyPoints": [
+          "Default recursion limit is 1,000 in Python",
+          "Recursive expansion risks RecursionError",
+          "Iterative while loop has zero stack overhead"
+        ],
+        "codeSnippet": "# Iterative while loop avoids recursion limit entirely"
+      },
+      {
+        "id": "q14",
+        "category": "Interview Multiple Solutions",
+        "question": "If an interviewer asks 'There are multiple palindromes of the same maximum length, which one should be returned?'",
+        "whatInterviewerChecks": "Attention to specification and strict inequality logic.",
+        "bestReplyScript": "Clarify immediately! If they want the *first* occurrence, use strict inequality `if len > max_len`. This ensures ties keep the earliest seen substring. If they want the *last* occurrence, use non-strict inequality `if len >= max_len`. Always state this distinction proactively.",
+        "keyPoints": [
+          "r - l > end - start keeps first occurrence",
+          "r - l >= end - start keeps last occurrence",
+          "Always clarify tie-breaking with interviewer"
+        ],
+        "codeSnippet": "# Strict inequality preserves the first occurrence:\nif r1 - l1 > end - start:\n    start, end = l1, r1"
+      },
+      {
+        "id": "q15",
+        "category": "Senior System Design Connection",
+        "question": "How are palindromic substring algorithms applied in bioinformatics and DNA sequence analysis?",
+        "whatInterviewerChecks": "Real-world domain applications of string algorithms.",
+        "bestReplyScript": "In computational biology, palindromic sequences in DNA (inverted repeats) serve as critical recognition sites for restriction enzymes (like EcoRI) and form hairpin loop structures in RNA folding. Algorithms like Manacher's and suffix trees are used in bioinformatics pipelines (BLAST, CRISPR target discovery) to detect palindromic binding motifs across millions of base pairs.",
+        "keyPoints": [
+          "DNA restriction enzyme recognition sites",
+          "RNA hairpin loop folding prediction",
+          "Motif discovery in CRISPR pipelines"
+        ],
+        "codeSnippet": "# DNA palindromic motif search uses suffix trees or Manacher's algorithm"
       }
     ],
     "mistakes": [
@@ -20667,52 +21717,203 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-58",
-        "question": "What happens if num_rows == 1?",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Zigzag Conversion in 30 seconds?",
+        "whatInterviewerChecks": "Simulation using row buckets and direction bounce.",
+        "bestReplyScript": "Instead of building a massive 2D matrix with empty spaces, we simulate the writing process using `numRows` string buckets. We iterate through the characters of the string while tracking `curr_row` and `step`. We append each character to `rows[curr_row]`. When `curr_row == 0`, we set `step = 1` (moving downward); when `curr_row == numRows - 1`, we set `step = -1` (bouncing upward diagonally). Finally, we join the row strings: `''.join(rows)`. This runs in O(N) time and O(N) space.",
+        "keyPoints": [
+          "numRows string buckets",
+          "Bounce direction at row 0 and row numRows - 1",
+          "step = 1 or -1",
+          "''.join(rows) at the end",
+          "O(N) time & O(N) space"
+        ],
+        "codeSnippet": "def convert(s: str, numRows: int) -> str:\n    if numRows == 1 or numRows >= len(s):\n        return s\n    rows = [''] * numRows\n    curr_row, step = 0, 1\n    for c in s:\n        rows[curr_row] += c\n        if curr_row == 0:\n            step = 1\n        elif curr_row == numRows - 1:\n            step = -1\n        curr_row += step\n    return ''.join(rows)"
+      },
+      {
+        "id": "q2",
+        "category": "Edge Case: numRows == 1",
+        "question": "What happens if numRows == 1, and why does the simulation fail without a guard?",
+        "whatInterviewerChecks": "Handling division by zero or infinite direction bouncing.",
+        "bestReplyScript": "If `numRows == 1`, `curr_row` starts at 0. Both `curr_row == 0` and `curr_row == numRows - 1` evaluate to True simultaneously! If not guarded, `step` oscillates or points out of bounds, causing an IndexError or wrong output. If `numRows == 1` or `numRows >= len(s)`, no zigzag pattern can exist, so we must return `s` immediately.",
+        "keyPoints": [
+          "numRows == 1 triggers both bounce conditions",
+          "No zigzag possible with 1 row",
+          "Guarding with 'if numRows == 1: return s' is essential"
+        ],
+        "codeSnippet": "# Critical guard:\nif numRows == 1 or numRows >= len(s):\n    return s"
+      },
+      {
+        "id": "q3",
+        "category": "String Concatenation Performance",
+        "question": "In Python, is `rows = [''] * numRows` and `rows[i] += c` efficient, or should we use lists of lists?",
+        "whatInterviewerChecks": "CPython string in-place concatenation optimization (`PyUnicode_Append`).",
+        "bestReplyScript": "In modern CPython, if a string has a reference count of 1, `s += c` attempts in-place reallocation via `PyUnicode_Append`, making it relatively fast. However, the most robust, guaranteed O(N) approach is using a list of lists: `rows = [[] for _ in range(numRows)]`, appending `rows[curr_row].append(c)`, and finally `''.join(''.join(r) for r in rows)`. This guarantees zero temporary string allocations across all Python implementations (PyPy, Jython).",
+        "keyPoints": [
+          "PyUnicode_Append can optimize += if refcount is 1",
+          "List of lists rows = [[] for _ in range(numRows)] is guaranteed O(N)",
+          "Avoids quadratic string copying across Python runtimes"
+        ],
+        "codeSnippet": "# Guaranteed O(N) list-of-lists approach:\nrows = [[] for _ in range(numRows)]\nfor c in s:\n    rows[curr_row].append(c)\n    # bounce step...\nreturn ''.join(''.join(r) for r in rows)"
+      },
+      {
+        "id": "q4",
+        "category": "Mathematical Cycle Jump Pattern",
+        "question": "How can you solve Zigzag Conversion with O(1) auxiliary space (excluding output)?",
+        "whatInterviewerChecks": "Mathematical cycle period derivation.",
+        "bestReplyScript": "The zigzag repeats in cycles of length `cycle_len = 2 * numRows - 2`. For row 0, characters appear at indices `k * cycle_len`. For row `numRows - 1`, characters appear at `k * cycle_len + numRows - 1`. For interior rows `r`, each cycle contains TWO characters: index `k * cycle_len + r` and index `(k + 1) * cycle_len - r`. By iterating row by row and computing indices directly, we construct the output with O(1) auxiliary space.",
+        "keyPoints": [
+          "Cycle length = 2 * numRows - 2",
+          "Row 0 and last row have 1 char per cycle",
+          "Interior rows have 2 chars per cycle (main + diagonal)",
+          "O(1) auxiliary memory"
+        ],
+        "codeSnippet": "# Cycle jump math:\ncycle_len = 2 * numRows - 2\n# For interior row r:\n# idx1 = k * cycle_len + r\n# idx2 = (k + 1) * cycle_len - r"
+      },
+      {
+        "id": "q5",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities?",
+        "whatInterviewerChecks": "Linear scan verification.",
+        "bestReplyScript": "Every character in `s` of length N is inspected exactly once. Appending to the row bucket takes O(1) amortized time. Joining the buckets at the end takes O(N) time. Thus, time complexity is strictly O(N). Space complexity is O(N) to store the characters in the buckets and produce the final output string.",
+        "keyPoints": [
+          "Time: strictly O(N)",
+          "Space: O(N) for row buckets",
+          "Optimal: every char processed once"
+        ],
+        "codeSnippet": "# Time: O(N), Space: O(N)"
+      },
+      {
+        "id": "q6",
+        "category": "Cycle Period Formula Derivation",
+        "question": "How do you mathematically derive the formula `cycle_len = 2 * numRows - 2`?",
+        "whatInterviewerChecks": "Geometric reasoning on the V-shaped cycle.",
+        "bestReplyScript": "A full cycle consists of: 1) Moving down from row 0 to row `numRows - 1` (takes `numRows` characters); 2) Moving diagonally up from row `numRows - 2` to row 1 (takes `numRows - 2` characters). Adding them together: `numRows + (numRows - 2) = 2 * numRows - 2`. For `numRows = 4`, `cycle_len = 2*4 - 2 = 6`.",
+        "keyPoints": [
+          "Downwards column: numRows characters",
+          "Upwards diagonal: numRows - 2 characters",
+          "Total = 2 * numRows - 2"
+        ],
+        "codeSnippet": "# Example: numRows = 4 -> cycle = 2*4 - 2 = 6\n# Row 0: index 0, 6, 12...\n# Row 1: index 1, 5, 7, 11...\n# Row 2: index 2, 4, 8, 10...\n# Row 3: index 3, 9, 15..."
+      },
+      {
+        "id": "q7",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Boundary condition handling.",
-        "bestReplyScript": "If num_rows == 1, there is no bouncing; all characters stay on row 0. Without an explicit guard (`if num_rows == 1: return s`), `curr == num_rows - 1` triggers immediately and causes oscillating step increments that crash or corrupt indexing. Handling `num_rows == 1` as an early exit ensures O(1) instantaneous return.",
+        "question": "What edge cases should you test for Zigzag Conversion?",
+        "whatInterviewerChecks": "Input boundary coverage.",
+        "bestReplyScript": "1) `numRows = 1`: returns original `s` immediately; 2) `numRows >= len(s)`: characters never even reach the bottom row, returns `s`; 3) `len(s) <= 2`: trivially short strings; 4) `numRows = 2`: pure alternating rows without diagonal elements; 5) Long string with repeated pattern.",
         "keyPoints": [
-          "num_rows == 1 has no vertical dimension",
-          "Must return original string s directly",
-          "Prevents infinite or broken step oscillation"
-        ]
+          "numRows = 1",
+          "numRows >= len(s)",
+          "numRows = 2 (alternating rows)",
+          "Single character string"
+        ],
+        "codeSnippet": "assert convert('A', 1) == 'A'\nassert convert('AB', 1) == 'AB'\nassert convert('PAYPALISHIRING', 3) == 'PAHNAPLSIIGYIR'"
       },
       {
-        "id": "q2-58",
-        "question": "What is the time complexity of the row-bucket solution?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "String builder cost in Python.",
-        "bestReplyScript": "We iterate through the string of length n once. In Python, appending characters to a list or string inside an array takes amortized O(1) time. Finally, `''.join(rows)` concatenates all n characters in O(n) time. Total time complexity is strictly linear O(n).",
+        "id": "q8",
+        "category": "Python List Multiplication Pitfall",
+        "question": "Why is `rows = [[]] * numRows` a dangerous bug, and what is the correct syntax?",
+        "whatInterviewerChecks": "Shallow reference copying in Python lists.",
+        "bestReplyScript": "`[[]] * numRows` creates a list of `numRows` references pointing to the *same identical list object* in memory! Appending to `rows[0]` would simultaneously append to `rows[1]`, `rows[2]`, etc. The correct syntax is a list comprehension: `rows = [[] for _ in range(numRows)]`, which creates `numRows` distinct list instances.",
         "keyPoints": [
-          "Single pass over n characters",
-          "Amortized O(1) per character",
-          "Final join is O(n), total O(n)"
-        ]
+          "[[]] * numRows copies the same list reference",
+          "Mutating one row mutates all rows",
+          "Use [[] for _ in range(numRows)] to create distinct lists"
+        ],
+        "codeSnippet": "# \u274c DANGEROUS BUG:\n# rows = [[]] * 3\n# rows[0].append('a') -> rows is [['a'], ['a'], ['a']]!\n\n# \u2705 CORRECT:\nrows = [[] for _ in range(3)]"
       },
       {
-        "id": "q3-58",
-        "question": "How does the mathematical cycle formula determine diagonal positions?",
-        "category": "Mathematical Formulation",
-        "whatInterviewerChecks": "Geometric formula derivation.",
-        "bestReplyScript": "A full zigzag cycle goes down `num_rows - 1` steps and back up `num_rows - 1` steps, making the cycle length `2 * num_rows - 2`. For a vertical character at index `i`, its paired diagonal counterpart in the same cycle is reflected across the bottom row, given by formula `i + cycle - 2 * r`.",
+        "id": "q9",
+        "category": "Generator Pipeline",
+        "question": "How can you write Zigzag Conversion using Python's `itertools`?",
+        "whatInterviewerChecks": "Advanced Python standard library tools (`itertools.cycle`).",
+        "bestReplyScript": "We can generate the sequence of row indices using `itertools.cycle`: the pattern of rows goes `0, 1, ..., numRows - 1, numRows - 2, ..., 1`. For `numRows = 3`, the sequence is `[0, 1, 2, 1]`. We zip `s` with `itertools.cycle(...)`, append to row buckets, and join. This is exceptionally concise and pythonic.",
         "keyPoints": [
-          "Cycle length = 2 * num_rows - 2",
-          "Diagonal character index = i + cycle - 2 * r",
-          "Top and bottom rows do not have diagonal characters"
-        ]
+          "itertools.cycle repeats row patterns",
+          "Pattern: list(range(n)) + list(range(n - 2, 0, -1))",
+          "Concise functional Python"
+        ],
+        "codeSnippet": "import itertools\n\ndef convert_itertools(s: str, numRows: int) -> str:\n    if numRows == 1 or numRows >= len(s): return s\n    pattern = list(range(numRows)) + list(range(numRows - 2, 0, -1))\n    rows = [''] * numRows\n    for c, row in zip(s, itertools.cycle(pattern)):\n        rows[row] += c\n    return ''.join(rows)"
       },
       {
-        "id": "q4-58",
-        "question": "How would you handle very large strings that do not fit in memory?",
-        "category": "Systems & Streaming",
-        "whatInterviewerChecks": "Scalability.",
-        "bestReplyScript": "Instead of buffering all rows in memory, we can use the mathematical cycle approach to stream the output row by row. For each row r from 0 to num_rows - 1, we read characters from disk at calculated periodic offsets, flushing to the output stream immediately, keeping RAM usage to O(1).",
+        "id": "q10",
+        "category": "Memory Profiling",
+        "question": "How much memory does the string-bucket approach consume compared to a 2D matrix?",
+        "whatInterviewerChecks": "Sparse vs dense representation memory comparison.",
+        "bestReplyScript": "A full 2D character matrix requires `numRows * numCols` cells. For a string of length N, `numCols \u2248 N / 2`. A matrix would allocate `numRows * (N / 2)` cells, mostly filled with empty space spaces `' '`. For N = 100,000 and numRows = 1,000, that is 50,000,000 cells (hundreds of megabytes). The row bucket approach allocates exactly N characters, using only ~100KB of RAM.",
         "keyPoints": [
-          "Stream output row-by-row",
-          "Seek offsets directly on disk",
-          "O(1) memory footprint"
-        ]
+          "Matrix uses numRows * (N / 2) cells (sparse waste)",
+          "Row buckets store exactly N characters",
+          "Orders of magnitude less memory"
+        ],
+        "codeSnippet": "# Matrix: O(numRows * N) memory\n# Buckets: strictly O(N) memory"
+      },
+      {
+        "id": "q11",
+        "category": "Direction Toggle Logic",
+        "question": "Why is `step = -step` a cleaner direction toggle than setting explicit values?",
+        "whatInterviewerChecks": "Clean state mutation without repetitive branches.",
+        "bestReplyScript": "If we start with `step = -1` and change direction at boundaries: `if curr_row == 0 or curr_row == numRows - 1: step = -step`. When we hit bottom (`numRows - 1`), `step` flips from `1` to `-1`. When we hit top (`0`), `step` flips from `-1` to `1`. This collapses four lines of conditional branching into a single elegant expression.",
+        "keyPoints": [
+          "step = -step flips sign cleanly",
+          "Single condition: curr_row in (0, numRows - 1)",
+          "Cleaner code with fewer branch instructions"
+        ],
+        "codeSnippet": "# Clean toggle:\nif curr_row == 0 or curr_row == numRows - 1:\n    step = -step\ncurr_row += step"
+      },
+      {
+        "id": "q12",
+        "category": "Reconstruction / Decoding",
+        "question": "Can you reverse this process: given the zigzag string and numRows, decode it back to the original string?",
+        "whatInterviewerChecks": "Inverse problem modeling and permutation inversion.",
+        "bestReplyScript": "Yes! To decode: 1) Run the exact same simulation using character indices `0, 1, 2, ... N-1` to find which original index ended up in which row; 2) This gives the permutation mapping from original index to encoded index; 3) Invert the permutation mapping and place the encoded characters back into their original positions. Total decode time is also O(N).",
+        "keyPoints": [
+          "Simulate with indices [0, 1, ... N-1]",
+          "Maps original index to zigzag position",
+          "Invert mapping to decode in O(N) time"
+        ],
+        "codeSnippet": "# Decoding: simulate index movement to build inverse permutation map"
+      },
+      {
+        "id": "q13",
+        "category": "ASCII Transposition in C/C++",
+        "question": "Why is this problem easier in Python than in C++?",
+        "whatInterviewerChecks": "Language memory ergonomics (dynamic strings vs fixed buffers).",
+        "bestReplyScript": "In Python, string buckets or lists of characters automatically resize and dynamically allocate memory, and `''.join(rows)` handles memory calculation and concatenation in a single C-level operation. In C++, you must precalculate the size of each row or manage multiple `std::string` buffers and reallocation.",
+        "keyPoints": [
+          "Python ''.join handles byte allocation in C",
+          "Dynamic array resizing built-in",
+          "More concise than C++ manual buffers"
+        ],
+        "codeSnippet": "# Python handles all bucket memory allocations dynamically"
+      },
+      {
+        "id": "q14",
+        "category": "Unit Testing & Invariants",
+        "question": "What invariant must hold between the input string and output string for Zigzag Conversion?",
+        "whatInterviewerChecks": "Conservation laws in string permutations.",
+        "bestReplyScript": "The output string must be an exact anagram (permutation) of the input string. Therefore: 1) `len(output) == len(input)`; 2) `collections.Counter(output) == collections.Counter(input)`. No characters can be added, modified, or lost.",
+        "keyPoints": [
+          "len(output) == len(input)",
+          "Counter(output) == Counter(input)",
+          "Output is a pure permutation of input"
+        ],
+        "codeSnippet": "assert len(res) == len(s)\nassert collections.Counter(res) == collections.Counter(s)"
+      },
+      {
+        "id": "q15",
+        "category": "Real-world Applications",
+        "question": "Does Zigzag Conversion have applications in cryptography or hardware display rendering?",
+        "whatInterviewerChecks": "Historical and practical context (Rail Fence Cipher).",
+        "bestReplyScript": "Yes! Zigzag Conversion is historically known as the **Rail Fence Cipher**, a classical transposition cipher used in military cryptography (dating back to ancient Greece and the American Civil War). In hardware, zigzag scanning (like the 8x8 zigzag order in JPEG image compression) traverses 2D discrete cosine transform (DCT) coefficients from low to high frequency for efficient run-length encoding.",
+        "keyPoints": [
+          "Classical Rail Fence transposition cipher",
+          "JPEG compression 8x8 DCT matrix zigzag scan",
+          "Displays and serial data serialization"
+        ],
+        "codeSnippet": "# Historically identical to the Rail Fence Cipher (transposition cipher)"
       }
     ],
     "mistakes": [
@@ -20816,51 +22017,203 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-59",
-        "question": "How do you detect 32-bit integer overflow before multiplying?",
-        "category": "Low-Level Safety",
-        "whatInterviewerChecks": "Systems awareness in languages like C/C++.",
-        "bestReplyScript": "In languages like C or C++ where integer overflow causes undefined behavior, we cannot simply let the number overflow and check afterwards. Before multiplying `val * 10`, we check: `if val > INT_MAX // 10 or (val == INT_MAX // 10 and digit > INT_MAX % 10): return INT_MAX if sign == 1 else INT_MIN`. In Python, integers have arbitrary precision, so checking after accumulation is mathematically safe.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain String to Integer (atoi) in 30 seconds?",
+        "whatInterviewerChecks": "State-machine parsing, whitespace, signs, and 32-bit clamping.",
+        "bestReplyScript": "We implement a 4-step sequential parser: 1) Skip leading whitespace using an index pointer; 2) Parse an optional '+' or '-' sign to determine multiplier `sign = 1` or `-1`; 3) Traverse digit characters `'0'-'9'`, accumulating the number via `num = num * 10 + digit`; 4) If `num` exceeds the 32-bit signed range [-2^31, 2^31 - 1], clamp to `INT_MIN` or `INT_MAX`. This runs in O(N) time and O(1) space without regex.",
         "keyPoints": [
-          "Check before multiplication in C/C++",
-          "val > INT_MAX // 10 check",
-          "Python supports arbitrary precision"
-        ]
+          "Skip leading whitespace",
+          "Parse optional + / - sign",
+          "Accumulate num = num * 10 + digit",
+          "Clamp to [-2^31, 2^31 - 1]",
+          "O(N) time & O(1) space"
+        ],
+        "codeSnippet": "def myAtoi(s: str) -> int:\n    s = s.lstrip()\n    if not s: return 0\n    sign = 1\n    idx = 0\n    if s[0] == '-': sign = -1; idx = 1\n    elif s[0] == '+': idx = 1\n    res = 0\n    INT_MAX, INT_MIN = 2**31 - 1, -2**31\n    while idx < len(s) and s[idx].isdigit():\n        res = res * 10 + int(s[idx])\n        idx += 1\n    res *= sign\n    if res < INT_MIN: return INT_MIN\n    if res > INT_MAX: return INT_MAX\n    return res"
       },
       {
-        "id": "q2-59",
-        "question": "What are the essential edge cases for atoi?",
-        "category": "Edge Cases & QA",
-        "whatInterviewerChecks": "Comprehensive test coverage.",
-        "bestReplyScript": "1) Whitespace only (e.g. '   ') -> 0; 2) Sign only (e.g. '+', '-') -> 0; 3) Leading zeroes (e.g. '000042') -> 42; 4) Non-digit trailing characters (e.g. '4193 with words') -> 4193; 5) Words before digits (e.g. 'words 42') -> 0; 6) 32-bit overflows beyond -2\u00b3\u00b9 and 2\u00b3\u00b9 - 1.",
+        "id": "q2",
+        "category": "32-bit Clamping Boundaries",
+        "question": "What are the exact 32-bit signed integer limits, and why are they asymmetric?",
+        "whatInterviewerChecks": "Two's complement integer representation.",
+        "bestReplyScript": "In two's complement 32-bit representation: `INT_MIN = -2^31 = -2,147,483,648` and `INT_MAX = 2^31 - 1 = 2,147,483,647`. They are asymmetric because 0 takes up one of the non-negative slots (from 0 to 2^31 - 1), leaving the entire negative range from -1 down to -2^31.",
         "keyPoints": [
-          "Trailing non-digits ignored",
-          "Leading non-digits abort parsing",
-          "Overflow clamping"
-        ]
+          "INT_MIN = -2,147,483,648",
+          "INT_MAX = 2,147,483,647",
+          "Asymmetry due to two's complement encoding of 0"
+        ],
+        "codeSnippet": "INT_MIN = -2**31      # -2147483648\nINT_MAX = 2**31 - 1  #  2147483647"
       },
       {
-        "id": "q3-59",
-        "question": "Why does `int(\"1337c0d3\")` throw ValueError, but atoi must return 1337?",
-        "category": "Specification Difference",
-        "whatInterviewerChecks": "Understanding C standard library `atoi` behavior.",
-        "bestReplyScript": "Python's built-in `int()` requires the entire string to be a valid base-10 number. The C standard library `atoi` reads characters sequentially and simply terminates conversion at the first invalid character, keeping whatever valid prefix was read. Our manual parser implements the C-style specification.",
+        "id": "q3",
+        "category": "No Built-ins: Digit Conversion",
+        "question": "How do you convert a character digit `'5'` to integer `5` if `int()` is forbidden?",
+        "whatInterviewerChecks": "ASCII ordinal subtraction.",
+        "bestReplyScript": "In ASCII and Unicode, the digit characters `'0'` through `'9'` are guaranteed to be contiguous. We subtract the ordinal value of `'0'`: `digit = ord(c) - ord('0')`. For `'5'`, `ord('5') - ord('0') = 53 - 48 = 5`. This is the standard systems programming technique in C and assembly.",
         "keyPoints": [
-          "Python int() enforces full string validity",
-          "C atoi stops at first non-digit",
-          "Manual parser satisfies C atoi contract"
-        ]
+          "ord(c) - ord('0')",
+          "Digits 0-9 are contiguous in ASCII",
+          "Avoids Python's built-in int()"
+        ],
+        "codeSnippet": "# Manual digit conversion:\ndigit = ord(c) - ord('0')  # ord('7') - ord('0') == 55 - 48 == 7"
       },
       {
-        "id": "q4-59",
-        "question": "Can `+` and `-` both appear together?",
-        "category": "Grammar & Parsing",
-        "whatInterviewerChecks": "Sign uniqueness.",
-        "bestReplyScript": "No, valid format permits at most ONE sign character immediately following the whitespace. If both appear (e.g. '+-12' or '-+1'), the second character is not a digit, so parsing terminates and yields 0.",
+        "id": "q4",
+        "category": "Finite State Machine (FSM) Design",
+        "question": "How can atoi be designed cleanly as a Deterministic Finite Automaton (DFA / FSM)?",
+        "whatInterviewerChecks": "Compiler design and state machine architecture.",
+        "bestReplyScript": "We define 4 states: `START` (handling spaces), `SIGNED` (after reading + or -), `IN_NUMBER` (reading digits), and `END` (invalid character or finished). Transitions: in `START`, space stays in `START`, sign goes to `SIGNED`, digit goes to `IN_NUMBER`. In `SIGNED`, digit goes to `IN_NUMBER`, anything else goes to `END`. In `IN_NUMBER`, digit stays in `IN_NUMBER`, non-digit goes to `END`. A DFA eliminates messy nested conditionals.",
         "keyPoints": [
-          "At most one sign permitted",
-          "+-12 is invalid and yields 0"
-        ]
+          "4 states: START, SIGNED, IN_NUMBER, END",
+          "Clean transition table",
+          "Standard compiler lexical analysis technique"
+        ],
+        "codeSnippet": "# State transitions: (state, input_type) -> next_state"
+      },
+      {
+        "id": "q5",
+        "category": "Whitespace Handling Nuance",
+        "question": "Why does `s.strip()` introduce a subtle bug compared to `s.lstrip()`?",
+        "whatInterviewerChecks": "Trailing whitespace requirements.",
+        "bestReplyScript": "The problem specification states that ONLY *leading* whitespace should be ignored. Trailing non-digits or spaces should naturally stop the parsing. While `strip()` removes trailing spaces, if an input is `'  42  '`, `strip()` gives `'42'` which still parses to 42. However, `lstrip()` strictly adheres to the prompt contract without modifying the trailing buffer.",
+        "keyPoints": [
+          "Only leading whitespace should be skipped",
+          "lstrip() removes left whitespace only",
+          "Preserves trailing boundary semantics"
+        ],
+        "codeSnippet": "# Use lstrip() or manual index skipping:\nwhile idx < len(s) and s[idx] == ' ':\n    idx += 1"
+      },
+      {
+        "id": "q6",
+        "category": "Overflow Detection in Languages Without Arbitrary Precision",
+        "question": "In C++ or Java, `res = res * 10 + digit` overflows before you can clamp it. How do you detect overflow *before* it happens?",
+        "whatInterviewerChecks": "Pre-overflow boundary arithmetic.",
+        "bestReplyScript": "In languages with fixed 32-bit integers, check before multiplying: `if res > INT_MAX // 10 or (res == INT_MAX // 10 and digit > 7): return INT_MAX if sign == 1 else INT_MIN`. `INT_MAX // 10` is 214,748,364, and the last digit of INT_MAX is 7 (last digit of INT_MIN is 8). This catches overflow before multiplication occurs.",
+        "keyPoints": [
+          "Check res > INT_MAX // 10",
+          "Check digit > 7 on equality",
+          "Prevents undefined behavior in C/C++"
+        ],
+        "codeSnippet": "# Pre-multiplication overflow check (C++ standard):\n# if res > INT_MAX // 10 or (res == INT_MAX // 10 and digit > 7):\n#     return INT_MAX if sign == 1 else INT_MIN"
+      },
+      {
+        "id": "q7",
+        "category": "Edge Cases & Parsing Traps",
+        "question": "What tricky edge cases must atoi handle?",
+        "whatInterviewerChecks": "Edge case mastery on string parsing.",
+        "bestReplyScript": "1) Empty or only spaces `'   '` -> 0; 2) Sign only `'+'` or `'-'` -> 0; 3) Words before digits `'words and 987'` -> 0; 4) Words after digits `'4193 with words'` -> 4193; 5) Multiple signs `'+-12'` -> 0 (only the first sign is valid, '-' is seen as non-digit); 6) Huge overflow `'-91283472332'` -> INT_MIN.",
+        "keyPoints": [
+          "'+-12' returns 0 (second sign is non-digit)",
+          "'4193 with words' returns 4193",
+          "'words and 987' returns 0",
+          "Numbers exceeding 2^31 clamped"
+        ],
+        "codeSnippet": "assert myAtoi('   -42') == -42\nassert myAtoi('4193 with words') == 4193\nassert myAtoi('words and 987') == 0\nassert myAtoi('+-12') == 0\nassert myAtoi('-91283472332') == -2147483648"
+      },
+      {
+        "id": "q8",
+        "category": "Python Regex Alternative",
+        "question": "How would you solve atoi in 2 lines using Python's `re` module?",
+        "whatInterviewerChecks": "Regular expression pattern construction.",
+        "bestReplyScript": "We strip leading whitespace and match with regex `^([+-]?\\d+)`: `match = re.match(r'^\\s*([+-]?\\d+)', s)`. If no match, return 0. Otherwise parse the captured group `int(match.group(1))` and clamp to `[INT_MIN, INT_MAX]`. While concise, regex compiling has runtime overhead compared to manual pointer parsing.",
+        "keyPoints": [
+          "Pattern: ^\\s*([+-]?\\d+)",
+          "Captures optional sign and contiguous digits",
+          "Clamp result to 32-bit range"
+        ],
+        "codeSnippet": "import re\ndef myAtoi_regex(s: str) -> int:\n    match = re.match(r'^\\s*([+-]?\\d+)', s)\n    if not match: return 0\n    return max(-2**31, min(2**31 - 1, int(match.group(1))))"
+      },
+      {
+        "id": "q9",
+        "category": "Python `sys.set_int_max_str_digits`",
+        "question": "What security vulnerability (CVE-2020-10735) in Python 3.11+ affects converting massive digit strings to integers?",
+        "whatInterviewerChecks": "Security awareness and Python 3.11+ integer string parsing limit.",
+        "bestReplyScript": "Converting huge strings (> 4,300 digits) to integers in Python has O(N\u00b2) quadratic time complexity, enabling Denial of Service (DoS) attacks. In Python 3.11+, `sys.set_int_max_str_digits(4300)` enforces a 4,300-digit limit on `int(str)`. If an attacker passes a 100,000-character string of digits, `int(s)` throws `ValueError: Exceeds the limit for integer string conversion`.",
+        "keyPoints": [
+          "CVE-2020-10735 quadratic DoS vulnerability",
+          "Default 4,300 digit string conversion limit in Python 3.11+",
+          "Manual digit accumulation avoids this exception"
+        ],
+        "codeSnippet": "# Python 3.11+ protects against massive string int() conversions:\nimport sys\nprint(sys.get_int_max_str_digits())  # 4300 digits default"
+      },
+      {
+        "id": "q10",
+        "category": "Complexity Analysis",
+        "question": "What is the time and space complexity of manual atoi?",
+        "whatInterviewerChecks": "Single-pass complexity.",
+        "bestReplyScript": "We scan the string from left to right with an index pointer. Each character is visited at most once. Arithmetic operations are O(1). Time complexity is strictly O(N) where N is string length. Auxiliary space is O(1) as we only store integer variables (`res`, `sign`, `idx`).",
+        "keyPoints": [
+          "Time: strictly O(N)",
+          "Space: O(1) auxiliary",
+          "Single pass without extra buffers"
+        ],
+        "codeSnippet": "# Time: O(N), Space: O(1)"
+      },
+      {
+        "id": "q11",
+        "category": "Python `isdigit()` vs `isnumeric()` vs `isdecimal()`",
+        "question": "What is the difference between `isdigit()`, `isnumeric()`, and `isdecimal()` in Python?",
+        "whatInterviewerChecks": "Unicode character classification in Python strings.",
+        "bestReplyScript": "`isdecimal()` strictly checks for characters in the range 0-9 (Unicode decimal radices). `isdigit()` also returns True for superscripts like '\u00b2' or circled digits '\u2460'. `isnumeric()` also returns True for Roman numerals like '\u2163' and vulgar fractions like '\u00bd'. In atoi, we must only parse standard decimal digits (0-9), making `isdecimal()` or `ord('0') <= ord(c) <= ord('9')` the strictly correct check!",
+        "keyPoints": [
+          "isdecimal(): strictly 0-9",
+          "isdigit(): includes superscripts like '\u00b2'",
+          "isnumeric(): includes fractions like '\u00bd'",
+          "Use isdecimal() or ord check to avoid superscript bugs"
+        ],
+        "codeSnippet": "assert '2'.isdecimal() and '2'.isdigit() and '2'.isnumeric()\nassert '\u00b2'.isdigit() and not '\u00b2'.isdecimal()  # Gotcha!\nassert '\u00bd'.isnumeric() and not '\u00bd'.isdigit()  # Gotcha!"
+      },
+      {
+        "id": "q12",
+        "category": "Leading Zeros",
+        "question": "How does your code handle multiple leading zeros, e.g. `'  0000042'`?",
+        "whatInterviewerChecks": "Mathematical absorption of leading zeros.",
+        "bestReplyScript": "Leading zeros are absorbed naturally by `res = res * 10 + digit`. At index 0, `res = 0 * 10 + 0 = 0`. This repeats for all zeros until `'4'` is reached, at which point `res = 0 * 10 + 4 = 4`. No special zero-skipping logic is needed.",
+        "keyPoints": [
+          "0 * 10 + 0 = 0 naturally absorbs leading zeros",
+          "Transitions to real value on first non-zero digit",
+          "Zero code complexity overhead"
+        ],
+        "codeSnippet": "# s = '00042' -> res stays 0 until '4', then becomes 4, then 42"
+      },
+      {
+        "id": "q13",
+        "category": "Negative Zero Handling",
+        "question": "How is `-0` or `+0` handled by Python integers?",
+        "whatInterviewerChecks": "Signed zero representation in Python.",
+        "bestReplyScript": "In Python, integers do not have distinct representations for `+0` and `-0` (unlike IEEE 754 floating-point numbers `float`). If `s = '-0'`, `res = 0 * -1 = 0`. `0 == -0` is True, and `id(0)` points to the same singleton integer object.",
+        "keyPoints": [
+          "Python ints do not have signed zero",
+          "0 and -0 are identical object references",
+          "Floating point floats have -0.0, but integers do not"
+        ],
+        "codeSnippet": "assert -0 == 0\nassert -0 is 0"
+      },
+      {
+        "id": "q14",
+        "category": "Security & Malicious Input",
+        "question": "How does robust atoi implementation protect against buffer overflow or memory exhaustion?",
+        "whatInterviewerChecks": "Security engineering and defensive parsing.",
+        "bestReplyScript": "If an adversary sends a string with 10 million digits, accumulating the number without clamping could allocate a 4MB `PyLongObject` and consume CPU cycles. We can cap the maximum number of digits parsed: if `res > INT_MAX`, we can immediately clamp to `INT_MAX` or `INT_MIN` and `break` out of the loop without reading the remaining 9,999,980 digits!",
+        "keyPoints": [
+          "Break immediately once res exceeds INT_MAX",
+          "Prevents CPU/RAM exhaustion on massive inputs",
+          "Defense against denial of service"
+        ],
+        "codeSnippet": "if res > INT_MAX:\n    return INT_MAX if sign == 1 else INT_MIN"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Summary",
+        "question": "Why is atoi considered a classic interview question by companies like Amazon and Microsoft?",
+        "whatInterviewerChecks": "Understanding the true evaluation intent of parser questions.",
+        "bestReplyScript": "Atoi tests whether a candidate can write clean, robust parsing code under strict edge-case contracts. It evaluates handling of preconditions (whitespace), optional flags (signs), state transitions (digits vs non-digits), boundary constraints (32-bit limits), and defensive error handling without relying on language built-ins.",
+        "keyPoints": [
+          "Evaluates edge-case thoroughness",
+          "Tests state-machine thinking",
+          "Common in systems engineering and API protocol parsing"
+        ],
+        "codeSnippet": "# Executive Takeaway: Clean sequential parser with early bounds clamping"
       }
     ],
     "mistakes": [
@@ -20965,51 +22318,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-60",
-        "question": "Why does comparing only the first and last strings after sorting guarantee correctness?",
-        "category": "Mathematical Proof",
-        "whatInterviewerChecks": "Understanding lexicographical properties.",
-        "bestReplyScript": "In lexicographical ordering, strings are sorted by character order. If the first string and the last string both start with prefix P, then EVERY string positioned between them in the sorted sequence must also start with P. Therefore, the common prefix of the entire list is strictly identical to the common prefix of the first and last elements.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Longest Common Prefix in 30 seconds?",
+        "whatInterviewerChecks": "Sorting trick vs Vertical scanning.",
+        "bestReplyScript": "The most elegant way to solve Longest Common Prefix is by sorting the array of strings lexicographically. In a sorted list of strings, the first string `strs[0]` and the last string `strs[-1]` will be the most different in the entire collection. Therefore, any common prefix shared by the entire array must simply be the common prefix between the first and last strings! We compare characters of `strs[0]` and `strs[-1]` until they differ. This runs in O(N * L * log N) time and O(1) auxiliary space.",
         "keyPoints": [
-          "Lexicographical sorting orders strings monotonically",
-          "If first and last share P, all intermediate strings share P",
-          "Reduces N comparisons to a single pair comparison"
-        ]
+          "Sort strings lexicographically",
+          "Compare only the first and last string",
+          "First and last strings are the most divergent",
+          "O(1) auxiliary space"
+        ],
+        "codeSnippet": "def longestCommonPrefix(strs: list[str]) -> str:\n    if not strs:\n        return ''\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    return first[:i]"
       },
       {
-        "id": "q2-60",
-        "question": "Between Sort Extremes and Vertical Scanning, which is better in practice?",
-        "category": "Trade-offs",
-        "whatInterviewerChecks": "Algorithmic decision making.",
-        "bestReplyScript": "Vertical Scanning is better in practice when the common prefix is short! If the first column differs, Vertical Scanning terminates in O(n) operations, whereas sorting takes O(n \u00b7 m log n). Sorting is superior when simplicity of code is prioritized.",
+        "id": "q2",
+        "category": "Mathematical Proof of Sorting Trick",
+        "question": "Why is it mathematically guaranteed that comparing only `strs[0]` and `strs[-1]` is sufficient?",
+        "whatInterviewerChecks": "Lexicographical order transitivity.",
+        "bestReplyScript": "In lexicographical (alphabetical) order, strings are sorted character-by-character from left to right. If a prefix `P` is common to both the first string `strs[0]` and the last string `strs[-1]`, then by transitivity of lexicographical ordering, every intermediate string `strs[i]` between them must also start with prefix `P`. Any character mismatch between intermediate strings would force them to sort outside this boundary.",
         "keyPoints": [
-          "Vertical Scanning terminates early in O(n)",
-          "Sorting takes O(n \u00b7 m log n)",
-          "Vertical scan has optimal theoretical complexity"
-        ]
+          "Lexicographical transitivity",
+          "If strs[0] and strs[-1] share prefix P, all intermediate strings must share P",
+          "Proof by ordering definition"
+        ],
+        "codeSnippet": "# Lexicographical guarantee:\n# strs[0] <= strs[i] <= strs[-1]\n# If strs[0][:k] == strs[-1][:k], then strs[i][:k] must also match!"
       },
       {
-        "id": "q3-60",
-        "question": "What if there is no common prefix?",
+        "id": "q3",
+        "category": "Vertical Scanning Alternative",
+        "question": "What is Vertical Scanning, and why is it preferred when an array contains 1,000,000 strings?",
+        "whatInterviewerChecks": "O(N * M) worst-case vs early exit on short common prefixes.",
+        "bestReplyScript": "Vertical scanning checks column by column across all strings: character 0 across all strings, then character 1, and so forth. If character `i` mismatches in ANY string, or if `i == len(s)` for any string, we return `strs[0][:i]` immediately. If there is a very short common prefix (e.g. length 1) among 1,000,000 strings, vertical scanning terminates after examining only 1 or 2 characters per string (O(N) operations), completely avoiding the O(N * L * log N) cost of sorting!",
+        "keyPoints": [
+          "Inspects character column i across all strings",
+          "Halts on first mismatch across any string",
+          "Best for large N with short prefixes"
+        ],
+        "codeSnippet": "def longestCommonPrefix_vertical(strs: list[str]) -> str:\n    if not strs: return ''\n    for i in range(len(strs[0])):\n        c = strs[0][i]\n        for s in strs[1:]:\n            if i == len(s) or s[i] != c:\n                return strs[0][:i]\n    return strs[0]"
+      },
+      {
+        "id": "q4",
+        "category": "Python `zip(*strs)` Idiom",
+        "question": "How can Vertical Scanning be written in 2 lines using Python's `zip(*strs)`?",
+        "whatInterviewerChecks": "Python argument unpacking and zip tuple generation.",
+        "bestReplyScript": "`zip(*strs)` unpacks all strings into positional arguments and groups characters column by column into tuples: `('f', 'f', 'f')`, `('l', 'l', 'l')`, `('o', 'o', 'i')`. We iterate with `enumerate(zip(*strs))` and check `if len(set(col)) > 1: return strs[0][:i]`. If all columns match, return the shortest string. This is one of the most famous idiomatic Python interview solutions.",
+        "keyPoints": [
+          "zip(*strs) unpacks and aggregates columns",
+          "len(set(col)) == 1 checks column uniformity",
+          "Highly idiomatic Python 3"
+        ],
+        "codeSnippet": "def longestCommonPrefix_pythonic(strs: list[str]) -> str:\n    if not strs: return ''\n    for i, col in enumerate(zip(*strs)):\n        if len(set(col)) > 1:\n            return strs[0][:i]\n    return min(strs, key=len)"
+      },
+      {
+        "id": "q5",
+        "category": "Horizontal Scanning Alternative",
+        "question": "What is Horizontal Scanning, and how does it compare to Vertical Scanning?",
+        "whatInterviewerChecks": "Comparative analysis of prefix reduction.",
+        "bestReplyScript": "Horizontal scanning initializes `prefix = strs[0]`. Then it iterates through each string `s` in `strs[1:]`, shrinking `prefix` until `s.startswith(prefix)`: `while not s.startswith(prefix): prefix = prefix[:-1]`. While simple, if the very last string in a million-string array has no common prefix, horizontal scanning does wasted work comparing all previous strings.",
+        "keyPoints": [
+          "prefix = prefix[:-1] shrinks until match",
+          "Progressively reduces prefix across strings",
+          "Suboptimal if mismatch occurs only at the end"
+        ],
+        "codeSnippet": "# Horizontal scanning:\nprefix = strs[0]\nfor s in strs[1:]:\n    while not s.startswith(prefix):\n        prefix = prefix[:-1]\n        if not prefix: return ''"
+      },
+      {
+        "id": "q6",
+        "category": "Trie (Prefix Tree) Data Structure",
+        "question": "How would you solve this if you had to query the longest common prefix dynamically across an evolving set of strings?",
+        "whatInterviewerChecks": "Trie data structure design and multi-query optimization.",
+        "bestReplyScript": "We insert all strings into a Trie (Prefix Tree). Each node stores child pointers and an `is_end_of_word` flag. The longest common prefix corresponds to walking down the root node as long as: 1) The current node has *exactly one child*; and 2) `is_end_of_word` is False. The instant a node branches (children count > 1) or a word terminates, the common prefix ends. Trie insertion is O(total characters), and prefix retrieval is O(length of prefix).",
+        "keyPoints": [
+          "Insert strings into Trie",
+          "Traverse while node has exactly 1 child and not end_of_word",
+          "Optimal for dynamic multi-query systems"
+        ],
+        "codeSnippet": "# Trie walk: while len(node.children) == 1 and not node.is_end:\n#     node = next(iter(node.children.values()))"
+      },
+      {
+        "id": "q7",
+        "category": "Binary Search on Prefix Length",
+        "question": "How can Binary Search be applied to find the longest common prefix?",
+        "whatInterviewerChecks": "Binary search on solution space.",
+        "bestReplyScript": "The maximum possible prefix length is `min_len = min(len(s) for s in strs)`. The prefix property is monotonic: if prefix of length K matches all strings, any length < K also matches. We binary search on length from 1 to `min_len`. For `mid = (low + high) // 2`, we test if `strs[0][:mid]` matches all strings. If True, `low = mid + 1`; else `high = mid - 1`. Total time is O(N * M * log M).",
+        "keyPoints": [
+          "Binary search on length [1, min_len]",
+          "Monotonic property allows binary search",
+          "O(N * M * log M) time"
+        ],
+        "codeSnippet": "# Binary search on length: low, high = 1, min(len(s) for s in strs)"
+      },
+      {
+        "id": "q8",
+        "category": "Divide and Conquer Approach",
+        "question": "How does the Divide and Conquer approach work for this problem?",
+        "whatInterviewerChecks": "Divide-and-conquer recurrence modeling.",
+        "bestReplyScript": "We split the list of strings into two halves `LCP(strs[0..mid])` and `LCP(strs[mid+1..end])`. We recursively compute the common prefix of each half, and then compute the common prefix of the two resulting prefix strings. Recurrence is `T(N) = 2*T(N/2) + O(M)`. By the Master Theorem, time complexity is O(N * M).",
+        "keyPoints": [
+          "Divide array into two halves",
+          "Recursively find LCP of left and right",
+          "Merge two prefixes in O(M) time"
+        ],
+        "codeSnippet": "# def lcp_divide(strs, l, r):\n#     if l == r: return strs[l]\n#     mid = (l + r) // 2\n#     return common(lcp_divide(strs, l, mid), lcp_divide(strs, mid + 1, r))"
+      },
+      {
+        "id": "q9",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Empty prefix handling.",
-        "bestReplyScript": "If the first characters do not match, the loop terminates at `i = 0`, and `first[:0]` evaluates to empty string `''`, which is correctly printed.",
+        "question": "What edge cases must be tested for Longest Common Prefix?",
+        "whatInterviewerChecks": "Boundary test coverage.",
+        "bestReplyScript": "1) Empty list `[]` -> `''`; 2) Single string `['abc']` -> `'abc'`; 3) Empty string inside list `['', 'b']` -> `''`; 4) No common prefix `['dog', 'racecar', 'car']` -> `''`; 5) All identical strings `['flower', 'flower']` -> `'flower'`; 6) One string is a prefix of another `['ab', 'a']` -> `'a'`.",
         "keyPoints": [
-          "i = 0 yields empty string",
-          "Prints blank line as required by spec"
-        ]
+          "Empty list returns ''",
+          "Single string returns itself",
+          "Empty string in list returns ''",
+          "No common prefix returns ''"
+        ],
+        "codeSnippet": "assert longestCommonPrefix([]) == ''\nassert longestCommonPrefix(['single']) == 'single'\nassert longestCommonPrefix(['', 'b']) == ''\nassert longestCommonPrefix(['flower', 'flow', 'flight']) == 'fl'"
       },
       {
-        "id": "q4-60",
-        "question": "How would you solve this if strings are constantly inserted into an active database?",
-        "category": "Data Structures & Scale",
-        "whatInterviewerChecks": "Trie (Prefix Tree) knowledge.",
-        "bestReplyScript": "We would insert words into a Trie (Prefix Tree). The longest common prefix corresponds to walking down from the root while every node has exactly one child and is not an end-of-word marker. Tries support dynamic insertions and prefix queries in O(length) time.",
+        "id": "q10",
+        "category": "Python Timsort Overhead",
+        "question": "What is the computational cost of sorting strings in Python (`strs.sort()`)?",
+        "whatInterviewerChecks": "String comparison complexity in Timsort.",
+        "bestReplyScript": "In Python, sorting an array of N strings of length at most L requires comparing strings. In the worst case, comparing two strings takes O(L) time. Timsort performs O(N log N) comparisons. Therefore, sorting takes O(N * L * log N) time in the worst case. If N is very large and L is small, sorting is fast; if L is massive, vertical scanning O(N * L) is faster.",
         "keyPoints": [
-          "Trie data structure",
-          "Walk until branching factor > 1",
-          "Ideal for dynamic dictionary queries"
-        ]
+          "Comparing 2 strings takes up to O(L) time",
+          "Total sorting time is O(N * L * log N)",
+          "Vertical scanning O(N * L) is asymptotically faster for large N"
+        ],
+        "codeSnippet": "# Sorting: O(N * L * log N)\n# Vertical Scan: O(N * L) worst-case, O(N) best-case"
+      },
+      {
+        "id": "q11",
+        "category": "Python `min()` and `max()` on Strings",
+        "question": "Can you replace `strs.sort()` with `min(strs)` and `max(strs)` for 5x faster runtime?",
+        "whatInterviewerChecks": "Finding extremes in O(N) without full sorting.",
+        "bestReplyScript": "YES! To find the lexicographically first and last strings, you do NOT need to sort all N elements! You only need the minimum and maximum elements in lexicographical order: `first = min(strs)` and `last = max(strs)`. Finding min and max takes only O(N * L) time and avoids the O(N log N) sort overhead completely! This is an elite Python interview trick.",
+        "keyPoints": [
+          "min(strs) gives lexicographically smallest in O(N)",
+          "max(strs) gives lexicographically largest in O(N)",
+          "Avoids O(N log N) sort completely - runs in O(N * L)!"
+        ],
+        "codeSnippet": "def longestCommonPrefix_optimal(strs: list[str]) -> str:\n    if not strs: return ''\n    first, last = min(strs), max(strs)\n    for i, (c1, c2) in enumerate(zip(first, last)):\n        if c1 != c2:\n            return first[:i]\n    return first if len(first) < len(last) else last"
+      },
+      {
+        "id": "q12",
+        "category": "Memory Footprint",
+        "question": "What is the auxiliary memory consumption of the `min(strs)` and `max(strs)` solution?",
+        "whatInterviewerChecks": "Space analysis of string references.",
+        "bestReplyScript": "`min(strs)` and `max(strs)` return existing references to strings already in the list. They do not duplicate string buffers. We only allocate two pointer references (`first`, `last`) and an integer index `i`. Thus, auxiliary space complexity is strictly O(1) beyond the output string.",
+        "keyPoints": [
+          "Zero array allocations",
+          "Only 2 object references",
+          "Strictly O(1) auxiliary space"
+        ],
+        "codeSnippet": "# Auxiliary memory = O(1)"
+      },
+      {
+        "id": "q13",
+        "category": "Case Sensitivity & Unicode",
+        "question": "How does ASCII casing affect lexicographical comparison in `min()` and `max()`?",
+        "whatInterviewerChecks": "ASCII ordering where uppercase precedes lowercase.",
+        "bestReplyScript": "In ASCII, all uppercase letters ('A'-'Z', values 65-90) precede lowercase letters ('a'-'z', values 97-122). For example, `'Zebra' < 'apple'`. If input strings have mixed casing like `['apple', 'Apple']`, `'Apple'` will be the minimum and `'apple'` the maximum, resulting in an empty prefix `''`. If case-insensitive prefixing is required, strings must be normalized with `.lower()` first.",
+        "keyPoints": [
+          "Uppercase letters have smaller ASCII values than lowercase",
+          "'Z' < 'a' in ASCII ordering",
+          "Case-insensitive prefixing requires .lower() normalization"
+        ],
+        "codeSnippet": "assert 'Zebra' < 'apple'  # True in ASCII!"
+      },
+      {
+        "id": "q14",
+        "category": "Defensive Invariants",
+        "question": "What defensive checks should you add at the start of a production prefix utility?",
+        "whatInterviewerChecks": "Defensive programming in production libraries.",
+        "bestReplyScript": "1) Check `if not strs: return ''`; 2) Check if any element is `None` or not a string; 3) Check if `len(strs) == 1: return strs[0]`. This guarantees graceful execution without runtime TypeErrors.",
+        "keyPoints": [
+          "Guard against empty list",
+          "Single-element early return",
+          "Defensive type checks"
+        ],
+        "codeSnippet": "if not strs: return ''\nif len(strs) == 1: return strs[0]"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Summary",
+        "question": "Summarize the 4 approaches to Longest Common Prefix and when to choose each.",
+        "whatInterviewerChecks": "Architectural decision matrix across all 4 algorithms.",
+        "bestReplyScript": "1) **min/max Extremes**: O(N * L) time, O(1) space, cleanest and fastest for one-off batch queries; 2) **Vertical Scanning**: O(N * min_len) time, O(1) space, best when prefix is expected to be very short; 3) **Trie**: O(total chars) build, O(prefix) query, best for dynamic autocomplete engines; 4) **Binary Search**: O(N * L * log L), good for very long uniform strings.",
+        "keyPoints": [
+          "min/max: best general Python solution",
+          "Vertical scan: best when prefix is short",
+          "Trie: best for dynamic multi-query systems"
+        ],
+        "codeSnippet": "# Decision Matrix:\n# One-off -> min/max (O(N) time, O(1) space)\n# Interactive Autocomplete -> Trie (Prefix Tree)"
       }
     ],
     "mistakes": [
@@ -21107,51 +22610,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-61",
-        "question": "Why does Python's modulo behavior on negative numbers require `abs(x)`?",
-        "category": "Language Internals",
-        "whatInterviewerChecks": "Understanding Python's floor division semantics.",
-        "bestReplyScript": "In Python, modulo follows floor division towards negative infinity: `-123 // 10 = -13` and `-123 % 10 = 7`, not `-3`! In C/C++, modulo truncates towards zero. To guarantee predictable decimal digit extraction in Python, we must always work with `abs(x)` and reapply the sign at the end.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Reverse Integer in 30 seconds?",
+        "whatInterviewerChecks": "Mathematical digit reversal and 32-bit overflow handling.",
+        "bestReplyScript": "We reverse the integer mathematically using modulo and division. We track the sign `sign = -1 if x < 0 else 1` and take the absolute value `x = abs(x)`. In a while loop, we pop the last digit with `x % 10` and append it to `rev = rev * 10 + digit`, while integer dividing `x //= 10`. Finally, we re-apply the sign `rev *= sign`. If `rev` overflows the 32-bit signed range [-2^31, 2^31 - 1], we return 0 per the problem specification. This runs in O(log\u2081\u2080 N) time and O(1) space.",
         "keyPoints": [
-          "Python % follows floor division",
-          "-123 % 10 equals 7 in Python",
-          "abs(x) guarantees true decimal digit extraction"
-        ]
+          "Extract sign, work with abs(x)",
+          "rev = rev * 10 + (x % 10), x //= 10",
+          "Re-apply sign at end",
+          "Return 0 if outside [-2^31, 2^31 - 1]",
+          "O(log N) time, O(1) space"
+        ],
+        "codeSnippet": "def reverse(x: int) -> int:\n    sign = -1 if x < 0 else 1\n    x = abs(x)\n    rev = 0\n    while x > 0:\n        rev = rev * 10 + x % 10\n        x //= 10\n    rev *= sign\n    if rev < -2**31 or rev > 2**31 - 1:\n        return 0\n    return rev"
       },
       {
-        "id": "q2-61",
-        "question": "Why does reversing 1534236469 output 0?",
-        "category": "Overflow Handling",
-        "whatInterviewerChecks": "32-bit boundary checking.",
-        "bestReplyScript": "Reversing 1534236469 produces 9646324351. In a 32-bit signed integer system, the maximum allowable positive value is 2\u00b3\u00b9 - 1 = 2,147,483,647. Since 9,646,324,351 exceeds this maximum, integer overflow occurs. Per the problem specification, overflow conditions must output 0.",
+        "id": "q2",
+        "category": "Python Modulo on Negative Numbers Trap",
+        "question": "Why does Python's modulo operator `%` behave dangerously on negative numbers like `-123 % 10`?",
+        "whatInterviewerChecks": "Floor division vs truncation toward zero in Python.",
+        "bestReplyScript": "In Python, modulo follows floor division: `-123 % 10` returns `7` (because `-123 = -13 * 10 + 7`), whereas in C/C++/Java it returns `-3` (truncation toward zero). If you do not extract the sign and take `abs(x)` first, Python's modulo and integer division will produce incorrect digits and infinite loops for negative numbers!",
         "keyPoints": [
-          "32-bit max is 2,147,483,647",
-          "9.6 billion overflows 32 bits",
-          "Must output 0 on overflow"
-        ]
+          "Python % rounds toward floor (-infinity)",
+          "-123 % 10 is 7 in Python, but -3 in C++",
+          "Always take abs(x) and store sign first"
+        ],
+        "codeSnippet": "# Python behavior:\nprint(-123 % 10)  # Output: 7 (NOT -3!)\nprint(-123 // 10) # Output: -13 (NOT -12!)"
       },
       {
-        "id": "q3-61",
-        "question": "How are trailing zeroes handled, like 120 reversing to 21?",
+        "id": "q3",
+        "category": "Pre-Overflow Checks in C++ vs Python",
+        "question": "In C++, `rev * 10` causes an integer overflow crash before checking `rev > INT_MAX`. How do you check before multiplying?",
+        "whatInterviewerChecks": "Pre-multiplication boundary checking.",
+        "bestReplyScript": "In C++, check before multiplying: `if (rev > INT_MAX / 10 || (rev == INT_MAX / 10 && digit > 7)) return 0`. For negatives: `if (rev < INT_MIN / 10 || (rev == INT_MIN / 10 && digit < -8)) return 0`. In Python, integers have arbitrary precision, so `rev * 10` never crashes, but understanding the C++ boundary is a standard FAANG interview check.",
+        "keyPoints": [
+          "Check rev > INT_MAX // 10",
+          "Check digit > 7 for INT_MAX (ends in 7)",
+          "Prevents hardware overflow traps in C/C++"
+        ],
+        "codeSnippet": "# C++ pre-multiplication check:\n# if (rev > 214748364 || (rev == 214748364 && digit > 7)) return 0;"
+      },
+      {
+        "id": "q4",
+        "category": "String Slicing Alternative",
+        "question": "Can you solve this with string slicing `str(x)[::-1]`? What are the trade-offs?",
+        "whatInterviewerChecks": "String slicing memory allocation and performance.",
+        "bestReplyScript": "Yes: `s = str(abs(x))[::-1]; res = int(s) * (-1 if x < 0 else 1); return res if -2**31 <= res <= 2**31 - 1 else 0`. While concise, this approach converts the integer to an ASCII string, allocates a reversed string in heap memory, and parses it back to an integer. The mathematical loop uses strictly O(1) primitive arithmetic without heap allocations.",
+        "keyPoints": [
+          "String slicing allocates temporary heap strings",
+          "Mathematical loop uses strictly O(1) memory",
+          "Interviewers specifically look for the mathematical loop"
+        ],
+        "codeSnippet": "def reverse_slice(x: int) -> int:\n    s = str(abs(x))[::-1]\n    rev = int(s) if x >= 0 else -int(s)\n    return rev if -2**31 <= rev <= 2**31 - 1 else 0"
+      },
+      {
+        "id": "q5",
+        "category": "Time and Space Complexity",
+        "question": "What is the exact time complexity of mathematical integer reversal?",
+        "whatInterviewerChecks": "Logarithmic time complexity derivation.",
+        "bestReplyScript": "The number of digits in an integer x is `floor(log\u2081\u2080 |x|) + 1`. In each iteration, `x` is divided by 10, stripping exactly one digit. For a 32-bit integer, x <= 2,147,483,647, which has at most 10 digits. The loop runs at most 10 times. Therefore, time complexity is O(log\u2081\u2080 N) = O(1) bounded time, and space complexity is strictly O(1).",
+        "keyPoints": [
+          "Digits in x = floor(log10 |x|) + 1",
+          "At most 10 iterations for 32-bit ints",
+          "O(log10 N) = O(1) constant time, O(1) space"
+        ],
+        "codeSnippet": "# Maximum iterations = 10 (since 2^31 - 1 has 10 digits)"
+      },
+      {
+        "id": "q6",
+        "category": "Trailing Zeros",
+        "question": "How does the mathematical algorithm handle trailing zeros like `x = 120`?",
+        "whatInterviewerChecks": "Handling leading zeros in reversed output.",
+        "bestReplyScript": "When `x = 120`, the first digit popped is `120 % 10 = 0`. `rev = 0 * 10 + 0 = 0`. In the next step, `x = 12`, digit is `2`, and `rev = 0 * 10 + 2 = 2`. In the final step, digit is `1`, `rev = 2 * 10 + 1 = 21`. The trailing zero in 120 naturally becomes an invisible leading zero in 21 without any special logic.",
+        "keyPoints": [
+          "120 % 10 = 0 is absorbed into rev = 0",
+          "Next digit 2 makes rev = 2",
+          "120 becomes 21 seamlessly"
+        ],
+        "codeSnippet": "assert reverse(120) == 21"
+      },
+      {
+        "id": "q7",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Leading zero elimination.",
-        "bestReplyScript": "When popping digits: first digit is `120 % 10 = 0`, giving `rev = 0`. Next digit is `12 % 10 = 2`, giving `rev = 0 * 10 + 2 = 2`. The leading zero is naturally absorbed by the mathematical accumulation `rev * 10`.",
+        "question": "What edge cases must be tested for Reverse Integer?",
+        "whatInterviewerChecks": "32-bit boundaries and zero testing.",
+        "bestReplyScript": "1) Zero `0` -> returns 0; 2) Single digit `7` -> 7; 3) Negative numbers `-123` -> -321; 4) Trailing zeros `12000` -> 21; 5) Positive overflow `1,534,236,469` (reverses to 9,646,324,351 > 2^31 - 1) -> returns 0; 6) Negative overflow `-2,147,483,648` -> returns 0.",
         "keyPoints": [
-          "rev = 0 * 10 + next_digit absorbs leading zeroes",
-          "120 naturally becomes 21"
-        ]
+          "Zero returns 0",
+          "Trailing zeros stripped naturally",
+          "Reversal exceeding 2^31 - 1 returns 0",
+          "-2^31 returns 0"
+        ],
+        "codeSnippet": "assert reverse(0) == 0\nassert reverse(-123) == -321\nassert reverse(1534236469) == 0  # Overflows 32-bit!"
       },
       {
-        "id": "q4-61",
-        "question": "What is the time complexity in terms of the input value?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Logarithmic relation to input size.",
-        "bestReplyScript": "An integer x has roughly `log\u2081\u2080(x)` decimal digits. Each iteration of the while loop divides x by 10, removing one digit. Thus, the loop runs in O(log\u2081\u2080 x) iterations. For a 32-bit integer, log\u2081\u2080(2\u00b3\u00b9) \u2248 10 iterations at most, which is strictly O(1) in practical computing.",
+        "id": "q8",
+        "category": "Python `divmod()` Built-in",
+        "question": "Can you optimize the loop using Python's built-in `divmod()`?",
+        "whatInterviewerChecks": "Using divmod to compute quotient and remainder in a single C-level operation.",
+        "bestReplyScript": "`divmod(x, 10)` computes both the quotient `x // 10` and remainder `x % 10` in a single C-level operation: `x, digit = divmod(x, 10)`. This reduces bytecode instructions from two separate operations (`//` and `%`) down to one, running faster in CPython.",
         "keyPoints": [
-          "O(log\u2081\u2080 x) operations",
-          "At most 10 iterations for 32-bit integers",
-          "O(1) memory"
-        ]
+          "divmod(x, 10) computes // and % simultaneously",
+          "Single CPython bytecode instruction",
+          "Cleaner and slightly faster loop"
+        ],
+        "codeSnippet": "while x > 0:\n    x, digit = divmod(x, 10)\n    rev = rev * 10 + digit"
+      },
+      {
+        "id": "q9",
+        "category": "Bit Manipulation Representation",
+        "question": "Why can't we use bitwise shifts like `x >> 1` to reverse a base-10 integer?",
+        "whatInterviewerChecks": "Decimal base-10 vs binary base-2 representation.",
+        "bestReplyScript": "Bitwise shift operators (`>>` and `<<`) shift bits in base-2 (powers of 2). Decimal digits are in base-10. Shifting base-10 digits requires multiplying and dividing by 10 (`rev * 10` and `x // 10`), not powers of 2. Bit manipulation only works directly when reversing bits in a 32-bit binary integer.",
+        "keyPoints": [
+          "Bit shifts operate in base-2",
+          "Decimal digits require base-10 operations",
+          "Bit reversal is a different problem (Reverse Bits #190)"
+        ],
+        "codeSnippet": "# Decimal reversal requires base 10, not base 2 shifts"
+      },
+      {
+        "id": "q10",
+        "category": "Python 3 Arbitrary Precision Internals",
+        "question": "How does CPython store integers that exceed 64 bits?",
+        "whatInterviewerChecks": "CPython `PyLongObject` digit array architecture.",
+        "bestReplyScript": "In CPython, integers are represented by `PyLongObject`, which stores numbers as an array of 30-bit digits (or 15-bit on 32-bit machines). When an integer exceeds 2^30, CPython dynamically allocates additional digits in memory, performing multi-precision arithmetic. This is why Python integers never overflow hardware registers.",
+        "keyPoints": [
+          "PyLongObject stores numbers as array of 30-bit digits",
+          "Dynamically allocates memory as magnitude grows",
+          "No hardware overflow in Python 3"
+        ],
+        "codeSnippet": "import sys\n# Small int uses 28 bytes, large int allocates more bytes:\nprint(sys.getsizeof(1))       # 28 bytes\nprint(sys.getsizeof(10**30))  # 40 bytes"
+      },
+      {
+        "id": "q11",
+        "category": "Comparison to Palindrome Number",
+        "question": "How does Reverse Integer relate to Palindrome Number?",
+        "whatInterviewerChecks": "Algorithmic pattern transfer.",
+        "bestReplyScript": "In Palindrome Number (#9), we check if `x` equals its reversed value. However, in Palindrome Number we can reverse only *half* of the integer to avoid any possible overflow. In Reverse Integer, we must reverse all digits because the problem demands returning the full reversed numeric value.",
+        "keyPoints": [
+          "Palindrome Number can reverse only half",
+          "Reverse Integer must reverse all digits",
+          "Both share identical digit extraction math"
+        ],
+        "codeSnippet": "# Reversal logic is the foundation for Palindrome Number"
+      },
+      {
+        "id": "q12",
+        "category": "Functional Approach with `reduce`",
+        "question": "How could Reverse Integer be expressed using `functools.reduce`?",
+        "whatInterviewerChecks": "Functional programming in Python.",
+        "bestReplyScript": "We extract the digits into a list `digits`, then use `functools.reduce(lambda acc, d: acc * 10 + d, digits, 0)`. While mathematically clean, constructing the list of digits allocates temporary heap memory, making the while loop with `divmod` preferable for production code.",
+        "keyPoints": [
+          "functools.reduce accumulates acc * 10 + d",
+          "Functional programming idiom",
+          "While loop remains more memory-efficient"
+        ],
+        "codeSnippet": "from functools import reduce\n# rev = reduce(lambda acc, d: acc * 10 + d, digits, 0)"
+      },
+      {
+        "id": "q13",
+        "category": "Exception Handling vs Bounds Check",
+        "question": "Why shouldn't you use `try...except OverflowError` in Python for this problem?",
+        "whatInterviewerChecks": "Understanding that Python does NOT raise OverflowError on int overflow.",
+        "bestReplyScript": "In Python 3, integer operations never raise `OverflowError` because Python integers have arbitrary precision! An `except OverflowError` block will NEVER catch a number exceeding 2^31 - 1 in Python. You MUST explicitly write the bounds check: `if rev < -2**31 or rev > 2**31 - 1: return 0`.",
+        "keyPoints": [
+          "Python 3 never throws OverflowError on normal integer math",
+          "try/except OverflowError will silently fail",
+          "Explicit conditional check is mandatory"
+        ],
+        "codeSnippet": "# \u274c Won't work in Python 3:\n# try: rev = rev * 10 + d\n# except OverflowError: return 0  # NEVER TRIGGERED!\n\n# \u2705 Explicit check:\nif not (-2**31 <= rev <= 2**31 - 1): return 0"
+      },
+      {
+        "id": "q14",
+        "category": "64-bit Extension",
+        "question": "How would you modify this code to support 64-bit signed integer boundaries?",
+        "whatInterviewerChecks": "Parameterizing integer boundary limits.",
+        "bestReplyScript": "We simply replace the 32-bit limits with 64-bit limits: `INT64_MIN = -2**63 = -9,223,372,036,854,775,808` and `INT64_MAX = 2**63 - 1 = 9,223,372,036,854,775,807`. The digit extraction loop remains completely unchanged.",
+        "keyPoints": [
+          "Replace bounds with [-2^63, 2^63 - 1]",
+          "Digit extraction logic is identical",
+          "Supports any N-bit integer system"
+        ],
+        "codeSnippet": "INT64_MIN, INT64_MAX = -2**63, 2**63 - 1"
+      },
+      {
+        "id": "q15",
+        "category": "Executive Summary",
+        "question": "What is the key takeaway an interviewer seeks from Reverse Integer?",
+        "whatInterviewerChecks": "Clean numerical logic, sign handling, and boundary discipline.",
+        "bestReplyScript": "The interviewer is evaluating whether you can manipulate raw numeric data without relying on string conversions, whether you understand cross-language modulo subtleties with negative numbers, and whether you proactively handle hardware integer overflow boundaries.",
+        "keyPoints": [
+          "Digit extraction via modulo/division",
+          "Sign extraction prevents negative modulo bugs",
+          "Explicit 32-bit boundary check"
+        ],
+        "codeSnippet": "# Summary: divmod loop + sign isolation + explicit bounds clamping"
       }
     ],
     "mistakes": [
@@ -21235,51 +22889,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-62",
-        "question": "Why is `x % 10 == 0 and x != 0` checked upfront?",
-        "category": "Boundary Invariant",
-        "whatInterviewerChecks": "Leading zero logic.",
-        "bestReplyScript": "A non-zero number ending in 0 (like 10, 100, 20) can never be a palindrome because no positive integer starts with a leading zero! If we did not check this, 10 would give `x = 1, rev = 0` and then `rev * 10 + 0 = 0`, falsely reporting equality. 0 itself IS a palindrome, which is why `x != 0` is required.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Palindrome Number in 30 seconds?",
+        "whatInterviewerChecks": "Reverse half of the number without string conversion.",
+        "bestReplyScript": "First, negative numbers cannot be palindromes because of the leading minus sign. Also, any non-zero number ending in 0 (like 10, 100) cannot be a palindrome. For all other numbers, we reverse only the second half of the number: in a loop, `reverted = reverted * 10 + x % 10` and `x //= 10` while `x > reverted`. When `x <= reverted`, we stop. A palindrome occurs if `x == reverted` (even length, e.g. 1221) or `x == reverted // 10` (odd length, e.g. 12321). This runs in O(log\u2081\u2080 N) time and strictly O(1) space with zero overflow risk.",
         "keyPoints": [
-          "Numbers ending in 0 cannot be palindromes",
-          "Leading zeroes do not exist in standard integers",
-          "0 is a valid palindrome"
-        ]
+          "Negatives and numbers ending in 0 are False",
+          "Reverse only second half: while x > reverted",
+          "Even length: x == reverted; Odd length: x == reverted // 10",
+          "O(log N) time, O(1) space"
+        ],
+        "codeSnippet": "def isPalindrome(x: int) -> bool:\n    if x < 0 or (x % 10 == 0 and x != 0):\n        return False\n    rev = 0\n    while x > rev:\n        rev = rev * 10 + x % 10\n        x //= 10\n    return x == rev or x == rev // 10"
       },
       {
-        "id": "q2-62",
-        "question": "How does `x == rev // 10` work for odd-length palindromes?",
-        "category": "Mathematical Mechanics",
-        "whatInterviewerChecks": "Middle digit elimination.",
-        "bestReplyScript": "In an odd-length palindrome like 12321, the middle digit (3) does not affect symmetry. When the while loop finishes, `x = 12` and `rev = 123`. We can simply discard the middle digit using integer division `rev // 10 = 12`. Comparing `x == rev // 10` (12 == 12) confirms palindrome symmetry.",
+        "id": "q2",
+        "category": "Why Reverse Only Half?",
+        "question": "Why is reversing only half of the integer superior to reversing the whole integer?",
+        "whatInterviewerChecks": "Overflow avoidance and cutting iterations by 50%.",
+        "bestReplyScript": "Reversing the entire integer risks integer overflow in languages with fixed 32-bit registers (e.g. reversing 1,534,236,469 exceeds INT_MAX). Reversing only half stops when `rev >= x`, meaning `rev` will never exceed `sqrt(x)` in magnitude, completely eliminating any possibility of overflow. Additionally, it executes in half the number of loop iterations.",
         "keyPoints": [
-          "Middle digit does not affect symmetry",
-          "rev // 10 discards middle digit",
-          "Enables unified handling of odd and even lengths"
-        ]
+          "Eliminates integer overflow risk completely",
+          "50% fewer iterations",
+          "Stops automatically when x <= rev"
+        ],
+        "codeSnippet": "# Reversing half guarantees rev <= x at loop exit -> zero overflow risk"
       },
       {
-        "id": "q3-62",
-        "question": "Why is half-reversal better than full reversal?",
-        "category": "Systems Safety",
-        "whatInterviewerChecks": "Integer overflow awareness.",
-        "bestReplyScript": "In systems programming languages with 32-bit signed integers, reversing a number like 2,147,483,647 would produce a 10-digit number exceeding 2\u00b3\u00b9 - 1, causing an integer overflow crash before the comparison can occur. By stopping at the halfway point, the reversed value can never exceed 5 digits, guaranteeing zero risk of overflow.",
+        "id": "q3",
+        "category": "Handling Trailing Zeros Guard",
+        "question": "Why is `x % 10 == 0 and x != 0` explicitly checked at the start?",
+        "whatInterviewerChecks": "Identifying the leading-zero symmetry pitfall.",
+        "bestReplyScript": "If a number ends in zero (e.g. `x = 10`), the first digit of `reverted` will be 0: `reverted = 0 * 10 + 0 = 0`, while `x = 1`. Since `1 > 0`, in the next step `reverted = 0 * 10 + 1 = 1` and `x = 0`. At loop exit, `x == reverted // 10` (0 == 1 // 10 == 0) would mistakenly return True for 10! Since no integer has leading zeros, any number ending in 0 (except 0 itself) cannot be a palindrome.",
         "keyPoints": [
-          "Prevents 32-bit integer overflow",
-          "Cuts loop iterations in half",
-          "Safe across all programming languages"
-        ]
+          "Numbers ending in 0 cannot be palindromes (no leading zeros in ints)",
+          "Prevents 10 from falsely evaluating to True",
+          "0 itself is a valid palindrome"
+        ],
+        "codeSnippet": "# Critical guard:\nif x < 0 or (x % 10 == 0 and x != 0):\n    return False"
       },
       {
-        "id": "q4-62",
-        "question": "Why are negative numbers never palindromes?",
-        "category": "Specification",
-        "whatInterviewerChecks": "Sign character semantics.",
-        "bestReplyScript": "Negative numbers contain a leading minus sign (e.g. -121). Reading backwards produces `121-`, which does not match `-121` because of the misplaced sign. Therefore, all negative numbers are immediately False.",
+        "id": "q4",
+        "category": "Odd vs Even Length Numbers",
+        "question": "How does `x == rev or x == rev // 10` handle odd-length numbers like 12321?",
+        "whatInterviewerChecks": "Handling the middle digit in odd-length palindromes.",
+        "bestReplyScript": "For even length like 1221: after 2 iterations, `x = 12` and `rev = 12`. The loop terminates with `x == rev`. For odd length like 12321: the middle digit `3` gets pushed into `rev`: `x = 12` and `rev = 123`. Since the middle digit does not affect palindrome symmetry, `rev // 10` strips the middle digit `3`, leaving `12`. `x == rev // 10` (12 == 12) evaluates to True.",
         "keyPoints": [
-          "Leading minus sign breaks symmetry",
-          "Immediate False for all x < 0"
-        ]
+          "Even length: x == rev (e.g. 12 == 12)",
+          "Odd length: middle digit is at end of rev",
+          "rev // 10 strips the middle digit (123 // 10 == 12)"
+        ],
+        "codeSnippet": "# 1221 -> x = 12, rev = 12 -> x == rev\n# 12321 -> x = 12, rev = 123 -> x == rev // 10"
+      },
+      {
+        "id": "q5",
+        "category": "String Slicing Comparison",
+        "question": "What is wrong with `return str(x) == str(x)[::-1]` in an interview setting?",
+        "whatInterviewerChecks": "Interview follow-up constraint: 'Solve without converting to string'.",
+        "bestReplyScript": "Almost every top tech interview explicitly adds the follow-up constraint: 'Could you solve it without converting the integer to a string?'. `str(x)` allocates a heap string, `[::-1]` allocates a second reversed string, and string equality compares characters in O(N) memory. The mathematical half-reversal uses strictly O(1) auxiliary memory and demonstrates core computer science fundamentals.",
+        "keyPoints": [
+          "Interview explicitly tests 'without string conversion'",
+          "str(x)[::-1] allocates two temporary heap strings",
+          "Mathematical approach uses O(1) space"
+        ],
+        "codeSnippet": "# \u274c Follow-up violation:\n# return str(x) == str(x)[::-1]\n\n# \u2705 Expected interview solution: Mathematical half-reversal"
+      },
+      {
+        "id": "q6",
+        "category": "Negative Number Mechanics",
+        "question": "Why is `-121` not a palindrome?",
+        "whatInterviewerChecks": "Basic palindrome definition.",
+        "bestReplyScript": "Reading `-121` from left to right gives `'-121'`. Reading from right to left gives `'121-'`. Because the minus sign does not match the trailing digit `1`, negative numbers are never palindromes.",
+        "keyPoints": [
+          "Left-to-right: '-121'",
+          "Right-to-left: '121-'",
+          "All negative numbers return False immediately"
+        ],
+        "codeSnippet": "assert isPalindrome(-121) is False"
+      },
+      {
+        "id": "q7",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities of Palindrome Number?",
+        "whatInterviewerChecks": "Logarithmic complexity analysis.",
+        "bestReplyScript": "The number of digits in x is `log\u2081\u2080 N`. Because we only reverse half of the digits, the while loop executes at most `(log\u2081\u2080 N) / 2` times. For a 32-bit integer, this is at most 5 iterations. Thus, time complexity is O(log\u2081\u2080 N) = O(1) bounded time, and space complexity is strictly O(1) auxiliary memory.",
+        "keyPoints": [
+          "Time: O(log10 N) / 2 iterations",
+          "At most 5 iterations for 32-bit ints",
+          "Space: strictly O(1)"
+        ],
+        "codeSnippet": "# Max loop steps for 32-bit int = 5 -> O(log10 N) time, O(1) space"
+      },
+      {
+        "id": "q8",
+        "category": "Edge Cases",
+        "question": "What are the essential test cases for Palindrome Number?",
+        "whatInterviewerChecks": "Test suite completeness.",
+        "bestReplyScript": "1) `0` -> True; 2) Single-digit positive numbers `1` to `9` -> True; 3) Negative numbers `-1`, `-121` -> False; 4) Multiples of 10 like `10`, `100` -> False; 5) Even-length palindromes `1221` -> True; 6) Odd-length palindromes `12321` -> True; 7) Non-palindromes `12345` -> False.",
+        "keyPoints": [
+          "0 is True",
+          "Single digits 1-9 are True",
+          "10 and 100 are False",
+          "1221 and 12321 are True"
+        ],
+        "codeSnippet": "assert isPalindrome(0) is True\nassert isPalindrome(7) is True\nassert isPalindrome(10) is False\nassert isPalindrome(1221) is True\nassert isPalindrome(12321) is True"
+      },
+      {
+        "id": "q9",
+        "category": "Loop Termination Invariant",
+        "question": "How do you prove that `while x > rev` is guaranteed to terminate?",
+        "whatInterviewerChecks": "Loop termination proof in arithmetic algorithms.",
+        "bestReplyScript": "In each step, `x` is divided by 10 (`x //= 10`) while `rev` is multiplied by 10 (`rev = rev * 10 + digit`). Thus, `x` strictly decreases by a factor of 10 while `rev` increases by a factor of 10. Since `x` decreases monotonically and `rev` increases monotonically, the condition `x > rev` must flip to False in at most `ceil(digits / 2)` steps, guaranteeing termination.",
+        "keyPoints": [
+          "x decreases by 10x each step",
+          "rev increases by 10x each step",
+          "Guaranteed to cross in ceil(digits / 2) steps"
+        ],
+        "codeSnippet": "# x decreases exponentially, rev increases exponentially -> guaranteed termination"
+      },
+      {
+        "id": "q10",
+        "category": "Direct Two-Pointer Math Without Reversal",
+        "question": "Can you check palindrome symmetry by comparing the outermost digits directly?",
+        "whatInterviewerChecks": "Alternative math approach with highest and lowest digit extraction.",
+        "bestReplyScript": "Yes! Find the highest divisor `div`: e.g. for 1221, `div = 1000`. Then in a loop: compare `left_digit = x // div` with `right_digit = x % 10`. If they differ, return False. Otherwise, remove both outer digits: `x = (x % div) // 10` and `div //= 100`. While valid, this requires computing `div` up-front and handles interior zeros more delicately than half-reversal.",
+        "keyPoints": [
+          "Extract left digit x // div and right digit x % 10",
+          "Strip both digits: (x % div) // 10",
+          "div //= 100 on each step"
+        ],
+        "codeSnippet": "# Outer digit extraction:\n# left = x // div; right = x % 10\n# x = (x % div) // 10; div //= 100"
+      },
+      {
+        "id": "q11",
+        "category": "Base-B Generalization",
+        "question": "How would you solve Palindrome Number in an arbitrary base B (e.g. binary or hexadecimal)?",
+        "whatInterviewerChecks": "Generalizing base-10 modulo arithmetic to base-B.",
+        "bestReplyScript": "Simply replace `10` with base `B`! Modulo becomes `x % B`, division becomes `x // B`, and reversal accumulation becomes `rev = rev * B + x % B`. The guard check becomes `x % B == 0 and x != 0`. The entire algorithm generalizes to any base B in O(log_B N) time.",
+        "keyPoints": [
+          "Replace 10 with base B",
+          "rev = rev * B + x % B",
+          "x //= B",
+          "Works identically for binary, octal, hex"
+        ],
+        "codeSnippet": "def isPalindrome_baseB(x: int, B: int) -> bool:\n    if x < 0 or (x % B == 0 and x != 0): return False\n    rev = 0\n    while x > rev:\n        rev = rev * B + x % B\n        x //= B\n    return x == rev or x == rev // B"
+      },
+      {
+        "id": "q12",
+        "category": "Single Digit Proof",
+        "question": "Why do single-digit numbers 0-9 evaluate to True correctly in your code?",
+        "whatInterviewerChecks": "Tracing edge cases through the while loop.",
+        "bestReplyScript": "For `x = 7`: `7 < 0` is False, `7 % 10 == 0` is False. `rev = 0`. In the while loop: `7 > 0` is True. `rev = 0 * 10 + 7 = 7`, `x = 7 // 10 = 0`. The loop terminates because `0 > 7` is False. Then `x == rev // 10` evaluates to `0 == 7 // 10 == 0`, which is True! Single digits succeed seamlessly.",
+        "keyPoints": [
+          "For single digit x, loop runs exactly once",
+          "rev becomes x, x becomes 0",
+          "0 == rev // 10 evaluates to True"
+        ],
+        "codeSnippet": "# x = 7: loop runs once -> x = 0, rev = 7 -> 0 == 7 // 10 -> True"
+      },
+      {
+        "id": "q13",
+        "category": "Python Bytecode Efficiency",
+        "question": "How many clock cycles does `x //= 10` take in CPython?",
+        "whatInterviewerChecks": "CPython integer division implementation.",
+        "bestReplyScript": "For numbers fitting in 30 bits (under 1 billion), CPython uses single-digit fast division (`PyLong_DIV_10`), which compilers optimize into a multiplication by magic constant `0xCCCCCCCD` followed by a bit shift. It executes in just 1-2 CPU clock cycles, making mathematical integer division faster than string allocation.",
+        "keyPoints": [
+          "Compilers optimize division by 10 into magic multiplication and bit shift",
+          "Executes in 1-2 CPU clock cycles",
+          "Faster than any heap string conversion"
+        ],
+        "codeSnippet": "# Fast division by 10 via multiplication by magic inverse in assembly"
+      },
+      {
+        "id": "q14",
+        "category": "Defensive Code Contracts",
+        "question": "How should you type hint and document Palindrome Number in a production utility?",
+        "whatInterviewerChecks": "Type hinting and production documentation.",
+        "bestReplyScript": "Use PEP 484 annotations: `def is_palindrome(x: int) -> bool:`. Add a docstring clarifying that negative numbers return False and that execution uses O(1) auxiliary memory without string conversion.",
+        "keyPoints": [
+          "PEP 484 type hints",
+          "Clear docstring specifying negative number contract",
+          "PEP 8 snake_case function name"
+        ],
+        "codeSnippet": "def is_palindrome(x: int) -> bool:\n    \"\"\"Determine if an integer is a palindrome without string conversion.\"\"\"\n    ..."
+      },
+      {
+        "id": "q15",
+        "category": "Senior Takeaway",
+        "question": "What is the key takeaway an interviewer wants to hear at the conclusion of this problem?",
+        "whatInterviewerChecks": "Demonstrating problem simplification and algorithmic elegance.",
+        "bestReplyScript": "The key insight is recognizing that we do not need to reverse the entire integer. Reversing only half stops at the line of symmetry, avoids all integer overflow risks, cuts execution time by 50%, and completely bypasses the need for heap memory allocations.",
+        "keyPoints": [
+          "Reversing half avoids integer overflow",
+          "Cuts runtime by 50%",
+          "Strictly O(1) space with zero heap allocations"
+        ],
+        "codeSnippet": "# Summary: Half-reversal solves symmetry without overflow or string conversion"
       }
     ],
     "mistakes": [
@@ -21367,51 +23172,203 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-63",
-        "question": "Why is the time complexity O(1) instead of O(n)?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Input domain constraints.",
-        "bestReplyScript": "Because the problem specifies the input integer is bounded between 1 and 3999! The mapping array has a fixed size of 13 entries. The maximum number of symbols appended for any number in this range is 15 (for 3888: MMMDCCCLXXXVIII). Since the loop runs at most 13 times and the output length is capped at 15, both time and space complexity are strictly constant O(1).",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Integer to Roman in 30 seconds?",
+        "whatInterviewerChecks": "Greedy subtraction using the 13 canonical Roman numeral values.",
+        "bestReplyScript": "Roman numerals use a greedy additive and subtractive system. There are exactly 13 unique symbol-value pairs: the 7 standard symbols (M=1000, D=500, C=100, L=50, X=10, V=5, I=1) plus the 6 subtractive pairs (CM=900, CD=400, XC=90, XL=40, IX=9, IV=4). We list these 13 pairs in descending order. While `num >= value`, we append the symbol and subtract the value from `num`. Since `num <= 3999`, this takes O(1) time and O(1) space.",
         "keyPoints": [
-          "Input domain is strictly 1 to 3999",
-          "Loop iterates at most 13 times",
-          "Maximum string length is 15 characters"
-        ]
+          "13 symbol-value pairs in descending order",
+          "Greedy subtraction while num >= value",
+          "Includes 6 subtractive pairs (CM, CD, XC, XL, IX, IV)",
+          "O(1) time and O(1) space"
+        ],
+        "codeSnippet": "def intToRoman(num: int) -> str:\n    val_map = [\n        (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),\n        (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),\n        (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')\n    ]\n    res = []\n    for val, sym in val_map:\n        if num == 0: break\n        count, num = divmod(num, val)\n        res.append(sym * count)\n    return ''.join(res)"
       },
       {
-        "id": "q2-63",
-        "question": "Why are 900, 400, 90, 40, 9, and 4 included as discrete symbols?",
-        "category": "Algorithmic Design",
-        "whatInterviewerChecks": "Subtractive notation rules.",
-        "bestReplyScript": "Roman numeral rules forbid four identical consecutive symbols (e.g. IIII is written as IV, and VIIII as IX). By including the 6 subtractive pairs directly in our lookup table, the greedy choice property holds unconditionally: taking the largest possible value at each step is guaranteed to produce the correct Roman representation without complex exception branches.",
+        "id": "q2",
+        "category": "Why 13 Values?",
+        "question": "Why are there exactly 13 values in the greedy mapping and not 7?",
+        "whatInterviewerChecks": "Roman numeral subtractive notation rules.",
+        "bestReplyScript": "The basic Roman symbols are 7: I (1), V (5), X (10), L (50), C (100), D (500), M (1000). However, Roman numerals forbid repeating a symbol 4 times in a row (e.g. 4 is IV, not IIII; 9 is IX, not VIIII). There are 6 subtractive combinations: IV (4), IX (9), XL (40), XC (90), CD (400), CM (900). By including these 6 subtractive pairs directly into our mapping (total 7 + 6 = 13), the problem transforms into a pure, clean greedy change-making algorithm.",
         "keyPoints": [
-          "Prevents 4 consecutive identical characters",
-          "Greedy choice property holds with 13 symbols",
-          "Eliminates special case branching"
-        ]
+          "7 base symbols + 6 subtractive pairs = 13 values",
+          "Subtractive pairs prevent 4 identical characters",
+          "Transforms logic into standard greedy change-making"
+        ],
+        "codeSnippet": "# 13 pairs: 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1"
       },
       {
-        "id": "q3-63",
-        "question": "Could this approach be extended to numbers larger than 3999?",
-        "category": "Domain Extension",
-        "whatInterviewerChecks": "Historical Roman numeral Vinculum notation.",
-        "bestReplyScript": "Traditional Roman numerals topped out at 3999 because M (1000) was the largest standard letter. For numbers >= 4000, Romans used an overline (Vinculum) to represent multiplication by 1000 (e.g. V\u0304 = 5000). In modern computing, numbers above 3999 are not standardized in basic ASCII Roman numerals.",
+        "id": "q3",
+        "category": "Complexity & Big-O",
+        "question": "Why is the time complexity strictly O(1) instead of O(num)?",
+        "whatInterviewerChecks": "Understanding constraint-bounded complexity.",
+        "bestReplyScript": "The problem constraints specify `1 <= num <= 3999`. The loop iterates through a fixed list of 13 pairs. The maximum number of symbols produced is for 3888 (`MMMDCCCLXXXVIII`), which contains exactly 15 characters. Because the number of loop iterations is bounded by 13 and the output length is bounded by 15, both time and space complexity are mathematically strictly O(1) constant.",
         "keyPoints": [
-          "Standard Roman numerals stop at 3999",
-          "Vinculum notation for >= 4000"
-        ]
+          "Input bounded: 1 <= num <= 3999",
+          "Loop runs at most 13 times",
+          "Max output length is 15 characters (e.g. 3888)",
+          "Strictly O(1) time and space"
+        ],
+        "codeSnippet": "# Maximum symbols for any number <= 3999 is 15 (e.g., 3888 -> 'MMMDCCCLXXXVIII')"
       },
       {
-        "id": "q4-63",
-        "question": "Why use division (`num // val`) instead of a while loop (`num -= val`)?",
-        "category": "Code Quality",
-        "whatInterviewerChecks": "Arithmetic efficiency.",
-        "bestReplyScript": "Division computes the exact repetition count in a single arithmetic operation, allowing `res.append(sym * count)` instead of looping up to 3 times per symbol. This reduces CPU branch instructions and makes the code cleaner.",
+        "id": "q4",
+        "category": "Python String Concatenation Optimization",
+        "question": "Why use `res.append(sym * count)` followed by `''.join(res)` instead of `s += sym`?",
+        "whatInterviewerChecks": "List appending vs string immutability in Python.",
+        "bestReplyScript": "`divmod(num, val)` gives the count of how many times `val` fits into `num` in one step: `count, num = divmod(num, val)`. Then `res.append(sym * count)` appends the replicated symbol in O(1). Finally, `''.join(res)` calculates the exact memory size and copies all characters into the final string in a single C-level operation, avoiding repeated string reallocations.",
         "keyPoints": [
-          "Single division computes count",
-          "sym * count replaces loop iterations",
-          "Fewer branch checks"
-        ]
+          "divmod computes count and remainder in 1 step",
+          "sym * count replicates string without loops",
+          "''.join(res) allocates final string in single C operation"
+        ],
+        "codeSnippet": "count, num = divmod(num, val)\nif count:\n    res.append(sym * count)"
+      },
+      {
+        "id": "q5",
+        "category": "Lookup Table / Matrix Alternative",
+        "question": "How can Integer to Roman be solved in 1 line using a digit matrix lookup table?",
+        "whatInterviewerChecks": "Radix positional lookup table design.",
+        "bestReplyScript": "Because Roman numerals are positional (thousands, hundreds, tens, units), we can hardcode the Roman representations for each digit 0-9 at each position: `thousands = ['', 'M', 'MM', 'MMM']`, `hundreds = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM']`, etc. Then: `return thousands[num // 1000] + hundreds[(num % 1000) // 100] + tens[(num % 100) // 10] + ones[num % 10]`. This executes in pure O(1) without any loops.",
+        "keyPoints": [
+          "Positional radix lookup tables (thousands, hundreds, tens, units)",
+          "Direct index by digit: num // 1000, etc.",
+          "Pure O(1) table lookup with zero loops"
+        ],
+        "codeSnippet": "def intToRoman_matrix(num: int) -> str:\n    M = ['', 'M', 'MM', 'MMM']\n    C = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM']\n    X = ['', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC']\n    I = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX']\n    return M[num // 1000] + C[(num % 1000) // 100] + X[(num % 100) // 10] + I[num % 10]"
+      },
+      {
+        "id": "q6",
+        "category": "Edge Cases",
+        "question": "What edge cases should you test for Integer to Roman?",
+        "whatInterviewerChecks": "Testing smallest, largest, and subtractive numerals.",
+        "bestReplyScript": "1) Smallest input `1` -> `'I'`; 2) Largest input `3999` -> `'MMMCMXCIX'`; 3) Single subtractive values `4` -> `'IV'`, `9` -> `'IX'`, `40` -> `'XL'`, `90` -> `'XC'`, `400` -> `'CD'`, `900` -> `'CM'`; 4) Round multiples of 10 `1000` -> `'M'`, `500` -> `'D'`, `50` -> `'L'`; 5) Complex numbers with mixed digits `1994` -> `'MCMXCIV'`, `58` -> `'LVIII'`.",
+        "keyPoints": [
+          "Smallest: 1 -> 'I'",
+          "Largest: 3999 -> 'MMMCMXCIX'",
+          "Subtractive pairs: 4, 9, 40, 90, 400, 900",
+          "1994 -> 'MCMXCIV'"
+        ],
+        "codeSnippet": "assert intToRoman(3) == 'III'\nassert intToRoman(58) == 'LVIII'\nassert intToRoman(1994) == 'MCMXCIV'\nassert intToRoman(3999) == 'MMMCMXCIX'"
+      },
+      {
+        "id": "q7",
+        "category": "Why Roman Numerals Stop at 3999",
+        "question": "Why is the standard Roman numeral range capped at 3999?",
+        "whatInterviewerChecks": "Historical and mathematical context of Roman numerals.",
+        "bestReplyScript": "In standard Roman numerals, `M` (1000) is the largest standard letter symbol. Because the rule forbids repeating any symbol 4 times in a row, the largest number of consecutive `M`s is 3 (`MMM` = 3000). Reaching 4000 would require a symbol for 5000 (historically represented with an overline `V\u0305`, called vinculum). Without the vinculum notation, standard ASCII Roman numerals terminate at 3999.",
+        "keyPoints": [
+          "M (1000) is the largest base symbol",
+          "Maximum of 3 consecutive 'M's -> 3000",
+          "4000 requires vinculum (overline) notation"
+        ],
+        "codeSnippet": "# 3999 = 'MMM' (3000) + 'CM' (900) + 'XC' (90) + 'IX' (9) = 'MMMCMXCIX'"
+      },
+      {
+        "id": "q8",
+        "category": "Zero in Roman Numerals",
+        "question": "How did ancient Romans represent zero?",
+        "whatInterviewerChecks": "Historical number systems knowledge.",
+        "bestReplyScript": "Standard Roman numerals have no symbol for zero. Romans used the word *nulla* (meaning 'none') in text, but zero as a positional placeholder or arithmetic entity was introduced to Europe centuries later via the Hindu-Arabic numeral system by Fibonacci in *Liber Abaci* (1202). That is why the problem specifies `1 <= num <= 3999`.",
+        "keyPoints": [
+          "No Roman numeral symbol for 0",
+          "Romans used the Latin word 'nulla'",
+          "Constraints guarantee 1 <= num <= 3999"
+        ],
+        "codeSnippet": "# Zero has no symbol in Roman numerals"
+      },
+      {
+        "id": "q9",
+        "category": "Greedy Choice Property Proof",
+        "question": "Why does the greedy choice property work for Roman numerals but fails for arbitrary coin change?",
+        "whatInterviewerChecks": "Canonical coin change systems vs arbitrary denominations.",
+        "bestReplyScript": "In general Coin Change, greedy subtraction can fail (e.g. coins [1, 3, 4] for amount 6: greedy picks 4+1+1 = 3 coins, but optimal is 3+3 = 2 coins). The Roman numeral system is a **canonical coin system**: each denomination is chosen such that taking the largest possible denomination is mathematically guaranteed to leave a remainder that minimizes total symbols without dead ends.",
+        "keyPoints": [
+          "Roman system is a canonical coin system",
+          "Greedy choice is provably optimal",
+          "No dynamic programming required"
+        ],
+        "codeSnippet": "# Canonical system: greedy choice yields globally minimal symbol count"
+      },
+      {
+        "id": "q10",
+        "category": "Memory Footprint",
+        "question": "What is the memory footprint of the mapping table in Python?",
+        "whatInterviewerChecks": "Static tuple allocation in CPython.",
+        "bestReplyScript": "A list or tuple of 13 pairs `(int, str)` takes roughly 200 bytes. Because it is defined once or at module level, it is allocated once during module compilation. It is completely static, with zero dynamic memory overhead.",
+        "keyPoints": [
+          "Static mapping table ~200 bytes",
+          "Zero dynamic allocations",
+          "Strictly O(1) auxiliary memory"
+        ],
+        "codeSnippet": "# Define at module level or static tuple for zero allocation overhead"
+      },
+      {
+        "id": "q11",
+        "category": "Python Code Structure",
+        "question": "Should the mapping be stored as a `dict` or a list of `tuples` in Python?",
+        "whatInterviewerChecks": "Ordered data structures and Python iteration efficiency.",
+        "bestReplyScript": "While Python 3.7+ dictionaries preserve insertion order, iterating over a list of `(val, sym)` tuples is preferred because tuples have lower memory overhead and faster iteration speeds in CPython than dictionary `.items()`. Tuples are immutable and communicate clearly that the mapping is an ordered, static sequence.",
+        "keyPoints": [
+          "List/tuple of pairs is faster than dict.items()",
+          "Immutable tuples communicate static ordering",
+          "Avoids hash map lookup overhead"
+        ],
+        "codeSnippet": "# Prefer tuple of tuples:\nVAL_MAP = ((1000, 'M'), (900, 'CM'), (500, 'D'), ...)"
+      },
+      {
+        "id": "q12",
+        "category": "Subtractive Notation Rules",
+        "question": "Why is 49 represented as `XLIX` and not `IL`?",
+        "whatInterviewerChecks": "Strict subtractive syntax rules.",
+        "bestReplyScript": "In Roman subtractive rules: `I` can only be subtracted from `V` and `X` (yielding 4 and 9); `X` can only be subtracted from `L` and `C` (yielding 40 and 90); `C` can only be subtracted from `D` and `M` (yielding 400 and 900). A symbol can never be subtracted from a symbol more than 10 times its value! Thus, `IL` (50 - 1) is strictly invalid; 49 must be broken down by place value as `40 (XL) + 9 (IX) = XLIX`.",
+        "keyPoints": [
+          "'I' can only precede 'V' and 'X'",
+          "'X' can only precede 'L' and 'C'",
+          "'C' can only precede 'D' and 'M'",
+          "IL is strictly invalid; 49 is XLIX"
+        ],
+        "codeSnippet": "# 49 = 40 (XL) + 9 (IX) = 'XLIX' (NOT 'IL')"
+      },
+      {
+        "id": "q13",
+        "category": "Defensive Validation",
+        "question": "What defensive check should be included at the beginning of the function?",
+        "whatInterviewerChecks": "Input boundary validation.",
+        "bestReplyScript": "Check if `num` is within the valid range: `if not (1 <= num <= 3999): raise ValueError('Roman numerals only support 1 <= num <= 3999')`. This prevents infinite loops or nonsensical outputs on negative numbers or values >= 4000.",
+        "keyPoints": [
+          "Validate 1 <= num <= 3999",
+          "Raise ValueError on invalid inputs",
+          "Defensive programming standard"
+        ],
+        "codeSnippet": "if not (1 <= num <= 3999):\n    raise ValueError('Input must be between 1 and 3999')"
+      },
+      {
+        "id": "q14",
+        "category": "Round-Trip Property Testing",
+        "question": "How would you write a property-based fuzz test to verify Integer to Roman?",
+        "whatInterviewerChecks": "Round-trip property testing with Roman to Integer.",
+        "bestReplyScript": "We test the round-trip property for every single valid integer from 1 to 3999: `for n in range(1, 4000): assert romanToInt(intToRoman(n)) == n`. Testing all 3,999 numbers takes under 0.05 seconds and exhaustively proves 100% correctness across the entire domain.",
+        "keyPoints": [
+          "Test all 3,999 valid integers",
+          "assert romanToInt(intToRoman(n)) == n",
+          "Exhaustive domain proof in 50ms"
+        ],
+        "codeSnippet": "for n in range(1, 4000):\n    assert romanToInt(intToRoman(n)) == n"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "What is the key design pattern demonstrated by Integer to Roman?",
+        "whatInterviewerChecks": "Pattern recognition and mapping abstraction.",
+        "bestReplyScript": "It demonstrates the **Data-Driven Programming** pattern: instead of writing dozens of complex `if/elif` branches for every special case, we encode the problem domain rules into an ordered data structure (the 13 symbol-value pairs). The algorithm itself becomes a clean, generic 5-line consumer loop.",
+        "keyPoints": [
+          "Data-driven design pattern",
+          "Domain rules encoded in data, not complex conditionals",
+          "Cleaner, bug-free, and maintainable"
+        ],
+        "codeSnippet": "# Data-Driven Design: encode rules in data, keep code logic minimal"
       }
     ],
     "mistakes": [
@@ -21518,51 +23475,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-64",
-        "question": "How does lookahead comparison handle subtractive pairs?",
-        "category": "Algorithmic Invariant",
-        "whatInterviewerChecks": "Understanding mathematical equivalence.",
-        "bestReplyScript": "In subtractive notation like 'IV' (value 4), 'I' (1) is subtracted and 'V' (5) is added: `-1 + 5 = 4`. Because arithmetic addition is commutative and associative, subtracting `vals[s[i]]` when it is strictly less than `vals[s[i+1]]` mathematically achieves the exact subtraction without needing to read characters in chunks of two.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Roman to Integer in 30 seconds?",
+        "whatInterviewerChecks": "Subtractive lookahead comparison logic.",
+        "bestReplyScript": "We map the 7 Roman symbols to their values in a dictionary: I=1, V=5, X=10, L=50, C=100, D=500, M=1000. We iterate through the string from left to right. For each character at index `i`, if `i + 1 < len(s)` and `val[s[i]] < val[s[i+1]]`, it indicates a subtractive pair (like 'IV' or 'IX'), so we subtract `val[s[i]]` from total. Otherwise, we add `val[s[i]]`. Finally, we return `total`. This runs in O(N) time and O(1) space.",
         "keyPoints": [
-          "vals[s[i]] < vals[s[i+1]] triggers subtraction",
-          "-1 + 5 = 4 equivalence",
-          "Processes one character per loop iteration cleanly"
-        ]
+          "7-symbol dictionary mapping",
+          "Compare s[i] to s[i+1]",
+          "If s[i] < s[i+1]: subtract; else: add",
+          "O(N) time and O(1) space"
+        ],
+        "codeSnippet": "def romanToInt(s: str) -> int:\n    vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n    total = 0\n    for i in range(len(s)):\n        if i + 1 < len(s) and vals[s[i]] < vals[s[i+1]]:\n            total -= vals[s[i]]\n        else:\n            total += vals[s[i]]\n    return total"
       },
       {
-        "id": "q2-64",
-        "question": "What is the time complexity?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Big-O mastery.",
-        "bestReplyScript": "We loop through the string of length n once. Dictionary lookups take O(1) time. The entire traversal runs in linear O(n) time and strictly O(1) auxiliary space.",
+        "id": "q2",
+        "category": "Why Subtraction Works",
+        "question": "Why does `total -= vals[s[i]]` mathematically produce the correct result for subtractive pairs like 'IV'?",
+        "whatInterviewerChecks": "Arithmetic equivalence in subtractive notation.",
+        "bestReplyScript": "Consider `'IV'` (which equals 4). At index 0 (`'I'`), since `vals['I'] < vals['V']` (1 < 5), we subtract 1: `total = -1`. At index 1 (`'V'`), since it's the last character, we add 5: `total = -1 + 5 = 4`. Similarly, for `'MCMXCIV'` (1994): `+1000 - 100 + 1000 - 10 + 100 - 1 + 5 = 1994`. Treating the smaller preceding value as a negative term is mathematically identical to subtracting the pair.",
         "keyPoints": [
-          "O(n) linear scan",
-          "O(1) dictionary lookups",
-          "O(1) extra space"
-        ]
+          "'IV' becomes -1 + 5 = 4",
+          "Preceding smaller symbol is treated as a negative term",
+          "Avoids multi-character tokenization"
+        ],
+        "codeSnippet": "# 'IV' -> total = 0 - 1 + 5 = 4\n# 'IX' -> total = 0 - 1 + 9 = 9\n# 'MCM' -> 1000 - 100 + 1000 = 1900"
       },
       {
-        "id": "q3-64",
-        "question": "Why is the boundary check `i + 1 < n` required?",
-        "category": "Edge Cases & Safety",
-        "whatInterviewerChecks": "Index bounds checking.",
-        "bestReplyScript": "For the very last character at index `n - 1`, there is no `s[i + 1]`. Without checking `i + 1 < n`, accessing `s[i + 1]` raises an IndexError: string index out of range. The last character is always added, never subtracted.",
+        "id": "q3",
+        "category": "Reverse Scan Alternative",
+        "question": "How can you solve Roman to Integer by scanning backward from right to left?",
+        "whatInterviewerChecks": "Right-to-left traversal tracking maximum seen value.",
+        "bestReplyScript": "We scan from right to left while maintaining `max_seen = 0`. For each character `c`: if `vals[c] >= max_seen`, we add `vals[c]` and update `max_seen = vals[c]`. If `vals[c] < max_seen`, we subtract `vals[c]`. This eliminates lookahead boundary checks (`i + 1 < len(s)`) and is slightly cleaner to write.",
         "keyPoints": [
-          "Last character has no lookahead neighbor",
-          "Must be guarded with i + 1 < n",
-          "Last character is always added"
-        ]
+          "Right-to-left traversal",
+          "Maintain max_seen value",
+          "If val >= max_seen: add; else: subtract",
+          "Eliminates i + 1 boundary checks"
+        ],
+        "codeSnippet": "def romanToInt_reverse(s: str) -> int:\n    vals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n    total = max_seen = 0\n    for c in reversed(s):\n        v = vals[c]\n        if v >= max_seen:\n            total += v\n            max_seen = v\n        else:\n            total -= v\n    return total"
       },
       {
-        "id": "q4-64",
-        "question": "Can Roman numerals have consecutive subtractive pairs like 'IIV'?",
-        "category": "Domain Rules",
-        "whatInterviewerChecks": "Roman numeral grammar constraints.",
-        "bestReplyScript": "No, standard Roman numeral grammar only permits one subtractive prefix per numeral (3 is III, 4 is IV, never IIV). Our lookahead logic complies with valid Roman numeral input constraints.",
+        "id": "q4",
+        "category": "String Replace Shortcut",
+        "question": "Can you solve this with string replacement `s.replace('IV', 'IIII')`? What are the trade-offs?",
+        "whatInterviewerChecks": "Evaluating string substitution vs mathematical parsing.",
+        "bestReplyScript": "Yes! You can replace the 6 subtractive pairs with their additive equivalents: `s = s.replace('IV', 'IIII').replace('IX', 'VIIII').replace('XL', 'XXXX')...` and then simply `sum(vals[c] for c in s)`. While creative and concise, each `.replace()` scans the string and allocates a new string object in heap memory (6 heap allocations). The direct index comparison loop does zero allocations and runs in a single pass.",
         "keyPoints": [
-          "At most one subtractive prefix",
-          "Standard Roman grammar guarantees validity"
-        ]
+          ".replace() creates 6 temporary strings on heap",
+          "sum() adds characters in single pass",
+          "Index comparison is faster and uses O(1) memory"
+        ],
+        "codeSnippet": "# Creative replace approach (allocates 6 strings):\n# s = s.replace('IV', 'IIII').replace('IX', 'VIIII')...\n# return sum(vals[c] for c in s)"
+      },
+      {
+        "id": "q5",
+        "category": "Time and Space Complexity",
+        "question": "What is the time and space complexity?",
+        "whatInterviewerChecks": "Constraint-bounded analysis.",
+        "bestReplyScript": "The length of string `s` is at most 15 characters (for 3888). In general for a string of length N, we visit each character once, and dictionary lookup is O(1). Time complexity is O(N) = O(1) bounded time. Auxiliary space is O(1) for the 7-entry dictionary and integer total.",
+        "keyPoints": [
+          "Time: strictly O(N), at most 15 steps -> O(1)",
+          "Space: O(1) auxiliary",
+          "Dictionary has only 7 entries"
+        ],
+        "codeSnippet": "# Time: O(N) = O(1) bounded, Space: O(1)"
+      },
+      {
+        "id": "q6",
+        "category": "Edge Cases",
+        "question": "What edge cases should you test for Roman to Integer?",
+        "whatInterviewerChecks": "Boundary and complex numeral verification.",
+        "bestReplyScript": "1) Single character `'I'` -> 1, `'M'` -> 1000; 2) Subtractive pairs `'IV'` -> 4, `'IX'` -> 9, `'CD'` -> 400, `'CM'` -> 900; 3) Repeated symbols `'III'` -> 3, `'XXX'` -> 30, `'MMM'` -> 3000; 4) Mixed complex numerals `'LVIII'` -> 58, `'MCMXCIV'` -> 1994, `'MMMCMXCIX'` -> 3999.",
+        "keyPoints": [
+          "Single characters",
+          "All 6 subtractive pairs",
+          "Repeated symbols",
+          "Complex mixtures like 'MCMXCIV'"
+        ],
+        "codeSnippet": "assert romanToInt('III') == 3\nassert romanToInt('LVIII') == 58\nassert romanToInt('MCMXCIV') == 1994"
+      },
+      {
+        "id": "q7",
+        "category": "Invalid Roman Numeral Detection",
+        "question": "Does this algorithm validate whether the Roman numeral is grammatically valid (e.g. rejecting 'IL' or 'IC')?",
+        "whatInterviewerChecks": "Validation vs parsing contract distinction.",
+        "bestReplyScript": "No. The standard algorithm assumes valid Roman numerals per problem constraints. For example, `'IL'` would compute `50 - 1 = 49`, even though `IL` is grammatically invalid in Roman syntax. To validate syntax, you can either: 1) Verify `intToRoman(romanToInt(s)) == s`; or 2) Validate with regex: `^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$`.",
+        "keyPoints": [
+          "Algorithm assumes valid input",
+          "Grammar validation can be done via regex or round-trip check",
+          "Regex: ^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"
+        ],
+        "codeSnippet": "# Full grammar validation regex:\n# import re\n# is_valid = bool(re.match(r'^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$', s))"
+      },
+      {
+        "id": "q8",
+        "category": "Python Dictionary Overhead",
+        "question": "Can the 7-symbol dictionary be replaced with a Python `match` statement (Python 3.10+)?",
+        "whatInterviewerChecks": "Structural pattern matching in modern Python.",
+        "bestReplyScript": "Yes! In Python 3.10+, `match c: case 'I': return 1 ...` compiles to a jump table at the bytecode level, avoiding dictionary hashing and collision lookups entirely. However, for 7 static items, a dictionary lookup executes in ~30 nanoseconds, which is already virtually instantaneous.",
+        "keyPoints": [
+          "Python 3.10 match compiles to jump table",
+          "Avoids hash lookup",
+          "Dictionary is clean and backward-compatible"
+        ],
+        "codeSnippet": "# Python 3.10+ match statement:\ndef val(c):\n    match c:\n        case 'I': return 1\n        case 'V': return 5\n        case 'X': return 10\n        case 'L': return 50\n        case 'C': return 100\n        case 'D': return 500\n        case 'M': return 1000"
+      },
+      {
+        "id": "q9",
+        "category": "Memory Allocation",
+        "question": "How many heap allocations occur during execution of the lookahead loop?",
+        "whatInterviewerChecks": "Zero-allocation verification.",
+        "bestReplyScript": "Zero heap allocations! The dictionary is created once. The loop variable `i` and `total` are primitive integer references stored on the CPython stack. Slicing is avoided, and no new strings are created.",
+        "keyPoints": [
+          "Zero heap allocations",
+          "Stack integer variables only",
+          "CPython LOAD_FAST execution"
+        ],
+        "codeSnippet": "# Zero heap allocation loop"
+      },
+      {
+        "id": "q10",
+        "category": "Array Table Micro-Optimization",
+        "question": "How would you write Roman to Integer in C using a direct 256-element ASCII array?",
+        "whatInterviewerChecks": "Systems programming and ASCII table mapping.",
+        "bestReplyScript": "In C, allocate a static array `int vals[128] = {0}; vals['I'] = 1; vals['V'] = 5; ...`. Then access `vals[s[i]]` directly via ASCII integer indexing. This compiles to a single `mov` assembly instruction without hash table logic.",
+        "keyPoints": [
+          "Static ASCII array indexed by char byte",
+          "Zero hash table overhead",
+          "Compiles to 1 CPU assembly instruction"
+        ],
+        "codeSnippet": "# C/C++ static ASCII lookup table:\n# int vals[128] = {0};\n# vals['I'] = 1; vals['V'] = 5;"
+      },
+      {
+        "id": "q11",
+        "category": "Case Sensitivity",
+        "question": "How should lowercase input like `'mcmxciv'` be handled?",
+        "whatInterviewerChecks": "Defensive input normalization.",
+        "bestReplyScript": "The problem contract specifies uppercase letters only. In production, we normalize with `s = s.upper()` at the entry point or map both uppercase and lowercase in the dictionary (`{'I': 1, 'i': 1, ...}`) to avoid creating an uppercase copy string.",
+        "keyPoints": [
+          "Problem contract specifies uppercase",
+          "In production, use s.upper() or include lowercase in dictionary",
+          "Avoid unnecessary string copying"
+        ],
+        "codeSnippet": "# Normalize defensively: s = s.upper()"
+      },
+      {
+        "id": "q12",
+        "category": "Unit Testing with Parametrization",
+        "question": "How do you write a clean parametrized pytest test for Roman to Integer?",
+        "whatInterviewerChecks": "Pytest best practices.",
+        "bestReplyScript": "Use `@pytest.mark.parametrize`: pass a list of tuples `('III', 3), ('IV', 4), ('IX', 9), ('LVIII', 58), ('MCMXCIV', 1994)`. Pytest executes each case as an independent test, isolating any failures.",
+        "keyPoints": [
+          "@pytest.mark.parametrize",
+          "Isolates test cases independently",
+          "Clean test code"
+        ],
+        "codeSnippet": "import pytest\n\n@pytest.mark.parametrize('roman, expected', [\n    ('III', 3),\n    ('IV', 4),\n    ('LVIII', 58),\n    ('MCMXCIV', 1994),\n])\ndef test_roman_to_int(roman, expected):\n    assert romanToInt(roman) == expected"
+      },
+      {
+        "id": "q13",
+        "category": "Performance Comparison",
+        "question": "Compare the execution speed of Left-to-Right Lookahead, Right-to-Left, and Replace.",
+        "whatInterviewerChecks": "Benchmarking and runtime profiling.",
+        "bestReplyScript": "1) **Right-to-Left**: Fastest (~0.8 \u00b5s), avoids `i + 1 < len(s)` boundary check; 2) **Left-to-Right Lookahead**: Nearly identical (~0.9 \u00b5s), natural forward reading; 3) **String Replace**: Slowest (~3.5 \u00b5s, 4x slower) due to 6 heap string allocations and passes.",
+        "keyPoints": [
+          "Right-to-Left is fastest (no boundary check)",
+          "Left-to-Right is standard interview favorite",
+          "Replace is 4x slower due to heap allocations"
+        ],
+        "codeSnippet": "# Right-to-left scan is fastest in microbenchmarks"
+      },
+      {
+        "id": "q14",
+        "category": "Lookahead Index Out-of-Bounds Trap",
+        "question": "Why does `i + 1 < len(s)` prevent an IndexError on the last character?",
+        "whatInterviewerChecks": "Short-circuit boolean evaluation in Python.",
+        "bestReplyScript": "In Python, `and` uses short-circuit evaluation. When `i == len(s) - 1` (the last character), `i + 1 < len(s)` evaluates to False. Python immediately aborts the condition without evaluating the right-hand side `vals[s[i]] < vals[s[i+1]]`, completely preventing `IndexError: string index out of range`.",
+        "keyPoints": [
+          "Short-circuit evaluation of 'and'",
+          "Right operand never evaluated when left is False",
+          "Safely guards s[i+1] access"
+        ],
+        "codeSnippet": "# Short-circuit evaluation:\nif i + 1 < len(s) and vals[s[i]] < vals[s[i+1]]:\n    # Safe! s[i+1] is never accessed on last character"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "What is the broader software pattern illustrated by Roman to Integer?",
+        "whatInterviewerChecks": "Lexical tokenization and lookahead parsing.",
+        "bestReplyScript": "It illustrates **1-Token Lookahead (LL(1) Parsing)**. In language parsers and lexers, when parsing tokens whose meaning depends on the subsequent token (like `>` vs `>=`), the parser reads one token ahead before deciding whether to emit a single token or combine them into a multi-character operator.",
+        "keyPoints": [
+          "LL(1) 1-token lookahead parsing",
+          "Standard compiler lexical analysis technique",
+          "Determines operator identity before consuming input"
+        ],
+        "codeSnippet": "# Takeaway: Lookahead parsing converts multi-character syntax into single values"
       }
     ],
     "mistakes": [
@@ -21661,52 +23769,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-65",
-        "question": "Why must we binary search on the smaller array rather than the larger array?",
-        "category": "Algorithmic Invariant",
-        "whatInterviewerChecks": "Boundary safety and index validity.",
-        "bestReplyScript": "Because `j = (m + n + 1) // 2 - i`. If we binary search on the larger array (where m > n), `i` can be larger than `half_len`, causing `j` to become negative! By strictly ensuring `nums1` is the smaller array (m <= n), `j` is mathematically guaranteed to always fall within valid bounds `[0, n]`. Furthermore, searching the smaller array guarantees optimal runtime O(log(min(m, n))).",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Median of Two Sorted Arrays in 30 seconds?",
+        "whatInterviewerChecks": "Binary search on partitions in O(log(min(m, n))).",
+        "bestReplyScript": "Instead of merging the arrays in O(M + N), we binary search on the partition of the smaller array. We partition both arrays into left and right halves such that the total number of elements in the combined left halves equals the combined right halves. We adjust the partition cut using binary search until every element on the left is <= every element on the right: `maxLeft1 <= minRight2` and `maxLeft2 <= minRight1`. Once found, the median is either `max(maxLeft1, maxLeft2)` for odd total length, or the average of `max(lefts)` and `min(rights)` for even length. Total time is O(log(min(M, N))) and space is O(1).",
         "keyPoints": [
-          "Guarantees j is always non-negative and <= n",
-          "Prevents index out of bounds",
-          "Achieves optimal O(log(min(m, n))) runtime"
-        ]
+          "Binary search on the smaller array",
+          "Partition cuts split combined elements into equal halves",
+          "Valid when maxLeft1 <= minRight2 and maxLeft2 <= minRight1",
+          "Strictly O(log(min(M, N))) time & O(1) space"
+        ],
+        "codeSnippet": "def findMedianSortedArrays(nums1: list[int], nums2: list[int]) -> float:\n    if len(nums1) > len(nums2):\n        nums1, nums2 = nums2, nums1\n    m, n = len(nums1), len(nums2)\n    imin, imax, half_len = 0, m, (m + n + 1) // 2\n    while imin <= imax:\n        i = (imin + imax) // 2\n        j = half_len - i\n        if i < m and nums2[j - 1] > nums1[i]:\n            imin = i + 1\n        elif i > 0 and nums1[i - 1] > nums2[j]:\n            imax = i - 1\n        else:\n            max_left = max(nums1[i-1] if i > 0 else -float('inf'),\n                           nums2[j-1] if j > 0 else -float('inf'))\n            if (m + n) % 2 == 1:\n                return float(max_left)\n            min_right = min(nums1[i] if i < m else float('inf'),\n                            nums2[j] if j < n else float('inf'))\n            return (max_left + min_right) / 2.0"
       },
       {
-        "id": "q2-65",
-        "question": "What happens when one of the input arrays is empty?",
+        "id": "q2",
+        "category": "Why Binary Search on the Smaller Array?",
+        "question": "Why MUST the binary search be performed on the smaller array?",
+        "whatInterviewerChecks": "Guaranteed boundary safety and minimizing time complexity.",
+        "bestReplyScript": "Two crucial reasons: 1) Complexity: Binary searching the smaller array runs in O(log(min(M, N))), which is strictly faster; 2) Boundary safety: If `i` is in `[0, M]`, `j = (M + N + 1)//2 - i`. Because `M <= N`, `j` is guaranteed to always be in the valid range `[0, N]`. If we searched on the larger array, `j` could become negative, causing index out-of-bounds errors!",
+        "keyPoints": [
+          "O(log(min(M, N))) guarantees fastest runtime",
+          "Guarantees j = half - i is always in [0, N]",
+          "Prevents negative j index errors"
+        ],
+        "codeSnippet": "# Swap to ensure nums1 is always the smaller array:\nif len(nums1) > len(nums2):\n    nums1, nums2 = nums2, nums1"
+      },
+      {
+        "id": "q3",
+        "category": "Partition Equation Derivation",
+        "question": "How is the formula `j = (m + n + 1) // 2 - i` derived?",
+        "whatInterviewerChecks": "Understanding equal partition sizing for both odd and even lengths.",
+        "bestReplyScript": "The total elements is M + N. We want the combined left half to have `half_len = (M + N + 1) // 2` elements. If array 1 contributes `i` elements to the left half, array 2 must contribute the remaining elements: `j = half_len - i`. Adding `+1` before integer division ensures that for odd lengths, the left half holds exactly 1 extra element, meaning the median is simply `max(maxLeft1, maxLeft2)` without an extra branch.",
+        "keyPoints": [
+          "Left half holds (M + N + 1) // 2 elements",
+          "j = half_len - i balance equation",
+          "+1 puts median element in left half for odd lengths"
+        ],
+        "codeSnippet": "half_len = (m + n + 1) // 2\nj = half_len - i"
+      },
+      {
+        "id": "q4",
+        "category": "Infinity Boundary Sentinels",
+        "question": "Why do we use `-infinity` and `+infinity` when `i == 0` or `i == m`?",
+        "whatInterviewerChecks": "Handling empty partition boundaries without crashing.",
+        "bestReplyScript": "When `i == 0`, array 1 contributes zero elements to the left half, so `maxLeft1` does not exist. We set it to `-float('inf')` so it never blocks the comparison `maxLeft1 <= minRight2`. When `i == m`, array 1 contributes all its elements to the left half, so `minRight1` does not exist; we set it to `+float('inf')`. Sentinels eliminate special-case conditionals for boundary cuts.",
+        "keyPoints": [
+          "i == 0: maxLeft1 = -inf (all elements of nums1 are on right)",
+          "i == m: minRight1 = +inf (all elements of nums1 are on left)",
+          "Sentinels eliminate out-of-bounds edge cases"
+        ],
+        "codeSnippet": "max_left1 = nums1[i-1] if i > 0 else -float('inf')\nmin_right1 = nums1[i] if i < m else float('inf')"
+      },
+      {
+        "id": "q5",
+        "category": "Binary Search Direction Logic",
+        "question": "How do you decide whether to move `imin = i + 1` or `imax = i - 1`?",
+        "whatInterviewerChecks": "Binary search convergence conditions.",
+        "bestReplyScript": "1) If `nums2[j - 1] > nums1[i]`: `maxLeft2` is greater than `minRight1`. Array 1's cut is too far to the left (elements on right are too small). We must increase `i` by setting `imin = i + 1`. 2) If `nums1[i - 1] > nums2[j]`: `maxLeft1` is greater than `minRight2`. Array 1's cut is too far to the right. We must decrease `i` by setting `imax = i - 1`. 3) Otherwise, the partition is perfectly balanced!",
+        "keyPoints": [
+          "nums2[j-1] > nums1[i] -> i is too small -> imin = i + 1",
+          "nums1[i-1] > nums2[j] -> i is too big -> imax = i - 1",
+          "Otherwise -> valid partition found"
+        ],
+        "codeSnippet": "if i < m and nums2[j-1] > nums1[i]:\n    imin = i + 1\nelif i > 0 and nums1[i-1] > nums2[j]:\n    imax = i - 1\nelse:\n    # Partition is perfect!"
+      },
+      {
+        "id": "q6",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities, and why does this beat merging?",
+        "whatInterviewerChecks": "Rigorous logarithmic proof.",
+        "bestReplyScript": "Binary searching the cut index in `[0, M]` takes `O(log M)` steps. Because we ensure `M <= N`, time complexity is strictly `O(log(min(M, N)))`. For two arrays of 1,000,000 elements, binary search takes at most ~20 iterations! Merging (`nums1 + nums2`) takes O(M + N) = 2,000,000 operations and O(M + N) space. The binary search solution uses strictly O(1) auxiliary space.",
+        "keyPoints": [
+          "Time: strictly O(log(min(M, N)))",
+          "Space: strictly O(1) auxiliary",
+          "Takes ~20 steps for 1 million elements"
+        ],
+        "codeSnippet": "# Merging: O(M + N) time & space\n# Binary Search: O(log(min(M, N))) time, O(1) space"
+      },
+      {
+        "id": "q7",
+        "category": "Two-Pointer Counter Alternative",
+        "question": "Can you solve this with Two Pointers without extra memory? What is its complexity?",
+        "whatInterviewerChecks": "O((M+N)/2) time two-pointer simulation.",
+        "bestReplyScript": "Yes. Place pointer `p1` on `nums1` and `p2` on `nums2`. We simulate the merge step-by-step for `(M + N) // 2` iterations, tracking the previous and current values. While it uses O(1) space, it takes O(M + N) time. The interview specifically demands O(log(M + N)) time, so the two-pointer counter fails the strict asymptotic requirement.",
+        "keyPoints": [
+          "Two-pointer counter takes O(M + N) time and O(1) space",
+          "Simulates merge up to midpoint",
+          "Fails the required O(log(min(M, N))) constraint"
+        ],
+        "codeSnippet": "# Two-pointer counter is O((M+N)/2) -> Not O(log(min(M, N)))"
+      },
+      {
+        "id": "q8",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Edge case robustness.",
-        "bestReplyScript": "If one array is empty (e.g. nums1 = []), it becomes the smaller array (m = 0). The binary search immediately sets `i = 0` and `j = (n + 1) // 2`. The boundary checks correctly set `max_of_left = nums2[j-1]` and `min_of_right = nums2[j]`, seamlessly returning the median of nums2 with zero crashes.",
+        "question": "What edge cases must be tested for Median of Two Sorted Arrays?",
+        "whatInterviewerChecks": "Extreme partition cuts and empty array handling.",
+        "bestReplyScript": "1) One array is completely empty `[]` and `[1]` -> 1.0; 2) One element in each array `[1]` and `[2]` -> 1.5; 3) All elements of array 1 are strictly smaller than array 2 `[1, 2]` and `[3, 4]` -> 2.5; 4) Arrays of vastly different sizes `[1]` and `[2, 3, 4, 5, 6, 7]` -> 4.0; 5) Duplicate elements `[1, 1]` and `[1, 1]` -> 1.0.",
         "keyPoints": [
-          "i = 0 immediately",
-          "Correctly delegates entirely to the non-empty array",
-          "Handles empty arrays seamlessly"
-        ]
+          "One array empty",
+          "Arrays of size 1",
+          "Non-overlapping ranges",
+          "Vastly unequal lengths (1 vs 10,000)"
+        ],
+        "codeSnippet": "assert findMedianSortedArrays([], [1]) == 1.0\nassert findMedianSortedArrays([1, 3], [2]) == 2.0\nassert findMedianSortedArrays([1, 2], [3, 4]) == 2.5"
       },
       {
-        "id": "q3-65",
-        "question": "Why is `half_len` defined as `(m + n + 1) // 2` with `+ 1`?",
-        "category": "Mathematical Formulation",
-        "whatInterviewerChecks": "Odd vs even length balancing.",
-        "bestReplyScript": "Adding 1 before integer dividing by 2 ensures that for odd total lengths, the left half receives exactly one more element than the right half. Consequently, for odd totals, the median is ALWAYS simply `max_of_left`, eliminating messy conditional branches.",
+        "id": "q9",
+        "category": "K-th Element in Two Sorted Arrays",
+        "question": "How does Median of Two Sorted Arrays generalize to finding the K-th smallest element?",
+        "whatInterviewerChecks": "Recursive reduction by discarding K/2 elements.",
+        "bestReplyScript": "Finding the median is equivalent to finding the `K-th` element where `K = (M + N + 1) // 2`. To find the K-th element in O(log K): we compare `nums1[K//2 - 1]` and `nums2[K//2 - 1]`. The array with the smaller element provably CANNOT contain the K-th element in its first `K//2` elements! We discard those `K//2` elements, reduce `K` by `K//2`, and recurse. This is another classic O(log(M + N)) pattern.",
         "keyPoints": [
-          "Left half holds equal or 1 more element",
-          "Odd length median is always max_of_left",
-          "Unifies odd and even formula"
-        ]
+          "Compare elements at index K//2 - 1",
+          "Discard K//2 elements from the smaller array",
+          "Reduces K by half in each recursive step"
+        ],
+        "codeSnippet": "# Discard K//2 elements:\n# if nums1[k//2 - 1] < nums2[k//2 - 1]:\n#     return findKth(nums1[k//2:], nums2, k - k//2)"
       },
       {
-        "id": "q4-65",
-        "question": "How do you handle edge boundary values when a cut is at index 0 or length m?",
-        "category": "Boundary Values",
-        "whatInterviewerChecks": "Infinity guards.",
-        "bestReplyScript": "When `i == 0`, no elements from nums1 are on the left, so `max_of_left` comes exclusively from `nums2[j-1]`. When `i == m`, no elements from nums1 are on the right, so `min_of_right` comes exclusively from `nums2[j]`. In languages like C++, we can also use `-infinity` and `+infinity` guards.",
+        "id": "q10",
+        "category": "Float Division vs Integer Division",
+        "question": "Why does the return statement divide by `2.0` instead of `// 2`?",
+        "whatInterviewerChecks": "Floating-point return type requirements.",
+        "bestReplyScript": "The median of an even number of integers can be a floating-point fractional value (e.g. median of 1 and 2 is `(1 + 2) / 2.0 = 1.5`). Using integer floor division `// 2` would truncate `1.5` to `1`, producing an incorrect answer. The problem requires returning `float`.",
         "keyPoints": [
-          "i == 0 means left side has no nums1 elements",
-          "i == m means right side has no nums1 elements",
-          "Conditional selection avoids out-of-bounds"
-        ]
+          "Median can be fractional like 1.5",
+          "Integer division // truncates to 1",
+          "Must return float"
+        ],
+        "codeSnippet": "return (max_left + min_right) / 2.0"
+      },
+      {
+        "id": "q11",
+        "category": "Python `statistics.median` Comparison",
+        "question": "Why shouldn't you do `import statistics; return statistics.median(nums1 + nums2)`?",
+        "whatInterviewerChecks": "Understanding library internals and memory/time penalties.",
+        "bestReplyScript": "`statistics.median()` concatenates and sorts the combined array. `nums1 + nums2` allocates a new list of size M + N, and sorting takes O((M + N) log(M + N)). While passing tests on small inputs, it completely defeats the purpose of the Hard-tier algorithmic challenge and will be rejected instantly in an interview.",
+        "keyPoints": [
+          "Allocates full list on heap",
+          "Takes O((M + N) log(M + N)) time",
+          "Violates O(log(min(M, N))) requirement"
+        ],
+        "codeSnippet": "# \u274c Instant rejection in interview:\n# import statistics; return statistics.median(nums1 + nums2)"
+      },
+      {
+        "id": "q12",
+        "category": "Zero Length Array Guard",
+        "question": "How does the code handle when `nums1` is completely empty `[]`?",
+        "whatInterviewerChecks": "Verification of empty input branch.",
+        "bestReplyScript": "Since `len(nums1) > len(nums2)` swaps if necessary, `nums1` is guaranteed to be the empty array (`m = 0`). `imin = 0, imax = 0`. The loop runs once with `i = 0`. `j = (0 + n + 1) // 2`. `maxLeft1` is `-inf`, `maxLeft2 = nums2[j - 1]`. For odd `n`, it returns `float(max_left2)`, which is `nums2[(n - 1) // 2]`, the exact median of `nums2`! It works flawlessly with zero special-case branches.",
+        "keyPoints": [
+          "m = 0 sets i = 0 directly",
+          "maxLeft1 becomes -inf",
+          "Returns exact median of nums2 correctly"
+        ],
+        "codeSnippet": "# Empty array handled automatically via sentinel -inf"
+      },
+      {
+        "id": "q13",
+        "category": "Binary Search Invariants",
+        "question": "What invariant is maintained by `imin` and `imax`?",
+        "whatInterviewerChecks": "Formal loop invariant reasoning.",
+        "bestReplyScript": "The invariant is: 'The optimal cut position `i` in `nums1` is guaranteed to lie within the closed interval `[imin, imax]`'. Since `imin` increases or `imax` decreases strictly in every step without eliminating the true partition, binary search is guaranteed to find the unique partition where all left elements <= all right elements.",
+        "keyPoints": [
+          "Optimal cut i in [imin, imax]",
+          "Interval shrinks by half each step",
+          "Guarantees exact convergence"
+        ],
+        "codeSnippet": "# Invariant: optimal cut i in range [imin, imax]"
+      },
+      {
+        "id": "q14",
+        "category": "Code Robustness in Python",
+        "question": "Why is `float('-inf')` and `float('inf')` used instead of `sys.maxsize`?",
+        "whatInterviewerChecks": "Python integer unboundedness vs IEEE 754 infinity.",
+        "bestReplyScript": "In Python, integers do not have a maximum value (`sys.maxsize` is just `2^63 - 1`, but Python integers can exceed it). `float('inf')` is true IEEE 754 infinity, which is mathematically guaranteed to be greater than ANY number in Python. Using `float('inf')` avoids comparison failures on inputs containing huge integers.",
+        "keyPoints": [
+          "Python integers can exceed sys.maxsize",
+          "float('inf') is guaranteed greater than all numbers",
+          "Safe against arbitrary precision integers"
+        ],
+        "codeSnippet": "assert float('inf') > 10**100  # True!"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "Why is Median of Two Sorted Arrays considered one of the most prestigious Hard interview questions?",
+        "whatInterviewerChecks": "Synthesis of advanced binary search on non-traditional solution spaces.",
+        "bestReplyScript": "Because it elevates binary search from simple element lookup to **searching for an optimal partition boundary between two independent datasets**. It tests simultaneous index balancing (`j = half - i`), boundary sentinel reasoning, and understanding how to achieve sub-linear logarithmic performance without merging data.",
+        "keyPoints": [
+          "Binary search on a partition boundary (not element values)",
+          "Simultaneous multi-variable index balancing",
+          "Logarithmic time without allocating or merging data"
+        ],
+        "codeSnippet": "# Takeaway: Binary search on partition cut achieves O(log(min(M, N))) without data movement"
       }
     ],
     "mistakes": [
@@ -21810,51 +24067,201 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-66",
-        "question": "Why is the loop condition `or carry` crucial?",
-        "category": "Edge Cases & Safety",
-        "whatInterviewerChecks": "Carry overflow handling.",
-        "bestReplyScript": "Consider adding [5] and [5]. Both lists have length 1. After processing the first digits, `5 + 5 = 10`, leaving `carry = 1`. Both lists are now exhausted (i == 1, j == 1). Without `or carry`, the while loop would terminate prematurely, producing `[0]` instead of the correct answer `[0, 1]` (representing 10). Including `or carry` ensures that any trailing carry creates a new most significant digit.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Add Two Numbers in 30 seconds?",
+        "whatInterviewerChecks": "Columnar addition simulation with carry propagation.",
+        "bestReplyScript": "Because the digits are stored in reverse order (least significant digit first), we simulate elementary school addition column by column. We iterate as long as either list has digits remaining OR a non-zero carry exists (`while l1 or l2 or carry`). At each step, we sum available digits plus `carry`, set the new carry via `carry = total // 10`, and append `total % 10` to our result. This runs in O(max(N, M)) time and O(max(N, M)) space.",
         "keyPoints": [
-          "5 + 5 = 10 requires new node for carry",
-          "Prevents losing the most significant carried 1",
-          "Handles numbers growing by 1 digit"
-        ]
+          "Reverse order aligns least significant digit first",
+          "Loop condition: while l1 or l2 or carry",
+          "carry = total // 10, digit = total % 10",
+          "O(max(N, M)) time and space"
+        ],
+        "codeSnippet": "def addTwoNumbers(l1: list[int], l2: list[int]) -> list[int]:\n    res = []\n    carry = 0\n    i, j = 0, 0\n    while i < len(l1) or j < len(l2) or carry:\n        v1 = l1[i] if i < len(l1) else 0\n        v2 = l2[j] if j < len(l2) else 0\n        total = v1 + v2 + carry\n        carry = total // 10\n        res.append(total % 10)\n        i += 1; j += 1\n    return res"
       },
       {
-        "id": "q2-66",
-        "question": "Why are digits stored in reverse order in this problem?",
-        "category": "Data Structure Design",
-        "whatInterviewerChecks": "Understanding computational direction.",
-        "bestReplyScript": "Because standard positional addition starts at the least significant digit (ones place) and moves to higher places (tens, hundreds). Storing digits in reverse order means the head of each list is the ones place, allowing single-pass linear addition from left to right without needing to reverse the lists first.",
+        "id": "q2",
+        "category": "Critical Loop Guard",
+        "question": "Why is `or carry` essential in the while loop condition `while l1 or l2 or carry`?",
+        "whatInterviewerChecks": "Handling final overflow carry into a new most significant digit.",
+        "bestReplyScript": "If two numbers add up to a value that generates a final carry (e.g. `5 + 5 = 10` or `99 + 1 = 100`), both input lists will be completely exhausted (`i >= len(l1)` and `j >= len(l2)`), but `carry = 1`. If `or carry` is missing, the loop terminates prematurely and drops the leading `1`, producing `0` instead of `[0, 1]`! Including `or carry` guarantees the final carry is appended.",
         "keyPoints": [
-          "Addition proceeds from least significant to most significant",
-          "Head of list is ones place",
-          "Enables single-pass streaming without reversal"
-        ]
+          "Handles final carry overflow (e.g. 5 + 5 = 10)",
+          "Without 'or carry', leading 1 is dropped",
+          "Essential for correct addition"
+        ],
+        "codeSnippet": "# Without 'or carry': [5] + [5] returns [0] (WRONG!)\n# With 'or carry': [5] + [5] returns [0, 1] (CORRECT!)"
       },
       {
-        "id": "q3-66",
-        "question": "What if the two input numbers have drastically different lengths?",
-        "category": "Boundary Handling",
-        "whatInterviewerChecks": "Padding shorter numbers.",
-        "bestReplyScript": "Our implementation uses `val1 = l1[i] if i < len(l1) else 0`. When the shorter list runs out, its missing digits are treated as 0. The loop continues seamlessly, adding 0 and propagating any carry into the remaining digits of the longer number.",
+        "id": "q3",
+        "category": "Why Reverse Order is Convenient",
+        "question": "Why does the problem store digits in reverse order (e.g. 342 as [2, 4, 3])?",
+        "whatInterviewerChecks": "Understanding alignment of decimal place values.",
+        "bestReplyScript": "In addition, computation starts at the 1s place (least significant digit) and carries propagate toward higher place values (10s, 100s, 1000s). Reverse order naturally places the 1s digit at head/index 0. If digits were stored in forward order, we would either have to reverse both lists first, pad with leading zeros to align places, or use recursion / stacks to process from right to left.",
         "keyPoints": [
-          "Missing digits are treated as 0",
-          "Seamless continuation for disparate lengths",
-          "No IndexError risk"
-        ]
+          "Aligns 1s place at index 0",
+          "Carries propagate naturally from left to right",
+          "Forward order would require reversing or stacks"
+        ],
+        "codeSnippet": "# Reverse order: index 0 is 10^0, index 1 is 10^1, index 2 is 10^2"
       },
       {
-        "id": "q4-66",
-        "question": "What is the maximum length of the output list compared to inputs of length N and M?",
-        "category": "Space Bounds",
-        "whatInterviewerChecks": "Maximum size bounds.",
-        "bestReplyScript": "The maximum possible length is `max(N, M) + 1`. A sum can exceed the maximum length of its inputs by at most 1 digit (for example, 99 + 1 = 100, where inputs of length 2 and 1 produce length 3).",
+        "id": "q4",
+        "category": "Forward Order Follow-up (Add Two Numbers II)",
+        "question": "How would you solve this if digits were in standard forward order (e.g. [3, 4, 2]) without reversing the lists?",
+        "whatInterviewerChecks": "Using LIFO stacks to simulate right-to-left addition.",
+        "bestReplyScript": "We push all digits of list 1 and list 2 onto two separate LIFO stacks: `stack1` and `stack2`. Popping from the stacks automatically retrieves digits from right to left (least significant first). We compute sums with carry and build the result by prepending nodes. This achieves right-to-left addition without mutating the input lists.",
         "keyPoints": [
-          "Max length is max(N, M) + 1",
-          "Carried 1 can add at most 1 digit"
-        ]
+          "Push digits onto two stacks",
+          "Pop from stacks to process least significant first",
+          "Prepends nodes to build forward result list"
+        ],
+        "codeSnippet": "# Forward order uses stacks:\n# stack1 = [3, 4, 2], stack2 = [4, 6, 5]\n# pop 2 and 5 -> 7; pop 4 and 6 -> 0 (carry 1); pop 3 and 4 + 1 -> 8"
+      },
+      {
+        "id": "q5",
+        "category": "Linked List Dummy Head Pattern",
+        "question": "When implemented with linked lists (`ListNode`), why is a dummy head node used?",
+        "whatInterviewerChecks": "Linked list initialization and head pointer management.",
+        "bestReplyScript": "A dummy head node (`dummy = ListNode(0)`) simplifies list creation. Without a dummy node, we would need special-case logic to initialize `head` on the first iteration and update `curr.next` on subsequent iterations. With a dummy node, every node is appended uniformly via `curr.next = ListNode(...)`, and at the end we simply return `dummy.next`.",
+        "keyPoints": [
+          "dummy = ListNode(0) eliminates special-case head check",
+          "Uniform curr.next appending on all iterations",
+          "Returns dummy.next at the end"
+        ],
+        "codeSnippet": "dummy = curr = ListNode(0)\n# while loop:\n# curr.next = ListNode(total % 10)\n# curr = curr.next\n# return dummy.next"
+      },
+      {
+        "id": "q6",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities?",
+        "whatInterviewerChecks": "Asymptotic bound based on max length.",
+        "bestReplyScript": "Let N be the length of list 1 and M be the length of list 2. The loop runs `max(N, M)` times (or `max(N, M) + 1` if there is a final carry). Each iteration performs O(1) additions. Time complexity is strictly O(max(N, M)). Auxiliary space complexity is O(max(N, M)) to store the resulting list.",
+        "keyPoints": [
+          "Time: O(max(N, M))",
+          "Space: O(max(N, M)) for output list",
+          "Optimal: must visit every digit at least once"
+        ],
+        "codeSnippet": "# Time: O(max(N, M))\n# Space: O(max(N, M))"
+      },
+      {
+        "id": "q7",
+        "category": "BigInt Conversion Shortcut",
+        "question": "Can you convert both lists to integers in Python, add them, and convert back? Why is this discouraged in interviews?",
+        "whatInterviewerChecks": "Algorithmic simulation vs language cheat.",
+        "bestReplyScript": "In Python, you can convert lists to integers: `n1 = int(''.join(map(str, l1[::-1])))`, `n2 = int(''.join(map(str, l2[::-1])))`, and return `[int(c) for c in str(n1 + n2)[::-1]]`. However, interviewers explicitly reject this because: 1) It fails in languages without arbitrary precision (overflow on >18 digits); 2) It violates the spirit of linked list simulation; 3) Python 3.11+ string-to-int conversion caps at 4,300 digits (CVE-2020-10735).",
+        "keyPoints": [
+          "Fails in Java/C++ due to 64-bit overflow",
+          "CPython 3.11+ limits int(str) to 4,300 digits",
+          "Interviewers test your pointer/carry logic, not language shortcuts"
+        ],
+        "codeSnippet": "# \u274c Discouraged interview cheat:\n# return [int(c) for c in str(int(''.join(map(str, l1[::-1]))) + ...)[::-1]]"
+      },
+      {
+        "id": "q8",
+        "category": "Edge Cases",
+        "question": "What edge cases must be tested for Add Two Numbers?",
+        "whatInterviewerChecks": "Different length lists, zeros, and multiple carries.",
+        "bestReplyScript": "1) Both lists represent zero `[0]` and `[0]` -> `[0]`; 2) Different lengths `[9, 9]` (99) and `[1]` (1) -> `[0, 0, 1]` (100); 3) Long chain of carries `[9, 9, 9]` + `[1]` -> `[0, 0, 0, 1]`; 4) One list much longer than the other `[1]` + `[0, 0, 0, 1]` -> `[1, 0, 0, 1]`; 5) Identical single digits creating carry `[5]` + `[5]` -> `[0, 1]`.",
+        "keyPoints": [
+          "Different length lists",
+          "Chained carries (999 + 1 = 1000)",
+          "Both zeros [0] + [0] = [0]",
+          "Single digit carry [5] + [5] = [0, 1]"
+        ],
+        "codeSnippet": "assert addTwoNumbers([2, 4, 3], [5, 6, 4]) == [7, 0, 8]\nassert addTwoNumbers([0], [0]) == [0]\nassert addTwoNumbers([9, 9, 9], [1]) == [0, 0, 0, 1]"
+      },
+      {
+        "id": "q9",
+        "category": "Python `itertools.zip_longest`",
+        "question": "How can you write Add Two Numbers using Python's `itertools.zip_longest`?",
+        "whatInterviewerChecks": "Standard library itertools mastery.",
+        "bestReplyScript": "Using `itertools.zip_longest(l1, l2, fillvalue=0)` pairs corresponding digits automatically and fills missing digits with 0. We iterate through the zipped pairs, computing `total = a + b + carry`, appending `total % 10`, and updating `carry`. After the zip terminates, if `carry` is non-zero, append `carry`.",
+        "keyPoints": [
+          "zip_longest pads shorter list with fillvalue=0",
+          "Eliminates manual boundary checks (i < len(l1))",
+          "Concise, idiomatic Python"
+        ],
+        "codeSnippet": "from itertools import zip_longest\n\ndef addTwoNumbers_zip(l1, l2):\n    res = []\n    carry = 0\n    for a, b in zip_longest(l1, l2, fillvalue=0):\n        total = a + b + carry\n        carry, digit = divmod(total, 10)\n        res.append(digit)\n    if carry:\n        res.append(carry)\n    return res"
+      },
+      {
+        "id": "q10",
+        "category": "Generator Pipeline",
+        "question": "How would you implement this as a streaming generator with `yield`?",
+        "whatInterviewerChecks": "Python generators for infinite digit streams.",
+        "bestReplyScript": "Instead of accumulating digits in a list, we `yield digit` on each iteration: `yield total % 10`. This transforms the function into a streaming generator that can add numbers with 100 million digits with O(1) memory overhead, streaming digits directly to disk or network.",
+        "keyPoints": [
+          "Use yield instead of res.append()",
+          "O(1) auxiliary memory for stream consumer",
+          "Can stream numbers with millions of digits"
+        ],
+        "codeSnippet": "def addTwoNumbers_stream(l1_iter, l2_iter):\n    carry = 0\n    # while digits or carry:\n    #     yield total % 10"
+      },
+      {
+        "id": "q11",
+        "category": "Carry Value Range Invariant",
+        "question": "What is the maximum possible value that `carry` can ever reach?",
+        "whatInterviewerChecks": "Mathematical bounds on decimal column addition.",
+        "bestReplyScript": "The maximum digit in base 10 is 9. In any column, the maximum sum is `digit1 + digit2 + carry = 9 + 9 + 1 = 19`. Thus, `total // 10` is at most 1. The carry is mathematically strictly bounded in `{0, 1}`. It can never exceed 1, regardless of how many digits are added.",
+        "keyPoints": [
+          "Max column sum is 9 + 9 + 1 = 19",
+          "carry is strictly bounded in {0, 1}",
+          "Never exceeds 1 in base 10"
+        ],
+        "codeSnippet": "# Invariant: carry in (0, 1)"
+      },
+      {
+        "id": "q12",
+        "category": "Base-B Generalization",
+        "question": "How would you adapt this code to add numbers in binary (base 2) or hexadecimal (base 16)?",
+        "whatInterviewerChecks": "Arbitrary radix arithmetic abstraction.",
+        "bestReplyScript": "Simply replace `10` with base `B`: `carry, digit = divmod(total, B)`. In binary (base 2), `carry = total // 2` and `digit = total % 2` (equivalent to `carry = total >> 1` and `digit = total & 1`). The columnar addition logic is universal across all radices.",
+        "keyPoints": [
+          "Replace 10 with base B",
+          "carry = total // B, digit = total % B",
+          "Binary addition uses total >> 1 and total & 1"
+        ],
+        "codeSnippet": "# Base-B addition:\ncarry, digit = divmod(total, BASE)\nres.append(digit)"
+      },
+      {
+        "id": "q13",
+        "category": "Memory Allocation & CPython",
+        "question": "How much memory does the output list allocate in CPython?",
+        "whatInterviewerChecks": "PyListObject allocation and over-allocation growth pattern.",
+        "bestReplyScript": "In CPython, an empty list takes 56 bytes. As elements are appended, CPython over-allocates slots (`0, 4, 8, 16, 25, 35, 46, 58, ...`) to ensure O(1) amortized appending. For an addition resulting in 100 digits, the list allocates ~120 pointer slots on the heap.",
+        "keyPoints": [
+          "PyListObject over-allocation formula",
+          "O(1) amortized append speed",
+          "Total memory proportional to max(N, M)"
+        ],
+        "codeSnippet": "# CPython over-allocates list capacity to provide O(1) amortized append"
+      },
+      {
+        "id": "q14",
+        "category": "In-Place Linked List Mutation",
+        "question": "Can you solve this in O(1) auxiliary space by mutating list 1 in-place?",
+        "whatInterviewerChecks": "In-place linked list recycling.",
+        "bestReplyScript": "Yes! Instead of allocating new nodes for each digit, we can overwrite `l1.val = total % 10`. If `l1` is shorter than `l2`, we link the end of `l1` to the remaining nodes of `l2`. Only if there is a final carry at the very end do we allocate a single new node `ListNode(1)`. This achieves strictly O(1) auxiliary space.",
+        "keyPoints": [
+          "Overwrite l1.val in-place",
+          "Splice l2 tail onto l1 if l1 is shorter",
+          "O(1) auxiliary memory (only 1 node allocated if final carry exists)"
+        ],
+        "codeSnippet": "# In-place reuse of l1 nodes achieves O(1) auxiliary memory"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "What fundamental computing concept is demonstrated by Add Two Numbers?",
+        "whatInterviewerChecks": "Understanding hardware full-adder logic and arbitrary precision BigInt implementation.",
+        "bestReplyScript": "It is the software equivalent of a **Ripple Carry Adder** in computer hardware. This exact algorithm is how Python's CPython runtime, GMP (GNU Multiple Precision library), and Java's `BigInteger` implement arbitrary-precision arithmetic when numbers exceed hardware 64-bit registers.",
+        "keyPoints": [
+          "Software equivalent of hardware Ripple Carry Adder",
+          "Foundation of BigInteger and arbitrary-precision libraries",
+          "Universal columnar addition paradigm"
+        ],
+        "codeSnippet": "# Takeaway: Foundation of arbitrary-precision BigInt arithmetic engines"
       }
     ],
     "mistakes": [
@@ -21938,51 +24345,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-67",
-        "question": "How do two pointers achieve a single pass in a singly linked list?",
-        "category": "Two Pointers Technique",
-        "whatInterviewerChecks": "Linked list runner technique.",
-        "bestReplyScript": "We use a dummy head node pointing to head. We advance pointer `fast` by n + 1 steps from the dummy node, creating an exact gap of n nodes between `slow` and `fast`. Then, we move both `slow` and `fast` forward one step at a time until `fast` hits null. At that moment, `slow` is guaranteed to be standing right before the node to be deleted! We simply update `slow.next = slow.next.next` in O(1).",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Remove Nth Node From End of List in 30 seconds?",
+        "whatInterviewerChecks": "Two-pointer gap runner technique in a single pass.",
+        "bestReplyScript": "We use a Two-Pointer technique with a dummy head node. We advance the `fast` pointer `N + 1` steps ahead of `slow`. This establishes a fixed gap of `N` nodes between them. Then we advance both `fast` and `slow` simultaneously until `fast` reaches the end (`None`). At that exact moment, `slow` is positioned right before the node to be removed! We skip the target node: `slow.next = slow.next.next`. This achieves a single-pass O(L) time and O(1) space solution.",
         "keyPoints": [
-          "Dummy head handles head deletion",
-          "Advance fast by n + 1 steps to create gap",
-          "When fast is null, slow is at predecessor"
-        ]
+          "Two pointers (fast and slow) with dummy head",
+          "Advance fast N + 1 steps to create gap",
+          "Move both until fast is None",
+          "slow.next = slow.next.next",
+          "Single pass O(L) time & O(1) space"
+        ],
+        "codeSnippet": "def removeNthFromEnd(head, n: int):\n    dummy = ListNode(0, head)\n    fast = slow = dummy\n    for _ in range(n + 1):\n        fast = fast.next\n    while fast:\n        fast = fast.next\n        slow = slow.next\n    slow.next = slow.next.next\n    return dummy.next"
       },
       {
-        "id": "q2-67",
-        "question": "Why is a dummy node essential in linked list implementations?",
-        "category": "Data Structure Design",
-        "whatInterviewerChecks": "Edge case prevention (deleting head).",
-        "bestReplyScript": "Without a dummy node, deleting the head node (when n == length) requires an explicit special branch because `head` has no predecessor. A dummy node placed before `head` acts as a permanent predecessor, unifying head deletion with internal node deletion under the exact same code logic.",
+        "id": "q2",
+        "category": "Why Dummy Head Node?",
+        "question": "Why is a dummy head node essential for removing the Nth node?",
+        "whatInterviewerChecks": "Edge case handling when removing the actual head node.",
+        "bestReplyScript": "If `n == length`, the node to be removed is the very first node (the `head`). Without a dummy node, removing the head requires special branching: `if n == length: return head.next`. By creating `dummy = ListNode(0, head)` and starting both pointers at `dummy`, `slow` always lands on the node *immediately preceding* the node to be deleted, treating the head identically to any interior node.",
         "keyPoints": [
-          "Dummy node provides predecessor for head",
-          "Eliminates special case for deleting head",
-          "Standard best practice in linked list manipulation"
-        ]
+          "Eliminates special case when deleting the head node (n == length)",
+          "slow lands on predecessor node uniformly",
+          "Returns dummy.next cleanly"
+        ],
+        "codeSnippet": "# Without dummy: if n == len: return head.next (special case!)\n# With dummy: dummy.next handles head removal uniformly!"
       },
       {
-        "id": "q3-67",
-        "question": "What if the list contains only 1 element and n = 1?",
+        "id": "q3",
+        "category": "Gap Size Derivation",
+        "question": "Why does the `fast` pointer need to move `n + 1` steps instead of `n` steps?",
+        "whatInterviewerChecks": "Targeting the predecessor node instead of target node.",
+        "bestReplyScript": "To delete a node in a singly linked list, we must modify the pointer of the *predecessor* node (`prev.next = prev.next.next`). If `fast` moves only `n` steps, when `fast` reaches `None`, `slow` will land directly *on* the node to be deleted. By moving `fast` `n + 1` steps ahead, `slow` lands exactly one node *before* the target, giving direct access to delete it.",
+        "keyPoints": [
+          "Need predecessor node to perform slow.next = slow.next.next",
+          "n steps puts slow on the target node",
+          "n + 1 steps puts slow on predecessor node"
+        ],
+        "codeSnippet": "# fast moves n + 1 steps:\nfor _ in range(n + 1):\n    fast = fast.next"
+      },
+      {
+        "id": "q4",
+        "category": "Single Pass vs Two Pass",
+        "question": "What is the difference between the One-Pass and Two-Pass approach?",
+        "whatInterviewerChecks": "Algorithmic comparison and instruction counts.",
+        "bestReplyScript": "In the Two-Pass approach, pass 1 counts the total length L. In pass 2, we advance `L - n` steps to reach the node before the target and delete it. This traverses `L + (L - n)` nodes (~2L operations). The One-Pass approach uses two pointers with a gap of N to delete the node in exactly L steps. Both have O(L) asymptotic time, but One-Pass makes half as many node reads.",
+        "keyPoints": [
+          "Two-pass: count length L, then traverse L - n (2L reads)",
+          "One-pass: two pointers with gap (L reads)",
+          "One-pass is faster and cache-friendly"
+        ],
+        "codeSnippet": "# Two-Pass: count length -> traverse L - n\n# One-Pass: fast/slow gap runner in single traversal"
+      },
+      {
+        "id": "q5",
+        "category": "Memory Leaks & Python Garbage Collection",
+        "question": "When `slow.next = slow.next.next` executes, does Python immediately free the deleted node's memory?",
+        "whatInterviewerChecks": "CPython reference counting deallocation.",
+        "bestReplyScript": "Yes. When `slow.next` is re-pointed to `slow.next.next`, the reference count of the deleted node drops to 0 (assuming no other external references exist). In CPython, objects with reference count 0 are deallocated immediately by `Py_DECREF`. No memory leak occurs.",
+        "keyPoints": [
+          "Reference count drops to 0",
+          "CPython deallocates immediately via Py_DECREF",
+          "No memory leak in singly linked lists"
+        ],
+        "codeSnippet": "# CPython: refcount becomes 0 -> memory reclaimed instantaneously"
+      },
+      {
+        "id": "q6",
         "category": "Edge Cases",
-        "whatInterviewerChecks": "Empty list handling.",
-        "bestReplyScript": "Deleting the only element leaves the list completely empty. Per the problem specification, when the resulting list is empty, we must output the string 'EMPTY'.",
+        "question": "What edge cases must be tested for Remove Nth Node From End?",
+        "whatInterviewerChecks": "Boundary test coverage on singly linked lists.",
+        "bestReplyScript": "1) Single node list `[1], n = 1` -> returns `[]`; 2) Removing the head node `[1, 2], n = 2` -> returns `[2]`; 3) Removing the tail node `[1, 2], n = 1` -> returns `[1]`; 4) Removing a middle node `[1, 2, 3, 4, 5], n = 2` -> returns `[1, 2, 3, 5]`; 5) Long list where n is small or large.",
         "keyPoints": [
-          "Single element list becomes empty",
-          "Must output 'EMPTY'"
-        ]
+          "Single node list returning empty",
+          "Removing the head (n == length)",
+          "Removing the tail (n == 1)",
+          "Removing a middle node"
+        ],
+        "codeSnippet": "# Edge Case 1: [1], n=1 -> []\n# Edge Case 2: [1, 2], n=2 -> [2]"
       },
       {
-        "id": "q4-67",
-        "question": "What is the time complexity in a linked list vs an array?",
-        "category": "Complexity Comparison",
-        "whatInterviewerChecks": "Understanding memory layout.",
-        "bestReplyScript": "In a linked list, unlinking a node (`slow.next = slow.next.next`) takes strictly O(1) time once found, making total time O(L) with zero element shifting. In an array, deleting at an index requires shifting all subsequent elements left, which also takes O(L) time. Both are O(L) overall, but linked lists perform zero copy operations.",
+        "id": "q7",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities?",
+        "whatInterviewerChecks": "Single-pass complexity verification.",
+        "bestReplyScript": "The `fast` pointer traverses all L nodes in the list once. The `slow` pointer traverses `L - n` nodes. Time complexity is strictly O(L) where L is the number of nodes. Space complexity is strictly O(1) auxiliary memory since we only allocate the dummy node and two pointer references.",
         "keyPoints": [
-          "Linked list unlinks in O(1)",
-          "Array shifts elements in O(L)",
-          "Both achieve O(L) total time"
-        ]
+          "Time: strictly O(L) in a single pass",
+          "Space: strictly O(1) auxiliary",
+          "Zero node copies or extra arrays"
+        ],
+        "codeSnippet": "# Time: O(L), Space: O(1)"
+      },
+      {
+        "id": "q8",
+        "category": "Array / List Representation in Python",
+        "question": "If the input is given as a Python list `nums` and integer `n`, how do you solve it in Python?",
+        "whatInterviewerChecks": "Python negative indexing.",
+        "bestReplyScript": "If given as a Python list `nums`, removing the Nth element from the end is a single expression: `del nums[-n]` or `nums.pop(-n)`! Python's negative indexing `-n` automatically accesses the Nth element from the end. To return a new list without mutating: `return nums[:-n] + nums[-n+1:]` if `n > 1` else `nums[:-1]`.",
+        "keyPoints": [
+          "del nums[-n] or nums.pop(-n) in Python lists",
+          "Negative index -n natively targets Nth from end",
+          "nums[:-n] + nums[-n+1:] creates sliced copy"
+        ],
+        "codeSnippet": "# Python list native approach:\nnums.pop(-n)\n# Or non-mutating slice:\nres = nums[:-n] + (nums[-n+1:] if n > 1 else [])"
+      },
+      {
+        "id": "q9",
+        "category": "Stack-Based Alternative",
+        "question": "How can you solve this using a Stack, and what are the trade-offs?",
+        "whatInterviewerChecks": "Stack LIFO retrieval vs two pointers.",
+        "bestReplyScript": "We push all nodes onto a stack. To remove the Nth from end, we pop N nodes: the Nth popped node is the target, and the node now on top of the stack is its predecessor! We set `stack[-1].next = stack[-1].next.next`. While intuitive, this requires O(L) auxiliary space for the stack, whereas the two-pointer approach achieves O(1) space.",
+        "keyPoints": [
+          "Push all nodes to stack",
+          "Pop N times to reach target",
+          "Takes O(L) space vs O(1) for Two Pointers"
+        ],
+        "codeSnippet": "# Stack approach: O(L) space vs Two Pointers O(1) space"
+      },
+      {
+        "id": "q10",
+        "category": "Recursive Approach",
+        "question": "Can you solve this recursively using the call stack?",
+        "whatInterviewerChecks": "Post-order recursive traversal.",
+        "bestReplyScript": "Yes! In post-order traversal: recurse to the end of the list first. On the way back up the call stack, increment a counter `count`. When `count == n`, we return `node.next` to the caller, effectively skipping the target node! Recurrence depth is L, requiring O(L) call stack space.",
+        "keyPoints": [
+          "Post-order recursive return counts from the end",
+          "When count == n, returns node.next to skip",
+          "O(L) call stack depth"
+        ],
+        "codeSnippet": "# Recursive: count on call-stack return path"
+      },
+      {
+        "id": "q11",
+        "category": "Doubly Linked List Comparison",
+        "question": "How does this problem become trivial in a Doubly Linked List?",
+        "whatInterviewerChecks": "Data structure trade-offs (singly vs doubly linked lists).",
+        "bestReplyScript": "In a Doubly Linked List with a tail pointer, we can traverse backwards from `tail` directly: `for _ in range(n - 1): curr = curr.prev`. Then splice it out: `curr.prev.next = curr.next; curr.next.prev = curr.prev`. This takes only N steps instead of L steps, illustrating the trade-off of storing an extra `prev` pointer per node.",
+        "keyPoints": [
+          "Doubly linked list allows backward traversal from tail",
+          "Takes only N steps instead of L",
+          "Costs extra prev pointer memory per node"
+        ],
+        "codeSnippet": "# Doubly linked list traverses directly backwards from tail"
+      },
+      {
+        "id": "q12",
+        "category": "Invalid N Guard",
+        "question": "What happens if N is greater than the length of the list?",
+        "whatInterviewerChecks": "Defensive pointer validation.",
+        "bestReplyScript": "If `N > length`, the `fast` pointer will reach `None` before completing its `n + 1` initial steps! An unchecked `fast = fast.next` will raise `AttributeError: 'NoneType' object has no attribute 'next'`. In production code, we add a defensive check: `if not fast: return head`.",
+        "keyPoints": [
+          "N > length causes fast to hit None early",
+          "AttributeError on unchecked fast.next",
+          "Defensive guard handles invalid inputs"
+        ],
+        "codeSnippet": "for _ in range(n + 1):\n    if not fast: return head  # N exceeds list length!\n    fast = fast.next"
+      },
+      {
+        "id": "q13",
+        "category": "Fast Runner Cycle Trap",
+        "question": "Could this code get stuck in an infinite loop if the linked list contains a cycle?",
+        "whatInterviewerChecks": "Cycle detection awareness in pointer traversal.",
+        "bestReplyScript": "Yes! If the linked list has a cycle, `fast` will never reach `None`, causing an infinite while loop. In production systems with untrusted data, we can combine this with Floyd's Cycle Detection (Tortoise and Hare) or maintain a visited set of node IDs to reject cyclic inputs.",
+        "keyPoints": [
+          "Cycles cause infinite loops",
+          "Floyd's algorithm can detect cycles beforehand",
+          "Defensive check for production systems"
+        ],
+        "codeSnippet": "# If cycles are possible, run Floyd's cycle detection first"
+      },
+      {
+        "id": "q14",
+        "category": "Object Identity vs Value Equality",
+        "question": "Why must linked list node comparison use identity `is` rather than value `==`?",
+        "whatInterviewerChecks": "Object identity in graph/pointer algorithms.",
+        "bestReplyScript": "Multiple nodes in a linked list can have the exact same integer value (e.g. `1 -> 1 -> 1`). Comparing by value `node.val == target.val` would match the wrong node. Node pointers must always be compared by object identity `node is target` or by referencing `.next` pointers directly.",
+        "keyPoints": [
+          "Nodes may have duplicate values",
+          "Value comparison matches wrong nodes",
+          "Pointer algorithms rely strictly on object identity"
+        ],
+        "codeSnippet": "# Always compare node identity (node is target), never values"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Takeaway",
+        "question": "What is the universal pointer pattern taught by this problem?",
+        "whatInterviewerChecks": "Recognition of the Two-Pointer Sliding Gap pattern.",
+        "bestReplyScript": "It is the **Two-Pointer Sliding Gap Pattern**. By sending one pointer ahead by a fixed distance K and then moving both pointers at equal speed, the trailing pointer is guaranteed to maintain a distance of K from the leading pointer. This pattern solves: finding the middle of a list, detecting cycles, finding the Kth-to-last node, and sliding window string matching.",
+        "keyPoints": [
+          "Sliding Gap pattern maintains fixed distance K",
+          "Solves Kth from end, middle of list, cycle detection",
+          "Universal single-pass linked list technique"
+        ],
+        "codeSnippet": "# Takeaway: Fixed-gap runner converts two-pass problems into single-pass solutions"
       }
     ],
     "mistakes": [
@@ -22090,51 +24648,202 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-68",
-        "question": "Why must the stack be empty at the end for the string to be valid?",
-        "category": "Invariants",
-        "whatInterviewerChecks": "Handling dangling open brackets.",
-        "bestReplyScript": "Consider the input `\"(((\"`. No closing bracket is ever encountered, so no mismatch error triggers inside the loop. However, the brackets are never closed! Checking `not stack` at the end ensures that every opened bracket found its corresponding closing counterpart.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Valid Parentheses in 30 seconds?",
+        "whatInterviewerChecks": "LIFO Stack matching logic and early exit checks.",
+        "bestReplyScript": "We use a LIFO Stack and a dictionary mapping closing brackets to opening brackets: `mapping = {')': '(', '}': '{', ']': '['}`. We iterate through the string: if the character is an opening bracket, we push it onto the stack. If it is a closing bracket, the stack must not be empty AND the top element must match the required opening bracket: `stack.pop() == mapping[c]`. If not, we return False immediately. At the end, the stack must be completely empty: `return len(stack) == 0`. This runs in O(N) time and O(N) space.",
         "keyPoints": [
-          "Catches unclosed opening brackets",
-          "String like '(((' has no mismatches but is invalid",
-          "not stack verifies all opened brackets were closed"
-        ]
+          "LIFO Stack matching",
+          "Dict mapping closing to opening brackets",
+          "Push openers, pop and compare closers",
+          "Stack must be empty at the end",
+          "O(N) time & O(N) space"
+        ],
+        "codeSnippet": "def isValid(s: str) -> bool:\n    if len(s) % 2 != 0: return False\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    for c in s:\n        if c in mapping:\n            if not stack or stack.pop() != mapping[c]:\n                return False\n        else:\n            stack.append(c)\n    return len(stack) == 0"
       },
       {
-        "id": "q2-68",
-        "question": "Why is a stack preferred over simple integer counters?",
-        "category": "Data Structure Selection",
-        "whatInterviewerChecks": "Understanding nesting constraints.",
-        "bestReplyScript": "If there was only one type of bracket (e.g. only `()`), an integer counter incremented on `(` and decremented on `)` would be optimal in O(1) space. However, with MULTIPLE bracket types `()`, `[]`, `{}`), order matters! In `\"([)]\"`, the counts for each bracket type are equal, but the brackets are crossed and improperly nested. A stack enforces the LIFO ordering required to ensure the most recently opened bracket is closed first.",
+        "id": "q2",
+        "category": "Early Exit Parity Check",
+        "question": "Why is `if len(s) % 2 != 0: return False` a powerful optimization?",
+        "whatInterviewerChecks": "Parity invariance in balanced bracket strings.",
+        "bestReplyScript": "Every valid bracket string consists of matched pairs. Therefore, a valid string MUST have an even length! If `len(s)` is odd (e.g. 1, 3, 5), it is mathematically impossible for every bracket to have a matching pair. Checking `len(s) % 2 != 0` rejects odd-length strings in O(1) time before allocating any stack memory.",
         "keyPoints": [
-          "Counter only works for single bracket type",
-          "Multiple types require order enforcement",
-          "Crossed brackets like ([)] fail counters but are caught by stack"
-        ]
+          "Valid bracket strings must have an even length",
+          "Odd length can never be balanced",
+          "O(1) early rejection before loop"
+        ],
+        "codeSnippet": "# O(1) early exit:\nif len(s) % 2 != 0:\n    return False"
       },
       {
-        "id": "q3-68",
-        "question": "What is the sentinel technique used in `stack.pop() if stack else '#'`?",
-        "category": "Defensive Coding",
-        "whatInterviewerChecks": "Avoiding try/except or nested conditionals.",
-        "bestReplyScript": "If the stack is empty when a closing bracket arrives (e.g. `s = \")(\"`), popping would raise an IndexError. By checking `if stack else '#'`, we return a dummy sentinel character `#` that is guaranteed never to match any valid opening bracket. This cleanly fails the equality check without throwing exceptions.",
+        "id": "q3",
+        "category": "Why LIFO Stack?",
+        "question": "Why does a Stack naturally model nested parenthesis validation?",
+        "whatInterviewerChecks": "Last-In, First-Out property matching nested syntax.",
+        "bestReplyScript": "Parentheses follow a **Last-In, First-Out (LIFO)** nesting structure: the most recently opened bracket must be the very first bracket to be closed! In `'([{}])'`, `'{'` is the last opener seen, so it must be closed first by `'}'`. A stack naturally enforces LIFO ordering, making `stack.pop()` inspect the most recent unmatched opener in O(1) time.",
         "keyPoints": [
-          "Prevents IndexError on empty stack",
-          "Sentinel never matches valid brackets",
-          "Eliminates messy try/except blocks"
-        ]
+          "Most recently opened bracket must close first",
+          "LIFO matches nested hierarchical syntax",
+          "Stack.pop() provides O(1) access to active opener"
+        ],
+        "codeSnippet": "# In '([{}])': '{' opened last, must close first -> LIFO stack property"
       },
       {
-        "id": "q4-68",
-        "question": "What is the worst-case space complexity?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Worst-case bounds.",
-        "bestReplyScript": "In the worst case where the string contains all opening brackets (e.g. `\"(((((\"`), all n characters are pushed onto the stack, requiring O(n) auxiliary space.",
+        "id": "q4",
+        "category": "Stack Not Empty at End Trap",
+        "question": "Why is `return len(stack) == 0` required instead of just `return True` at the end?",
+        "whatInterviewerChecks": "Catching unclosed opening brackets like '((('",
+        "bestReplyScript": "If the input string contains only opening brackets like `'((('`, the closing bracket check is never triggered, so the loop finishes without returning False. However, the brackets were never closed! Checking `len(stack) == 0` verifies that every single opened bracket found its matching closing partner. If any openers remain on the stack, it correctly returns False.",
         "keyPoints": [
-          "All opening brackets pushes n elements",
-          "Worst-case space is O(n)"
-        ]
+          "Inputs like '(((' have no closing brackets",
+          "Loop completes without mismatch",
+          "len(stack) == 0 verifies all openers were closed"
+        ],
+        "codeSnippet": "# s = '(((' -> stack is ['(', '(', '('] -> len(stack) == 0 returns False (Correct!)"
+      },
+      {
+        "id": "q5",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities?",
+        "whatInterviewerChecks": "Linear asymptotic bounds.",
+        "bestReplyScript": "We iterate through the string of length N once. Each character is pushed or popped from the stack at most once. Both `append()` and `pop()` run in O(1) amortized time in Python lists. Time complexity is strictly O(N). In the worst case (e.g. `'(((((('`), all N characters are pushed onto the stack, so auxiliary space complexity is O(N).",
+        "keyPoints": [
+          "Time: strictly O(N) (each char pushed/popped once)",
+          "Space: O(N) worst-case for all opening brackets",
+          "Optimal linear performance"
+        ],
+        "codeSnippet": "# Time: O(N), Space: O(N)"
+      },
+      {
+        "id": "q6",
+        "category": "Python String Replace Alternative",
+        "question": "Can you solve Valid Parentheses with `while '()' in s or '[]' in s or '{}' in s: s = s.replace(...)`? Why is it bad?",
+        "whatInterviewerChecks": "O(N\u00b2) string replacement vs O(N) stack.",
+        "bestReplyScript": "While concise, each `.replace()` scans the entire string and allocates a brand-new string on the heap. In the worst case (e.g. `'((((....))))'`), the while loop executes `N / 2` times, scanning an O(N) string each time. This degrades time complexity to O(N\u00b2)! For N = 100,000, it times out completely. The stack approach runs in strictly O(N) time.",
+        "keyPoints": [
+          "String replacement takes O(N\u00b2) quadratic time",
+          "Allocates new strings on heap on every iteration",
+          "Stack approach is O(N) linear"
+        ],
+        "codeSnippet": "# \u274c O(N^2) quadratic trap:\n# while '()' in s or '[]' in s or '{}' in s:\n#     s = s.replace('()', '').replace('[]', '').replace('{}', '')"
+      },
+      {
+        "id": "q7",
+        "category": "Edge Cases",
+        "question": "What edge cases must be tested for Valid Parentheses?",
+        "whatInterviewerChecks": "Empty strings, odd lengths, mismatched types, and out-of-order closers.",
+        "bestReplyScript": "1) Empty string `''` -> True; 2) Single character `'('` or `')'` -> False (odd length); 3) Mismatched types `'(]'` -> False; 4) Wrong nesting order `'([)]'` -> False; 5) Closing bracket on empty stack `')('` -> False; 6) Unclosed openers `'((('` -> False; 7) Valid nested mixtures `'{[()]}' -> True.",
+        "keyPoints": [
+          "Single bracket (odd length)",
+          "Mismatched bracket types '(]'",
+          "Improper nesting '([)]'",
+          "Closing bracket first ')('"
+        ],
+        "codeSnippet": "assert isValid('()') is True\nassert isValid('()[]{}') is True\nassert isValid('(]') is False\nassert isValid('([)]') is False\nassert isValid('{[]}') is True"
+      },
+      {
+        "id": "q8",
+        "category": "Push Expected Closer Optimization",
+        "question": "How can you simplify the code by pushing expected closing brackets instead of opening brackets?",
+        "whatInterviewerChecks": "Alternative stack pattern pushing closing symbols.",
+        "bestReplyScript": "When encountering an opening bracket, push its *expected closing bracket* onto the stack: if `'('`, push `')'`; if `'{'`, push `'}'`; if `'['`, push `']'`. Then, for any other character, simply check `if not stack or stack.pop() != c: return False`! This eliminates the dictionary lookup and simplifies the closing verification to a direct character equality check.",
+        "keyPoints": [
+          "Push expected closer instead of opener",
+          "Closing check becomes simple stack.pop() != c",
+          "Very popular in Java/C++ interviews"
+        ],
+        "codeSnippet": "def isValid_push_closer(s: str) -> bool:\n    stack = []\n    for c in s:\n        if c == '(': stack.append(')')\n        elif c == '{': stack.append('}')\n        elif c == '[': stack.append(']')\n        elif not stack or stack.pop() != c: return False\n    return not stack"
+      },
+      {
+        "id": "q9",
+        "category": "Python List as Stack Efficiency",
+        "question": "Why is a standard Python `list` efficient as a stack, and when would you use `collections.deque`?",
+        "whatInterviewerChecks": "List dynamic array vs deque doubly-linked blocks.",
+        "bestReplyScript": "Python's `list` is a dynamic array. Appending and popping from the *right* end (`list.append()` and `list.pop()`) are amortized O(1) operations that execute directly in C without pointer allocations. `collections.deque` is only necessary when pushing or popping from the *left* end (`popleft()`), which is O(N) on lists. For a LIFO stack, `list` is actually faster due to better cache locality.",
+        "keyPoints": [
+          "list.append() and list.pop() are O(1) amortized",
+          "Cache-friendly contiguous memory",
+          "deque is only needed for FIFO queues (popleft)"
+        ],
+        "codeSnippet": "# list is the optimal LIFO stack in Python:\nstack = []\nstack.append(x)  # O(1)\nstack.pop()      # O(1)"
+      },
+      {
+        "id": "q10",
+        "category": "Compiler / AST Parser Context",
+        "question": "How is Valid Parentheses used inside real compiler parsers (like Python's PEG parser)?",
+        "whatInterviewerChecks": "Syntax trees, grammars, and lexical analyzers.",
+        "bestReplyScript": "In compiler frontends, bracket matching is part of syntax analysis (parsing context-free grammars). Compilers maintain a parse stack (Pushdown Automaton) to validate that code blocks, function arguments, and dictionary literals are properly balanced. A mismatch triggers a `SyntaxError: closing parenthesis ']' does not match opening parenthesis '('` with line number coordinates.",
+        "keyPoints": [
+          "Context-Free Grammar validation",
+          "Pushdown Automaton (PDA) theoretical model",
+          "Powers syntax error diagnostics in compilers"
+        ],
+        "codeSnippet": "# Compilers use pushdown automata to parse balanced expressions"
+      },
+      {
+        "id": "q11",
+        "category": "Wildcard Parentheses Follow-up",
+        "question": "How does the problem change if `'*'` can represent `'('`, `')'`, or empty string `''` (Valid Parenthesis String #678)?",
+        "whatInterviewerChecks": "Greedy range tracking or dual-stack logic.",
+        "bestReplyScript": "With wildcards, a single stack cannot explore all possibilities deterministically. We track the range of possible open bracket counts `[low, high]`. For `'('`, both increment; for `')'`, both decrement; for `'*'`, `low` decrements (treat as `)`) and `high` increments (treat as `(`). We clamp `low = max(low, 0)`. If `high < 0`, return False. At the end, `return low == 0`. This runs in O(N) time and O(1) space.",
+        "keyPoints": [
+          "Track min and max open count range [low, high]",
+          "'*' expands the range [low - 1, high + 1]",
+          "O(N) time and O(1) space greedy solution"
+        ],
+        "codeSnippet": "# Valid Parentheses with wildcards: track [low, high] balance range"
+      },
+      {
+        "id": "q12",
+        "category": "Score of Parentheses Follow-up",
+        "question": "How would you compute the score of balanced parentheses where '()' = 1 and '(A)' = 2 * A?",
+        "whatInterviewerChecks": "Stack evaluation with numeric accumulation.",
+        "bestReplyScript": "We maintain a stack of scores initialized with `[0]`. When seeing `'('`, we push a new score layer `0`. When seeing `')'`, we pop the inner score `v`, and update the outer score: `stack[-1] += max(2 * v, 1)`. At the end, `stack[0]` contains the total score in O(N) time and O(N) space.",
+        "keyPoints": [
+          "Stack stores scores at each nesting depth",
+          "Inner score v contributes max(2 * v, 1) to parent",
+          "O(N) time and O(N) space"
+        ],
+        "codeSnippet": "# Score calculation via stack layers:\n# stack = [0]\n# for c in s:\n#     if c == '(': stack.append(0)\n#     else: v = stack.pop(); stack[-1] += max(2 * v, 1)"
+      },
+      {
+        "id": "q13",
+        "category": "Memory Allocation & Profiling",
+        "question": "How much memory does a Python list of N characters consume on the heap?",
+        "whatInterviewerChecks": "CPython memory profiling.",
+        "bestReplyScript": "For N = 100,000 opening brackets, a Python list stores 100,000 pointer references (8 bytes each = 800KB) plus the `PyListObject` header. The string characters themselves are cached ASCII singletons, so no extra string memory is allocated. Total RAM is under 1MB.",
+        "keyPoints": [
+          "List stores 8-byte pointers on 64-bit systems",
+          "ASCII chars 0-255 are cached singletons",
+          "Total RAM < 1MB for 100k elements"
+        ],
+        "codeSnippet": "# Memory footprint is bounded by 8 bytes per pointer on 64-bit systems"
+      },
+      {
+        "id": "q14",
+        "category": "Defensive Invariants",
+        "question": "What invariant is maintained by the stack throughout the loop?",
+        "whatInterviewerChecks": "Formal loop invariants.",
+        "bestReplyScript": "The invariant is: 'The stack contains exactly the sequence of currently open, unmatched brackets in the prefix of the string processed so far, in order of appearance'. If any incoming closing bracket fails to match the top of this stack, the prefix is invalid and can never be made valid.",
+        "keyPoints": [
+          "Stack holds active unmatched openers",
+          "Ordered by nesting hierarchy",
+          "Guarantees correctness at every step"
+        ],
+        "codeSnippet": "# Invariant: stack represents active unclosed nesting hierarchy"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Engineering Summary",
+        "question": "What is the key takeaway an interviewer seeks from Valid Parentheses?",
+        "whatInterviewerChecks": "Fundamental data structure mastery and edge case thoroughness.",
+        "bestReplyScript": "The interviewer is evaluating whether you instinctively recognize LIFO stack problems, whether you check boundary edge cases (odd lengths, empty stack pops, leftover openers), and whether you write clean, dictionary-driven matching code without repetitive `if/else` ladders.",
+        "keyPoints": [
+          "Recognition of LIFO data structure pattern",
+          "Dictionary-driven matching logic",
+          "Thorough edge case handling (empty stack, leftover openers, odd length)"
+        ],
+        "codeSnippet": "# Takeaway: Dictionary mapping + LIFO stack provides optimal O(N) syntax validation"
       }
     ],
     "mistakes": [
@@ -22221,51 +24930,203 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-69",
-        "question": "Why is the time complexity O(4\u207f)?",
-        "category": "Complexity Analysis",
-        "whatInterviewerChecks": "Branching factor derivation.",
-        "bestReplyScript": "On a telephone keypad, most digits map to 3 letters, but 7 ('pqrs') and 9 ('wxyz') map to 4 letters. In the worst case where all digits in the input string are 7s or 9s, each step branches 4 times. For a string of length n, the total number of leaves in the decision tree is 4\u207f. Generating and printing each string takes O(n) time, so total worst-case time complexity is O(n \u00b7 4\u207f).",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Letter Combinations of a Phone Number in 30 seconds?",
+        "whatInterviewerChecks": "Backtracking / Cartesian product generation.",
+        "bestReplyScript": "We map each phone digit '2'-'9' to its corresponding letters using a dictionary (e.g. '2' -> 'abc', '3' -> 'def'). We use recursive Backtracking: starting at digit index 0 with an empty combination path, for the current digit we iterate through each of its mapped letters, append the letter to our path, and recurse on index + 1. When the path length equals the number of digits, we add `''.join(path)` to our results. If the input is empty, return `[]`. Total time is O(4^N * N) and auxiliary space is O(N) for recursion depth.",
         "keyPoints": [
-          "7 and 9 have 4 letters each",
-          "Worst-case branching factor is 4",
-          "Total combinations bounded by 4\u207f"
-        ]
+          "Digit to letters mapping dictionary",
+          "Backtracking: choose letter, recurse index + 1, backtrack",
+          "Base case: path length == len(digits)",
+          "O(4^N * N) time, O(N) recursion space"
+        ],
+        "codeSnippet": "def letterCombinations(digits: str) -> list[str]:\n    if not digits: return []\n    phone = {\n        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'\n    }\n    res = []\n    def backtrack(idx, path):\n        if idx == len(digits):\n            res.append(''.join(path))\n            return\n        for letter in phone[digits[idx]]:\n            path.append(letter)\n            backtrack(idx + 1, path)\n            path.pop()  # Backtrack!\n    backtrack(0, [])\n    return res"
       },
       {
-        "id": "q2-69",
-        "question": "What is the difference in auxiliary space between Backtracking and Iterative expansion?",
-        "category": "Space Trade-offs",
-        "whatInterviewerChecks": "Stack vs Heap allocation awareness.",
-        "bestReplyScript": "Recursive Backtracking operates with O(n) auxiliary call stack memory (plus the output array), because it traverses depth-first down a single path of length n. Iterative expansion buffers all intermediate combinations in heap memory at every level, requiring O(4\u207f) working memory.",
+        "id": "q2",
+        "category": "Iterative BFS Alternative",
+        "question": "How can Letter Combinations be solved iteratively using Breadth-First Search (BFS)?",
+        "whatInterviewerChecks": "Queue-based iterative Cartesian product expansion.",
+        "bestReplyScript": "We start with a list `res = ['']`. For each digit in `digits`, we expand our combinations: for every existing prefix in `res` and every letter mapped to the current digit, we create `prefix + letter`. We replace `res` with the newly expanded list. For example: `['']` -> `['a', 'b', 'c']` -> `['ad', 'ae', 'af', 'bd', ...]`. This is iterative BFS without recursion.",
         "keyPoints": [
-          "Backtracking uses O(n) call stack space",
-          "Iterative expansion buffers full intermediate arrays in heap",
-          "Backtracking is more memory-efficient when streaming"
-        ]
+          "Start with res = ['']",
+          "Expand each combination with letters of current digit",
+          "List comprehension res = [p + c for p in res for c in phone[d]]",
+          "Iterative BFS with no call stack overhead"
+        ],
+        "codeSnippet": "def letterCombinations_bfs(digits: str) -> list[str]:\n    if not digits: return []\n    phone = {'2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n             '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}\n    res = ['']\n    for d in digits:\n        res = [prefix + c for prefix in res for c in phone[d]]\n    return res"
       },
       {
-        "id": "q3-69",
-        "question": "What if the input contains digits '0' or '1'?",
-        "category": "Specification & Edge Cases",
-        "whatInterviewerChecks": "Handling non-alphabetical keypad buttons.",
-        "bestReplyScript": "On standard telephone keypads, '0' and '1' do not map to letters. If valid input constraints specify digits '2'-'9', we can ignore or reject them. In our implementation, we guard with `if d in phone:`, safely skipping any unmapped digits.",
+        "id": "q3",
+        "category": "Python `itertools.product` One-Liner",
+        "question": "How can you solve this in 1 line using Python's `itertools.product`?",
+        "whatInterviewerChecks": "Standard library Cartesian product knowledge.",
+        "bestReplyScript": "We unpack the letter strings for each digit into `itertools.product`: `return [''.join(comb) for comb in itertools.product(*(phone[d] for d in digits))] if digits else []`. `itertools.product()` computes the Cartesian product in optimized C bytecode, running faster than manual Python recursion.",
         "keyPoints": [
-          "0 and 1 have no letters",
-          "Guard with if d in phone:",
-          "Safely skips unmapped keys"
-        ]
+          "itertools.product(*(phone[d] for d in digits))",
+          "Computes Cartesian product in C speed",
+          "Extremely concise idiomatic Python"
+        ],
+        "codeSnippet": "import itertools\n\ndef letterCombinations_product(digits: str) -> list[str]:\n    if not digits: return []\n    phone = {'2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n             '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}\n    return [''.join(c) for c in itertools.product(*(phone[d] for d in digits))]"
       },
       {
-        "id": "q4-69",
-        "question": "How should empty input be handled?",
-        "category": "Output Specification",
-        "whatInterviewerChecks": "Handling null/empty inputs per spec.",
-        "bestReplyScript": "The problem specification requires outputting 'NONE' when the input string is empty. We strip input and check `if not line: print('NONE')` before initiating any expansion.",
+        "id": "q4",
+        "category": "Complexity Analysis: Why 4^N?",
+        "question": "Why is the time complexity O(4^N * N) and not O(3^N)?",
+        "whatInterviewerChecks": "Digits '7' and '9' have 4 letters.",
+        "bestReplyScript": "Digits '2', '3', '4', '5', '6', '8' map to 3 letters, but digits '7' (pqrs) and '9' (wxyz) map to 4 letters! In the worst case where digits consist only of '7' and '9' (e.g. '7979'), each digit has 4 branching choices. There are 4^N total leaf nodes in the decision tree. For each combination, building the string of length N takes O(N) time. Thus, total time complexity is O(4^N * N).",
         "keyPoints": [
-          "Empty string prints 'NONE'",
-          "Checked upfront before expansion"
-        ]
+          "Digits 7 and 9 have 4 letters (pqrs, wxyz)",
+          "Worst case branching factor is 4",
+          "Total combinations bounded by 4^N",
+          "Time: O(4^N * N)"
+        ],
+        "codeSnippet": "# Worst case: digits = '7979' -> 4^4 = 256 combinations"
+      },
+      {
+        "id": "q5",
+        "category": "Auxiliary Space Complexity",
+        "question": "What is the auxiliary space complexity excluding the output list?",
+        "whatInterviewerChecks": "Recursion call stack depth vs output size.",
+        "bestReplyScript": "The recursion depth is bounded by the number of digits N. The `path` list contains at most N characters at any time. Thus, auxiliary space complexity is strictly O(N) for the call stack and path buffer. The output list itself contains O(4^N) strings of length N.",
+        "keyPoints": [
+          "Recursion stack depth = N",
+          "Path buffer length = N",
+          "Auxiliary space: O(N)"
+        ],
+        "codeSnippet": "# Call stack depth = len(digits) -> O(N) auxiliary space"
+      },
+      {
+        "id": "q6",
+        "category": "Edge Cases",
+        "question": "What edge cases should you test for Letter Combinations?",
+        "whatInterviewerChecks": "Handling empty input, single digits, and 4-letter digits.",
+        "bestReplyScript": "1) Empty input `digits = ''` -> must return `[]` (NOT `['']`!); 2) Single digit `'2'` -> `['a', 'b', 'c']`; 3) Two digits `'23'`; 4) Digits with 4 letters `'7'` -> `['p', 'q', 'r', 's']`; 5) Maximum length input `digits = '2345'` (constraints state 0 <= digits.length <= 4).",
+        "keyPoints": [
+          "Empty string returns [] (not [''])",
+          "Single digit returns individual letters",
+          "Digits 7 and 9 have 4 letters",
+          "Length bounded: 0 <= len <= 4"
+        ],
+        "codeSnippet": "assert letterCombinations('') == []\nassert letterCombinations('2') == ['a', 'b', 'c']\nassert len(letterCombinations('23')) == 9"
+      },
+      {
+        "id": "q7",
+        "category": "The Empty String Return Trap",
+        "question": "Why is returning `['']` instead of `[]` for an empty input a common bug?",
+        "whatInterviewerChecks": "Distinguishing between 0 combinations vs 1 empty combination.",
+        "bestReplyScript": "If you do not add an explicit guard `if not digits: return []`, a base backtracking function with `res.append(''.join(path))` will execute the base case immediately at `idx == 0 == len('')` and return `['']` (a list containing 1 empty string). The problem specification requires returning an empty list `[]` (0 combinations).",
+        "keyPoints": [
+          "len(['']) == 1 (one empty combination)",
+          "len([]) == 0 (zero combinations)",
+          "Problem explicitly demands [] for empty input"
+        ],
+        "codeSnippet": "# Critical guard:\nif not digits:\n    return []"
+      },
+      {
+        "id": "q8",
+        "category": "Mutable List vs String Path",
+        "question": "Why use `path.append()` and `path.pop()` with a list instead of passing string `path + letter`?",
+        "whatInterviewerChecks": "Memory allocation and string immutability in recursion.",
+        "bestReplyScript": "If you pass `path + letter` where `path` is a string, Python allocates a new string object on every single recursive call. Using a single shared list `path` with `path.append(letter)` and `path.pop()` mutates the same list in-place in O(1) time without heap allocations. This is the canonical **Choose-Explore-Unchoose** backtracking pattern.",
+        "keyPoints": [
+          "String concatenation path + letter allocates new string every call",
+          "Shared list with append/pop uses O(1) time in-place",
+          "Classic Choose-Explore-Unchoose backtracking idiom"
+        ],
+        "codeSnippet": "# Choose -> Explore -> Unchoose:\npath.append(letter)       # Choose\nbacktrack(idx + 1, path)  # Explore\npath.pop()                # Unchoose"
+      },
+      {
+        "id": "q9",
+        "category": "Generator Pipeline with `yield`",
+        "question": "How can you convert this into a generator that yields combinations lazily?",
+        "whatInterviewerChecks": "Python generator delegation with `yield from`.",
+        "bestReplyScript": "We yield combinations on demand: if `idx == len(digits): yield ''.join(path)`. Otherwise, for each letter, `yield from backtrack(idx + 1, path + [letter])`. This allows consumer systems to process combinations one at a time without storing all 4^N strings in RAM.",
+        "keyPoints": [
+          "yield from for recursive generator delegation",
+          "Lazy generation of combinations",
+          "O(N) memory footprint for consumer"
+        ],
+        "codeSnippet": "def letterCombinations_gen(digits: str):\n    if not digits: return\n    phone = {'2': 'abc', '3': 'def', ...}\n    def backtrack(idx, path):\n        if idx == len(digits):\n            yield ''.join(path)\n            return\n        for letter in phone[digits[idx]]:\n            yield from backtrack(idx + 1, path + [letter])\n    yield from backtrack(0, [])"
+      },
+      {
+        "id": "q10",
+        "category": "DFS vs BFS Traversal Order",
+        "question": "Does the recursive solution produce combinations in DFS or BFS order?",
+        "whatInterviewerChecks": "Tree traversal order differences.",
+        "bestReplyScript": "The recursive backtracking approach explores depth-first (DFS): it completes `'ad'`, `'ae'`, `'af'` before starting `'bd'`. The iterative loop with `res = [p + c for p in res for c in letters]` explores breadth-first (BFS): it generates all length 1 prefixes, then all length 2, etc. Both produce the exact same lexicographically ordered output list.",
+        "keyPoints": [
+          "Recursive backtracking is Depth-First Search (DFS)",
+          "Iterative queue/list comprehension is Breadth-First Search (BFS)",
+          "Both produce identical lexicographical order"
+        ],
+        "codeSnippet": "# DFS: 'ad' -> 'ae' -> 'af' -> 'bd'\n# Both orders match lexicographically"
+      },
+      {
+        "id": "q11",
+        "category": "Invalid Digit Handling",
+        "question": "How should digits '0' and '1' or symbols like '*' and '#' be handled?",
+        "whatInterviewerChecks": "Defensive input validation.",
+        "bestReplyScript": "On telephone keypads, '0' and '1' do not map to any letters. Problem constraints guarantee input consists only of digits '2'-'9'. In production code, we can either ignore '0' and '1', skip them without adding letters, or raise a `ValueError('Invalid phone keypad digit')`.",
+        "keyPoints": [
+          "'0' and '1' have no letter mappings on standard phones",
+          "Constraints guarantee digits 2-9",
+          "Defensive validation raises ValueError in production"
+        ],
+        "codeSnippet": "for d in digits:\n    if d not in phone:\n        raise ValueError(f'Invalid digit: {d}')"
+      },
+      {
+        "id": "q12",
+        "category": "Total Combination Counting Math",
+        "question": "How can you count the total number of combinations without generating them?",
+        "whatInterviewerChecks": "Combinatorial multiplication rule.",
+        "bestReplyScript": "By the fundamental multiplication rule of combinatorics: `total = math.prod(len(phone[d]) for d in digits)`. For `digits = '237'`, `total = 3 * 3 * 4 = 36` combinations. This runs in O(N) time and O(1) space.",
+        "keyPoints": [
+          "Multiplication rule: prod(len(phone[d]))",
+          "For '237': 3 * 3 * 4 = 36 combinations",
+          "O(N) time and O(1) space to count"
+        ],
+        "codeSnippet": "import math\ntotal_combinations = math.prod(len(phone[d]) for d in digits)"
+      },
+      {
+        "id": "q13",
+        "category": "Real-World Context: T9 Texting",
+        "question": "How did early mobile phones use this algorithm for T9 Predictive Text?",
+        "whatInterviewerChecks": "Historical engineering context of T9 and Trie integration.",
+        "bestReplyScript": "In early mobile phones with 12-key keypads, T9 (Text on 9 keys) used this exact letter combination logic combined with a **Trie (Prefix Tree) dictionary**. As the user typed '4663', instead of showing all 3*3*3*3 = 81 letter combinations, the phone walked down a dictionary Trie and only suggested valid English words matching the combinations (like 'GOOD' and 'HOME').",
+        "keyPoints": [
+          "T9 predictive text on 12-key phone keypads",
+          "Prunes combinations against a dictionary Trie",
+          "Returns valid dictionary words matching digit sequence"
+        ],
+        "codeSnippet": "# T9 combines letter combinations with Trie prefix pruning"
+      },
+      {
+        "id": "q14",
+        "category": "Unit Testing & Assertions",
+        "question": "How do you test letter combinations in unit tests?",
+        "whatInterviewerChecks": "Writing comprehensive test assertions.",
+        "bestReplyScript": "Test: 1) Empty string `''` -> `[]`; 2) Single digit `'2'` -> `['a', 'b', 'c']`; 3) Two digits `'23'` -> 9 items; 4) Check length equality: `assert len(res) == 3 ** count_3 * 4 ** count_4`; 5) Check that all combinations have length `len(digits)`.",
+        "keyPoints": [
+          "Empty string returns []",
+          "Verify count matches math.prod",
+          "Verify every element has length == len(digits)"
+        ],
+        "codeSnippet": "res = letterCombinations('23')\nassert len(res) == 9\nassert all(len(s) == 2 for s in res)"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Takeaway",
+        "question": "What is the universal backtracking blueprint demonstrated by this problem?",
+        "whatInterviewerChecks": "Mastery of the Backtracking template.",
+        "bestReplyScript": "It demonstrates the universal **Backtracking Template**: 1) Base case check: if condition met, record state and return; 2) Iterate through choices at current step; 3) Make choice (`path.append`); 4) Recurse to next step; 5) Undo choice (`path.pop`). This exact blueprint solves Permutations, Subsets, Combination Sum, and N-Queens.",
+        "keyPoints": [
+          "Universal Backtracking template",
+          "Choose -> Recurse -> Unchoose",
+          "Transfers directly to Permutations, Subsets, N-Queens"
+        ],
+        "codeSnippet": "# The Backtracking Blueprint:\n# def backtrack(state):\n#     if is_solution(state): add(state); return\n#     for choice in choices:\n#         make_choice(); backtrack(); undo_choice()"
       }
     ],
     "mistakes": [
@@ -22372,51 +25233,206 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1-70",
-        "question": "What is the meaning of `*` in this problem versus standard Unix shell globbing?",
-        "category": "Problem Disambiguation",
-        "whatInterviewerChecks": "Understanding regex grammar.",
-        "bestReplyScript": "In shell globbing (like `ls *.py`), `*` stands on its own and matches zero or more of ANY character. In regular expressions, `*` NEVER stands on its own: it modifies the single preceding element, representing zero or more repetitions of THAT specific element. The regex equivalent of glob `*` is `.*`.",
+        "id": "q1",
+        "category": "30-Second Elevator Pitch",
+        "question": "How do you explain Regular Expression Matching in 30 seconds?",
+        "whatInterviewerChecks": "2D Dynamic Programming / Memoized DFS for '.' and '*'.",
+        "bestReplyScript": "We use 2D Dynamic Programming where `dp[i][j]` represents whether `s[i:]` matches `p[j:]`. A character matches if `p[j] == s[i]` or `p[j] == '.'`. If the next pattern character is `*` (`p[j+1] == '*'`): we have two choices: 1) Zero occurrences: skip the pair entirely (`dp[i][j+2]`); 2) One or more occurrences: if current char matches, consume one character from `s` and reuse the pattern (`first_match and dp[i+1][j]`). If no `*`, we simply require `first_match and dp[i+1][j+1]`. This runs in O(M * N) time and O(M * N) space.",
         "keyPoints": [
-          "Regex * modifies the preceding character",
-          "Shell * matches anything on its own",
-          "Regex .* equals shell wildcard *"
-        ]
+          "2D DP state: s[i:] matches p[j:]",
+          "'.' matches any single character",
+          "'*' matches zero or more of the preceding element",
+          "Zero occurrences: dp[i][j+2]",
+          "One or more: first_match and dp[i+1][j]",
+          "O(M * N) time and space"
+        ],
+        "codeSnippet": "def isMatch(s: str, p: str) -> bool:\n    memo = {}\n    def dfs(i, j):\n        if (i, j) in memo: return memo[(i, j)]\n        if j == len(p): return i == len(s)\n        first_match = i < len(s) and (p[j] == s[i] or p[j] == '.')\n        if j + 1 < len(p) and p[j + 1] == '*':\n            ans = dfs(i, j + 2) or (first_match and dfs(i + 1, j))\n        else:\n            ans = first_match and dfs(i + 1, j + 1)\n        memo[(i, j)] = ans\n        return ans\n    return dfs(0, 0)"
       },
       {
-        "id": "q2-70",
-        "question": "Why does the '*' transition have two branches in the DP formula?",
-        "category": "State Transition Proof",
-        "whatInterviewerChecks": "Dynamic programming logic.",
-        "bestReplyScript": "Because '*' can represent zero occurrences OR one or more occurrences. Branch 1: Zero occurrences is modeled by `dp[i][j - 2]`, which completely ignores the character and the '*'. Branch 2: Multiple occurrences is modeled by `dp[i - 1][j]`, which consumes one character from `s` while keeping the regex pattern at `j` so the '*' can continue matching further repetitions.",
+        "id": "q2",
+        "category": "What '*' Really Means",
+        "question": "What is the most common misconception about '*' in this problem?",
+        "whatInterviewerChecks": "Regex syntax vs Shell globbing syntax.",
+        "bestReplyScript": "The most common misconception is confusing Regex with Shell wildcards! In shell globbing (like `*.txt`), `*` matches any sequence of arbitrary characters. In Regex, `*` NEVER stands alone: it is a quantifier that modifies the *immediately preceding character*, meaning 'zero or more occurrences of the preceding element'. For example, `'a*'` matches `''`, `'a'`, `'aa'`, `'aaa'`. It cannot match `'b'`.",
         "keyPoints": [
-          "dp[i][j-2] represents 0 occurrences",
-          "dp[i-1][j] represents 1+ occurrences",
-          "OR combination models both possibilities"
-        ]
+          "'*' is a quantifier, not a standalone wildcard",
+          "Means 'zero or more of the preceding character'",
+          "'a*' matches '', 'a', 'aa' (does NOT match 'b')",
+          "Common shell glob vs regex confusion"
+        ],
+        "codeSnippet": "# 'a*' matches '' (0 'a's), 'a' (1 'a'), 'aaa' (3 'a's)\n# '.*' matches any sequence of any characters!"
       },
       {
-        "id": "q3-70",
-        "question": "Why must the 0-th row be initialized for '*' characters before the nested loops?",
-        "category": "Base Cases & Initialization",
-        "whatInterviewerChecks": "Empty string matching.",
-        "bestReplyScript": "An empty string `s = \"\"` can still match non-empty patterns if every element is starred, such as `\"a*b*c*\"`. Initializing the 0-th row `dp[0][j] = dp[0][j - 2]` propagates `True` across all consecutive starred blocks for empty string inputs.",
+        "id": "q3",
+        "category": "The Meaning of '.*'",
+        "question": "What does '.*' match in Regular Expression Matching?",
+        "whatInterviewerChecks": "Combining wildcard with quantifier.",
+        "bestReplyScript": "Since `.` matches any single character, and `*` means zero or more of the preceding character, `.*` matches zero or more occurrences of *any character*! Therefore, `.*` matches any arbitrary string, including the empty string `''`. It is the ultimate universal wildcard in regex.",
         "keyPoints": [
-          "Empty string can match patterns like a*b*",
-          "dp[0][j] = dp[0][j - 2] handles empty string base cases"
-        ]
+          "'.' matches any character",
+          "'*' repeats it zero or more times",
+          "'.*' matches any string whatsoever, including empty string"
+        ],
+        "codeSnippet": "assert isMatch('abcdef', '.*') is True\nassert isMatch('', '.*') is True"
       },
       {
-        "id": "q4-70",
-        "question": "Can space complexity be optimized to O(n)?",
-        "category": "Space Optimization",
-        "whatInterviewerChecks": "Rolling array optimization.",
-        "bestReplyScript": "Yes! Notice that computing row `i` only requires values from the previous row `i - 1` (specifically `dp[i-1][j]` and `dp[i-1][j-1]`) and the current row `i` (`dp[i][j-2]`). By using two 1D arrays (`prev_dp` and `curr_dp`), we can reduce auxiliary space from O(m \u00b7 n) to O(n).",
+        "id": "q4",
+        "category": "Zero Occurrences Choice",
+        "question": "Why does the '*' branch check `dfs(i, j + 2)`?",
+        "whatInterviewerChecks": "Understanding the 'zero occurrences' skip transition.",
+        "bestReplyScript": "`dfs(i, j + 2)` represents choosing **zero occurrences** of the character preceding `*`. Because the pattern at `j` and `j+1` (e.g. `'a*'`) is treated as appearing 0 times, we skip both the character and the star by advancing the pattern pointer by 2 (`j + 2`) without advancing the string pointer `i`. For example, matching `s = 'b'` with `p = 'a*b'`: `a*` is taken 0 times, skipping to `'b'` (`j + 2`), which matches `s`.",
         "keyPoints": [
-          "Only current and previous rows are needed",
-          "Rolling array reduces space to O(n)",
-          "Time remains O(m \u00b7 n)"
-        ]
+          "j + 2 skips both preceding character and '*'",
+          "Represents 0 occurrences of preceding character",
+          "Crucial for patterns like 'a*b' matching 'b'"
+        ],
+        "codeSnippet": "# Zero occurrences: skip 'x*'\n# s = 'b', p = 'a*b' -> i=0, j=0 -> dfs(0, 2) matches 'b' with 'b'!"
+      },
+      {
+        "id": "q5",
+        "category": "One or More Occurrences Choice",
+        "question": "Why does the one-or-more branch call `dfs(i + 1, j)` and NOT `dfs(i + 1, j + 2)`?",
+        "whatInterviewerChecks": "Allowing '*' to consume multiple matching characters.",
+        "bestReplyScript": "If current character matches (`first_match`), we consume 1 character from `s` (`i + 1`), but keep the pattern pointer at `j`! By keeping `j` unchanged, the `*` pattern remains active and can continue to consume additional matching characters in subsequent steps! When no more characters match, the zero-occurrences branch `dfs(i, j + 2)` will naturally terminate the `*` pattern.",
+        "keyPoints": [
+          "i + 1 consumes one matching character from s",
+          "Keeping j allows '*' to match 2nd, 3rd, 4th characters",
+          "Natural recursive consumption"
+        ],
+        "codeSnippet": "# Consume 1 char, keep pattern active:\nfirst_match and dfs(i + 1, j)"
+      },
+      {
+        "id": "q6",
+        "category": "Base Cases & Boundary Traps",
+        "question": "What are the exact base cases when `i == len(s)` or `j == len(p)`?",
+        "whatInterviewerChecks": "Base condition precision in recursive dynamic programming.",
+        "bestReplyScript": "1) If `j == len(p)`: the pattern is exhausted. The match is True ONLY if the string is also exhausted (`i == len(s)`). 2) If `i == len(s)`: the string is exhausted, BUT the pattern might still match if remaining pattern tokens are all star pairs like `'a*b*c*'`. That is why we do NOT return `j == len(p)` when `i == len(s)`; we must allow the recursion to continue evaluating `j + 2` skips!",
+        "keyPoints": [
+          "If pattern exhausted: return i == len(s)",
+          "If string exhausted: pattern can still match if it consists of 'x*' pairs",
+          "Never abort prematurely when i == len(s)"
+        ],
+        "codeSnippet": "if j == len(p):\n    return i == len(s)\n# Notice we do NOT return when i == len(s); let j advance via j + 2!"
+      },
+      {
+        "id": "q7",
+        "category": "Time and Space Complexity",
+        "question": "What are the exact time and space complexities with memoization?",
+        "whatInterviewerChecks": "State space bound of 2D DP.",
+        "bestReplyScript": "There are `len(s) + 1` possible values for `i` (from 0 to M), and `len(p) + 1` possible values for `j` (from 0 to N). The total number of distinct subproblems `(i, j)` is bounded by `(M + 1) * (N + 1) = O(M * N)`. Each state is computed once and cached in `memo`. Within each state, operations take O(1) time. Thus, time complexity is strictly O(M * N), and space complexity is O(M * N) for the memoization table and call stack.",
+        "keyPoints": [
+          "(M + 1) * (N + 1) distinct states",
+          "Each state computed in O(1) time",
+          "Time: O(M * N)",
+          "Space: O(M * N) for memo dict"
+        ],
+        "codeSnippet": "# Time: O(M * N), Space: O(M * N)"
+      },
+      {
+        "id": "q8",
+        "category": "Unmemoized Exponential Explosion",
+        "question": "What is the time complexity without memoization, and why does it crash?",
+        "whatInterviewerChecks": "Exponential tree branching without caching.",
+        "bestReplyScript": "Without memoization, the branching at `*` creates two recursive paths. In the worst case (e.g. `s = 'aaaaaaaaab'`, `p = 'a*a*a*a*b'`), the recursion tree branches 2 ways at every level. The number of paths grows exponentially as O(2^(M + N)). For inputs of length 30, 2^30 \u2248 10^9 operations, which times out or causes stack overflow. Memoization collapses overlapping branches into O(M * N).",
+        "keyPoints": [
+          "Unmemoized branching takes O(2^(M + N)) exponential time",
+          "Massive overlapping subproblem redundancy",
+          "Memoization reduces exponential to polynomial O(M * N)"
+        ],
+        "codeSnippet": "# Unmemoized: O(2^(M+N)) -> TLE on N > 20\n# Memoized: O(M * N) -> executes in 2ms"
+      },
+      {
+        "id": "q9",
+        "category": "Bottom-Up Iterative DP Table",
+        "question": "How does the Bottom-Up Iterative DP table work?",
+        "whatInterviewerChecks": "Iterative 2D DP table construction.",
+        "bestReplyScript": "We allocate a 2D boolean array `dp = [[False] * (N + 1) for _ in range(M + 1)]`. Base case: `dp[M][N] = True` (two empty strings match). For the last row (`i = M`), `dp[M][j] = dp[M][j+2]` if `p[j+1] == '*'`. Then we iterate backwards `i` from `M-1` down to 0, and `j` from `N-1` down to 0, filling `dp[i][j]` using the exact same transition formula. Finally, return `dp[0][0]`.",
+        "keyPoints": [
+          "dp[M + 1][N + 1] boolean matrix",
+          "Base case dp[M][N] = True",
+          "Iterate backwards from M down to 0 and N down to 0",
+          "dp[0][0] holds final answer"
+        ],
+        "codeSnippet": "def isMatch_bottom_up(s: str, p: str) -> bool:\n    m, n = len(s), len(p)\n    dp = [[False] * (n + 1) for _ in range(m + 1)]\n    dp[m][n] = True\n    for j in range(n - 1, -1, -1):\n        if j + 1 < n and p[j + 1] == '*':\n            dp[m][j] = dp[m][j + 2]\n    for i in range(m - 1, -1, -1):\n        for j in range(n - 1, -1, -1):\n            first_match = (p[j] == s[i] or p[j] == '.')\n            if j + 1 < n and p[j + 1] == '*':\n                dp[i][j] = dp[i][j + 2] or (first_match and dp[i + 1][j])\n            else:\n                dp[i][j] = first_match and dp[i + 1][j + 1]\n    return dp[0][0]"
+      },
+      {
+        "id": "q10",
+        "category": "Edge Cases",
+        "question": "What tricky edge cases must be tested for Regular Expression Matching?",
+        "whatInterviewerChecks": "Complex quantifier edge cases.",
+        "bestReplyScript": "1) Empty string and empty pattern `''` and `''` -> True; 2) Empty string with star pattern `''` and `'a*b*c*'` -> True; 3) Mismatched simple chars `'aa'` and `'a'` -> False; 4) Star consuming multiple chars `'aa'` and `'a*'` -> True; 5) Universal wildcard `'ab'` and `'.*'` -> True; 6) Star following dot `'aab'` and `'c*a*b'` -> True; 7) Backtracking with trailing match `'mississippi'` and `'mis*is*p*.'` -> False.",
+        "keyPoints": [
+          "Empty string matching 'a*b*c*'",
+          "'mississippi' against 'mis*is*p*.'",
+          "'.*' matching arbitrary strings",
+          "Single character vs star"
+        ],
+        "codeSnippet": "assert isMatch('aa', 'a') is False\nassert isMatch('aa', 'a*') is True\nassert isMatch('ab', '.*') is True\nassert isMatch('aab', 'c*a*b') is True\nassert isMatch('mississippi', 'mis*is*p*.') is False"
+      },
+      {
+        "id": "q11",
+        "category": "Space Optimization to O(N)",
+        "question": "Can the Bottom-Up DP table space be optimized from O(M * N) down to O(N)?",
+        "whatInterviewerChecks": "1D rolling array DP optimization.",
+        "bestReplyScript": "Yes! Notice that computing row `i` only requires values from the current row `i` and the row directly below it `i + 1`. We do not need the entire M x N matrix in memory simultaneously. By keeping only two rows (`curr_dp` and `next_dp`), we reduce auxiliary space complexity from O(M * N) down to strictly O(N), where N is the length of pattern `p`.",
+        "keyPoints": [
+          "Row i only depends on row i and row i + 1",
+          "Two 1D rows of size N + 1",
+          "Reduces space from O(M * N) to O(N)"
+        ],
+        "codeSnippet": "# Rolling array: prev_row and curr_row -> O(N) space"
+      },
+      {
+        "id": "q12",
+        "category": "Comparison to Wildcard Matching (LeetCode #44)",
+        "question": "How is Regular Expression Matching (#10) fundamentally different from Wildcard Matching (#44)?",
+        "whatInterviewerChecks": "Disambiguating the two classic matching problems.",
+        "bestReplyScript": "In Wildcard Matching (#44), `?` matches 1 character, and `*` stands alone to match ANY sequence of characters. In Regular Expression Matching (#10), `.` matches 1 character, and `*` cannot stand alone: it modifies the *preceding character*. In #44, `*` transitions to `dp[i+1][j]` or `dp[i][j+1]`. In #10, `*` requires inspecting the preceding character and jumps by `j + 2`.",
+        "keyPoints": [
+          "#44: '*' stands alone and matches any sequence",
+          "#10: '*' is a quantifier on the preceding character",
+          "Completely different state transitions"
+        ],
+        "codeSnippet": "# #44: dp[i][j] = dp[i+1][j] or dp[i][j+1]\n# #10: dp[i][j] = dp[i][j+2] or (first_match and dp[i+1][j])"
+      },
+      {
+        "id": "q13",
+        "category": "Python `functools.lru_cache`",
+        "question": "Can you use `@functools.lru_cache(None)` instead of a manual `memo` dictionary?",
+        "whatInterviewerChecks": "Python standard library caching decorators.",
+        "bestReplyScript": "Yes! Decorating the helper function with `@lru_cache(maxsize=None)` automatically caches the results of `(i, j)` calls using an internal C-level hash table. This eliminates the boilerplate `if (i, j) in memo` lines and runs slightly faster in CPython.",
+        "keyPoints": [
+          "@functools.lru_cache(maxsize=None)",
+          "C-level internal cache table",
+          "Eliminates manual memo boilerplate"
+        ],
+        "codeSnippet": "from functools import lru_cache\n\ndef isMatch_cached(s: str, p: str) -> bool:\n    @lru_cache(maxsize=None)\n    def dfs(i, j):\n        # same logic...\n        pass\n    return dfs(0, 0)"
+      },
+      {
+        "id": "q14",
+        "category": "Python `re` Module Internal Engine",
+        "question": "How does Python's standard `re` module (SRE engine) implement regex matching?",
+        "whatInterviewerChecks": "CPython regex engine architecture (NFA / Backtracking).",
+        "bestReplyScript": "Python's `re` module uses a C-based bytecode engine called **SRE** (Secret Labs Regular Expression Engine). SRE compiles patterns into bytecode instructions and uses a recursive backtracking engine (Nondeterministic Finite Automaton / NFA simulation). For complex patterns with catastrophic backtracking, SRE can experience exponential slowdown, which is why engines like Google's RE2 use DFA simulation for guaranteed linear time.",
+        "keyPoints": [
+          "CPython uses SRE bytecode engine",
+          "Backtracking NFA architecture",
+          "Google RE2 uses DFA for guaranteed linear time without backtracking"
+        ],
+        "codeSnippet": "# Python re module uses SRE bytecode compiler"
+      },
+      {
+        "id": "q15",
+        "category": "Senior Takeaway",
+        "question": "Why is Regular Expression Matching considered the pinnacle of 2D Dynamic Programming interview questions?",
+        "whatInterviewerChecks": "Synthesis of complex state transitions and non-local lookaheads.",
+        "bestReplyScript": "Because it requires managing non-local lookaheads (`j + 1 == '*'`), dual branching (zero occurrences vs multiple occurrences), sentinel boundary values (empty string matching multi-star patterns), and demonstrates how dynamic programming converts an intractable exponential search tree (O(2^N)) into a predictable, polynomial O(M * N) table.",
+        "keyPoints": [
+          "Non-local lookahead logic (j + 1 == '*')",
+          "Dual branching: zero vs multiple occurrences",
+          "Transforms exponential search into deterministic O(M * N) table"
+        ],
+        "codeSnippet": "# Takeaway: 2D DP tames exponential regex branching into deterministic O(M * N) execution"
       }
     ],
     "mistakes": [
@@ -22450,3 +25466,4 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ]
   }
 };
+
