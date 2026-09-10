@@ -321,11 +321,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Priority 4: OpenAI / OpenRouter API (if OPENAI_API_KEY or OPENROUTER_API_KEY is set)
-    const openAIKey = process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY;
+    // Priority 4: OpenAI / OpenRouter / GitHub Copilot API (if OPENAI_API_KEY, OPENROUTER_API_KEY, or GITHUB_TOKEN is set)
+    const openAIKey = process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.GITHUB_TOKEN || process.env.COPILOT_API_KEY;
     if (openAIKey) {
-      const baseUrl = process.env.OPENAI_API_BASE || (process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1');
-      const model = process.env.OPENAI_MODEL || (process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.3-70b-instruct:free' : 'gpt-4o-mini');
+      let baseUrl = process.env.OPENAI_API_BASE || (process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' : 'https://api.openai.com/v1');
+      let model = process.env.OPENAI_MODEL || (process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.3-70b-instruct:free' : 'gpt-4o-mini');
+
+      if (process.env.GITHUB_TOKEN || process.env.COPILOT_API_KEY) {
+        baseUrl = process.env.COPILOT_API_BASE || 'https://models.inference.ai.azure.com';
+        model = process.env.COPILOT_MODEL || 'gpt-4o-mini';
+      }
+
       try {
         const reply = await callOpenAICompatible(
           baseUrl,
@@ -340,7 +346,7 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ reply, socratic_hint: knowledge?.hints?.[0]?.nudge || '' });
         }
       } catch (err) {
-        console.warn('OpenAI API call failed, falling back:', err);
+        console.warn('OpenAI / GitHub Models API call failed, falling back:', err);
       }
     }
 
