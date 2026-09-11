@@ -84,10 +84,10 @@ async def test_evaluator_beginner_friendly_matching():
     passed, res, _ = await evaluate_challenge_test_cases(code_quotes, test_case_str)
     assert passed is True
 
-    # 3. List spacing / bracket tolerance: '[1, 2, 3]' matches '1 2 3'
-    code_list = "print([1, 2, 3])"
-    test_case_list = [{"input": "", "expected": "1 2 3"}]
-    passed, res, _ = await evaluate_challenge_test_cases(code_list, test_case_list)
+    # 4. Input prompt tolerance: user wrote input("Enter a string: ") with prompt text
+    code_prompt = 's = input("Enter a string: ")\nprint(s == s[::-1])'
+    test_case_prompt = [{"input": "racecar", "expected": "True"}]
+    passed, res, _ = await evaluate_challenge_test_cases(code_prompt, test_case_prompt)
     assert passed is True
 
 

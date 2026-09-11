@@ -91,7 +91,7 @@ async def execute_code_in_sandbox(
         }
 
     # 2. Prepare Subprocess execution
-    # Wrap with safety setup to prevent resource exhaustion and file access
+    # Wrap with safety setup and beginner-friendly input() patch
     runner_script = f"""
 import sys
 # Disable file creation & raw socket hooks if available
@@ -99,6 +99,17 @@ try:
     import resource
     # Limit CPU time (seconds)
     resource.setrlimit(resource.RLIMIT_CPU, (3, 3))
+except Exception:
+    pass
+
+# Beginner-friendly input patch: ignore interactive prompt strings so prompts don't leak into stdout
+try:
+    import builtins
+    _orig_input = builtins.input
+    def _clean_input(prompt=None):
+        # Discard prompt message so student prompts like input("Enter string: ") don't pollute test stdout
+        return _orig_input()
+    builtins.input = _clean_input
 except Exception:
     pass
 

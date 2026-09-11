@@ -35,8 +35,14 @@ def is_beginner_friendly_match(actual: str, expected: str) -> bool:
     if act_norm == exp_norm:
         return True
 
+    # 1b. Strip prompt prefixes like "Enter a string: ", "Enter number: ", etc. if present
+    import re
+    act_cleaned = re.sub(r'^(enter\s+[^:\n]+:\s*)+', '', act_norm, flags=re.IGNORECASE).strip()
+    if act_cleaned == exp_norm:
+        return True
+
     # 2. Quote-stripped comparison
-    act_unquoted = strip_quotes(act_norm)
+    act_unquoted = strip_quotes(act_cleaned)
     exp_unquoted = strip_quotes(exp_norm)
     if act_unquoted == exp_unquoted:
         return True
