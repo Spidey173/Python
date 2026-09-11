@@ -15,15 +15,30 @@ interface TutorRequestBody {
   chat_history?: ChatMessage[];
 }
 
-const SYSTEM_PROMPT = `You are Byte, an expert, warm, and highly encouraging AI Python Coding Tutor and DSA Mentor for PyForge.
-Your goal is to help students, freshers, and interview candidates master Python coding and data structures & algorithms.
-Persona Guidelines:
-1. Be as conversational, helpful, and articulate as Claude or ChatGPT.
-2. When asked to help solve a problem, guide them step-by-step with clear logic, optimal time/space complexity (Big-O), and concise Python code examples.
-3. If they ask about their code, analyze their logic directly, point out bugs or missing print/return statements gently, and explain why.
-4. Keep a positive, motivating, and encouraging tone!
-5. Format code blocks using proper markdown (\`\`\`python ... \`\`\`).
-6. Never give rigid one-liner canned responses. Tailor your answer directly to what the user asked.`;
+const SYSTEM_PROMPT = `You are Byte, a warm, patient, and inspiring 1-on-1 Python coding mentor for learners.
+Your primary mission: Make coding feel natural, clear, and confidence-building. Teach, don't lecture.
+
+CRITICAL MENTORING RULES:
+1. NO OVERWHELMING WALLS OF TEXT (Keep replies under 120-150 words):
+   - Never write academic textbooks, long essays, or intimidating overviews.
+   - NEVER use markdown tables.
+   - Keep answers to 2-3 short, friendly, well-spaced paragraphs or 2-3 crisp bullet points.
+
+2. "SIMPLE FIRST, THEN MORE SIMPLE" (Progressive Clarity):
+   - When asked "what is this problem?" or "how do I solve this?":
+     Step 1: Explain the core real-world idea in 1 simple, relatable sentence (e.g. "A palindrome is just a word or phrase that reads the same backward as forward, like 'racecar' or 'madam'").
+     Step 2: Give the 2 simple steps in plain English (e.g., "1. Clean out spaces and symbols. 2. Check if the reversed string matches.").
+     Step 3: Ask 1 gentle, encouraging question to help them write the first step in their editor.
+
+3. NEVER SPOIL THE SOLUTION CODE:
+   - Do NOT write out the complete working program or dump boilerplate like \`import sys\`, \`def main()\`, \`if __name__ == '__main__':\`.
+   - Never write the exact lines that solve the active challenge.
+   - If showing code, show at most 1 short line of conceptual syntax or pseudocode.
+   - The goal is for the student to experience the "Aha!" moment of solving it themselves.
+
+4. BUILD CONFIDENCE & ENCOURAGE ACTION:
+   - Always validate their curiosity and make them feel capable ("You've got this!", "Let's take it one step at a time.").
+   - End with a friendly, bite-sized next action they can try right now in \`solution.py\`.`;
 
 // Call Anthropic Claude API
 async function callClaude(apiKey: string, prompt: string, code: string, challengeInfo: string, history: ChatMessage[]) {
@@ -158,7 +173,7 @@ async function callOpenAICompatible(baseUrl: string, apiKey: string, model: stri
   return data.choices?.[0]?.message?.content || '';
 }
 
-// Autonomous Deep Socratic AI Tutor Engine (High Quality fallback when no external LLM key is configured)
+// Autonomous 1-on-1 Socratic AI Tutor Engine (Encouraging, simple-first, confidence-building)
 function generateClaudeGradeFallback(
   message: string,
   code: string,
@@ -170,43 +185,51 @@ function generateClaudeGradeFallback(
   const sol = ALL_50_SOLUTIONS[challengeId];
   const problemTitle = sol?.title || knowledge?.conceptName || `Challenge #${challengeId}`;
   const concept = knowledge?.conceptName || 'Algorithmic Logic';
-  const explanation = knowledge?.conceptExplanation || sol?.explanation || 'Break down the problem into inputs, processing, and output.';
+  const explanation = knowledge?.conceptExplanation || sol?.explanation || 'Break down the problem into input, processing, and output.';
   const interviewTrap = knowledge?.interviewTrap || 'Watch out for boundary values and empty inputs.';
-  const optimalSolution = approaches?.[0];
-  const alternativeSolution = approaches?.[1];
 
   // 1. Greetings & Warm Welcomes
   if (/^(hi|hello|hey|hey there|hola|sup|good (morning|afternoon|evening)|yo)/i.test(q)) {
-    return `👋 **Hey there! Great to code with you today!**\n\nI'm **Byte**, your dedicated Python & DSA mentor. We're currently working on **"${problemTitle}"** (${concept}).\n\nHow can I help you right now?\n- 💡 Need a **step-by-step hint** on how to get started?\n- 🔍 Want me to **review or debug** the code currently in your editor?\n- ⚡ Curious about the **optimal time & space complexity**?\n\nJust let me know what you'd like to explore!`;
+    return `👋 **Hey there! Great to code with you!**\n\nI'm **Byte**, your personal mentor for **${problemTitle}**.\n\nDon't worry about complicated syntax or tricky test cases—we'll take it one simple step at a time. What part would you like to explore first?`;
   }
 
-  // 2. "Can you help solve this problem?" / "How to solve" / "Explain approach"
+  // 2. "What is this problem?" / "How to solve" / "Explain approach" / "Help"
   if (
+    q.includes('what is this problem') ||
+    q.includes('explain') ||
     q.includes('help solve') ||
     q.includes('how to solve') ||
-    q.includes('how do i solve') ||
+    q.includes('how do i') ||
     q.includes('solve this') ||
     q.includes('approach') ||
-    q.includes('strategy')
+    q.includes('strategy') ||
+    q.includes('what does this mean')
   ) {
-    return `🎯 **Let's break down "${problemTitle}" together!**\n\nHere is how top software engineers approach this in an interview:\n\n### 1. The Core Idea\n${explanation}\n\n### 2. High-Level Strategy\n- **Step 1 (Parse Input)**: Read and clean the input according to the problem requirements.\n- **Step 2 (Algorithm)**: Focus on the **${concept}** pattern to avoid unnecessary loops.\n- **Step 3 (Output)**: Make sure to print the exact expected format using \`print(...)\`.\n\n### 3. Interview Trap to Avoid\n> ⚠️ **Watch Out**: ${interviewTrap}\n\n**Next step**: Take a look at your \`solution.py\` editor. What data structure or first step do you think we should write first?`;
+    return (
+      `👋 **Here is the simple idea for "${problemTitle}":**\n\n` +
+      `${explanation}\n\n` +
+      `**To solve it, we just break it down into 2 easy steps:**\n` +
+      `1. **Clean / prepare the data**: Set up your input so it's clean and easy to test.\n` +
+      `2. **Check the condition**: Use the **${concept}** pattern to decide the result.\n\n` +
+      `💡 *Keep in mind*: ${interviewTrap}\n\n` +
+      `How would you like to start? Try writing your first line in \`solution.py\` (like reading the input with \`s = input()\`) and tell me what you'd like to do next!`
+    );
   }
 
   // 3. Hints & Clues request
   if (q.includes('hint') || q.includes('clue') || q.includes('stuck') || q.includes('nudge')) {
-    const hint1 = knowledge?.hints?.[0]?.nudge || 'Start by understanding the input constraints and expected output.';
-    const hint2 = knowledge?.hints?.[1]?.nudge || 'Think about using a two-pointer or hash map pattern.';
-    const snippet = knowledge?.hints?.[1]?.codeSnippet || optimalSolution?.code || sol?.optimalCode || '';
+    const hint1 = knowledge?.hints?.[0]?.nudge || 'Start by understanding the input and what output is expected.';
+    const hint2 = knowledge?.hints?.[1]?.nudge || 'Think about keeping only what you need and comparing values.';
 
-    return `💡 **Here's your strategic hint for "${problemTitle}"**:\n\n1. **Conceptual Clue**:\n   ${hint1}\n\n2. **Implementation Pointer**:\n   ${hint2}\n\n${snippet ? `\`\`\`python\n# Starting pattern\n${snippet}\n\`\`\`` : ''}\n\nGive this a try in the code editor! If you want a deeper look at the next line, just ask!`;
+    return (
+      `💡 **Let's take it one small step at a time:**\n\n` +
+      `• **Step 1**: ${hint1}\n` +
+      `• **Step 2**: ${hint2}\n\n` +
+      `You don't need complex code for this—just a few clean lines. What line do you want to write first?`
+    );
   }
 
-  // 4. "Anything else?" / "More tips" / "What else"
-  if (q.includes('anything else') || q.includes('what else') || q.includes('more tips') || q.includes('more')) {
-    return `✨ **Bonus Pro Tips for "${problemTitle}"**:\n\n1. **Edge Case Checklist**:\n   - What happens if the input is completely empty or single-character?\n   - Does case sensitivity matter (e.g. \`s.lower()\`)?\n   - Are spaces and punctuation handled cleanly (e.g. \`c.isalnum()\`)?\n\n2. **Complexity Goal**:\n   - Target Time: **${optimalSolution?.timeComplexity || sol?.timeComplexity || 'O(n)'}**\n   - Target Space: **${optimalSolution?.spaceComplexity || sol?.spaceComplexity || 'O(1)'}**\n\n3. **Alternative Approach**:\n   ${alternativeSolution ? `You can also solve this using **${alternativeSolution.title}** (${alternativeSolution.timeComplexity}), which gives great perspective during an interview discussion!` : 'Keeping your solution clean and readable is highly valued by interviewers.'}\n\nWould you like me to inspect the code you have written so far? Click **Run** or paste any question!`;
-  }
-
-  // 5. Code Review / "Why is it wrong?" / "Debug my code" / "Check my code"
+  // 4. Code Review / "Why is it wrong?" / "Debug my code" / "Check my code"
   if (
     q.includes('wrong') ||
     q.includes('bug') ||
@@ -217,34 +240,39 @@ function generateClaudeGradeFallback(
     q.includes('review')
   ) {
     if (!code || code.trim() === '') {
-      return `📝 Your editor looks empty right now! Start by writing a draft in \`solution.py\` or take inspiration from the problem spec on the left, then ask me to review it anytime.`;
+      return `📝 Your editor looks empty right now! Try writing your first thought in \`solution.py\` and hit **Run**, or ask me where to begin!`;
     }
 
     const hasPrint = code.includes('print');
-    const hasInput = code.includes('input');
-
-    const issues: string[] = [];
     if (!hasPrint) {
-      issues.push('• **Missing \`print(...)\`**: The test runner evaluates what your code outputs to the terminal. Make sure to print the final result!');
-    }
-    if (!hasInput && challengeId <= 40) {
-      issues.push('• **Input Reading**: Ensure you read inputs using \`s = input()\` or \`sys.stdin.read().splitlines()\`.');
-    }
-
-    if (issues.length > 0) {
-      return `🔍 **Quick Code Review on your current implementation**:\n\n${issues.join('\n')}\n\nHere is an idiomatic skeleton to match:\n\`\`\`python\n${knowledge?.patternExample || optimalSolution?.code || sol?.optimalCode || '# Write your solution here'}\n\`\`\`\n\nUpdate your code and hit the green **Run (Ctrl+Enter)** button to test it against live test cases!`;
+      return (
+        `👀 **Quick observation:**\n\n` +
+        `Your logic might be close, but Python Quest checks standard output. Make sure you use \`print(...)\` to output your final answer, then click **Run** to test it!`
+      );
     }
 
-    return `👍 **Your code has good structure!**\n\nMake sure your variables handle all boundary cases (like empty strings or single elements). Hit the green **Run (Ctrl+Enter)** button to run your solution against the visible test cases in the Terminal! If any case fails, tell me the error message and we'll fix it together!`;
+    return (
+      `👍 **You're making solid progress!**\n\n` +
+      `Click the green **Run (Ctrl+Enter)** button below to test your code against the visible sample inputs. If a case fails, compare what your code printed against the expected output, and we'll refine it together!`
+    );
   }
 
-  // 6. Time and Space Complexity (Big-O)
+  // 5. Time and Space Complexity (Big-O)
   if (q.includes('complexity') || q.includes('big o') || q.includes('runtime') || q.includes('space') || q.includes('time')) {
-    return `⚡ **Complexity Analysis for "${problemTitle}"**:\n\n- **Optimal Time Complexity**: \`${optimalSolution?.timeComplexity || sol?.timeComplexity || 'O(n)'}\`\n  *Why*: We scan or process each element a constant number of times.\n\n- **Auxiliary Space Complexity**: \`${optimalSolution?.spaceComplexity || sol?.spaceComplexity || 'O(1)'}\`\n  *Why*: Minimal extra memory beyond basic pointers/variables.\n\n💡 *Interview Tip*: Always state your Big-O upfront to the interviewer before jumping straight into code!`;
+    return (
+      `⚡ **Efficiency Goals for "${problemTitle}":**\n\n` +
+      `• **Time**: Target a linear O(n) pass—look through the data once without nested loops.\n` +
+      `• **Memory**: Keep auxiliary storage minimal.\n\n` +
+      `Don't worry about perfection right away! Focus first on getting the logic working cleanly, then we can optimize.`
+    );
   }
 
-  // 7. General Conversational / Socratic Response
-  return `🤖 **Mentor Byte here!**\n\nRegarding: *"${message}"*\n\nFor **"${problemTitle}"**, remember:\n1. **Concept**: ${concept} — ${explanation}\n2. **Trap**: ${interviewTrap}\n3. Keep your code clean and Pythonic!\n\n${optimalSolution ? `**Optimal Pattern Reference**:\n\`\`\`python\n${optimalSolution.code}\n\`\`\`` : ''}\n\nWhat would you like to try next? You can edit your code in \`solution.py\` and hit **Run** anytime!`;
+  // 6. General Conversational / Encouraging Response
+  return (
+    `🤖 **Mentor Byte here!**\n\n` +
+    `For **${problemTitle}**, keep it simple: focus on the core **${concept}** idea.\n\n` +
+    `Write out your thoughts in \`solution.py\` and click **Run** anytime. What question do you have about the next step?`
+  );
 }
 
 export async function POST(req: NextRequest) {

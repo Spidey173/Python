@@ -6,14 +6,30 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 
 ast_analyzer = ASTCodeAnalyzer()
 
-SYSTEM_TUTOR_PROMPT = """You are Byte, an expert, warm, and encouraging AI Python Coding Tutor and DSA Mentor.
-You engage naturally like a friendly conversational chatbot (ChatGPT/Claude style).
-Key persona rules:
-1. Respond conversationally to any user prompt—whether it's a greeting ('hi', 'hello'), a request for an explanation ('explain how two pointers work'), code analysis ('why is my code slow?'), or an open discussion.
-2. Be highly encouraging, supportive, and motivating. Build student confidence!
-3. Provide clear, detailed, step-by-step explanations when asked for concept breakdowns or guidance. Use bullet points and code snippets where appropriate.
-4. When discussing coding problems, guide candidates socratically toward optimal time/space complexity while highlighting key Python 3 idioms and interview edge cases.
-5. Never refuse chit-chat or general coding questions. Always answer naturally and offer relevant follow-up tips!
+SYSTEM_TUTOR_PROMPT = """You are Byte, a warm, patient, and inspiring 1-on-1 Python coding mentor for learners.
+Your primary mission: Make coding feel natural, clear, and confidence-building. Teach, don't lecture.
+
+CRITICAL MENTORING RULES:
+1. NO OVERWHELMING WALLS OF TEXT (Keep replies under 120-150 words):
+   - Never write academic textbooks, long essays, or intimidating overviews.
+   - NEVER use markdown tables.
+   - Keep answers to 2-3 short, friendly, well-spaced paragraphs or 2-3 crisp bullet points.
+
+2. "SIMPLE FIRST, THEN MORE SIMPLE" (Progressive Clarity):
+   - When asked "what is this problem?" or "how do I solve this?":
+     Step 1: Explain the core real-world idea in 1 simple, relatable sentence (e.g. "A palindrome is just a word or phrase that reads the same backward as forward, like 'racecar' or 'madam'").
+     Step 2: Give the 2 simple steps in plain English (e.g., "1. Clean out spaces and symbols. 2. Check if the reversed string matches.").
+     Step 3: Ask 1 gentle, encouraging question to help them write the first step in their editor.
+
+3. NEVER SPOIL THE SOLUTION CODE:
+   - Do NOT write out the complete working program or dump boilerplate like `import sys`, `def main()`, `if __name__ == '__main__':`.
+   - Never write the exact lines that solve the active challenge.
+   - If showing code, show at most 1 short line of conceptual syntax or pseudocode.
+   - The goal is for the student to experience the "Aha!" moment of solving it themselves.
+
+4. BUILD CONFIDENCE & ENCOURAGE ACTION:
+   - Always validate their curiosity and make them feel capable ("You've got this!", "Let's take it one step at a time.").
+   - End with a friendly, bite-sized next action they can try right now in `solution.py`.
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -185,61 +201,57 @@ async def chat_with_ai_tutor(
     clean_code = (code or "").strip()
     prob_name = challenge_info.split('-')[0].strip() if challenge_info else "this challenge"
 
-    # 1. Greetings & Chit-Chat
+    # 1. Greetings & Warm Welcomes
     if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo", "can u help solve this problem"]:
-        return f"👋 **Hey!** I'm ready to help you conquer **{prob_name}**! What part of the problem would you like to explore first? We can discuss the optimal data structure, write an algorithm outline, or debug your current code!"
+        return f"👋 **Hey there! Great to code with you!**\n\nI'm **Byte**, your personal mentor for **{prob_name}**.\n\nDon't worry about complicated syntax or tricky test cases—we'll take it one simple step at a time. What part would you like to explore first?"
 
     elif "who are you" in msg_lower or "what can you do" in msg_lower:
-        return "🤖 I'm **Byte**, your AI Python Coach! Ask me anything about algorithm strategy, line-by-line code logic, time complexity, or edge cases."
+        return "🤖 I'm **Byte**, your 1-on-1 Python Coding Mentor! Ask me anything about how the problem works, how to get started, or debugging your code."
 
     elif "thank" in msg_lower or "thanks" in msg_lower or "awesome" in msg_lower or "great" in msg_lower:
-        return "🙌 Happy to help! Keep sharpening your problem-solving intuition. Try writing out your logic in `solution.py` and hit **Run**!"
+        return "🙌 You've got this! Keep going—try writing out your thoughts in `solution.py` and click **Run**!"
 
-    # 2. Detailed explanation / how to solve / concept questions
-    elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach"]):
+    # 2. "What is this problem?" / "Explain" / "How to solve"
+    elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach", "what is this", "what does this mean"]):
         return (
-            f"📘 **Strategy for {prob_name}**:\n\n"
-            f"1. **Analyze Input & Edge Cases**: Watch out for empty strings/lists, case sensitivity, or boundary values.\n"
-            f"2. **Choose Optimal Data Structure**: Think if a two-pointer approach, hash map, or sliding window eliminates $O(n^2)$ nested loops.\n"
-            f"3. **Format Output**: Ensure your solution prints the exact expected result format.\n\n"
-            f"What data structure or loop strategy are you planning to use?"
+            f"👋 **Here is the simple idea for {prob_name}:**\n\n"
+            f"Don't worry about complexity or long code—think of the problem in 2 easy steps:\n"
+            f"1. **Clean / prepare the data**: Read your input and set it up so it's simple to inspect.\n"
+            f"2. **Check the condition**: Check if the items meet the challenge requirement, and print the answer!\n\n"
+            f"How would you like to start? Try writing your first line in `solution.py` (like reading input with `s = input()`) and let's go from there!"
         )
 
     # 3. Hints & Clues
     elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help"]):
         return (
-            f"💡 **Key Clue for {prob_name}**:\n"
-            f"- For string or array scanning, can you maintain pointer(s) or track seen elements in a hash set/dict?\n"
-            f"- Check if built-in Python methods like `.isalnum()`, `.lower()`, or `.split()` simplify your data prep.\n"
-            f"- Click the **Tiny Hint** or **Bigger Clue** button above for progressive step-by-step nudges!"
+            f"💡 **Let's take it one small step at a time for {prob_name}:**\n\n"
+            f"• **Step 1**: Start by reading the input cleanly with `s = input()`.\n"
+            f"• **Step 2**: Focus only on the core condition without worrying about nested loops.\n\n"
+            f"You don't need complex code for this—just a few clean lines. What line do you want to write first in your editor?"
         )
 
     # 4. Big-O Complexity
     elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
         return (
-            f"⚡ **Big-O Goals for {prob_name}**:\n"
-            f"- **Target Time Complexity**: $O(n)$ linear scan (or $O(n \\log n)$ if sorting is needed).\n"
-            f"- **Target Space Complexity**: $O(1)$ auxiliary memory or $O(n)$ for hash storage.\n"
-            f"Avoid nested `for` loops where possible to keep execution fast under 3,000ms!"
+            f"⚡ **Efficiency Goals for {prob_name}:**\n\n"
+            f"• **Time**: Aim for a single pass through the data (linear O(n)).\n"
+            f"• **Memory**: Keep extra storage minimal.\n\n"
+            f"Focus first on getting the logic working cleanly, then we can optimize!"
         )
 
     # 5. Debugging & Errors
     elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working"]):
         if clean_code and "print" not in clean_code:
-            return "⚠️ **Output Required**: Remember that Python Quest evaluates your solution using standard output. Make sure you use `print(...)` to output your calculated answer!"
+            return "👀 **Quick observation:** Make sure you use `print(...)` to output your final answer! Python Quest evaluates your solution by reading standard terminal output."
         return (
-            f"🔍 **Debugging {prob_name}**:\n"
-            f"1. Click the green **Run (Ctrl+Enter)** button to run your solution against test cases.\n"
-            f"2. Inspect the **Terminal** tab to see your actual output vs the expected test case output.\n"
-            f"3. Check for off-by-one errors or empty input handling!"
+            f"👍 **You're making solid progress on {prob_name}!**\n\n"
+            f"Click the green **Run (Ctrl+Enter)** button below to test your code against the sample inputs in the Terminal dock. If a test case fails, compare what your code printed against the expected output, and we'll fix it together!"
         )
 
-    # 6. Any other general prompt
+    # 6. General Conversational / Encouraging Response
     else:
         return (
-            f"🤖 **Mentor**: You asked: *\"{message}\"*\n\n"
-            f"To excel in Python technical interviews for **{prob_name}**:\n"
-            f"- Keep your code clean, modular, and readable.\n"
-            f"- Double check your conditional statements and variable updates.\n"
-            f"- Click **Run** anytime to test your solution live!"
+            f"🤖 **Mentor Byte here!**\n\n"
+            f"For **{prob_name}**, remember to keep it simple: focus on the core logic step-by-step.\n\n"
+            f"Try writing out your thoughts in `solution.py` and click **Run** anytime. What question do you have about the next step?"
         )
