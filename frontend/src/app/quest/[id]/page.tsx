@@ -38,6 +38,7 @@ interface TerminalHistoryEntry {
   id: string;
   command: string;
   stdin?: string;
+  interactivePrompts?: Array<{ prompt: string; value: string }>;
   stdout: string;
   stderr: string;
   exitCode: number;
@@ -84,6 +85,19 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [runResponse, setRunResponse] = useState<CodeRunResponse | null>(null);
   const [terminalHistory, setTerminalHistory] = useState<TerminalHistoryEntry[]>([]);
   const terminalEndRef = useRef<HTMLDivElement | null>(null);
+  const terminalInputRef = useRef<HTMLInputElement | null>(null);
+  const [terminalInput, setTerminalInput] = useState<string>('');
+  const [interactiveSession, setInteractiveSession] = useState<{
+    active: boolean;
+    prompts: string[];
+    collectedInputs: string[];
+    currentStep: number;
+  }>({
+    active: false,
+    prompts: [],
+    collectedInputs: [],
+    currentStep: 0,
+  });
   const [copiedCode, setCopiedCode] = useState(false);
 
   // Timer HUD
@@ -132,6 +146,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       }
     };
   }, [problemId, startTimer]);
+
+  // Auto-scroll Terminal canvas to bottom
+  useEffect(() => {
+    if (activeConsoleTab === 'terminal') {
+      terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [terminalHistory, isRunning, interactiveSession, activeConsoleTab]);
 
   const formatTimer = (totalSec: number) => {
     const mins = Math.floor(totalSec / 60);
@@ -436,8 +457,24 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     streamMentorText(coachReply, 'coaching');
   };
 
-  // 6. Run Code Pipeline with Cinematic AI Analysis
-  const handleRunCode = async () => {
+  // 6. Interactive VS Code Terminal & Code Pipeline
+  const extractInputPrompts = (codeStr: string): string[] => {
+    // Strip single-line comments to avoid matching commented-out inputs
+    const cleanCode = codeStr.replace(/#.*$/gm, '');
+    const regex = /input\s*\(\s*(?:(['"`])(.*?)\1)?\s*\)/g;
+    const prompts: string[] = [];
+    let match;
+    while ((match = regex.exec(cleanCode)) !== null) {
+      prompts.push(match[2] !== undefined ? match[2] : '');
+    }
+    return prompts;
+  };
+
+  const executeWithStdin = async (
+    stdinText: string,
+    customCommand: string = 'python3 solution.py',
+    interactivePrompts?: Array<{ prompt: string; value: string }>
+  ) => {
     if (!problem || isRunning || isSubmitting) return;
 
     try {
@@ -446,28 +483,101 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       setConsoleCollapsed(false);
       setActiveConsoleTab('terminal');
 
-      // Cinematic multi-stage reasoning
-      setThinkingPhase('Thinking...');
-      await new Promise((r) => setTimeout(r, 200));
-
       setThinkingPhase('Running in Python 3.12 sandbox...');
-      const res = await api.runCode(problemId, code);
+      const res = await api.runCode(problemId, code, stdinText);
       setRunResponse(res);
-
-      setThinkingPhase('Analyzing AST and stdout...');
-      await new Promise((r) => setTimeout(r, 300));
-
-      setThinkingPhase('Generating mentor coaching...');
-      await new Promise((r) => setTimeout(r, 250));
 
       const exitCode = res.success ? 0 : 1;
       const duration = Math.round(res.execution_time_ms || 24);
       setLastExecutionRuntime(duration);
       const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-      // Append Terminal record with test case feedback summary
+      setTerminalHistory((prev) => [
+        ...prev.slice(-25),
+        {
+          id: Math.random().toString(36).substring(7),
+          command: customCommand,
+          stdin: stdinText || undefined,
+          interactivePrompts,
+          stdout: res.stdout || '',
+          stderr: res.stderr || (res.security_error ? `[Security Error] ${res.security_error}` : ''),
+          exitCode,
+          durationMs: duration,
+          timestamp: timeStr,
+        },
+      ]);
+
+      const feedback = analyzeExecutionForMentor(res, problem, code);
+      if (!res.success) {
+        soundFX.playFailureThud();
+      }
+      streamMentorText(feedback.responseText, feedback.mood, feedback.codeSnippet);
+    } catch (err: any) {
+      soundFX.playFailureThud();
+      streamMentorText(
+        `Execution encountered an error: ${err?.message || 'Failed to connect to runner'}. Please verify syntax.`,
+        'debugging'
+      );
+    } finally {
+      setIsRunning(false);
+      setIsThinking(false);
+      setThinkingPhase('');
+      setInteractiveSession({ active: false, prompts: [], collectedInputs: [], currentStep: 0 });
+      setTimeout(() => {
+        terminalInputRef.current?.focus();
+      }, 60);
+    }
+  };
+
+  const handleRunCode = async (overrideStdin?: string) => {
+    if (!problem || isRunning || isSubmitting) return;
+
+    if (overrideStdin !== undefined) {
+      await executeWithStdin(overrideStdin, 'python3 solution.py');
+      return;
+    }
+
+    const prompts = extractInputPrompts(code);
+    if (prompts.length > 0) {
+      setConsoleCollapsed(false);
+      setActiveConsoleTab('terminal');
+      setInteractiveSession({
+        active: true,
+        prompts,
+        collectedInputs: [],
+        currentStep: 0,
+      });
+      setTerminalInput('');
+      setTimeout(() => {
+        terminalInputRef.current?.focus();
+        terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 60);
+      return;
+    }
+
+    await executeWithStdin('', 'python3 solution.py');
+  };
+
+  const handleRunTestCases = async () => {
+    if (!problem || isRunning || isSubmitting) return;
+
+    try {
+      setIsRunning(true);
+      setIsThinking(true);
+      setConsoleCollapsed(false);
+      setActiveConsoleTab('tests');
+      setThinkingPhase('Running visible test cases in sandbox...');
+
+      const res = await api.runCode(problemId, code);
+      setRunResponse(res);
+
+      const exitCode = res.success ? 0 : 1;
+      const duration = Math.round(res.execution_time_ms || 24);
+      setLastExecutionRuntime(duration);
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
       const testSummary = res.test_results && res.test_results.length > 0
-        ? res.test_results.map(t => `  • Case ${t.test_case_index} (${t.description}): ${t.passed ? 'PASSED' : 'FAILED'}${t.actual_output ? ` -> Output: ${t.actual_output.trim()}` : ''}`).join('\n')
+        ? res.test_results.map((t) => `  • Case ${t.test_case_index} (${t.description}): ${t.passed ? 'PASSED' : 'FAILED'}${t.actual_output ? ` -> Output: ${t.actual_output.trim()}` : ''}`).join('\n')
         : '';
 
       const terminalStdout = testSummary
@@ -475,10 +585,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         : (res.stdout || '');
 
       setTerminalHistory((prev) => [
-        ...prev.slice(-15),
+        ...prev.slice(-25),
         {
           id: Math.random().toString(36).substring(7),
-          command: 'python3 solution.py',
+          command: 'pytest tests/ -v (Visible Test Suite)',
           stdin: undefined,
           stdout: terminalStdout,
           stderr: res.stderr || (res.security_error ? `[Security Error] ${res.security_error}` : ''),
@@ -488,24 +598,118 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         },
       ]);
 
-      // Sound and Mentor Feedback
       const feedback = analyzeExecutionForMentor(res, problem, code);
-
       if (!res.success || (res.test_results && res.test_results.some((t) => !t.passed))) {
         soundFX.playFailureThud();
       }
-
       streamMentorText(feedback.responseText, feedback.mood, feedback.codeSnippet);
     } catch (err: any) {
       soundFX.playFailureThud();
       streamMentorText(
-        `Execution encountered an error: ${err?.message || 'Failed to connect to the runner'}. Please verify syntax.`,
+        `Execution encountered an error: ${err?.message || 'Failed to connect to runner'}.`,
         'debugging'
       );
     } finally {
       setIsRunning(false);
       setIsThinking(false);
       setThinkingPhase('');
+    }
+  };
+
+  const handleInteractiveInputSubmit = () => {
+    const currentVal = terminalInput;
+    const nextCollected = [...interactiveSession.collectedInputs, currentVal];
+    const nextStep = interactiveSession.currentStep + 1;
+
+    if (nextStep < interactiveSession.prompts.length) {
+      setInteractiveSession((prev) => ({
+        ...prev,
+        collectedInputs: nextCollected,
+        currentStep: nextStep,
+      }));
+      setTerminalInput('');
+    } else {
+      const promptsWithValues = interactiveSession.prompts.map((p, idx) => ({
+        prompt: p,
+        value: nextCollected[idx] || '',
+      }));
+      const fullStdin = nextCollected.join('\n');
+      setInteractiveSession({ active: false, prompts: [], collectedInputs: [], currentStep: 0 });
+      setTerminalInput('');
+      executeWithStdin(fullStdin, 'python3 solution.py', promptsWithValues);
+    }
+  };
+
+  const handleTerminalCommandSubmit = () => {
+    const trimmed = terminalInput.trim();
+    setTerminalInput('');
+
+    if (!trimmed) {
+      handleRunCode();
+      return;
+    }
+
+    if (trimmed === 'clear' || trimmed === 'cls') {
+      setTerminalHistory([]);
+      return;
+    }
+
+    if (trimmed === 'help') {
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: 'help',
+          stdout: `Available Terminal Commands:\n  python3 solution.py     Run current code interactively in terminal\n  pytest tests/           Run visible automated test cases\n  <value>                 Directly pass value as input and execute\n  clear                   Clear terminal scrollback\n  help                    Show this guidance`,
+          stderr: '',
+          exitCode: 0,
+          durationMs: 0,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'pytest' || trimmed === 'pytest tests/' || trimmed === 'test') {
+      handleRunTestCases();
+      return;
+    }
+
+    if (trimmed.startsWith('python3 solution.py') || trimmed.startsWith('python solution.py')) {
+      const customArg = trimmed.replace(/^python3?\s+solution\.py\s*/, '').trim();
+      if (customArg) {
+        executeWithStdin(customArg, trimmed);
+      } else {
+        handleRunCode();
+      }
+      return;
+    }
+
+    // Treat arbitrary input typed at prompt as custom stdin
+    executeWithStdin(trimmed, `python3 solution.py << '${trimmed}'`);
+  };
+
+  const handleTerminalKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape' || (e.ctrlKey && e.key === 'c')) {
+      e.preventDefault();
+      if (interactiveSession.active) {
+        setInteractiveSession({ active: false, prompts: [], collectedInputs: [], currentStep: 0 });
+        setTerminalInput('');
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        setTerminalHistory((prev) => [
+          ...prev.slice(-25),
+          {
+            id: Math.random().toString(36).substring(7),
+            command: 'python3 solution.py',
+            stdout: '^C\n[KeyboardInterrupt: Terminated by user]',
+            stderr: '',
+            exitCode: 130,
+            durationMs: 0,
+            timestamp: timeStr,
+          },
+        ]);
+      }
     }
   };
 
@@ -591,7 +795,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // Keyboard Shortcuts
   useEffect(() => {
     const unregister = registerGlobalShortcuts({
-      onRun: handleRunCode,
+      onRun: () => handleRunCode(),
       onSubmit: handleSubmitCode,
       onToggleSidebar: () => setSidebarCollapsed((p) => !p),
       onToggleConsole: () => setConsoleCollapsed((p) => !p),
@@ -715,7 +919,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           </button>
 
           <button
-            onClick={handleRunCode}
+            onClick={() => handleRunCode()}
             disabled={isRunning || isSubmitting}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#58A6FF] text-sm font-semibold text-[#E6EDF3] transition-all shadow-md disabled:opacity-50 cursor-pointer"
             title="Run code in Terminal (Ctrl+Enter)"
@@ -1028,6 +1232,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                   >
                     <Terminal className="h-4 w-4 text-emerald-400" />
                     <span>Terminal</span>
+                    {interactiveSession.active && (
+                      <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" title="Input prompt waiting for typing" />
+                    )}
                     {isRunning && <span className="h-2 w-2 rounded-full bg-[#58A6FF] animate-ping" />}
                   </button>
 
@@ -1049,8 +1256,18 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                   </button>
                 </div>
 
-                {/* Right Controls: Exit code badge, Clear, Height toggle */}
+                {/* Right Controls: Run Tests, Exit code badge, Clear, Height toggle */}
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleRunTestCases}
+                    disabled={isRunning || isSubmitting}
+                    className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold text-[#58A6FF] bg-[#161B22] hover:bg-[#21262D] border border-white/10 transition-colors cursor-pointer disabled:opacity-50"
+                    title="Run all visible test cases"
+                  >
+                    <Play className="h-3 w-3 fill-current text-[#58A6FF]" />
+                    <span>Run Test Cases</span>
+                  </button>
+
                   {runResponse && (
                     <span
                       className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-md border ${
@@ -1065,7 +1282,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
                   <button
                     onClick={() => setTerminalHistory([])}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
+                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
                     title="Clear Terminal"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -1073,7 +1290,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
                   <button
                     onClick={() => setDockHeight((p) => (p === 'normal' ? 'expanded' : 'normal'))}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
+                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
                     title={dockHeight === 'expanded' ? 'Shrink' : 'Expand'}
                   >
                     {dockHeight === 'expanded' ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
@@ -1081,7 +1298,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
                   <button
                     onClick={() => setConsoleCollapsed(true)}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
+                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
                     title="Close Dock"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -1090,8 +1307,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Terminal Shell Canvas */}
-              <div className="flex-1 overflow-y-auto p-4 font-mono text-xs sm:text-sm select-text bg-[#020408]">
-                {/* 1. Real Terminal Stream */}
+              <div
+                onClick={() => terminalInputRef.current?.focus()}
+                className="flex-1 overflow-y-auto p-4 font-mono text-xs sm:text-sm select-text bg-[#020408] cursor-text"
+              >
+                {/* 1. Real Interactive Terminal Stream (VS Code Style) */}
                 {activeConsoleTab === 'terminal' && (
                   <div className="space-y-3">
                     {terminalHistory.map((item) => (
@@ -1105,12 +1325,21 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                           <span className="text-[#E6EDF3] font-semibold">{item.command}</span>
                         </div>
 
-                        {/* Stdin Echo */}
-                        {item.stdin && (
+                        {/* Interactive Prompts Echo */}
+                        {item.interactivePrompts && item.interactivePrompts.length > 0 ? (
+                          <div className="space-y-0.5 pl-2 border-l-2 border-amber-500/40">
+                            {item.interactivePrompts.map((ip, idx) => (
+                              <div key={idx} className="flex items-center gap-1.5 text-xs sm:text-sm">
+                                <span className="text-amber-300/90 font-medium">{ip.prompt || 'Input: '}</span>
+                                <span className="text-[#E6EDF3] font-semibold">{ip.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : item.stdin ? (
                           <div className="text-[#8B949E] text-xs pl-2 border-l-2 border-[#30363D]">
                             [stdin feed]: {item.stdin}
                           </div>
-                        )}
+                        ) : null}
 
                         {/* Stdout Output */}
                         {item.stdout && (
@@ -1139,8 +1368,77 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                       </div>
                     ))}
 
-                    {/* Active Running State */}
-                    {isRunning && (
+                    {/* Interactive Active Session (Waiting for user typing in terminal) */}
+                    {interactiveSession.active && (
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-emerald-400 font-bold">python@workspace</span>
+                          <span className="text-[#8B949E]">:</span>
+                          <span className="text-[#58A6FF] font-medium">~/workspace</span>
+                          <span className="text-[#8B949E]">$</span>
+                          <span className="text-[#E6EDF3] font-semibold">python3 solution.py</span>
+                        </div>
+
+                        {/* Previous answered inputs in this run */}
+                        {interactiveSession.collectedInputs.map((val, idx) => (
+                          <div key={idx} className="flex items-center gap-1.5 text-xs sm:text-sm pl-2 border-l-2 border-amber-500/40">
+                            <span className="text-amber-300 font-medium">{interactiveSession.prompts[idx] || 'Input: '}</span>
+                            <span className="text-[#E6EDF3] font-semibold">{val}</span>
+                          </div>
+                        ))}
+
+                        {/* Active Prompt Line with Focused Input */}
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            handleInteractiveInputSubmit();
+                          }}
+                          className="flex items-center gap-2 text-xs sm:text-sm bg-[#161B22]/80 p-2 rounded-xl border border-amber-500/40 shadow-inner"
+                        >
+                          <span className="text-amber-300 font-bold whitespace-nowrap">
+                            {interactiveSession.prompts[interactiveSession.currentStep] || 'Enter input: '}
+                          </span>
+                          <input
+                            ref={terminalInputRef}
+                            type="text"
+                            value={terminalInput}
+                            onChange={(e) => setTerminalInput(e.target.value)}
+                            onKeyDown={handleTerminalKeyDown}
+                            placeholder="Type value & hit Enter (or Esc to cancel)..."
+                            className="flex-1 bg-transparent border-none outline-none text-[#E6EDF3] font-mono text-xs sm:text-sm font-semibold placeholder:text-[#6E7681] caret-[#58A6FF] p-0"
+                            autoFocus
+                          />
+                          <button
+                            type="submit"
+                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer transition-colors shadow"
+                          >
+                            Enter ↵
+                          </button>
+                        </form>
+
+                        {/* Quick paste helper for beginner if problem has test cases */}
+                        {problem?.visible_test_cases?.[0]?.input && (
+                          <div className="flex items-center gap-2 text-[11px] text-[#8B949E] pl-1">
+                            <span>Quick test with Example 1:</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const lines = problem.visible_test_cases[0].input.split('\n');
+                                const val = lines[interactiveSession.currentStep] !== undefined ? lines[interactiveSession.currentStep] : problem.visible_test_cases[0].input;
+                                setTerminalInput(val);
+                                terminalInputRef.current?.focus();
+                              }}
+                              className="px-2 py-0.5 rounded bg-[#161B22] border border-[#30363D] hover:border-[#58A6FF] text-[#58A6FF] transition-all cursor-pointer"
+                            >
+                              Paste &quot;{problem.visible_test_cases[0].input.split('\n')[interactiveSession.currentStep] || problem.visible_test_cases[0].input}&quot;
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Active Running State (when communicating with sandbox) */}
+                    {isRunning && !interactiveSession.active && (
                       <div className="space-y-1 animate-pulse">
                         <div className="flex items-center gap-2">
                           <span className="text-emerald-400 font-bold">python@workspace</span>
@@ -1156,15 +1454,29 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                       </div>
                     )}
 
-                    {/* Ready Prompt with Cursor */}
-                    {!isRunning && (
-                      <div className="flex items-center gap-2 pt-1">
+                    {/* Ready Prompt (Interactive Bash Shell) */}
+                    {!isRunning && !interactiveSession.active && (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleTerminalCommandSubmit();
+                        }}
+                        className="flex items-center gap-2 pt-1"
+                      >
                         <span className="text-emerald-400 font-bold">python@workspace</span>
                         <span className="text-[#8B949E]">:</span>
                         <span className="text-[#58A6FF] font-medium">~/workspace</span>
                         <span className="text-[#8B949E]">$</span>
-                        <span className="inline-block w-2 h-4 bg-[#58A6FF] animate-pulse" />
-                      </div>
+                        <input
+                          ref={terminalInputRef}
+                          type="text"
+                          value={terminalInput}
+                          onChange={(e) => setTerminalInput(e.target.value)}
+                          onKeyDown={handleTerminalKeyDown}
+                          placeholder="python3 solution.py, clear, or type input... (Enter ↵)"
+                          className="flex-1 bg-transparent border-none outline-none text-[#E6EDF3] font-mono text-xs sm:text-sm placeholder:text-[#484F58] caret-[#58A6FF] p-0"
+                        />
+                      </form>
                     )}
 
                     <div ref={terminalEndRef} />
