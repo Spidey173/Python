@@ -10,6 +10,70 @@ def normalize_output(text: str) -> str:
     return "\n".join(lines)
 
 
+def strip_quotes(s: str) -> str:
+    """Removes single or double wrapping quotes if present."""
+    s = s.strip()
+    if (s.startswith("'") and s.endswith("'")) or (s.startswith('"') and s.endswith('"')):
+        return s[1:-1].strip()
+    return s
+
+
+def is_beginner_friendly_match(actual: str, expected: str) -> bool:
+    """
+    Intelligent, beginner-friendly output comparator:
+    1. Exact normalized match.
+    2. Boolean equivalence ('true' == 'True' == True, 'false' == 'False' == False).
+    3. Surrounding quotes tolerance ('"True"' or "'hello'" matches 'hello').
+    4. Numeric and float equivalence ('4.0' == '4', '+5' == '5').
+    5. List / Array spacing tolerance ('[1,2,3]' == '[1, 2, 3]' == '1 2 3').
+    6. Case-insensitive match for single-word / status token responses.
+    """
+    act_norm = normalize_output(actual)
+    exp_norm = normalize_output(expected)
+
+    # 1. Exact match after basic trimming
+    if act_norm == exp_norm:
+        return True
+
+    # 2. Quote-stripped comparison
+    act_unquoted = strip_quotes(act_norm)
+    exp_unquoted = strip_quotes(exp_norm)
+    if act_unquoted == exp_unquoted:
+        return True
+
+    # 3. Boolean equivalence (e.g. True / False vs true / false vs "true" / "True")
+    act_lower = act_unquoted.lower()
+    exp_lower = exp_unquoted.lower()
+
+    if exp_lower in ("true", "false"):
+        return act_lower == exp_lower
+
+    # 4. Numeric tolerance (int / float / negative / positive)
+    try:
+        if float(act_unquoted) == float(exp_unquoted):
+            return True
+    except (ValueError, TypeError):
+        pass
+
+    # 5. List / Tuple / Space-separated array tolerance (e.g. '[1, 2, 3]' vs '1 2 3' or '[1,2,3]')
+    def clean_tokens(text: str) -> list:
+        # Strip brackets, parentheses, and commas
+        cleaned = text.replace("[", " ").replace("]", " ").replace("(", " ").replace(")", " ").replace(",", " ")
+        return [strip_quotes(token).lower() for token in cleaned.split() if token.strip()]
+
+    act_tokens = clean_tokens(act_norm)
+    exp_tokens = clean_tokens(exp_norm)
+    if act_tokens and act_tokens == exp_tokens:
+        return True
+
+    # 6. Single-line case-insensitive fallback (for words like "palindrome", "valid", "anagram", "-1")
+    if "\n" not in exp_norm and "\n" not in act_norm:
+        if act_lower == exp_lower:
+            return True
+
+    return False
+
+
 async def evaluate_challenge_test_cases(
     code: str,
     test_cases: List[Dict[str, Any]],
@@ -26,7 +90,6 @@ async def evaluate_challenge_test_cases(
     for idx, tc in enumerate(test_cases, 1):
         input_data = str(tc.get("input", ""))
         expected_raw = str(tc.get("expected", ""))
-        expected_norm = normalize_output(expected_raw)
         description = tc.get("description", f"Test Case #{idx}")
         hidden = bool(tc.get("hidden", False))
 
@@ -37,12 +100,15 @@ async def evaluate_challenge_test_cases(
         )
 
         actual_raw = exec_res.get("stdout", "")
-        actual_norm = normalize_output(actual_raw)
         error = exec_res.get("stderr") or exec_res.get("security_error")
         time_ms = exec_res.get("execution_time_ms", 0.0)
         total_time_ms += time_ms
 
-        passed = (exec_res["success"] and actual_norm == expected_norm and not error)
+        passed = (
+            exec_res["success"]
+            and not error
+            and is_beginner_friendly_match(actual_raw, expected_raw)
+        )
 
         if not passed:
             all_passed = False

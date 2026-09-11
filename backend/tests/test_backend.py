@@ -70,6 +70,27 @@ async def test_evaluator_grades_test_cases():
     assert results[1]["passed"] is True
 
 
+@pytest.mark.asyncio
+async def test_evaluator_beginner_friendly_matching():
+    # 1. Boolean matching: string 'true' / '"True"' matches boolean expected 'True'
+    code_bool_str = "print('true')"
+    test_case_bool = [{"input": "", "expected": "True"}]
+    passed, res, _ = await evaluate_challenge_test_cases(code_bool_str, test_case_bool)
+    assert passed is True
+
+    # 2. Quotes tolerance: user printed '"hello"' when expected is 'hello'
+    code_quotes = "print('\"hello\"')"
+    test_case_str = [{"input": "", "expected": "hello"}]
+    passed, res, _ = await evaluate_challenge_test_cases(code_quotes, test_case_str)
+    assert passed is True
+
+    # 3. List spacing / bracket tolerance: '[1, 2, 3]' matches '1 2 3'
+    code_list = "print([1, 2, 3])"
+    test_case_list = [{"input": "", "expected": "1 2 3"}]
+    passed, res, _ = await evaluate_challenge_test_cases(code_list, test_case_list)
+    assert passed is True
+
+
 def test_rewards_and_stars_calculation():
     rewards = calculate_rewards_and_stars(
         passed_all=True,
