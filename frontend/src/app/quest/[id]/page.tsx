@@ -34,6 +34,8 @@ import {
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
+import { getProblemRankedSolutions } from '@/lib/problem-intelligence';
+
 interface TerminalHistoryEntry {
   id: string;
   command: string;
@@ -44,6 +46,104 @@ interface TerminalHistoryEntry {
   exitCode: number;
   durationMs: number;
   timestamp: string;
+}
+
+/**
+ * Returns an abstract algorithmic demonstration using generic sample data
+ * so that the active challenge solution is never leaked before submission.
+ */
+function getConceptualPattern(conceptName: string): string {
+  const c = (conceptName || '').toLowerCase();
+  if (c.includes('pointer') || c.includes('palindrome')) {
+    return `# Conceptual Pattern: Two-Pointer Traversal (Generic Array)
+# Demonstrates comparing elements from both ends towards the center
+items = [10, 20, 30, 20, 10]
+left, right = 0, len(items) - 1
+is_symmetric = True
+
+while left < right:
+    if items[left] != items[right]:
+        is_symmetric = False
+        break
+    left += 1
+    right -= 1
+
+print(f"Symmetric pattern: {is_symmetric}")`;
+  }
+  if (c.includes('count') || c.includes('frequency') || c.includes('hash') || c.includes('map') || c.includes('anagram')) {
+    return `# Conceptual Pattern: Frequency Counting with Dictionary
+# Demonstrates accumulating item counts and querying unique values
+fruits = ["apple", "banana", "apple", "orange", "banana"]
+frequencies = {}
+
+for item in fruits:
+    frequencies[item] = frequencies.get(item, 0) + 1
+
+# Finding items that appear exactly once:
+singles = [k for k, v in frequencies.items() if v == 1]
+print(f"Unique occurrences: {singles}")`;
+  }
+  if (c.includes('stack')) {
+    return `# Conceptual Pattern: Last-In First-Out (Stack Structure)
+# Demonstrates balancing open/close delimiters using a list as a stack
+stack = []
+tokens = ["(", "[", "]", ")"]
+
+for token in tokens:
+    if token in "([":
+        stack.append(token)
+    elif stack:
+        stack.pop()
+
+print(f"Balanced structure: {len(stack) == 0}")`;
+  }
+  if (c.includes('sliding') || c.includes('window')) {
+    return `# Conceptual Pattern: Sliding Window Accumulator
+# Demonstrates updating a fixed window without re-summing from scratch
+numbers = [2, 1, 5, 1, 3, 2]
+window_size = 3
+max_sum = 0
+current_sum = sum(numbers[:window_size])
+
+for i in range(len(numbers) - window_size):
+    current_sum = current_sum - numbers[i] + numbers[i + window_size]
+    max_sum = max(max_sum, current_sum)
+
+print(f"Max window sum: {max_sum}")`;
+  }
+  if (c.includes('binary') || c.includes('search')) {
+    return `# Conceptual Pattern: Binary Search on Ordered Space
+# Demonstrates halving the search space on sorted inputs
+sorted_list = [1, 3, 5, 7, 9, 11, 13]
+target = 7
+low, high = 0, len(sorted_list) - 1
+found_index = -1
+
+while low <= high:
+    mid = (low + high) // 2
+    if sorted_list[mid] == target:
+        found_index = mid
+        break
+    elif sorted_list[mid] < target:
+        low = mid + 1
+    else:
+        high = mid - 1
+
+print(f"Found target index: {found_index}")`;
+  }
+  // Generic fallback
+  return `# Conceptual Algorithmic Pattern (Abstract Demonstration)
+# 1. Prepare and normalize generic data
+raw_collection = ["alpha", "beta", "gamma"]
+filtered = [x.strip().lower() for x in raw_collection if x]
+
+# 2. Accumulate or process
+result_accumulator = []
+for entry in filtered:
+    result_accumulator.append(entry.upper())
+
+# 3. Format final result
+print(result_accumulator)`;
 }
 
 export default function WorkspacePage({ params }: { params: Promise<{ id: string }> }) {
@@ -229,18 +329,25 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           stopTimer();
         }
 
-        // Code restoration:
-        // Priority 1: User's saved draft (if non-empty and not just blank starter)
-        // Priority 2: Submitted passing code from backend (prob.saved_code)
-        // Priority 3: Problem starter template
+        // Code restoration: Always load the problem's clean starter_code so the user solves it independently
         let initialCode = prob.starter_code;
+        // Only restore draft if user actively edited their own code and it's not a pre-filled solution
         if (savedDraft && savedDraft.trim() !== '' && savedDraft !== prob.starter_code) {
-          initialCode = savedDraft;
-        } else if (prob.saved_code && prob.saved_code.trim() !== '' && prob.saved_code !== prob.starter_code) {
-          initialCode = prob.saved_code;
-          await persistence.saveDraft(problemId, prob.saved_code);
-        } else if (savedDraft && savedDraft.trim() !== '') {
-          initialCode = savedDraft;
+          const rankedSols = getProblemRankedSolutions(prob);
+          const isOfficialSolution = rankedSols.some(
+            (s) => s.code.trim() === savedDraft.trim() || (s.code.trim().length > 15 && savedDraft.includes(s.code.trim()))
+          );
+          const isLeakedSolution = isOfficialSolution ||
+                                  savedDraft.includes('while left < right and not') || 
+                                  savedDraft.includes('cleaned == cleaned[::-1]') ||
+                                  savedDraft.includes('words[::-1]') ||
+                                  savedDraft.includes('counts[c] = counts.get');
+          if (!isLeakedSolution) {
+            initialCode = savedDraft;
+          } else {
+            // Clean out the stale/leaked solution from localStorage so it never re-appears
+            persistence.saveDraft(problemId, prob.starter_code);
+          }
         }
         setCode(initialCode);
 
@@ -249,9 +356,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setConsoleCollapsed(layoutSettings.consoleCollapsed);
         await persistence.setLastActiveProblemId(problemId);
 
-        // Solution is unlocked if the challenge has been solved OR manually unlocked previously
-        const isUnlockedInStorage = unlockedSolutions.includes(problemId);
-        setIsSolutionUnlocked(isAlreadySolved || isUnlockedInStorage);
+        // Solution is strictly locked until the user submits code and passes all test suites in this session
+        setIsSolutionUnlocked(false);
 
         // Initialize Mentor with welcoming greeting
         const knowledge = getMentorKnowledge(prob);
@@ -299,7 +405,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setSolvedIds(resolved);
         if (resolved.includes(problemId)) {
           stopTimer();
-          setIsSolutionUnlocked(true);
         }
       } catch (e) {
         console.error('Failed to sync user solved progress:', e);
@@ -397,9 +502,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       },
     ]);
 
-    const exampleIntro = "Here is an idiomatic structural pattern demonstrating how this concept functions. Adapt this logic to match your specific challenge:";
+    const exampleIntro = `Here is an idiomatic structural pattern demonstrating the **${knowledge.conceptName}** principle on abstract sample data. Adapt this general algorithm structure to match your challenge:`;
+    const conceptualSnippet = getConceptualPattern(knowledge.conceptName);
     setTimeout(() => {
-      streamMentorText(exampleIntro, 'coaching', knowledge.patternExample);
+      streamMentorText(exampleIntro, 'coaching', conceptualSnippet);
     }, 200);
   };
 
@@ -1008,11 +1114,17 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               onClick={() => setActiveTab('interview')}
               className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'interview'
-                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40 shadow-sm'
+                  ? isSolutionUnlocked
+                    ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40 shadow-sm'
+                    : 'bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 shadow-sm'
                   : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
               }`}
             >
-              <Briefcase className="w-4 h-4 text-purple-400" />
+              {isSolutionUnlocked ? (
+                <Briefcase className="w-4 h-4 text-purple-400" />
+              ) : (
+                <Lock className="w-4 h-4 text-[#D29922]" />
+              )}
               <span>Interview Q&A</span>
             </button>
           </div>
@@ -1133,7 +1245,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             {activeTab === 'interview' && problem && (
               <InterviewPanel
                 problem={problem}
-                isSolved={Boolean(isCurrentProblemSolved)}
+                isSolved={isSolutionUnlocked}
+                onClose={() => setActiveTab('spec')}
               />
             )}
           </div>
