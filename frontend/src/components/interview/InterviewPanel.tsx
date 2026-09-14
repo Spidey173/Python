@@ -340,9 +340,9 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
                                 )}
                               </button>
                             </div>
-                            <p className="text-sm sm:text-base text-[#F0F6FC] leading-relaxed font-medium">
-                              &ldquo;{q.bestReplyScript}&rdquo;
-                            </p>
+                             <div className="text-sm sm:text-base text-[#F0F6FC] leading-relaxed font-medium whitespace-pre-wrap font-sans">
+                               {q.bestReplyScript}
+                             </div>
                           </div>
 
                           {/* 2. Key Terms Badges */}
