@@ -3606,203 +3606,189 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Rotate Array by K Steps in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Rotate Array by K Steps using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain your algorithm.",
+        "whatInterviewerChecks": "Explaining 3-step Reverse Algorithm step by step.",
+        "bestReplyScript": "I use the Reverse Algorithm, which rotates the array in-place using three reversals.\n\nThe steps are:\n1. Compute k = k % n to handle cases where k is larger than the array size.\n2. Reverse the entire array.\n3. Reverse the first k elements.\n4. Reverse the remaining n-k elements.\n\nExample:\nInput: nums = [1,2,3,4,5,6,7], k = 3\n\nStep 1: Reverse entire array -> [7,6,5,4,3,2,1]\nStep 2: Reverse first 3 elements -> [5,6,7,4,3,2,1]\nStep 3: Reverse remaining elements -> [5,6,7,1,2,3,4]\n\nOutput: [5,6,7,1,2,3,4]\n\nThis approach is efficient because it modifies the original array without using extra memory.\n\nComplexity\n• Time: O(n)\n• Space: O(1)",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_10(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "In-place 3-pass reverse algorithm",
+          "k = k % n bounds normalization",
+          "Reverse all -> Reverse 0..k-1 -> Reverse k..n-1",
+          "O(n) time and O(1) space"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Rotate Array by K Steps?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Algorithmic Mechanics",
+        "question": "2. Why reverse the array three times?",
+        "whatInterviewerChecks": "Understanding the visual re-ordering logic of reversals.",
+        "bestReplyScript": "The three reversals rearrange the elements into the correct rotated order.\n\n• The first reversal moves the last k elements to the front (but in reverse order).\n• The second reversal restores the correct order of those first k elements.\n• The third reversal restores the order of the remaining elements.\n\nExample:\nOriginal: [1,2,3,4,5,6,7]\nReverse All: [7,6,5,4,3,2,1]\nReverse First 3: [5,6,7,4,3,2,1]\nReverse Remaining: [5,6,7,1,2,3,4]\n\nThree reversals achieve rotation in-place without extra storage.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Rotate Array by K Steps:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "1st reverse: Brings tail elements to head position in inverted order",
+          "2nd reverse: Restores proper orientation of head k elements",
+          "3rd reverse: Restores proper orientation of remaining n-k tail elements"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Rotate Array by K Steps if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Time & Space Complexity Proof",
+        "question": "3. What's the complexity?",
+        "whatInterviewerChecks": "Summing asymptotic bounds across 3 reversal passes.",
+        "bestReplyScript": "Although the array is reversed three times, each reversal is O(n).\n\nSo,\n• Reverse whole array → O(n)\n• Reverse first k elements → O(k)\n• Reverse remaining elements → O(n-k)\n\nTotal: O(n)\nExtra Space: O(1)",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_10(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "O(n) + O(k) + O(n-k) = O(2n) = O(n) total time",
+          "Strictly O(1) space (two pointers in-place element swap)",
+          "Optimal lower bound"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "In-place Requirement",
+        "question": "4. Can you rotate in-place?",
+        "whatInterviewerChecks": "Confirming zero auxiliary buffer allocation.",
+        "bestReplyScript": "Yes.\n\nThe reverse algorithm modifies the original array directly.\n\nNo additional array is created.\n\nExample:\nOriginal: [1,2,3,4,5]\nAfter rotation: [4,5,1,2,3]\n\nSince only swaps are used, the extra space remains O(1).",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Modifies input list in-place",
+          "Uses 2-pointer swap mechanism",
+          "Zero auxiliary array allocations"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Modulo Normalization",
+        "question": "5. What if k is larger than the array size?",
+        "whatInterviewerChecks": "Handling k > n via modulo reduction.",
+        "bestReplyScript": "I first compute: k = k % n.\n\nThis removes unnecessary full rotations.\n\nExample:\nArray Size = 5, k = 12\n12 % 5 = 2\n\nRotating by 12 steps is equivalent to rotating by 2 steps.\n\nThis optimization improves efficiency and avoids redundant work.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Modulo reduction: k = k % n",
+          "Full array rotation (k = n) is identity operation",
+          "Prevents out-of-bounds array slicing errors"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Directional Adaptation (Left Rotation)",
+        "question": "6. How would you rotate left instead?",
+        "whatInterviewerChecks": "Adapting reversal order for Left vs Right rotation.",
+        "bestReplyScript": "For a left rotation by k positions:\n1. Reverse the first k elements (0..k-1).\n2. Reverse the remaining elements (k..n-1).\n3. Reverse the entire array (0..n-1).\n\nExample:\nInput: [1,2,3,4,5], k = 2\nOutput: [3,4,5,1,2]\n\nThe logic is similar to right rotation; only the order of reversals changes.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Rotate Array by K Steps:\nassert solve_10([]) == 0\nassert solve_10([5]) == 5\nassert solve_10([-1, -5, -2]) != 0\nassert solve_10([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Left rotation 3-step order: Reverse 0..k-1 -> Reverse k..n-1 -> Reverse 0..n-1",
+          "Alternative: Right rotate by (n - (k % n))",
+          "Identical O(n) time and O(1) space"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Edge Cases & Boundaries",
+        "question": "7. What edge cases exist?",
+        "whatInterviewerChecks": "Identifying boundary inputs.",
+        "bestReplyScript": "Important edge cases include:\n\n• Empty array: [] -> Output []\n• One element: [5] -> Output [5]\n• k = 0: [1,2,3] -> Output [1,2,3]\n• k = n: n = 5, k = 5 -> No change\n• k > n: n = 5, k = 8 -> 8 % 5 = 3 (rotate by 3 instead)\n\nTesting these cases ensures the solution handles all boundary conditions.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Empty array []",
+          "Single-element list [x]",
+          "k = 0 (no-op)",
+          "k = n (full circle no-op)",
+          "k > n (modulo reduction required)"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Auxiliary Space Alternative",
+        "question": "8. Can this be solved using extra memory?",
+        "whatInterviewerChecks": "Explaining the O(n) space auxiliary array approach.",
+        "bestReplyScript": "Yes.\n\nOne simple approach is:\n1. Create a new array.\n2. Place each element at its rotated position: nums[(i + k) % n] = original[i].\n\nComplexity:\n• Time: O(n)\n• Space: O(n)\n\nThis approach is easier to understand but uses additional memory.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Formula: new_arr[(i + k) % n] = old_arr[i]",
+          "Time: O(n), Space: O(n)",
+          "High memory overhead for large arrays"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Trade-off & Strategy Comparison",
+        "question": "9. Which approach is fastest?",
+        "whatInterviewerChecks": "Comparing Extra Array vs Reverse Algorithm vs Cyclic Replacement.",
+        "bestReplyScript": "The best approach depends on the constraints.\n\nApproach | Time | Space\nExtra Array | O(n) | O(n)\nReverse Algorithm | O(n) | O(1)\nCyclic Replacement | O(n) | O(1)\n\nFor interviews and production, the Reverse Algorithm is usually preferred because it is simple, efficient, and uses constant extra space.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Reverse Algorithm: O(n) time, O(1) space, cleanest implementation",
+          "Cyclic Replacement: O(n) time, O(1) space, complex pointer math",
+          "Extra Array: O(n) time, O(n) space, simplest code"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Test Suite Design",
+        "question": "10. How would you test this?",
+        "whatInterviewerChecks": "Designing structured test cases.",
+        "bestReplyScript": "I would create test cases for different scenarios.\n\nInput | k | Expected Output\n[1,2,3,4,5,6,7] | 3 | [5,6,7,1,2,3,4]\n[1,2] | 1 | [2,1]\n[1] | 5 | [1]\n[] | 2 | []\n[1,2,3] | 0 | [1,2,3]\n[1,2,3] | 3 | [1,2,3]\n\nTesting different values of k ensures correctness.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Standard rotation (k < n)",
+          "k = 0 and k = n boundary cases",
+          "k > n large step cases",
+          "Single and empty arrays"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Candidate Pitfalls & Mistakes",
+        "question": "11. What mistakes do candidates make?",
+        "whatInterviewerChecks": "Identifying common execution errors.",
+        "bestReplyScript": "Some common mistakes include:\n• Forgetting to calculate k % n.\n• Using extra memory when an in-place solution is required.\n• Reversing the wrong portions of the array.\n• Failing to handle empty arrays.\n• Incorrect index calculations.\n• Forgetting that k = n means no rotation.\n\nThe most common mistake is not applying modulo, which leads to incorrect results or IndexError when k is larger than the array size.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Omitting k = k % n modulo normalization",
+          "Reversing incorrect subarray index bounds",
+          "Allocating O(n) memory when O(1) is demanded"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Modulo Mathematics Mechanics",
+        "question": "12. How does modulo help?",
+        "whatInterviewerChecks": "Explaining equivalence classes in circular array indexing.",
+        "bestReplyScript": "Modulo converts large rotation values into the equivalent smaller rotation.\n\nExample:\nArray Size = 7, k = 17\n17 % 7 = 3\n\nRotating 17 times gives the same result as rotating 3 times.\n\nUsing modulo avoids unnecessary work and simplifies the algorithm.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Periodic equivalence: rotation k == k + c*n for integer c",
+          "Reduces total pointer operations to minimum required steps",
+          "Guarantees k < n bound"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Data Structure Adaptation (Linked List)",
+        "question": "13. Can you rotate a linked list?",
+        "whatInterviewerChecks": "Adapting array rotation logic to singly linked lists.",
+        "bestReplyScript": "Yes.\n\nFor a linked list:\n1. Find its length.\n2. Compute k % length.\n3. Locate the new tail (at length - k position).\n4. Connect the last node to the original head to form a temporary circle.\n5. Break the circle at the new tail.\n\nThis rotates the linked list in:\n• Time: O(n)\n• Space: O(1)",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "1. Count length N and find old tail",
+          "2. Make circular list: old_tail.next = head",
+          "3. Traverse N - (k % N) steps to new tail",
+          "4. Break cycle: new_head = new_tail.next, new_tail.next = None"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Real-world Engineering Applications",
+        "question": "14. Where is array rotation used?",
+        "whatInterviewerChecks": "Identifying system-level applications of circular array rotation.",
+        "bestReplyScript": "Array rotation has many practical applications, including:\n• Circular buffers in stream processing.\n• CPU Round-Robin scheduling algorithms.\n• Load balancing ring buffers.\n• Image and matrix transformations.\n• Cryptography & bitwise barrel shifters.\n• Ring queues in low-level drivers.\n• Operating systems process management.\n\nThe concept of cyclic movement is common in many software systems.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "OS Round-Robin process scheduling",
+          "Circular Ring Buffers for audio/video streaming",
+          "Hardware barrel shifters in ALU chips",
+          "Load balancer round-robin target servers"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Production Engineering Decision",
+        "question": "15. Which solution would you choose in production?",
+        "whatInterviewerChecks": "Balancing code readability vs memory optimization in production.",
+        "bestReplyScript": "It depends on the requirements.\n\n• If memory efficiency is important, I would use the Reverse Algorithm because it runs in O(n) time with O(1) extra space.\n• If readability is the priority and extra memory is acceptable, I might use the extra array / slice approach since it is easier to understand and maintain.\n\nIn most production environments, I would choose the Reverse Algorithm because it provides the best balance of performance and memory usage.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Production choice: Reverse Algorithm (Optimal O(1) RAM)",
+          "Pythonic shortcut: `nums[:] = nums[-k:] + nums[:-k]` (Uses O(n) RAM, clean for small arrays)",
+          "Defensive validation of inputs in enterprise APIs"
+        ]
       }
     ],
     "mistakes": [
