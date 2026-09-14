@@ -27,7 +27,7 @@ import {
   Play, RotateCcw, ArrowLeft, Clock, BookOpen,
   Check, X, Terminal, ChevronDown, ChevronUp, Copy, Trash2,
   CheckSquare, RefreshCw, Bot, Lock, Unlock,
-  Briefcase, Zap
+  Briefcase, Zap, Sparkles
 } from 'lucide-react';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -376,6 +376,18 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     streamMentorText(coachReply, 'coaching');
   };
 
+  const handleAskMentorAboutError = (command: string, errorText: string) => {
+    setActiveTab('mentor');
+    const prompt = `I ran into an error in the terminal while running \`${command}\`:\n\`\`\`\n${errorText.trim()}\n\`\`\`\nCan you explain what caused this error and give me a helpful hint to resolve it?`;
+    handleSendCustomPrompt(prompt);
+  };
+
+  const handleAskMentorAboutTestFailure = (caseNum: number, input: string, expected: string, actual: string) => {
+    setActiveTab('mentor');
+    const prompt = `Test Case ${caseNum} failed on my code:\nInput: \`${input}\`\nExpected: \`${expected}\`\nMy Output: \`${actual}\`\n\nCould you give me a hint on why my logic produced this output and what edge case or condition I should check?`;
+    handleSendCustomPrompt(prompt);
+  };
+
   // 6. Interactive VS Code Terminal & Code Pipeline
   const extractInputPrompts = (codeStr: string): string[] => {
     // Strip single-line comments to avoid matching commented-out inputs
@@ -398,11 +410,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     try {
       setIsRunning(true);
-      setIsThinking(true);
       setConsoleCollapsed(false);
       setActiveConsoleTab('terminal');
 
-      setThinkingPhase('Running in Python 3.12 sandbox...');
       const res = await api.runCode(problemId, code, stdinText);
       setRunResponse(res);
 
@@ -426,21 +436,29 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         },
       ]);
 
-      const feedback = analyzeExecutionForMentor(res);
       if (!res.success) {
         soundFX.playFailureThud();
+      } else {
+        soundFX.playSuccessChime();
       }
-      streamMentorText(feedback.responseText, feedback.mood, feedback.codeSnippet);
     } catch (err: any) {
       soundFX.playFailureThud();
-      streamMentorText(
-        `Execution encountered an error: ${err?.message || 'Failed to connect to runner'}. Please verify syntax.`,
-        'debugging'
-      );
+      setTerminalHistory((prev) => [
+        ...prev.slice(-25),
+        {
+          id: Math.random().toString(36).substring(7),
+          command: customCommand,
+          stdin: stdinText || undefined,
+          interactivePrompts,
+          stdout: '',
+          stderr: `Execution error: ${err?.message || 'Failed to connect to runner'}.`,
+          exitCode: 1,
+          durationMs: 0,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        },
+      ]);
     } finally {
       setIsRunning(false);
-      setIsThinking(false);
-      setThinkingPhase('');
       setInteractiveSession({ active: false, prompts: [], collectedInputs: [], currentStep: 0 });
       setTimeout(() => {
         terminalInputRef.current?.focus();
@@ -482,10 +500,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     try {
       setIsRunning(true);
-      setIsThinking(true);
       setConsoleCollapsed(false);
       setActiveConsoleTab('tests');
-      setThinkingPhase('Running visible test cases in sandbox...');
 
       const res = await api.runCode(problemId, code);
       setRunResponse(res);
@@ -517,21 +533,28 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         },
       ]);
 
-      const feedback = analyzeExecutionForMentor(res);
       if (!res.success || (res.test_results && res.test_results.some((t) => !t.passed))) {
         soundFX.playFailureThud();
+      } else {
+        soundFX.playSuccessChime();
       }
-      streamMentorText(feedback.responseText, feedback.mood, feedback.codeSnippet);
     } catch (err: any) {
       soundFX.playFailureThud();
-      streamMentorText(
-        `Execution encountered an error: ${err?.message || 'Failed to connect to runner'}.`,
-        'debugging'
-      );
+      setTerminalHistory((prev) => [
+        ...prev.slice(-25),
+        {
+          id: Math.random().toString(36).substring(7),
+          command: 'pytest tests/ -v',
+          stdin: undefined,
+          stdout: '',
+          stderr: `Execution error: ${err?.message || 'Failed to connect to runner'}.`,
+          exitCode: 1,
+          durationMs: 0,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        },
+      ]);
     } finally {
       setIsRunning(false);
-      setIsThinking(false);
-      setThinkingPhase('');
     }
   };
 
@@ -1290,7 +1313,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                     {interactiveSession.active && (
                       <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
                     )}
-                    {isRunning && <span className="h-1.5 w-1.5 rounded-full bg-[#58A6FF] animate-ping" />}
+                    {isRunning && (
+                      <span className="flex items-center gap-1 text-[10px] text-[#38bdf8] font-mono lowercase">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8] animate-ping" />
+                        running
+                      </span>
+                    )}
                   </button>
 
                   <button
@@ -1405,6 +1433,21 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                             {item.stderr}
                           </pre>
                         )}
+
+                        {/* On-Demand AI Help Action for Errors */}
+                        {(item.exitCode !== 0 || !!item.stderr) && (
+                          <div className="pt-1 pb-0.5 flex items-center gap-2 flex-wrap">
+                            <button
+                              type="button"
+                              onClick={() => handleAskMentorAboutError(item.command, item.stderr || item.stdout)}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1f242c] hover:bg-[#28303d] border border-[#388bfd]/30 text-xs text-[#58a6ff] hover:text-[#79c0ff] transition-all cursor-pointer shadow-sm font-sans"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-[#58a6ff]" />
+                              <span>Ask AI Mentor to explain this error</span>
+                            </button>
+                            <span className="text-[11px] text-[#858585] font-mono">• exit {item.exitCode}</span>
+                          </div>
+                        )}
                       </div>
                     ))}
 
@@ -1459,12 +1502,16 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
                     {/* Active Running State (Executing sandbox command) */}
                     {isRunning && !interactiveSession.active && (
-                      <div className="space-y-0.5">
+                      <div className="space-y-1 pt-0.5">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="text-[#22c55e] font-bold select-none animate-pulse">➜</span>
                           <span className="text-[#38bdf8] font-medium select-none">Python</span>
                           <span className="text-[#22c55e] select-none">❯</span>
                           <span className="text-[#ffffff] ml-1">python3 solution.py</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-[#858585] pl-1 font-mono">
+                          <span className="inline-block w-2 h-2 rounded-full bg-[#38bdf8] animate-ping" />
+                          <span>Running in sandbox...</span>
                         </div>
                       </div>
                     )}
@@ -1557,6 +1604,18 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                               <div className={`p-2 rounded mt-1 font-mono border ${result.passed ? 'bg-[#181818] text-[#4ec9b0] border-[#4ec9b0]/30' : 'bg-[#181818] text-[#f48771] border-[#f48771]/30'}`}>
                                 {result.actual_output || '(no output)'}
                               </div>
+                            </div>
+                          )}
+                          {result && !result.passed && (
+                            <div className="pt-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleAskMentorAboutTestFailure(selectedCaseIndex + 1, testCase?.input || '', result.expected_output || testCase?.expected || '', result.actual_output || '')}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1f242c] hover:bg-[#28303d] border border-[#388bfd]/30 text-xs text-[#58a6ff] hover:text-[#79c0ff] transition-all cursor-pointer shadow-sm font-sans"
+                              >
+                                <Sparkles className="w-3.5 h-3.5 text-[#58a6ff]" />
+                                <span>Ask AI Mentor why this test case failed</span>
+                              </button>
                             </div>
                           )}
                         </div>

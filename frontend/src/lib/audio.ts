@@ -51,6 +51,29 @@ class SoundFX {
     }
   }
 
+  // Quick crisp success chime for successful test/terminal execution
+  playSuccessChime() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      [587.33, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.12, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.36);
+      });
+    } catch {}
+  }
+
   // Metallic resonant lock-breaking sound effect
   playLockBreak() {
     if (this.isMuted) return;
