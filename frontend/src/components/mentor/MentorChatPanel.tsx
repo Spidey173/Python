@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Bot, Sparkles, Send, Lightbulb, Compass, HelpCircle,
-  CheckCircle2, AlertCircle, ArrowRight, Code2, RefreshCw,
-  Cpu, Zap, BookOpen, Lock, Unlock, Volume2, VolumeX
+  Bot, Send, Code2, RefreshCw, Volume2, VolumeX
 } from 'lucide-react';
 import { ChallengeDetail } from '@/lib/types';
 import {
@@ -17,14 +15,14 @@ interface MentorChatPanelProps {
   problem: ChallengeDetail;
   currentCode: string;
   messages: MentorMessage[];
-  hintTier: HintTier;
+  hintTier?: HintTier;
   isThinking: boolean;
   thinkingPhase: string;
-  isSolutionUnlocked: boolean;
-  onOpenSolutionVault: () => void;
-  onRequestHint: (tier: HintTier) => void;
-  onRequestConcept: () => void;
-  onRequestExample: () => void;
+  isSolutionUnlocked?: boolean;
+  onOpenSolutionVault?: () => void;
+  onRequestHint?: (tier: HintTier) => void;
+  onRequestConcept?: () => void;
+  onRequestExample?: () => void;
   onSendCustomPrompt: (prompt: string) => void;
 }
 
@@ -191,11 +189,6 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
     setIsMuted(next);
   };
 
-  const getNextHintTier = (): HintTier => {
-    if (hintTier >= 5) return 5;
-    return (hintTier + 1) as HintTier;
-  };
-
   return (
     <div className="flex flex-col h-full bg-[#0B0F17]/95 backdrop-blur-xl border-r border-[#21262D] overflow-hidden select-none">
       {/* 1. Mentor HUD Header */}
@@ -219,7 +212,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
               <span className="text-sm font-extrabold text-[#E6EDF3] tracking-tight">Mentor</span>
             </div>
             <span className="text-xs text-[#8B949E] font-medium block">
-              {isThinking ? thinkingPhase || 'Analyzing solution...' : 'Observing code • Ready to coach'}
+              {isThinking ? thinkingPhase || 'Thinking...' : 'AI Programming Partner'}
             </span>
           </div>
         </div>
@@ -236,48 +229,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
         </div>
       </div>
 
-      {/* 2. Quick Action Chips — Clean & Legible */}
-      <div className="px-4 py-2.5 border-b border-[#21262D] bg-[#0E131E]/80 shrink-0">
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
-          <button
-            onClick={() => onRequestHint(1)}
-            disabled={isThinking}
-            className="px-3 py-1.5 rounded-lg border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#D29922] text-xs font-bold text-[#E6EDF3] transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-50"
-          >
-            <Lightbulb className="w-3.5 h-3.5 text-[#D29922]" />
-            <span>Tiny Hint</span>
-          </button>
-
-          <button
-            onClick={() => onRequestHint(getNextHintTier())}
-            disabled={isThinking || hintTier >= 5}
-            className="px-3 py-1.5 rounded-lg border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#58A6FF] text-xs font-bold text-[#E6EDF3] transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-50"
-          >
-            <Compass className="w-3.5 h-3.5 text-[#58A6FF]" />
-            <span>Bigger Clue</span>
-          </button>
-
-          <button
-            onClick={onRequestConcept}
-            disabled={isThinking}
-            className="px-3 py-1.5 rounded-lg border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#A371F7] text-xs font-bold text-[#E6EDF3] transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-50"
-          >
-            <BookOpen className="w-3.5 h-3.5 text-[#A371F7]" />
-            <span>Concept</span>
-          </button>
-
-          <button
-            onClick={onRequestExample}
-            disabled={isThinking}
-            className="px-3 py-1.5 rounded-lg border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-emerald-400 text-xs font-bold text-[#E6EDF3] transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-50"
-          >
-            <Code2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Example</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 3. Chat Message Canvas */}
+      {/* 2. Chat Message Canvas */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 select-text">
         {messages.map((msg) => {
           const isMentor = msg.sender === 'mentor';
@@ -346,10 +298,10 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
             <div className="rounded-2xl rounded-tl-sm bg-[#161B22] border border-amber-500/30 p-4 text-sm sm:text-base text-amber-300 space-y-1">
               <div className="flex items-center gap-2 font-mono font-bold">
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>{thinkingPhase || 'Mentor thinking...'}</span>
+                <span>{thinkingPhase || 'Thinking...'}</span>
               </div>
               <p className="text-xs text-[#8B949E]">
-                Analyzing AST semantics & comparing against interview benchmarks...
+                Thinking through your approach...
               </p>
             </div>
           </div>
@@ -366,7 +318,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             disabled={isThinking}
-            placeholder="Ask mentor about your code logic..."
+            placeholder="Ask a question or discuss your approach..."
             className="flex-1 bg-[#090C14] border border-[#21262D] rounded-xl px-4 py-3 text-sm text-[#F0F6FC] placeholder-[#8B949E] focus:outline-none focus:border-[#58A6FF] transition-colors"
           />
           <button

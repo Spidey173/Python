@@ -359,14 +359,14 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         // Solution is strictly locked until the user submits code and passes all test suites in this session
         setIsSolutionUnlocked(false);
 
-        // Initialize Mentor with welcoming greeting
-        const knowledge = getMentorKnowledge(prob);
+        // Initialize Mentor with calm partner message
+        const greetingText = `I'm ready to work through "${prob.title || 'this challenge'}" with you. What are you thinking for the approach?`;
         setMessages([
           {
             id: 'init-greeting',
             sender: 'mentor',
-            text: knowledge.greeting,
-            fullText: knowledge.greeting,
+            text: greetingText,
+            fullText: greetingText,
             status: 'done',
             mood: 'neutral',
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -527,7 +527,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     ]);
 
     setIsThinking(true);
-    setThinkingPhase('Mentor pondering...');
+    setThinkingPhase('Thinking...');
 
     // Directly query the backend AI Chatbot model for all custom questions & greetings
     try {
@@ -550,13 +550,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     // Fallback if backend API is unreachable
     const lower = prompt.trim().toLowerCase();
-    const knowledge = getMentorKnowledge(problem);
     let coachReply = '';
 
     if (lower.includes('hi') || lower.includes('hello') || lower.includes('hey')) {
-      coachReply = `Hello! 👋 Ready to tackle **${problem.title}**? I'm your AI Mentor. Ask me any question about logic, Python syntax, edge cases, or algorithm efficiency!`;
+      coachReply = `Hey. I'm working through "${problem.title}" with you. Where do you want to start?`;
     } else {
-      coachReply = `Regarding **"${prompt}"**: For **${problem.title}**, focus on input transformation and optimal time complexity. Write out your code in \`solution.py\` and hit **Run** to verify!`;
+      coachReply = `Looking at "${problem.title}". What part of the logic or implementation are you thinking about right now?`;
     }
 
     setIsThinking(false);
@@ -860,13 +859,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setShowMissionCompleteModal(true);
 
         streamMentorText(
-          `🎉 Magnificent work! Your code passed every single test case cleanly in ${duration}ms without needing to unlock the solution. The Solution Vault is now completely open for you to review optimal interview patterns!`,
+          `All test cases passed in ${duration}ms. The solution vault is unlocked if you want to inspect alternative approaches.`,
           'celebrating'
         );
       } else {
         soundFX.playFailureThud();
         streamMentorText(
-          `Submission evaluated, but some test cases failed. I paused your mission timer so you can analyze the failure at your own pace. Modify your code to resume!`,
+          `Some test cases failed. Check the test output below to see which inputs didn't match.`,
           'coaching'
         );
       }

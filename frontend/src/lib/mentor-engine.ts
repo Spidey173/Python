@@ -111,7 +111,7 @@ export function analyzeExecutionForMentor(
   if (securityError) {
     return {
       mood: 'debugging',
-      responseText: `Careful! Your code attempted to access a restricted module or capability: \`${securityError}\`. Python runs in a sandboxed interview environment where low-level system modules ('os', 'sys', 'subprocess') are disallowed. Focus on pure Python algorithms!`,
+      responseText: `Restricted capability detected: \`${securityError}\`. The environment restricts low-level system modules ('os', 'sys', 'subprocess'). Focus on pure algorithmic logic.`,
     };
   }
 
@@ -121,7 +121,7 @@ export function analyzeExecutionForMentor(
     const lineInfo = lineMatch ? ` around line ${lineMatch[1]}` : '';
     return {
       mood: 'debugging',
-      responseText: `Looks like Python caught a syntax issue${lineInfo} before your code could finish executing. Python is very particular about indentation, colons at the end of statements (\`if:\`, \`for:\`, \`def:\`), and matching parentheses or quotation marks. Check your syntax!`,
+      responseText: `Syntax issue${lineInfo}. Check your indentation, colons after control statements, and matching brackets or quotes.`,
     };
   }
 
@@ -131,7 +131,7 @@ export function analyzeExecutionForMentor(
     const varName = varMatch ? ` '${varMatch[1]}'` : ' a variable';
     return {
       mood: 'curious',
-      responseText: `Python couldn't find the definition for${varName}. Did you misspell it, or forget to declare it before using it? Remember that Python identifiers are strictly case-sensitive.`,
+      responseText: `NameError: ${varName} isn't defined. Check for a typo or make sure it's assigned before this line.`,
     };
   }
 
@@ -139,7 +139,7 @@ export function analyzeExecutionForMentor(
   if (stderr.includes('TypeError')) {
     return {
       mood: 'coaching',
-      responseText: `Caught a \`TypeError\`! This usually happens when an operation is performed on incompatible data types—like trying to concatenate a string with an integer, or calling something that isn't a function. Check your variable types!`,
+      responseText: `TypeError: an operation was called on incompatible types. Check the types of your variables at this point.`,
     };
   }
 
@@ -147,7 +147,7 @@ export function analyzeExecutionForMentor(
   if (stderr.includes('ZeroDivisionError')) {
     return {
       mood: 'coaching',
-      responseText: `A mathematical crash: division by zero! Check your divisor expressions. When testing edge cases, denominators can sometimes evaluate to zero unless guarded by an \`if\` condition.`,
+      responseText: `ZeroDivisionError: division by zero. Check your denominator expressions and guard against 0.`,
     };
   }
 
@@ -155,7 +155,7 @@ export function analyzeExecutionForMentor(
   if (stderr.includes('IndexError') || stderr.includes('KeyError')) {
     return {
       mood: 'debugging',
-      responseText: `An out-of-bounds lookup occurred! In Python, list indexing is 0-based, so for a list of length N, valid indices are 0 to N-1. Check your loop boundaries or dictionary keys.`,
+      responseText: `IndexError or KeyError. A lookup went out of bounds or accessed a missing key. Check your loop bounds and key names.`,
     };
   }
 
@@ -164,7 +164,7 @@ export function analyzeExecutionForMentor(
     const cleanErr = stderr.split('\n').filter((l) => l.trim()).slice(-1)[0] || 'Runtime Error';
     return {
       mood: 'debugging',
-      responseText: `Interesting... your code crashed with: \`${cleanErr}\`. Let's trace your variables step by step to see where the state diverged from expectations.`,
+      responseText: `Runtime error: \`${cleanErr}\`. Check where the state diverges from what's expected.`,
     };
   }
 
@@ -177,7 +177,7 @@ export function analyzeExecutionForMentor(
     const duration = Math.round(runRes.execution_time_ms || 20);
     return {
       mood: 'celebrating',
-      responseText: `🎉 Mission Complete! Your code executed cleanly in ${duration}ms and passed every single test case! You solved this without looking at the locked solution. The Solution Vault is now completely unlocked for you!`,
+      responseText: `All ${total} tests passed in ${duration}ms. The solution vault is unlocked if you want to inspect alternative approaches.`,
     };
   }
 
@@ -187,7 +187,7 @@ export function analyzeExecutionForMentor(
     const actual = firstFailed?.actual_output?.trim();
     return {
       mood: 'coaching',
-      responseText: `You're incredibly close! You passed ${passedCount} out of ${total} tests. Notice test case #${firstFailed?.test_case_index || 1}: expected output was "${expected}", but your code produced "${actual}". Check if there is an edge case or extra newline!`,
+      responseText: `${passedCount} of ${total} tests passed. Test case #${firstFailed?.test_case_index || 1} failed: expected "${expected}", got "${actual}".`,
     };
   }
 
@@ -196,13 +196,13 @@ export function analyzeExecutionForMentor(
     const actual = stdout.trim();
     return {
       mood: 'coaching',
-      responseText: `The test cases didn't match yet. The expected output is "${firstExpected}", but your standard output was "${actual || '(empty)'}". Let's double check your print statements and calculation logic. Want a hint?`,
+      responseText: `Output didn't match the expected case. Expected "${firstExpected}", got "${actual || '(empty)'}". Check your print statement or logic.`,
     };
   }
 
   // Standard run without predefined tests
   return {
     mood: 'neutral',
-    responseText: `Execution complete. Output captured:\n\`\`\`\n${stdout || '(no output)'}\n\`\`\`\nDoes this match what you anticipated? When you're confident, click 'Submit' to grade against all test suites.`,
+    responseText: `Output:\n\`\`\`\n${stdout || '(no output)'}\n\`\`\`\nSubmit when you're ready to evaluate against all test cases.`,
   };
 }

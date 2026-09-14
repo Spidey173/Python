@@ -15,30 +15,68 @@ interface TutorRequestBody {
   chat_history?: ChatMessage[];
 }
 
-const SYSTEM_PROMPT = `You are Byte, a warm, patient, and inspiring 1-on-1 Python coding mentor for learners.
-Your primary mission: Make coding feel natural, clear, and confidence-building. Teach, don't lecture.
+const SYSTEM_PROMPT = `You are Mentor, an AI programming partner.
 
-CRITICAL MENTORING RULES:
-1. NO OVERWHELMING WALLS OF TEXT (Keep replies under 120-150 words):
-   - Never write academic textbooks, long essays, or intimidating overviews.
-   - NEVER use markdown tables.
-   - Keep answers to 2-3 short, friendly, well-spaced paragraphs or 2-3 crisp bullet points.
+Your goal is not to lecture.
+Your goal is to think with the user.
 
-2. "SIMPLE FIRST, THEN MORE SIMPLE" (Progressive Clarity):
-   - When asked "what is this problem?" or "how do I solve this?":
-     Step 1: Explain the core real-world idea in 1 simple, relatable sentence (e.g. "A palindrome is just a word or phrase that reads the same backward as forward, like 'racecar' or 'madam'").
-     Step 2: Give the 2 simple steps in plain English (e.g., "1. Clean out spaces and symbols. 2. Check if the reversed string matches.").
-     Step 3: Ask 1 gentle, encouraging question to help them write the first step in their editor.
+The experience should feel similar to talking with ChatGPT, Claude, or Gemini:
+- natural
+- conversational
+- intelligent
+- adaptive
+- calm
+- curious
+- concise unless more detail is needed
 
-3. NEVER SPOIL THE SOLUTION CODE:
-   - Do NOT write out the complete working program or dump boilerplate like \`import sys\`, \`def main()\`, \`if __name__ == '__main__':\`.
-   - Never write the exact lines that solve the active challenge.
-   - If showing code, show at most 1 short line of conceptual syntax or pseudocode.
-   - The goal is for the student to experience the "Aha!" moment of solving it themselves.
+Never sound scripted.
+Never sound like a course.
+Never sound like a textbook.
+Never constantly encourage or praise the user.
 
-4. BUILD CONFIDENCE & ENCOURAGE ACTION:
-   - Always validate their curiosity and make them feel capable ("You've got this!", "Let's take it one step at a time.").
-   - End with a friendly, bite-sized next action they can try right now in \`solution.py\`.`;
+Never use phrases like:
+- Great question!
+- Excellent!
+- That's a fantastic observation!
+- Let's dive in!
+- Awesome!
+- You're doing amazing!
+
+Instead, respond naturally like an experienced engineer.
+
+Adapt to the user's style:
+- If the user is casual, be casual.
+- If they are technical, become technical.
+- If they ask short questions, answer briefly.
+- If they ask deeply, answer deeply.
+- Don't force long responses.
+- Don't force short responses.
+- Match the conversation naturally.
+
+When explaining programming:
+- Don't immediately dump everything.
+- Reveal information progressively.
+- Explain only what the current question requires.
+- If the user asks follow-up questions, expand naturally.
+- Avoid giant walls of text unless explicitly requested.
+
+Instead of teaching chapter by chapter, reason through problems.
+- Think before answering. Internally reason about what the user is trying to accomplish, where they are stuck, and what information is actually useful.
+- If debugging: Prioritize finding the bug. Don't start with theory. Start with observations. Then explain why. Then fix it.
+- If multiple solutions exist: Recommend one. Briefly mention alternatives. Explain tradeoffs.
+- If the user seems confused: Don't dump documentation. Rephrase. Use a small example. Then stop. Wait for the next question.
+
+Coding style:
+- When writing code: produce clean code, use meaningful variable names, modern syntax, avoid unnecessary comments, explain only the important parts.
+- Don't over-comment code. Don't explain every single line unless asked.
+- NEVER spoil or output the complete working solution to the active challenge before the user submits. Guide their intuition and pseudocode instead.
+
+Tone:
+- Friendly. Professional. Curious. Patient.
+- Never robotic. Never overly enthusiastic. Never corporate. Never motivational. Never roleplay as a professor.
+- You are an intelligent AI partner that happens to be excellent at programming.
+
+Always optimize for a natural conversation. The user should forget they're talking to a prompt-engineered bot. They should feel like they're talking to a highly capable AI assistant.`;
 
 // Call Anthropic Claude API
 async function callClaude(apiKey: string, prompt: string, code: string, challengeInfo: string, history: ChatMessage[]) {
@@ -173,7 +211,7 @@ async function callOpenAICompatible(baseUrl: string, apiKey: string, model: stri
   return data.choices?.[0]?.message?.content || '';
 }
 
-// Autonomous 1-on-1 Socratic AI Tutor Engine (Encouraging, simple-first, confidence-building)
+// Autonomous 1-on-1 AI Partner Engine (Natural, calm, experienced-engineer peer style)
 function generateClaudeGradeFallback(
   message: string,
   code: string,
@@ -188,12 +226,12 @@ function generateClaudeGradeFallback(
   const explanation = knowledge?.conceptExplanation || sol?.explanation || 'Break down the problem into input, processing, and output.';
   const interviewTrap = knowledge?.interviewTrap || 'Watch out for boundary values and empty inputs.';
 
-  // 1. Greetings & Warm Welcomes
-  if (/^(hi|hello|hey|hey there|hola|sup|good (morning|afternoon|evening)|yo)/i.test(q)) {
-    return `👋 **Hey there! Great to code with you!**\n\nI'm **Byte**, your personal mentor for **${problemTitle}**.\n\nDon't worry about complicated syntax or tricky test cases—we'll take it one simple step at a time. What part would you like to explore first?`;
+  // 1. Casual greetings
+  if (/^(hi|hello|hey|hey there|hola|sup|good (morning|afternoon|evening)|yo)$/i.test(q)) {
+    return `Hey. I'm working through "${problemTitle}" with you. Where do you want to start?`;
   }
 
-  // 2. "What is this problem?" / "How to solve" / "Explain approach" / "Help"
+  // 2. "What is this problem?" / "Explain" / "How to solve"
   if (
     q.includes('what is this problem') ||
     q.includes('explain') ||
@@ -206,13 +244,12 @@ function generateClaudeGradeFallback(
     q.includes('what does this mean')
   ) {
     return (
-      `👋 **Here is the simple idea for "${problemTitle}":**\n\n` +
+      `Here is the core idea for "${problemTitle}":\n\n` +
       `${explanation}\n\n` +
-      `**To solve it, we just break it down into 2 easy steps:**\n` +
-      `1. **Clean / prepare the data**: Set up your input so it's clean and easy to test.\n` +
-      `2. **Check the condition**: Use the **${concept}** pattern to decide the result.\n\n` +
-      `💡 *Keep in mind*: ${interviewTrap}\n\n` +
-      `How would you like to start? Try writing your first line in \`solution.py\` (like reading the input with \`s = input()\`) and tell me what you'd like to do next!`
+      `At a high level:\n` +
+      `1. Parse and normalize the input so it's clean to work with.\n` +
+      `2. Apply the ${concept.toLowerCase()} logic to decide the output.\n\n` +
+      `What are your thoughts on starting the first step in solution.py?`
     );
   }
 
@@ -222,10 +259,9 @@ function generateClaudeGradeFallback(
     const hint2 = knowledge?.hints?.[1]?.nudge || 'Think about keeping only what you need and comparing values.';
 
     return (
-      `💡 **Let's take it one small step at a time:**\n\n` +
-      `• **Step 1**: ${hint1}\n` +
-      `• **Step 2**: ${hint2}\n\n` +
-      `You don't need complex code for this—just a few clean lines. What line do you want to write first?`
+      `${hint1}\n\n` +
+      `Once you have that, ${hint2.toLowerCase()}\n\n` +
+      `What line are you thinking of writing next?`
     );
   }
 
@@ -240,38 +276,28 @@ function generateClaudeGradeFallback(
     q.includes('review')
   ) {
     if (!code || code.trim() === '') {
-      return `📝 Your editor looks empty right now! Try writing your first thought in \`solution.py\` and hit **Run**, or ask me where to begin!`;
+      return `Your editor is empty right now. Put your initial attempt in solution.py or paste what you have, and we can trace it.`;
     }
 
     const hasPrint = code.includes('print');
     if (!hasPrint) {
-      return (
-        `👀 **Quick observation:**\n\n` +
-        `Your logic might be close, but Python Quest checks standard output. Make sure you use \`print(...)\` to output your final answer, then click **Run** to test it!`
-      );
+      return `The test harness checks standard output. Your code isn't calling print() on the result, so the tests see empty output.`;
     }
 
-    return (
-      `👍 **You're making solid progress!**\n\n` +
-      `Click the green **Run (Ctrl+Enter)** button below to test your code against the visible sample inputs. If a case fails, compare what your code printed against the expected output, and we'll refine it together!`
-    );
+    return `Run the code and check the terminal output against the expected case. Where does the actual output diverge from what's expected?`;
   }
 
   // 5. Time and Space Complexity (Big-O)
   if (q.includes('complexity') || q.includes('big o') || q.includes('runtime') || q.includes('space') || q.includes('time')) {
     return (
-      `⚡ **Efficiency Goals for "${problemTitle}":**\n\n` +
-      `• **Time**: Target a linear O(n) pass—look through the data once without nested loops.\n` +
-      `• **Memory**: Keep auxiliary storage minimal.\n\n` +
-      `Don't worry about perfection right away! Focus first on getting the logic working cleanly, then we can optimize.`
+      `For "${problemTitle}", the target is typically O(n) time with minimal extra space.\n\n` +
+      `Are you concerned about a nested loop or memory usage in your current approach?`
     );
   }
 
-  // 6. General Conversational / Encouraging Response
+  // 6. Natural conversational response
   return (
-    `🤖 **Mentor Byte here!**\n\n` +
-    `For **${problemTitle}**, keep it simple: focus on the core **${concept}** idea.\n\n` +
-    `Write out your thoughts in \`solution.py\` and click **Run** anytime. What question do you have about the next step?`
+    `Looking at "${problemTitle}". What part of the logic or implementation are you thinking about right now?`
   );
 }
 
@@ -395,7 +421,7 @@ export async function POST(req: NextRequest) {
     console.error('Tutor route handler error:', error);
     return NextResponse.json(
       {
-        reply: "I'm right here with you! Let's focus on breaking down this problem step by step. What part of the logic would you like to tackle first?",
+        reply: "I ran into an issue connecting to the model. What part of the code or problem were you looking at?",
         socratic_hint: "Check edge cases and input format.",
       },
       { status: 200 }

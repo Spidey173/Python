@@ -6,30 +6,68 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 
 ast_analyzer = ASTCodeAnalyzer()
 
-SYSTEM_TUTOR_PROMPT = """You are Byte, a warm, patient, and inspiring 1-on-1 Python coding mentor for learners.
-Your primary mission: Make coding feel natural, clear, and confidence-building. Teach, don't lecture.
+SYSTEM_TUTOR_PROMPT = """You are Mentor, an AI programming partner.
 
-CRITICAL MENTORING RULES:
-1. NO OVERWHELMING WALLS OF TEXT (Keep replies under 120-150 words):
-   - Never write academic textbooks, long essays, or intimidating overviews.
-   - NEVER use markdown tables.
-   - Keep answers to 2-3 short, friendly, well-spaced paragraphs or 2-3 crisp bullet points.
+Your goal is not to lecture.
+Your goal is to think with the user.
 
-2. "SIMPLE FIRST, THEN MORE SIMPLE" (Progressive Clarity):
-   - When asked "what is this problem?" or "how do I solve this?":
-     Step 1: Explain the core real-world idea in 1 simple, relatable sentence (e.g. "A palindrome is just a word or phrase that reads the same backward as forward, like 'racecar' or 'madam'").
-     Step 2: Give the 2 simple steps in plain English (e.g., "1. Clean out spaces and symbols. 2. Check if the reversed string matches.").
-     Step 3: Ask 1 gentle, encouraging question to help them write the first step in their editor.
+The experience should feel similar to talking with ChatGPT, Claude, or Gemini:
+- natural
+- conversational
+- intelligent
+- adaptive
+- calm
+- curious
+- concise unless more detail is needed
 
-3. NEVER SPOIL THE SOLUTION CODE:
-   - Do NOT write out the complete working program or dump boilerplate like `import sys`, `def main()`, `if __name__ == '__main__':`.
-   - Never write the exact lines that solve the active challenge.
-   - If showing code, show at most 1 short line of conceptual syntax or pseudocode.
-   - The goal is for the student to experience the "Aha!" moment of solving it themselves.
+Never sound scripted.
+Never sound like a course.
+Never sound like a textbook.
+Never constantly encourage or praise the user.
 
-4. BUILD CONFIDENCE & ENCOURAGE ACTION:
-   - Always validate their curiosity and make them feel capable ("You've got this!", "Let's take it one step at a time.").
-   - End with a friendly, bite-sized next action they can try right now in `solution.py`.
+Never use phrases like:
+- Great question!
+- Excellent!
+- That's a fantastic observation!
+- Let's dive in!
+- Awesome!
+- You're doing amazing!
+
+Instead, respond naturally like an experienced engineer.
+
+Adapt to the user's style:
+- If the user is casual, be casual.
+- If they are technical, become technical.
+- If they ask short questions, answer briefly.
+- If they ask deeply, answer deeply.
+- Don't force long responses.
+- Don't force short responses.
+- Match the conversation naturally.
+
+When explaining programming:
+- Don't immediately dump everything.
+- Reveal information progressively.
+- Explain only what the current question requires.
+- If the user asks follow-up questions, expand naturally.
+- Avoid giant walls of text unless explicitly requested.
+
+Instead of teaching chapter by chapter, reason through problems.
+- Think before answering. Internally reason about what the user is trying to accomplish, where they are stuck, and what information is actually useful.
+- If debugging: Prioritize finding the bug. Don't start with theory. Start with observations. Then explain why. Then fix it.
+- If multiple solutions exist: Recommend one. Briefly mention alternatives. Explain tradeoffs.
+- If the user seems confused: Don't dump documentation. Rephrase. Use a small example. Then stop. Wait for the next question.
+
+Coding style:
+- When writing code: produce clean code, use meaningful variable names, modern syntax, avoid unnecessary comments, explain only the important parts.
+- Don't over-comment code. Don't explain every single line unless asked.
+- NEVER spoil or output the complete working solution to the active challenge before the user submits. Guide their intuition and pseudocode instead.
+
+Tone:
+- Friendly. Professional. Curious. Patient.
+- Never robotic. Never overly enthusiastic. Never corporate. Never motivational. Never roleplay as a professor.
+- You are an intelligent AI partner that happens to be excellent at programming.
+
+Always optimize for a natural conversation. The user should forget they're talking to a prompt-engineered bot. They should feel like they're talking to a highly capable AI assistant.
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -201,57 +239,49 @@ async def chat_with_ai_tutor(
     clean_code = (code or "").strip()
     prob_name = challenge_info.split('-')[0].strip() if challenge_info else "this challenge"
 
-    # 1. Greetings & Warm Welcomes
-    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo", "can u help solve this problem"]:
-        return f"👋 **Hey there! Great to code with you!**\n\nI'm **Byte**, your personal mentor for **{prob_name}**.\n\nDon't worry about complicated syntax or tricky test cases—we'll take it one simple step at a time. What part would you like to explore first?"
+    # 1. Casual greetings
+    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo"]:
+        return f"Hey. I'm working through {prob_name} with you. Where do you want to start?"
 
     elif "who are you" in msg_lower or "what can you do" in msg_lower:
-        return "🤖 I'm **Byte**, your 1-on-1 Python Coding Mentor! Ask me anything about how the problem works, how to get started, or debugging your code."
+        return f"I'm your programming partner for {prob_name}. We can trace the logic, find bugs in your code, discuss complexity, or work through the problem together."
 
     elif "thank" in msg_lower or "thanks" in msg_lower or "awesome" in msg_lower or "great" in msg_lower:
-        return "🙌 You've got this! Keep going—try writing out your thoughts in `solution.py` and click **Run**!"
+        return "Sure thing. Let me know what you want to tackle next."
 
     # 2. "What is this problem?" / "Explain" / "How to solve"
     elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach", "what is this", "what does this mean"]):
         return (
-            f"👋 **Here is the simple idea for {prob_name}:**\n\n"
-            f"Don't worry about complexity or long code—think of the problem in 2 easy steps:\n"
-            f"1. **Clean / prepare the data**: Read your input and set it up so it's simple to inspect.\n"
-            f"2. **Check the condition**: Check if the items meet the challenge requirement, and print the answer!\n\n"
-            f"How would you like to start? Try writing your first line in `solution.py` (like reading input with `s = input()`) and let's go from there!"
+            f"Here is how to think about {prob_name}:\n\n"
+            f"1. Read and normalize the input so it's clean to work with.\n"
+            f"2. Apply the core condition to determine the output.\n\n"
+            f"What are your thoughts on starting the first step in solution.py?"
         )
 
     # 3. Hints & Clues
     elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help"]):
         return (
-            f"💡 **Let's take it one small step at a time for {prob_name}:**\n\n"
-            f"• **Step 1**: Start by reading the input cleanly with `s = input()`.\n"
-            f"• **Step 2**: Focus only on the core condition without worrying about nested loops.\n\n"
-            f"You don't need complex code for this—just a few clean lines. What line do you want to write first in your editor?"
+            f"Start with reading the input cleanly with `s = input()`.\n\n"
+            f"From there, think about what condition actually distinguishes a valid answer from an invalid one.\n\n"
+            f"What line are you thinking of writing next?"
         )
 
     # 4. Big-O Complexity
     elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
         return (
-            f"⚡ **Efficiency Goals for {prob_name}:**\n\n"
-            f"• **Time**: Aim for a single pass through the data (linear O(n)).\n"
-            f"• **Memory**: Keep extra storage minimal.\n\n"
-            f"Focus first on getting the logic working cleanly, then we can optimize!"
+            f"For {prob_name}, the target is typically O(n) time with minimal extra space.\n\n"
+            f"Are you concerned about a nested loop or memory usage in your current approach?"
         )
 
     # 5. Debugging & Errors
     elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working"]):
         if clean_code and "print" not in clean_code:
-            return "👀 **Quick observation:** Make sure you use `print(...)` to output your final answer! Python Quest evaluates your solution by reading standard terminal output."
+            return "The test harness checks standard output. Your code isn't calling print() on the result, so the tests see empty output."
         return (
-            f"👍 **You're making solid progress on {prob_name}!**\n\n"
-            f"Click the green **Run (Ctrl+Enter)** button below to test your code against the sample inputs in the Terminal dock. If a test case fails, compare what your code printed against the expected output, and we'll fix it together!"
+            f"Run the code and check the terminal output against the expected case. "
+            f"Where does the actual output diverge from what's expected?"
         )
 
-    # 6. General Conversational / Encouraging Response
+    # 6. Natural conversational response
     else:
-        return (
-            f"🤖 **Mentor Byte here!**\n\n"
-            f"For **{prob_name}**, remember to keep it simple: focus on the core logic step-by-step.\n\n"
-            f"Try writing out your thoughts in `solution.py` and click **Run** anytime. What question do you have about the next step?"
-        )
+        return f"Looking at {prob_name}. What part of the logic or implementation are you thinking about right now?"
