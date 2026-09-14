@@ -196,202 +196,204 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your Valid Palindrome solution in 30 seconds to an interviewer?",
-        "whatInterviewerChecks": "Verbal clarity, algorithmic confidence, and concise problem breakdown.",
-        "bestReplyScript": "I solve this using a Two-Pointer technique. We place one pointer at the start and one at the end, moving them inward toward the center. At each step, we skip non-alphanumeric characters, convert letters to lowercase, and check if they match. If any pair mismatches, we exit early and return False. This takes O(N) time and O(1) space without allocating extra string copies in RAM.",
+        "category": "Step-by-Step Approach",
+        "question": "1. Explain your approach step by step.",
+        "whatInterviewerChecks": "Two-pointer technique, array bounds, character filtering, and case normalization logic.",
+        "bestReplyScript": "My approach uses the two-pointer technique because we only need to compare characters from both ends of the string.\n\nThe steps are:\n1. Initialize one pointer (left) at the beginning of the string.\n2. Initialize another pointer (right) at the end.\n3. Skip characters that are not letters or digits.\n4. Convert both characters to lowercase so the comparison becomes case-insensitive.\n5. Compare the two characters. If they don't match, return False immediately.\n6. If they match, move both pointers toward the center.\n7. Continue until both pointers meet or cross.\n8. If every comparison matches, return True.",
         "keyPoints": [
-          "Two-pointer inward scan",
-          "O(N) time & O(1) space",
-          "Skip symbols with .isalnum()",
+          "Two-pointer technique from both ends",
+          "Skip non-alphanumeric characters",
+          "Case-insensitive comparison",
           "Early exit on first mismatch"
         ],
         "codeSnippet": "def isPalindrome(s: str) -> bool:\n    left, right = 0, len(s) - 1\n    while left < right:\n        while left < right and not s[left].isalnum():\n            left += 1\n        while left < right and not s[right].isalnum():\n            right -= 1\n        if s[left].lower() != s[right].lower():\n            return False\n        left += 1\n        right -= 1\n    return True"
       },
       {
         "id": "q2",
-        "category": "Python Standard Library",
-        "question": "Why is `s == s[::-1]` unacceptable in a senior interview in a technical interview?",
-        "whatInterviewerChecks": "Python heap memory allocation awareness and string immutability.",
-        "bestReplyScript": "In Python, strings are immutable objects. Evaluating `s[::-1]` forces CPython to allocate a brand-new string of length N on the heap and copy every single character. That makes space complexity O(N). Additionally, `s[::-1]` doesn't filter out non-alphanumeric characters or handle mixed casing like 'RaceCar'. The Two-Pointer approach uses O(1) extra space and handles all cleaning on-the-fly.",
+        "category": "Algorithmic Justification",
+        "question": "2. Why did you choose the two-pointer approach?",
+        "whatInterviewerChecks": "Understanding of symmetry, space efficiency, and avoiding redundant string copies.",
+        "bestReplyScript": "I chose the two-pointer approach because a palindrome is symmetric. The first character should match the last, the second should match the second-last, and so on.\n\nUsing two pointers allows me to compare both ends simultaneously in a single pass.\n\nCompared to creating a reversed string:\n- It uses constant extra space O(1).\n- It avoids unnecessary copying of the string in heap memory.\n- It is more efficient for large inputs.\n\nThis makes it the optimal solution.",
         "keyPoints": [
-          "Strings are immutable in Python",
-          "Slicing s[::-1] allocates O(N) heap memory",
-          "Two pointers uses O(1) space"
+          "Exploits symmetry",
+          "O(1) constant extra space",
+          "Single pass comparison",
+          "Avoids heap memory allocation"
         ],
-        "codeSnippet": "# Comparison of Memory footprint:\n# \u274c Slicing approach:\ncleaned = [c.lower() for c in s if c.isalnum()]  # O(N) heap list\nreturn cleaned == cleaned[::-1]                  # O(N) reversed list\n\n# \u2705 Two-pointer approach:\n# Uses 2 integer variables (left, right) -> O(1) memory footprint!"
+        "codeSnippet": "# Comparing Two-Pointer vs Reversed String Copy:\n\n# ❌ Extra String Allocation (O(N) space):\ncleaned = [c.lower() for c in s if c.isalnum()]\nreturn cleaned == cleaned[::-1]\n\n# ✅ Two-Pointer Approach (O(1) space):\n# Compare characters in-place using two integer indices!"
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement this if `.isalnum()` and `.lower()` are strictly forbidden?",
-        "whatInterviewerChecks": "ASCII manipulation and bitwise/ordinal arithmetic from scratch.",
-        "bestReplyScript": "We check character ranges manually using ASCII ordinal values via `ord()`. A character is alphanumeric if `ord('a') <= code <= ord('z')`, `ord('A') <= code <= ord('Z')`, or `ord('0') <= code <= ord('9')`. To convert uppercase to lowercase, if `ord('A') <= code <= ord('Z')`, we add 32 to get its lowercase equivalent because 'a' (97) minus 'A' (65) is 32.",
+        "category": "Complexity Analysis",
+        "question": "3. What's the time and space complexity?",
+        "whatInterviewerChecks": "Asymptotic time/space complexity analysis and optimality proof.",
+        "bestReplyScript": "The algorithm visits each character at most once.\n\n- Time Complexity: O(n)\n  Every character is processed once while moving the pointers.\n\n- Space Complexity: O(1)\n  Only two pointer variables are used. No additional arrays or strings are created.\n\nThis is optimal because every character must be checked at least once.",
         "keyPoints": [
-          "ord() character ranges",
-          "ASCII difference 'a' - 'A' = 32",
-          "Manual byte manipulation"
-        ],
-        "codeSnippet": "def is_alnum_manual(c: str) -> bool:\n    code = ord(c)\n    return (ord('a') <= code <= ord('z') or \n            ord('A') <= code <= ord('Z') or \n            ord('0') <= code <= ord('9'))\n\ndef to_lower_manual(c: str) -> str:\n    code = ord(c)\n    if ord('A') <= code <= ord('Z'):\n        return chr(code + 32)\n    return c\n\ndef isPalindrome_manual(s: str) -> bool:\n    left, right = 0, len(s) - 1\n    while left < right:\n        while left < right and not is_alnum_manual(s[left]):\n            left += 1\n        while left < right and not is_alnum_manual(s[right]):\n            right -= 1\n        if to_lower_manual(s[left]) != to_lower_manual(s[right]):\n            return False\n        left += 1\n        right -= 1\n    return True"
+          "Time Complexity: O(n)",
+          "Space Complexity: O(1)",
+          "Single pass traversal",
+          "Lower bound is O(n)"
+        ]
       },
       {
         "id": "q4",
-        "category": "Looping Logic & Boundary Edge Cases",
-        "question": "Why do we use inner WHILE loops instead of IF statements when skipping non-alphanumeric characters?",
-        "whatInterviewerChecks": "Understanding boundary conditions with multiple consecutive spaces.",
-        "bestReplyScript": "An IF statement only checks and skips a single character once per outer iteration. If the input contains multiple consecutive spaces or punctuation like 'a   b', an IF statement would only skip 1 space and then mistakenly compare a space against 'b'. A WHILE loop continuously advances until it finds a valid letter or pointers meet.",
+        "category": "In-Place Processing",
+        "question": "4. Can you solve it without creating a new string?",
+        "whatInterviewerChecks": "In-place string inspection without allocating sanitized temporary strings.",
+        "bestReplyScript": "Yes. Instead of removing unwanted characters and creating another string, I simply move the pointers until they point to valid alphanumeric characters.\n\nFor example, given input \"A man, a plan, a canal: Panama\", instead of converting it into \"amanaplanacanalpanama\", I compare characters directly while skipping spaces and punctuation.\n\nThis saves memory and keeps the space complexity at O(1).",
         "keyPoints": [
-          "IF handles 1 space",
-          "WHILE handles multiple consecutive symbols",
-          "Prevents comparing un-skipped spaces"
-        ],
-        "codeSnippet": "# \u274c WRONG (Using IF):\nif not s[left].isalnum():\n    left += 1\n# If s = 'a   b', left moves from 0 ('a') to 1 (' '). Next step compares ' ' with 'b' -> BUG!\n\n# \u2705 CORRECT (Using WHILE):\nwhile left < right and not s[left].isalnum():\n    left += 1\n# Keeps incrementing left until s[left] is a valid letter!"
+          "Direct character comparison",
+          "In-place pointer traversal",
+          "No temporary string allocation",
+          "O(1) auxiliary space"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Tricky Concept: String Immutability",
-        "question": "Why can't we modify the string in-place in Python like we would in C++ or C?",
-        "whatInterviewerChecks": "Python object architecture and memory model.",
-        "bestReplyScript": "In Python, strings are immutable objects managed by CPython's memory allocator. Once created, string buffer bytes cannot be changed in-place. In C or C++, `std::string` has a mutable internal char array, allowing `s[i] = tolower(s[i])`. In Python, modifying a string generates a new string object. That's why we use two pointer indices over the existing string instead of mutating characters.",
+        "category": "Character Filtering",
+        "question": "5. How do you ignore non-alphanumeric characters?",
+        "whatInterviewerChecks": "Handling spaces, commas, colons, and punctuation using .isalnum() or manual checks.",
+        "bestReplyScript": "While moving the pointers, I check whether the current character is alphanumeric. If it is not, I simply move that pointer forward (or backward).\n\nIn Python, this is easily done using char.isalnum(). Characters like spaces, commas, colons, and exclamation marks are skipped completely before performing any comparison.",
         "keyPoints": [
-          "Python strings are immutable",
-          "Cannot perform in-place character mutation in Python",
-          "Pointers inspect indices without mutating the underlying object"
+          "Using char.isalnum()",
+          "Skip punctuation and spaces",
+          "Pointers advance past non-letters",
+          "Only alphanumeric chars compared"
         ],
-        "codeSnippet": "# In C++ (Mutable In-Place):\n# s[left] = tolower(s[left]); // Works in O(1) space!\n\n# In Python (Immutable):\n# s[left] = s[left].lower()   // TypeError: 'str' object does not support item assignment\n\n# Correct Python approach: Compare directly without assigning!\nif s[left].lower() != s[right].lower():\n    return False"
+        "codeSnippet": "while left < right and not s[left].isalnum():\n    left += 1\nwhile left < right and not s[right].isalnum():\n    right -= 1"
       },
       {
         "id": "q6",
-        "category": "Big-O Justification",
-        "question": "How do you mathematically prove that the time complexity is strictly O(N)?",
-        "whatInterviewerChecks": "Amortized loop analysis.",
-        "bestReplyScript": "We track pointer indices: `left` starts at 0 and only increments (`left++`); `right` starts at N-1 and only decrements (`right--`). The loop terminates as soon as `left >= right`. Since both pointers only move inward and never move backward, the sum of steps taken by `left` and `right` is at most N. Therefore, total iterations are bounded by N, proving O(N) linear time complexity.",
+        "category": "Edge Case Handling",
+        "question": "6. What edge cases did you consider?",
+        "whatInterviewerChecks": "Empty strings, single characters, punctuation-only strings, mixed cases, numbers.",
+        "bestReplyScript": "I considered several key edge cases:\n1. Empty string (\"\"): Valid palindrome.\n2. Single character (\"a\"): Always reads the same.\n3. Only punctuation (\"!!!\"): Nothing remains after ignoring punctuation, valid palindrome.\n4. Mixed uppercase and lowercase (\"RaceCar\"): Case-insensitive comparison handles it.\n5. Numbers (\"12321\"): Digits are alphanumeric and compared normally.\n6. Non-palindrome (\"hello\"): First mismatch returns False immediately.",
         "keyPoints": [
-          "Pointers strictly move inward",
-          "No backtracking",
-          "Total steps <= N -> O(N) time"
-        ],
-        "codeSnippet": "# Proof by total steps:\n# Initial state: left = 0, right = N - 1 (distance = N - 1)\n# In every inner or outer loop step, (right - left) decreases by at least 1.\n# Maximum possible steps before (right - left <= 0) is N.\n# Therefore, Time Complexity = O(N)."
+          "Empty string & single char",
+          "Punctuation-only input",
+          "Mixed case & numeric strings",
+          "Non-palindrome early exit"
+        ]
       },
       {
         "id": "q7",
-        "category": "System Design & Stream Processing",
-        "question": "How would you solve this if the input string is a 50GB file that cannot fit into RAM?",
-        "whatInterviewerChecks": "Streaming data processing and disk buffer management.",
-        "bestReplyScript": "We open two file descriptors to the file on disk: Stream 1 reads forward from byte 0, and Stream 2 reads backward from the end of the file using `file.seek(file_size - chunk_size)`. We buffer small chunks (e.g. 64KB) in RAM, extract valid characters, and compare bytes. When a buffer is exhausted, Stream 1 loads the next chunk forward and Stream 2 loads the previous chunk backward. RAM consumption remains capped at ~128KB regardless of file size.",
+        "category": "Unicode & Internationalization",
+        "question": "7. How would you handle Unicode characters?",
+        "whatInterviewerChecks": "Awareness of accented characters, emojis, scripts, and normalization (NFD/NFC).",
+        "bestReplyScript": "The basic solution works well for ASCII letters and digits. For Unicode strings, accented letters, emojis, and different language scripts may represent the same visual character differently.\n\nTo robustly handle Unicode, I would normalize the string using Unicode normalization before comparison. In Python, this can be done with unicodedata.normalize('NFD', s) to decompose accents and combine characters into canonical forms.",
         "keyPoints": [
-          "Dual file handles (head and seek tail)",
-          "Buffer small 64KB chunks in RAM",
-          "O(1) memory independent of file size"
+          "Unicode decomposition & normalization",
+          "unicodedata.normalize('NFD', s)",
+          "Accented & combining characters",
+          "Canonical equivalence"
         ],
-        "codeSnippet": "def is_huge_file_palindrome(filepath: str) -> bool:\n    import os\n    file_size = os.path.getsize(filepath)\n    with open(filepath, 'rb') as f1, open(filepath, 'rb') as f2:\n        pos1, pos2 = 0, file_size - 1\n        while pos1 < pos2:\n            f1.seek(pos1)\n            b1 = f1.read(1)\n            f2.seek(pos2)\n            b2 = f2.read(1)\n            # Filter non-alphanumeric and compare bytes...\n            pos1 += 1\n            pos2 -= 1\n    return True"
+        "codeSnippet": "import unicodedata\n\ndef normalize_unicode(s: str) -> str:\n    # Decompose Unicode characters (e.g., 'é' -> 'e' + accent)\n    normalized = unicodedata.normalize('NFD', s)\n    return ''.join(c for c in normalized if not unicodedata.combining(c))"
       },
       {
         "id": "q8",
-        "category": "Python Core: Memory Overhead",
-        "question": "What is the memory footprint of a string vs integer in 64-bit CPython?",
-        "whatInterviewerChecks": "CPython object structure depth (`sys.getsizeof`).",
-        "bestReplyScript": "In 64-bit Python 3, everything is an object containing PyObject headers (reference count + type pointer). A simple integer takes 28 bytes. An ASCII string takes 49 bytes plus 1 byte per character (`PyASCIIObject`). This is why allocating new lists or strings for temporary operations creates significant garbage collection overhead compared to primitive pointer numbers.",
+        "category": "Recursive Alternative",
+        "question": "8. How would you solve it recursively?",
+        "whatInterviewerChecks": "Understanding recursive call stack, base cases, and Python's recursion limit.",
+        "bestReplyScript": "The recursive idea is:\n1. Compare the first and last valid characters.\n2. If they match, recursively check the remaining substring.\n3. If they don't match, return False.\n4. Base cases: An empty string or single character returns True.\n\nAlthough recursion is elegant, I prefer the iterative two-pointer solution because recursion adds O(n) call stack space and risks RecursionError in Python for long strings.",
         "keyPoints": [
-          "PyObject header overhead",
-          "Int = 28 bytes",
-          "ASCII string = 49 bytes base",
-          "Avoid temporary heap objects"
+          "Recursive base case: len <= 1",
+          "Compare head and tail",
+          "O(n) recursion stack space",
+          "Risk of RecursionError in Python"
         ],
-        "codeSnippet": "import sys\n\nprint(sys.getsizeof(0))       # 28 bytes (PyLongObject)\nprint(sys.getsizeof(\"\"))      # 49 bytes (PyASCIIObject)\nprint(sys.getsizeof(\"a\"))     # 50 bytes (49 + 1 char)\nprint(sys.getsizeof([0, 1]))  # 72 bytes (PyListObject header + pointers)"
+        "codeSnippet": "def isPalindrome_recursive(s: str) -> bool:\n    def helper(left: int, right: int) -> bool:\n        if left >= right:\n            return True\n        if not s[left].isalnum():\n            return helper(left + 1, right)\n        if not s[right].isalnum():\n            return helper(left, right - 1)\n        if s[left].lower() != s[right].lower():\n            return False\n        return helper(left + 1, right - 1)\n    return helper(0, len(s) - 1)"
       },
       {
         "id": "q9",
-        "category": "Python Core: Recursion Trap",
-        "question": "Can we solve Valid Palindrome recursively? What is the main danger in Python?",
-        "whatInterviewerChecks": "Call stack depth limits (`sys.getrecursionlimit()`).",
-        "bestReplyScript": "Yes, we can recursively check `s[0] == s[-1]` and call `isPalindrome(s[1:-1])`. However, Python has a default recursion limit of 1,000 frames (`sys.getrecursionlimit()`). For a string with 50,000 characters, recursive implementation crashes with `RecursionError: maximum recursion depth exceeded`. Moreover, string slicing in recursion creates O(N\u00b2) total string memory allocations. Iterative two-pointers is strictly preferred.",
+        "category": "Problem Variant",
+        "question": "9. What if comparison is case-sensitive?",
+        "whatInterviewerChecks": "Adapting solution to modified constraints by removing .lower().",
+        "bestReplyScript": "If the comparison is case-sensitive, I would simply remove the .lower() conversion.\n\nFor example, for \"Madam\", without converting to lowercase, 'M' != 'm', so it returns False. The rest of the algorithm and pointer movements remain exactly the same.",
         "keyPoints": [
-          "Python recursion limit = 1000",
-          "RecursionError on long strings",
-          "Slicing in recursion = O(N\u00b2) space"
-        ],
-        "codeSnippet": "# \u274c Dangerous Recursive Approach:\ndef isPalindrome_recursive(s: str) -> bool:\n    if len(s) <= 1:\n        return True\n    if s[0] != s[-1]:\n        return False\n    return isPalindrome_recursive(s[1:-1]) # Crashes with RecursionError if len(s) > 1000!"
+          "Remove .lower() call",
+          "Direct character comparison",
+          "Case-sensitive output",
+          "Same O(n) time & O(1) space"
+        ]
       },
       {
         "id": "q10",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific test cases will you present to prove your code handles all edge cases?",
-        "whatInterviewerChecks": "Rigorous QA mindset and boundary condition analysis.",
-        "bestReplyScript": "I test: 1) Empty string `\"\"` (returns True); 2) Single-character string `\"a\"` (returns True); 3) String with only punctuation `\".,!!!\"` (returns True after skipping all chars); 4) Case sensitivity test `\"RaceCar\"` (returns True); and 5) Failing numeric test `\"0P\"` (returns False because '0' != 'p').",
+        "category": "No Built-ins Follow-up",
+        "question": "10. Can you solve it without using isalnum()?",
+        "whatInterviewerChecks": "ASCII range checks using ord() or comparison operators.",
+        "bestReplyScript": "Yes. Instead of isalnum(), I can manually check whether the character is:\n- Between 'a' and 'z': 'a' <= c <= 'z'\n- Between 'A' and 'Z': 'A' <= c <= 'Z'\n- Between '0' and '9': '0' <= c <= '9'\n\nThis avoids using built-in helper functions while working correctly across all ASCII characters.",
         "keyPoints": [
-          "Empty string",
-          "Single char",
-          "Punctuation only",
-          "Mixed casing ('RaceCar')",
-          "Numbers vs Letters ('0P')"
+          "Manual ASCII range checks",
+          "ord() / comparison operators",
+          "No built-in dependency",
+          "Identical O(n) efficiency"
         ],
-        "codeSnippet": "# Test Suite:\nassert isPalindrome(\"\") == True\nassert isPalindrome(\"a\") == True\nassert isPalindrome(\".,!!!\") == True\nassert isPalindrome(\"RaceCar\") == True\nassert isPalindrome(\"0P\") == False\nprint(\"All 5 Edge Cases Passed!\")"
+        "codeSnippet": "def is_alnum_manual(c: str) -> bool:\n    return ('a' <= c <= 'z') or ('A' <= c <= 'Z') or ('0' <= c <= '9')"
       },
       {
         "id": "q11",
-        "category": "Python Core: Unicode & UTF-8",
-        "question": "How does `.isalnum()` behave with non-ASCII characters like accent marks or Chinese characters?",
-        "whatInterviewerChecks": "Unicode standard awareness in Python 3.",
-        "bestReplyScript": "Python 3 strings are full Unicode (`PyUnicodeObject`). The `.isalnum()` method checks Unicode character categories (`Nd`, `Nl`, `No`, `Lu`, `Ll`, `Lt`, `Lm`, `Lo`). So non-English letters like `'\u00e9'`, `'\u00e4'`, or Chinese characters `'\u5b57'` return `True` for `.isalnum()`. If the interviewer specifies ASCII-only, we should clarify or restrict checks using `ord(c) < 128`.",
+        "category": "Theoretical Optimality",
+        "question": "11. Why is O(n) optimal?",
+        "whatInterviewerChecks": "Understanding lower bounds in computer science algorithms.",
+        "bestReplyScript": "A palindrome check requires examining every relevant character at least once. If we skip checking a character, we cannot guarantee the string is actually a palindrome.\n\nSince any valid algorithm must inspect the input characters, the lower bound for this problem is Ω(n).\n\nTherefore, an O(n) time solution is asymptotically optimal.",
         "keyPoints": [
-          "Python 3 uses full Unicode",
-          ".isalnum() includes international letters",
-          "Clarify ASCII vs Unicode with interviewer"
-        ],
-        "codeSnippet": "print('\u00e9'.isalnum())   # True (Unicode Ll)\nprint('\u5b57'.isalnum())   # True (Unicode Lo)\nprint('1'.isalnum())   # True (Unicode Nd)\nprint('!'.isalnum())   # False"
+          "Lower bound is Ω(n)",
+          "Must inspect input characters",
+          "Asymptotically optimal",
+          "Cannot do better than O(n)"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Can we speed up palindrome checking of 1,000,000 strings using Python threading?",
-        "whatInterviewerChecks": "Global Interpreter Lock (GIL) vs Multiprocessing.",
-        "bestReplyScript": "In CPython, the Global Interpreter Lock (GIL) prevents multiple native threads from executing Python bytecode in parallel. Because string comparison is CPU-bound, multithreading (`threading` module) will not provide true speedups due to GIL lock contention. To process 1,000,000 strings in parallel, we must use `multiprocessing` or `concurrent.futures.ProcessPoolExecutor` to spawn separate OS processes with isolated Python interpreters.",
+        "category": "Testing & Quality Assurance",
+        "question": "12. How would you test this function?",
+        "whatInterviewerChecks": "Comprehensive test suites covering basic, edge, and invalid cases.",
+        "bestReplyScript": "I would test different categories of inputs:\n1. Basic cases: \"madam\" -> True\n2. Mixed case: \"RaceCar\" -> True\n3. With punctuation: \"A man, a plan, a canal: Panama\" -> True\n4. Numbers: \"12321\" -> True\n5. Empty string: \"\" -> True\n6. Non-palindrome: \"hello\" -> False\n\nTesting multiple categories ensures the algorithm is robust against unexpected inputs.",
         "keyPoints": [
-          "GIL blocks parallel thread execution for CPU-bound tasks",
-          "Use ProcessPoolExecutor for CPU-bound batch processing",
-          "Avoid threading module for CPU tasks"
-        ],
-        "codeSnippet": "from concurrent.futures import ProcessPoolExecutor\n\ndef check_batch(strings):\n    return [isPalindrome(s) for s in strings]\n\n# Uses all CPU cores parallelly:\nwith ProcessPoolExecutor() as executor:\n    results = executor.map(isPalindrome, million_strings)"
+          "Basic & mixed-case inputs",
+          "Punctuation & numeric inputs",
+          "Empty & single char cases",
+          "Non-palindrome negative tests"
+        ]
       },
       {
         "id": "q13",
-        "category": "Code Refactoring & Clean Code",
-        "question": "How do you refactor the while-loop into clean, production-grade Python code?",
-        "whatInterviewerChecks": "Readability vs performance trade-offs.",
-        "bestReplyScript": "We can extract helper functions or use Python generator expressions with `filter()`. Generator expressions evaluate lazily in O(1) auxiliary space without building an intermediate list in memory: `cleaned = (c.lower() for c in s if c.isalnum())`. However, for max performance in competitive coding, the two-pointer loop is fastest because generator iteration overhead adds function call frames.",
+        "category": "Common Pitfalls",
+        "question": "13. What common mistakes occur?",
+        "whatInterviewerChecks": "Awareness of typical bugs like IF vs WHILE, case sensitivity, and string mutation errors.",
+        "bestReplyScript": "Some common mistakes include:\n- Forgetting to ignore spaces and punctuation.\n- Not converting characters to the same case.\n- Using IF instead of WHILE when skipping consecutive non-alphanumeric characters.\n- Moving only one pointer after a successful comparison.\n- Creating unnecessary extra strings, increasing space complexity to O(n).\n- Incorrect loop conditions that miss comparisons.",
         "keyPoints": [
-          "Generators evaluate lazily (O(1) space)",
-          "Filter expressions for readability",
-          "Direct while loop for maximum execution speed"
-        ],
-        "codeSnippet": "def isPalindrome_clean(s: str) -> bool:\n    # Lazy generator expression (no intermediate list in memory)\n    gen = (c.lower() for c in s if c.isalnum())\n    cleaned = list(gen) # Convert to list for two-pointer or reverse check\n    return cleaned == cleaned[::-1]"
+          "IF vs WHILE bug",
+          "Case-sensitivity bugs",
+          "Pointer update oversights",
+          "Unnecessary string copies"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Communication",
-        "question": "What if you make a syntax error or logic bug during a live interview whiteboard test?",
-        "whatInterviewerChecks": "Composure, self-debugging, and communication under pressure.",
-        "bestReplyScript": "I don't panic. I speak my thought process aloud to the interviewer: 'Let me dry-run this code with a simple trace input like s = \"a b a\"'. By tracing variables step-by-step on the board, I identify where the pointer out-of-bounds or off-by-one occurs, acknowledge the bug openly, and explain the exact fix before writing the corrected line.",
+        "category": "System & Streaming Design",
+        "question": "14. Can this work on a character stream?",
+        "whatInterviewerChecks": "Random access vs streaming input limitations.",
+        "bestReplyScript": "Not directly. A palindrome requires comparing the beginning and the end of the input. In a character stream, future characters are not yet available, making direct comparison impossible.\n\nPossible solutions include:\n- Storing the stream in memory or disk first.\n- Buffering data when length is known.\n- Dual stream file seeking if the stream source supports random access.\n\nThus, the standard two-pointer approach requires random access to the entire input.",
         "keyPoints": [
-          "Maintain composure",
-          "Think aloud and dry-run with sample input",
-          "Acknowledge bug openly and explain fix"
-        ],
-        "codeSnippet": "# Example trace callout aloud:\n# 'Let me dry run s = \"    \" (all spaces).\n# At line 6, left starts at 0. Without left < right, left increments to 4.\n# s[4] throws IndexError! I will add left < right to fix this.'"
+          "Requires random access",
+          "Streams lack future characters",
+          "Buffering / disk storage needed",
+          "Cannot compare stream in real-time"
+        ]
       },
       {
         "id": "q15",
-        "category": "Interview Trap: Space-Only Input",
-        "question": "What happens if s contains only spaces `\"    \"`? Walk through your code line by line.",
-        "whatInterviewerChecks": "Trace accuracy on edge cases.",
-        "bestReplyScript": "With `s = \"    \"` (length 4): 1) `left = 0`, `right = 3`. 2) Outer loop condition `0 < 3` is True. 3) Inner while loop `while left < right and not s[left].isalnum(): left += 1` executes. `left` increments from 0 -> 1 -> 2 -> 3. 4) When `left` reaches 3, `left < right` (`3 < 3`) becomes False, terminating the inner loop safely without reading out of bounds. 5) Outer loop condition `3 < 3` is False. 6) Function returns True. No crash occurs!",
+        "category": "Real-World Applications",
+        "question": "15. Where is this pattern used in real applications?",
+        "whatInterviewerChecks": "Practical engineering applications of two-pointer and symmetric text algorithms.",
+        "bestReplyScript": "The two-pointer technique and symmetric text scanning are widely used in:\n- DNA sequence analysis to detect symmetric genetic patterns (palindromic repeats).\n- Text processing to filter punctuation and normalize case.\n- Compiler and parser design for token scanning.\n- Two-pointer algorithmic patterns like Container With Most Water, Trapping Rain Water, and Two Sum on sorted arrays.",
         "keyPoints": [
-          "Inner loop bound check stops left at right",
-          "Prevents IndexError: index out of range",
-          "Returns True correctly"
-        ],
-        "codeSnippet": "# Line-by-line trace for s = \"   \":\n# left=0, right=2\n# Loop 1: left=1\n# Loop 2: left=2\n# Loop 3: left=2, right=2 -> left < right is FALSE -> Inner loop stops safely!"
+          "DNA sequence analysis",
+          "Text normalization & parsing",
+          "Two-pointer array patterns",
+          "Compiler token scanning"
+        ]
       }
     ],
     "mistakes": [
