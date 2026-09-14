@@ -398,42 +398,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting to ignore non-alphanumeric characters",
+            "description": "Comparing spaces, commas, punctuation, or symbols causes valid palindromes to fail.",
+            "badSnippet": "# Common Mistake: Forgetting to ignore non-alphanumeric characters",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Comparing spaces, commas, punctuation, or symbols causes valid palindromes to fail.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Not converting characters to the same case",
+            "description": "Comparing A and a directly instead of converting both to lowercase or uppercase.",
+            "badSnippet": "# Common Mistake: Not converting characters to the same case",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Comparing A and a directly instead of converting both to lowercase or uppercase.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Using extra memory unnecessarily",
+            "description": "Creating a cleaned string and reversing it instead of using the two-pointer approach.",
+            "badSnippet": "# Common Mistake: Using extra memory unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Creating a cleaned string and reversing it instead of using the two-pointer approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect pointer movement",
+            "description": "Moving both pointers before checking whether characters are alphanumeric, leading to skipped characters or index errors.",
+            "badSnippet": "# Common Mistake: Incorrect pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Moving both pointers before checking whether characters are alphanumeric, leading to skipped characters or index errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty strings",
+            "description": "Returning False instead of treating an empty string as a valid palindrome.",
+            "badSnippet": "# Common Mistake: Not handling empty strings",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning False instead of treating an empty string as a valid palindrome.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "2": {
     "problemId": 2,
@@ -785,42 +794,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Reversing characters instead of words",
+            "description": "Producing \"olleH dlroW\" instead of \"World Hello\".",
+            "badSnippet": "# Common Mistake: Reversing characters instead of words",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing \"olleH dlroW\" instead of \"World Hello\".",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Splitting only on a single space",
+            "description": "Using split(\" \") creates empty strings when multiple spaces exist.",
+            "badSnippet": "# Common Mistake: Splitting only on a single space",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using split(\" \") creates empty strings when multiple spaces exist.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting to join the words",
+            "description": "Returning a list instead of a string.",
+            "badSnippet": "# Common Mistake: Forgetting to join the words",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning a list instead of a string.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Ignoring leading and trailing spaces",
+            "description": "Producing unexpected extra spaces in the output.",
+            "badSnippet": "# Common Mistake: Ignoring leading and trailing spaces",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing unexpected extra spaces in the output.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty input",
+            "description": "Causing errors or returning incorrect results for an empty string.",
+            "badSnippet": "# Common Mistake: Not handling empty input",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causing errors or returning incorrect results for an empty string.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "3": {
     "problemId": 3,
@@ -1164,42 +1182,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using count() inside a loop",
+            "description": "Leads to O(n\u00b2) time complexity instead of O(n).",
+            "badSnippet": "# Common Mistake: Using count() inside a loop",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Leads to O(n\u00b2) time complexity instead of O(n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Returning the last unique character",
+            "description": "The problem asks for the first non-repeating character.",
+            "badSnippet": "# Common Mistake: Returning the last unique character",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The problem asks for the first non-repeating character.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Ignoring case sensitivity",
+            "description": "Treating 'A' and 'a' incorrectly depending on requirements.",
+            "badSnippet": "# Common Mistake: Ignoring case sensitivity",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Treating 'A' and 'a' incorrectly depending on requirements.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Returning frequency instead of the character/index",
+            "description": "Misunderstanding the expected output.",
+            "badSnippet": "# Common Mistake: Returning frequency instead of the character/index",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Misunderstanding the expected output.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting the \"not found\" case",
+            "description": "Not returning -1, None, or another required value when every character repeats.",
+            "badSnippet": "# Common Mistake: Forgetting the \"not found\" case",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not returning -1, None, or another required value when every character repeats.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "4": {
     "problemId": 4,
@@ -1547,42 +1574,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Sorting without checking length",
+            "description": "Wasting time sorting strings that can never be anagrams.",
+            "badSnippet": "# Common Mistake: Sorting without checking length",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Wasting time sorting strings that can never be anagrams.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Ignoring uppercase/lowercase requirements",
+            "description": "'Listen' and 'Silent' may fail unexpectedly.",
+            "badSnippet": "# Common Mistake: Ignoring uppercase/lowercase requirements",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "'Listen' and 'Silent' may fail unexpectedly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting spaces or punctuation",
+            "description": "Depending on the problem, these may need to be ignored.",
+            "badSnippet": "# Common Mistake: Forgetting spaces or punctuation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Depending on the problem, these may need to be ignored.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Comparing only unique characters",
+            "description": "Missing frequency differences such as \"aab\" vs \"abb\".",
+            "badSnippet": "# Common Mistake: Comparing only unique characters",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing frequency differences such as \"aab\" vs \"abb\".",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Using nested loops",
+            "description": "Producing O(n\u00b2) solutions instead of hash maps.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing O(n\u00b2) solutions instead of hash maps.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "5": {
     "problemId": 5,
@@ -1922,42 +1958,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting to append the last character group",
+            "description": "The final sequence is often missed after the loop ends.",
+            "badSnippet": "# Common Mistake: Forgetting to append the last character group",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The final sequence is often missed after the loop ends.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Resetting the count incorrectly",
+            "description": "Counts become inaccurate after switching characters.",
+            "badSnippet": "# Common Mistake: Resetting the count incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Counts become inaccurate after switching characters.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Compressing single characters incorrectly",
+            "description": "Producing \"a1\" when the expected output is simply \"a\" (depending on requirements).",
+            "badSnippet": "# Common Mistake: Compressing single characters incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing \"a1\" when the expected output is simply \"a\" (depending on requirements).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Inefficient string concatenation",
+            "description": "Using += repeatedly instead of building a list and joining it.",
+            "badSnippet": "# Common Mistake: Inefficient string concatenation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using += repeatedly instead of building a list and joining it.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty strings",
+            "description": "Accessing s[0] causes an index error.",
+            "badSnippet": "# Common Mistake: Not handling empty strings",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Accessing s[0] causes an index error.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "6": {
     "problemId": 6,
@@ -2295,42 +2340,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Changing the order of non-zero elements",
+            "description": "Stable ordering should usually be preserved.",
+            "badSnippet": "# Common Mistake: Changing the order of non-zero elements",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Stable ordering should usually be preserved.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Creating a new array unnecessarily",
+            "description": "Missing the in-place requirement.",
+            "badSnippet": "# Common Mistake: Creating a new array unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the in-place requirement.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Swapping every time a zero is found",
+            "description": "Causing unnecessary operations.",
+            "badSnippet": "# Common Mistake: Swapping every time a zero is found",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causing unnecessary operations.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Forgetting arrays with no zeros",
+            "description": "Making unnecessary modifications.",
+            "badSnippet": "# Common Mistake: Forgetting arrays with no zeros",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Making unnecessary modifications.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Mishandling arrays of all zeros",
+            "description": "Producing incorrect results or index errors.",
+            "badSnippet": "# Common Mistake: Mishandling arrays of all zeros",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing incorrect results or index errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "7": {
     "problemId": 7,
@@ -2670,42 +2724,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "O(n\u00b2) instead of O(n) with a hash map.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) instead of O(n) with a hash map.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Returning values instead of indices",
+            "description": "Many interview versions require indices.",
+            "badSnippet": "# Common Mistake: Returning values instead of indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Many interview versions require indices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Adding the current number before checking",
+            "description": "May incorrectly pair an element with itself.",
+            "badSnippet": "# Common Mistake: Adding the current number before checking",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "May incorrectly pair an element with itself.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Assuming the array is sorted",
+            "description": "Using two pointers on an unsorted array gives wrong answers.",
+            "badSnippet": "# Common Mistake: Assuming the array is sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using two pointers on an unsorted array gives wrong answers.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring duplicate numbers",
+            "description": "Missing valid solutions like [3,3].",
+            "badSnippet": "# Common Mistake: Ignoring duplicate numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing valid solutions like [3,3].",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "8": {
     "problemId": 8,
@@ -3044,42 +3107,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting to reset the candidate",
+            "description": "Boyer-Moore depends on updating the candidate correctly.",
+            "badSnippet": "# Common Mistake: Forgetting to reset the candidate",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Boyer-Moore depends on updating the candidate correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Incorrect count updates",
+            "description": "Incrementing or decrementing at the wrong time.",
+            "badSnippet": "# Common Mistake: Incorrect count updates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Incrementing or decrementing at the wrong time.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Assuming any frequent element is the majority",
+            "description": "Majority means more than n/2 occurrences.",
+            "badSnippet": "# Common Mistake: Assuming any frequent element is the majority",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Majority means more than n/2 occurrences.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Using unnecessary hash maps",
+            "description": "Missing the intended O(1) space solution.",
+            "badSnippet": "# Common Mistake: Using unnecessary hash maps",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the intended O(1) space solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not verifying the candidate",
+            "description": "If majority isn't guaranteed, a second pass is required.",
+            "badSnippet": "# Common Mistake: Not verifying the candidate",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "If majority isn't guaranteed, a second pass is required.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "9": {
     "problemId": 9,
@@ -3417,42 +3489,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Incorrect sum formula",
+            "description": "Using the wrong arithmetic formula.",
+            "badSnippet": "# Common Mistake: Incorrect sum formula",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using the wrong arithmetic formula.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Off-by-one errors",
+            "description": "Confusing numbers from 0...n with 1...n.",
+            "badSnippet": "# Common Mistake: Off-by-one errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Confusing numbers from 0...n with 1...n.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Overflow in other languages",
+            "description": "Large sums may overflow integer types.",
+            "badSnippet": "# Common Mistake: Overflow in other languages",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Large sums may overflow integer types.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Forgetting XOR solution",
+            "description": "XOR provides an elegant O(1) space approach.",
+            "badSnippet": "# Common Mistake: Forgetting XOR solution",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "XOR provides an elegant O(1) space approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Assuming the array is sorted",
+            "description": "Sorting isn't necessary.",
+            "badSnippet": "# Common Mistake: Assuming the array is sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Sorting isn't necessary.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "10": {
     "problemId": 10,
@@ -3793,42 +3874,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting k % n",
+            "description": "Rotating by k > n produces incorrect results.",
+            "badSnippet": "# Common Mistake: Forgetting k % n",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Rotating by k > n produces incorrect results.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Rotating in the wrong direction",
+            "description": "Left rotation instead of right (or vice versa).",
+            "badSnippet": "# Common Mistake: Rotating in the wrong direction",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Left rotation instead of right (or vice versa).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Using extra memory unnecessarily",
+            "description": "Missing the in-place reversal algorithm.",
+            "badSnippet": "# Common Mistake: Using extra memory unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the in-place reversal algorithm.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect reversal boundaries",
+            "description": "Reversing the wrong sections of the array.",
+            "badSnippet": "# Common Mistake: Incorrect reversal boundaries",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Reversing the wrong sections of the array.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty arrays",
+            "description": "Calculating k % n when n = 0 causes a division-by-zero error.",
+            "badSnippet": "# Common Mistake: Not handling empty arrays",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Calculating k % n when n = 0 causes a division-by-zero error.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "11": {
     "problemId": 11,
@@ -4183,42 +4273,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Not normalizing letter case",
+            "description": "Treating \"Apple\" and \"apple\" as different words when they should be counted together.",
+            "badSnippet": "# Common Mistake: Not normalizing letter case",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Treating \"Apple\" and \"apple\" as different words when they should be counted together.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Ignoring punctuation",
+            "description": "Counting \"hello\" and \"hello,\" as different words.",
+            "badSnippet": "# Common Mistake: Ignoring punctuation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Counting \"hello\" and \"hello,\" as different words.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Using nested loops for counting",
+            "description": "Results in O(n\u00b2) instead of O(n) using a dictionary.",
+            "badSnippet": "# Common Mistake: Using nested loops for counting",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(n\u00b2) instead of O(n) using a dictionary.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Forgetting to initialize counts",
+            "description": "Incrementing a key before it exists causes errors.",
+            "badSnippet": "# Common Mistake: Forgetting to initialize counts",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Incrementing a key before it exists causes errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrectly splitting words",
+            "description": "Using the wrong delimiter can merge or split words incorrectly.",
+            "badSnippet": "# Common Mistake: Incorrectly splitting words",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using the wrong delimiter can merge or split words incorrectly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "12": {
     "problemId": 12,
@@ -4573,42 +4672,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Returning duplicate elements",
+            "description": "The expected output often requires unique common elements only.",
+            "badSnippet": "# Common Mistake: Returning duplicate elements",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The expected output often requires unique common elements only.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using nested loops",
+            "description": "O(n\u00b2) instead of using sets.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) instead of using sets.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting empty arrays",
+            "description": "Not checking when one or both arrays are empty.",
+            "badSnippet": "# Common Mistake: Forgetting empty arrays",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not checking when one or both arrays are empty.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Confusing union with intersection",
+            "description": "Returning all elements instead of only common ones.",
+            "badSnippet": "# Common Mistake: Confusing union with intersection",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning all elements instead of only common ones.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Modifying the original arrays",
+            "description": "Accidentally removing elements while searching.",
+            "badSnippet": "# Common Mistake: Modifying the original arrays",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Accidentally removing elements while searching.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "13": {
     "problemId": 13,
@@ -4963,42 +5071,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Comparing every pair",
+            "description": "O(n\u00b2) solution instead of using a hash map.",
+            "badSnippet": "# Common Mistake: Comparing every pair",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) solution instead of using a hash map.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Ignoring the distance k",
+            "description": "Checking only for duplicates, not whether they're within k indices.",
+            "badSnippet": "# Common Mistake: Ignoring the distance k",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Checking only for duplicates, not whether they're within k indices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Updating the last seen index too early",
+            "description": "Can miss valid duplicate pairs.",
+            "badSnippet": "# Common Mistake: Updating the last seen index too early",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Can miss valid duplicate pairs.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect absolute difference calculation",
+            "description": "Comparing values instead of indices.",
+            "badSnippet": "# Common Mistake: Incorrect absolute difference calculation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Comparing values instead of indices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Mishandling k = 0",
+            "description": "No two different indices can satisfy the condition.",
+            "badSnippet": "# Common Mistake: Mishandling k = 0",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "No two different indices can satisfy the condition.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "14": {
     "problemId": 14,
@@ -5353,42 +5470,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Mapping only one direction",
+            "description": "Ensuring s \u2192 t without verifying t \u2192 s allows invalid mappings.",
+            "badSnippet": "# Common Mistake: Mapping only one direction",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Ensuring s \u2192 t without verifying t \u2192 s allows invalid mappings.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Allowing two characters to map to one",
+            "description": "Violates one-to-one correspondence.",
+            "badSnippet": "# Common Mistake: Allowing two characters to map to one",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Violates one-to-one correspondence.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Ignoring different string lengths",
+            "description": "Strings of different lengths cannot be isomorphic.",
+            "badSnippet": "# Common Mistake: Ignoring different string lengths",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Strings of different lengths cannot be isomorphic.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Recreating mappings repeatedly",
+            "description": "Clearing mappings during iteration causes incorrect results.",
+            "badSnippet": "# Common Mistake: Recreating mappings repeatedly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Clearing mappings during iteration causes incorrect results.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Comparing only character frequencies",
+            "description": "Equal frequencies do not guarantee isomorphic strings.",
+            "badSnippet": "# Common Mistake: Comparing only character frequencies",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Equal frequencies do not guarantee isomorphic strings.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "15": {
     "problemId": 15,
@@ -5743,42 +5869,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "O(n\u00b2) instead of prefix sums with a hash set.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) instead of prefix sums with a hash set.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Forgetting prefix sum equals zero",
+            "description": "A zero prefix sum means a valid subarray starts from index 0.",
+            "badSnippet": "# Common Mistake: Forgetting prefix sum equals zero",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A zero prefix sum means a valid subarray starts from index 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Not storing previous prefix sums",
+            "description": "Repeated prefix sums indicate a zero-sum subarray.",
+            "badSnippet": "# Common Mistake: Not storing previous prefix sums",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Repeated prefix sums indicate a zero-sum subarray.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Assuming only positive numbers",
+            "description": "Negative numbers make sliding window approaches invalid.",
+            "badSnippet": "# Common Mistake: Assuming only positive numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Negative numbers make sliding window approaches invalid.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning after checking only one element",
+            "description": "Missing longer valid subarrays.",
+            "badSnippet": "# Common Mistake: Returning after checking only one element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing longer valid subarrays.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "16": {
     "problemId": 16,
@@ -6133,42 +6268,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Calculating the middle incorrectly",
+            "description": "In some languages, (left + right) / 2 can overflow.",
+            "badSnippet": "# Common Mistake: Calculating the middle incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "In some languages, (left + right) / 2 can overflow.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Infinite loops",
+            "description": "Forgetting to update left or right.",
+            "badSnippet": "# Common Mistake: Infinite loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to update left or right.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Using binary search on an unsorted array",
+            "description": "Binary search requires sorted input.",
+            "badSnippet": "# Common Mistake: Using binary search on an unsorted array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Binary search requires sorted input.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Off-by-one errors",
+            "description": "Missing the first or last element.",
+            "badSnippet": "# Common Mistake: Off-by-one errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the first or last element.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect loop condition",
+            "description": "Using left < right instead of left <= right can skip valid elements.",
+            "badSnippet": "# Common Mistake: Incorrect loop condition",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using left < right instead of left <= right can skip valid elements.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "17": {
     "problemId": 17,
@@ -6523,42 +6667,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting the array is sorted",
+            "description": "Using unnecessary hash sets instead of two pointers.",
+            "badSnippet": "# Common Mistake: Forgetting the array is sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using unnecessary hash sets instead of two pointers.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Returning the modified array",
+            "description": "The problem usually expects the new length.",
+            "badSnippet": "# Common Mistake: Returning the modified array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The problem usually expects the new length.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect pointer updates",
+            "description": "Advancing pointers in the wrong order.",
+            "badSnippet": "# Common Mistake: Incorrect pointer updates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Advancing pointers in the wrong order.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Overwriting elements too early",
+            "description": "Losing values before comparison.",
+            "badSnippet": "# Common Mistake: Overwriting elements too early",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Losing values before comparison.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty arrays",
+            "description": "Accessing the first element causes an error.",
+            "badSnippet": "# Common Mistake: Not handling empty arrays",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Accessing the first element causes an error.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "18": {
     "problemId": 18,
@@ -6913,42 +7066,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Squaring and assuming the array stays sorted",
+            "description": "Negative values become positive, changing the order.",
+            "badSnippet": "# Common Mistake: Squaring and assuming the array stays sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Negative values become positive, changing the order.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Sorting after squaring",
+            "description": "O(n log n) instead of the optimal O(n) two-pointer approach.",
+            "badSnippet": "# Common Mistake: Sorting after squaring",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n log n) instead of the optimal O(n) two-pointer approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Ignoring negative numbers",
+            "description": "Large negative values can produce the largest squares.",
+            "badSnippet": "# Common Mistake: Ignoring negative numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Large negative values can produce the largest squares.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Filling the output from the wrong end",
+            "description": "The largest square should be placed at the end first.",
+            "badSnippet": "# Common Mistake: Filling the output from the wrong end",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The largest square should be placed at the end first.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect pointer movement",
+            "description": "Advancing the wrong pointer after comparison.",
+            "badSnippet": "# Common Mistake: Incorrect pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Advancing the wrong pointer after comparison.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "19": {
     "problemId": 19,
@@ -7303,42 +7465,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Returning -1 when the target isn't found",
+            "description": "The problem requires the insertion position.",
+            "badSnippet": "# Common Mistake: Returning -1 when the target isn't found",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The problem requires the insertion position.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Incorrect binary search updates",
+            "description": "Producing infinite loops or wrong answers.",
+            "badSnippet": "# Common Mistake: Incorrect binary search updates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing infinite loops or wrong answers.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Mishandling insertion at the beginning",
+            "description": "Returning index 1 instead of 0.",
+            "badSnippet": "# Common Mistake: Mishandling insertion at the beginning",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning index 1 instead of 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Mishandling insertion at the end",
+            "description": "Returning the last index instead of n.",
+            "badSnippet": "# Common Mistake: Mishandling insertion at the end",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning the last index instead of n.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Using linear search",
+            "description": "Missing the intended O(log n) solution.",
+            "badSnippet": "# Common Mistake: Using linear search",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the intended O(log n) solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "20": {
     "problemId": 20,
@@ -7693,42 +7864,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Allowing plateaus",
+            "description": "Equal adjacent elements invalidate a mountain array.",
+            "badSnippet": "# Common Mistake: Allowing plateaus",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Equal adjacent elements invalidate a mountain array.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Peak at the first element",
+            "description": "A mountain must first increase.",
+            "badSnippet": "# Common Mistake: Peak at the first element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A mountain must first increase.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Peak at the last element",
+            "description": "A mountain must also decrease.",
+            "badSnippet": "# Common Mistake: Peak at the last element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A mountain must also decrease.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Only checking increasing order",
+            "description": "Forgetting to verify the descending portion.",
+            "badSnippet": "# Common Mistake: Only checking increasing order",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to verify the descending portion.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Accepting arrays with fewer than three elements",
+            "description": "A valid mountain requires at least three elements.",
+            "badSnippet": "# Common Mistake: Accepting arrays with fewer than three elements",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A valid mountain requires at least three elements.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "21": {
     "problemId": 21,
@@ -8083,42 +8263,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using a hash map unnecessarily",
+            "description": "Missing the intended O(1) space XOR solution.",
+            "badSnippet": "# Common Mistake: Using a hash map unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the intended O(1) space XOR solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using OR (|) instead of XOR (^)",
+            "description": "OR cannot eliminate duplicate numbers.",
+            "badSnippet": "# Common Mistake: Using OR (|) instead of XOR (^)",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "OR cannot eliminate duplicate numbers.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting XOR properties",
+            "description": "a ^ a = 0 and 0 ^ a = a are the key concepts.",
+            "badSnippet": "# Common Mistake: Forgetting XOR properties",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "a ^ a = 0 and 0 ^ a = a are the key concepts.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Assuming the array is sorted",
+            "description": "Sorting increases time complexity unnecessarily.",
+            "badSnippet": "# Common Mistake: Assuming the array is sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Sorting increases time complexity unnecessarily.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning the last element",
+            "description": "Instead of the actual unique number.",
+            "badSnippet": "# Common Mistake: Returning the last element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of the actual unique number.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "22": {
     "problemId": 22,
@@ -8473,42 +8662,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Converting the number to a string",
+            "description": "Using binary string conversion instead of bitwise operations.",
+            "badSnippet": "# Common Mistake: Converting the number to a string",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using binary string conversion instead of bitwise operations.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using the wrong loop condition",
+            "description": "Infinite loops can occur if the number isn't updated correctly.",
+            "badSnippet": "# Common Mistake: Using the wrong loop condition",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Infinite loops can occur if the number isn't updated correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting unsigned integer behavior",
+            "description": "Negative numbers behave differently in some languages.",
+            "badSnippet": "# Common Mistake: Forgetting unsigned integer behavior",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Negative numbers behave differently in some languages.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Not using Brian Kernighan's algorithm",
+            "description": "Missing the efficient n &= (n - 1) approach.",
+            "badSnippet": "# Common Mistake: Not using Brian Kernighan's algorithm",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the efficient n &= (n - 1) approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Counting zero bits instead",
+            "description": "Misunderstanding the problem statement.",
+            "badSnippet": "# Common Mistake: Counting zero bits instead",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Misunderstanding the problem statement.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "23": {
     "problemId": 23,
@@ -8863,42 +9061,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting to check positive numbers",
+            "description": "Zero and negative numbers are never powers of two.",
+            "badSnippet": "# Common Mistake: Forgetting to check positive numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Zero and negative numbers are never powers of two.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using repeated division",
+            "description": "Works but is slower than the bitwise solution.",
+            "badSnippet": "# Common Mistake: Using repeated division",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Works but is slower than the bitwise solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect bitwise condition",
+            "description": "Using the wrong expression instead of (n & (n - 1)) == 0.",
+            "badSnippet": "# Common Mistake: Incorrect bitwise condition",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using the wrong expression instead of (n & (n - 1)) == 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Treating zero as a power of two",
+            "description": "0 should return False.",
+            "badSnippet": "# Common Mistake: Treating zero as a power of two",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "0 should return False.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Floating-point comparison",
+            "description": "Using logarithms can introduce precision errors.",
+            "badSnippet": "# Common Mistake: Floating-point comparison",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using logarithms can introduce precision errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "24": {
     "problemId": 24,
@@ -9253,42 +9460,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Checking divisibility by 3 before 15",
+            "description": "Multiples of both 3 and 5 incorrectly become \"Fizz\" instead of \"FizzBuzz\".",
+            "badSnippet": "# Common Mistake: Checking divisibility by 3 before 15",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Multiples of both 3 and 5 incorrectly become \"Fizz\" instead of \"FizzBuzz\".",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Printing instead of returning",
+            "description": "Many coding platforms expect a returned list.",
+            "badSnippet": "# Common Mistake: Printing instead of returning",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Many coding platforms expect a returned list.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Off-by-one errors",
+            "description": "Starting from 0 instead of 1.",
+            "badSnippet": "# Common Mistake: Off-by-one errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Starting from 0 instead of 1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect condition order",
+            "description": "Causes \"Buzz\" or \"Fizz\" to replace \"FizzBuzz\".",
+            "badSnippet": "# Common Mistake: Incorrect condition order",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes \"Buzz\" or \"Fizz\" to replace \"FizzBuzz\".",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Hardcoding outputs",
+            "description": "Instead of generating them dynamically.",
+            "badSnippet": "# Common Mistake: Hardcoding outputs",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of generating them dynamically.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "25": {
     "problemId": 25,
@@ -9643,42 +9859,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using brute force",
+            "description": "Checking every divisor instead of Euclid's algorithm.",
+            "badSnippet": "# Common Mistake: Using brute force",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Checking every divisor instead of Euclid's algorithm.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Incorrect LCM formula",
+            "description": "Using a * b / gcd without considering integer division.",
+            "badSnippet": "# Common Mistake: Incorrect LCM formula",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using a * b / gcd without considering integer division.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Division before multiplication",
+            "description": "Can lose precision in some languages.",
+            "badSnippet": "# Common Mistake: Division before multiplication",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Can lose precision in some languages.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Forgetting zero cases",
+            "description": "GCD and LCM involving zero need special handling.",
+            "badSnippet": "# Common Mistake: Forgetting zero cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "GCD and LCM involving zero need special handling.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Infinite recursion",
+            "description": "Incorrect recursive implementation of Euclid's algorithm.",
+            "badSnippet": "# Common Mistake: Infinite recursion",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Incorrect recursive implementation of Euclid's algorithm.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "26": {
     "problemId": 26,
@@ -10033,42 +10258,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using plain recursion",
+            "description": "Results in exponential time complexity.",
+            "badSnippet": "# Common Mistake: Using plain recursion",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in exponential time complexity.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Incorrect base cases",
+            "description": "Returning the wrong values for n = 0 or n = 1.",
+            "badSnippet": "# Common Mistake: Incorrect base cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning the wrong values for n = 0 or n = 1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Integer overflow",
+            "description": "Fibonacci numbers grow very quickly.",
+            "badSnippet": "# Common Mistake: Integer overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Fibonacci numbers grow very quickly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Off-by-one indexing",
+            "description": "Confusing whether Fibonacci starts at index 0 or 1.",
+            "badSnippet": "# Common Mistake: Off-by-one indexing",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Confusing whether Fibonacci starts at index 0 or 1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting memoization",
+            "description": "Recomputing the same values repeatedly.",
+            "badSnippet": "# Common Mistake: Forgetting memoization",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Recomputing the same values repeatedly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "27": {
     "problemId": 27,
@@ -10423,42 +10657,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Computing the factorial first",
+            "description": "Extremely inefficient for large values of n.",
+            "badSnippet": "# Common Mistake: Computing the factorial first",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Extremely inefficient for large values of n.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Counting only one factor of 5",
+            "description": "Missing additional factors from numbers like 25, 125, etc.",
+            "badSnippet": "# Common Mistake: Counting only one factor of 5",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing additional factors from numbers like 25, 125, etc.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Counting factors of 10",
+            "description": "Trailing zeros depend on pairs of 2 and 5, with 5 being the limiting factor.",
+            "badSnippet": "# Common Mistake: Counting factors of 10",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Trailing zeros depend on pairs of 2 and 5, with 5 being the limiting factor.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Recursive factorial overflow",
+            "description": "Large factorial values exceed integer limits.",
+            "badSnippet": "# Common Mistake: Recursive factorial overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Large factorial values exceed integer limits.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect loop termination",
+            "description": "Stopping before all powers of 5 are processed.",
+            "badSnippet": "# Common Mistake: Incorrect loop termination",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Stopping before all powers of 5 are processed.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "28": {
     "problemId": 28,
@@ -10813,42 +11056,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Multiplying x repeatedly",
+            "description": "O(n) instead of O(log n).",
+            "badSnippet": "# Common Mistake: Multiplying x repeatedly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n) instead of O(log n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Forgetting negative exponents",
+            "description": "Should return 1 / x^n.",
+            "badSnippet": "# Common Mistake: Forgetting negative exponents",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Should return 1 / x^n.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect odd/even exponent handling",
+            "description": "Producing wrong results during recursion.",
+            "badSnippet": "# Common Mistake: Incorrect odd/even exponent handling",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Producing wrong results during recursion.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Stack overflow",
+            "description": "Deep recursion without optimization.",
+            "badSnippet": "# Common Mistake: Stack overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Deep recursion without optimization.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring exponent equals zero",
+            "description": "Any non-zero number raised to 0 equals 1.",
+            "badSnippet": "# Common Mistake: Ignoring exponent equals zero",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Any non-zero number raised to 0 equals 1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "29": {
     "problemId": 29,
@@ -11203,42 +11455,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Performing only one digit sum",
+            "description": "The process should continue until a single digit remains.",
+            "badSnippet": "# Common Mistake: Performing only one digit sum",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The process should continue until a single digit remains.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Converting to strings unnecessarily",
+            "description": "Missing the constant-time mathematical solution.",
+            "badSnippet": "# Common Mistake: Converting to strings unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the constant-time mathematical solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Returning 9 for input 0",
+            "description": "The digital root of 0 is 0.",
+            "badSnippet": "# Common Mistake: Returning 9 for input 0",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The digital root of 0 is 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect modulo formula",
+            "description": "Misusing % 9 without handling multiples of 9 correctly.",
+            "badSnippet": "# Common Mistake: Incorrect modulo formula",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Misusing % 9 without handling multiples of 9 correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Infinite loop",
+            "description": "Forgetting to update the current number after summing digits.",
+            "badSnippet": "# Common Mistake: Infinite loop",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to update the current number after summing digits.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "30": {
     "problemId": 30,
@@ -11593,42 +11854,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Checking only increasing order",
+            "description": "Forgetting decreasing arrays are also monotonic.",
+            "badSnippet": "# Common Mistake: Checking only increasing order",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting decreasing arrays are also monotonic.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Treating equal values as violations",
+            "description": "Equal adjacent values are allowed.",
+            "badSnippet": "# Common Mistake: Treating equal values as violations",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Equal adjacent values are allowed.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Changing direction midway",
+            "description": "Not detecting arrays that switch between increasing and decreasing.",
+            "badSnippet": "# Common Mistake: Changing direction midway",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not detecting arrays that switch between increasing and decreasing.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Ignoring arrays of length 0 or 1",
+            "description": "These are always monotonic.",
+            "badSnippet": "# Common Mistake: Ignoring arrays of length 0 or 1",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "These are always monotonic.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Using sorting for comparison",
+            "description": "Sorting changes the original order and increases complexity unnecessarily.",
+            "badSnippet": "# Common Mistake: Using sorting for comparison",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Sorting changes the original order and increases complexity unnecessarily.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "31": {
     "problemId": 31,
@@ -11983,42 +12253,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Not using a stack",
+            "description": "Trying to count opening and closing brackets fails for nested expressions.",
+            "badSnippet": "# Common Mistake: Not using a stack",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Trying to count opening and closing brackets fails for nested expressions.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Ignoring bracket types",
+            "description": "Accepting ([)] as valid even though the nesting is incorrect.",
+            "badSnippet": "# Common Mistake: Ignoring bracket types",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Accepting ([)] as valid even though the nesting is incorrect.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting to check for an empty stack",
+            "description": "Calling pop() on an empty stack causes runtime errors.",
+            "badSnippet": "# Common Mistake: Forgetting to check for an empty stack",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Calling pop() on an empty stack causes runtime errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Not checking leftover opening brackets",
+            "description": "Returning True even when unmatched opening brackets remain.",
+            "badSnippet": "# Common Mistake: Not checking leftover opening brackets",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning True even when unmatched opening brackets remain.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Comparing the wrong bracket pairs",
+            "description": "Matching ( with ] or { with ) due to incorrect mapping.",
+            "badSnippet": "# Common Mistake: Comparing the wrong bracket pairs",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Matching ( with ] or { with ) due to incorrect mapping.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "32": {
     "problemId": 32,
@@ -12373,42 +12652,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using only one stack",
+            "description": "A single stack behaves like a stack (LIFO), not a queue (FIFO).",
+            "badSnippet": "# Common Mistake: Using only one stack",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A single stack behaves like a stack (LIFO), not a queue (FIFO).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Transferring elements on every operation",
+            "description": "Causes unnecessary O(n) operations instead of amortized O(1).",
+            "badSnippet": "# Common Mistake: Transferring elements on every operation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes unnecessary O(n) operations instead of amortized O(1).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting to transfer when the output stack is empty",
+            "description": "dequeue() may fail even when elements exist.",
+            "badSnippet": "# Common Mistake: Forgetting to transfer when the output stack is empty",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "dequeue() may fail even when elements exist.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Returning the wrong element",
+            "description": "Returning the most recently inserted element instead of the oldest.",
+            "badSnippet": "# Common Mistake: Returning the wrong element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning the most recently inserted element instead of the oldest.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling empty queues",
+            "description": "Attempting to pop from empty stacks without validation.",
+            "badSnippet": "# Common Mistake: Not handling empty queues",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Attempting to pop from empty stacks without validation.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "33": {
     "problemId": 33,
@@ -12763,42 +13051,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "Results in O(n\u00b2) instead of O(n) with a monotonic stack.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(n\u00b2) instead of O(n) with a monotonic stack.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Looking only at the immediate next element",
+            "description": "The next greater element may appear much later.",
+            "badSnippet": "# Common Mistake: Looking only at the immediate next element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The next greater element may appear much later.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting elements with no greater value",
+            "description": "These should return -1.",
+            "badSnippet": "# Common Mistake: Forgetting elements with no greater value",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "These should return -1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Building the stack incorrectly",
+            "description": "Using an increasing stack instead of a decreasing (monotonic) stack.",
+            "badSnippet": "# Common Mistake: Building the stack incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using an increasing stack instead of a decreasing (monotonic) stack.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring duplicate handling",
+            "description": "Mapping values incorrectly when duplicates are present.",
+            "badSnippet": "# Common Mistake: Ignoring duplicate handling",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Mapping values incorrectly when duplicates are present.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "34": {
     "problemId": 34,
@@ -13153,42 +13450,15 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
-      },
-      {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
-      },
-      {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
-      },
-      {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m1",
+            "title": "Simply removing",
+            "description": "",
+            "badSnippet": "# Common Mistake: Simply removing",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "35": {
     "problemId": 35,
@@ -13543,42 +13813,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Ignoring \".\" directories",
+            "description": "\".\" represents the current directory and should be skipped.",
+            "badSnippet": "# Common Mistake: Ignoring \".\" directories",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "\".\" represents the current directory and should be skipped.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Mishandling \"..\"",
+            "description": "\"..\" moves to the parent directory and requires popping from the stack.",
+            "badSnippet": "# Common Mistake: Mishandling \"..\"",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "\"..\" moves to the parent directory and requires popping from the stack.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Allowing navigation above the root",
+            "description": "/../../a should simplify to /a, not produce invalid paths.",
+            "badSnippet": "# Common Mistake: Allowing navigation above the root",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "/../../a should simplify to /a, not produce invalid paths.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Keeping multiple slashes",
+            "description": "//home///user should become /home/user.",
+            "badSnippet": "# Common Mistake: Keeping multiple slashes",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "//home///user should become /home/user.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting the leading slash",
+            "description": "Returning home/user instead of /home/user.",
+            "badSnippet": "# Common Mistake: Forgetting the leading slash",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning home/user instead of /home/user.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "36": {
     "problemId": 36,
@@ -13933,42 +14212,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Swapping rows and columns incorrectly",
+            "description": "Using the wrong indices produces incorrect matrices.",
+            "badSnippet": "# Common Mistake: Swapping rows and columns incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using the wrong indices produces incorrect matrices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Assuming every matrix is square",
+            "description": "Rectangular matrices require different dimensions after transposition.",
+            "badSnippet": "# Common Mistake: Assuming every matrix is square",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Rectangular matrices require different dimensions after transposition.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Modifying the original matrix incorrectly",
+            "description": "In-place transpose only works for square matrices.",
+            "badSnippet": "# Common Mistake: Modifying the original matrix incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "In-place transpose only works for square matrices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect loop boundaries",
+            "description": "Causes index-out-of-range errors.",
+            "badSnippet": "# Common Mistake: Incorrect loop boundaries",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes index-out-of-range errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning the original matrix",
+            "description": "Forgetting to build the transposed result.",
+            "badSnippet": "# Common Mistake: Returning the original matrix",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to build the transposed result.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "37": {
     "problemId": 37,
@@ -14323,42 +14611,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Double-counting the center element",
+            "description": "In odd-sized matrices, the center belongs to both diagonals and should be counted once.",
+            "badSnippet": "# Common Mistake: Double-counting the center element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "In odd-sized matrices, the center belongs to both diagonals and should be counted once.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Mixing row and column indices",
+            "description": "Using incorrect positions for diagonal elements.",
+            "badSnippet": "# Common Mistake: Mixing row and column indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using incorrect positions for diagonal elements.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Assuming non-square matrices",
+            "description": "The standard problem uses square matrices.",
+            "badSnippet": "# Common Mistake: Assuming non-square matrices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The standard problem uses square matrices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Summing every element",
+            "description": "Instead of only the two diagonals.",
+            "badSnippet": "# Common Mistake: Summing every element",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of only the two diagonals.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect loop limits",
+            "description": "Missing the last diagonal element.",
+            "badSnippet": "# Common Mistake: Incorrect loop limits",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the last diagonal element.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "38": {
     "problemId": 38,
@@ -14713,42 +15010,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using linear search",
+            "description": "Missing the intended O(log n) binary search solution.",
+            "badSnippet": "# Common Mistake: Using linear search",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the intended O(log n) binary search solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Treating each row independently",
+            "description": "Without using the matrix's sorted properties.",
+            "badSnippet": "# Common Mistake: Treating each row independently",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Without using the matrix's sorted properties.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect row/column conversion",
+            "description": "Wrong calculations when mapping a 1D index to 2D coordinates.",
+            "badSnippet": "# Common Mistake: Incorrect row/column conversion",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Wrong calculations when mapping a 1D index to 2D coordinates.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Off-by-one errors",
+            "description": "Missing the first or last element.",
+            "badSnippet": "# Common Mistake: Off-by-one errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing the first or last element.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Assuming unsorted input",
+            "description": "Binary search only works because the matrix is sorted.",
+            "badSnippet": "# Common Mistake: Assuming unsorted input",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Binary search only works because the matrix is sorted.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "39": {
     "problemId": 39,
@@ -15103,42 +15409,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting the base case",
+            "description": "Causes infinite recursion.",
+            "badSnippet": "# Common Mistake: Forgetting the base case",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes infinite recursion.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Revisiting already colored cells",
+            "description": "Results in excessive recursion or infinite loops.",
+            "badSnippet": "# Common Mistake: Revisiting already colored cells",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in excessive recursion or infinite loops.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Not checking matrix boundaries",
+            "description": "Leads to index-out-of-range errors.",
+            "badSnippet": "# Common Mistake: Not checking matrix boundaries",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Leads to index-out-of-range errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Starting when the new color equals the old color",
+            "description": "Can create unnecessary recursion.",
+            "badSnippet": "# Common Mistake: Starting when the new color equals the old color",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Can create unnecessary recursion.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Considering only four directions incorrectly",
+            "description": "Missing valid neighboring cells or checking invalid directions.",
+            "badSnippet": "# Common Mistake: Considering only four directions incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing valid neighboring cells or checking invalid directions.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "40": {
     "problemId": 40,
@@ -15493,42 +15808,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Reversing before transposing incorrectly",
+            "description": "The order of operations matters.",
+            "badSnippet": "# Common Mistake: Reversing before transposing incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The order of operations matters.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Assuming rectangular matrices",
+            "description": "In-place rotation only works for square matrices.",
+            "badSnippet": "# Common Mistake: Assuming rectangular matrices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "In-place rotation only works for square matrices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Swapping incorrect indices",
+            "description": "Produces mirrored or rotated-in-the-wrong-direction matrices.",
+            "badSnippet": "# Common Mistake: Swapping incorrect indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces mirrored or rotated-in-the-wrong-direction matrices.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Overwriting values during rotation",
+            "description": "Losing original values because swaps aren't handled correctly.",
+            "badSnippet": "# Common Mistake: Overwriting values during rotation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Losing original values because swaps aren't handled correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Rotating counterclockwise by mistake",
+            "description": "Reversing rows/columns incorrectly changes the rotation direction.",
+            "badSnippet": "# Common Mistake: Rotating counterclockwise by mistake",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Reversing rows/columns incorrectly changes the rotation direction.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "41": {
     "problemId": 41,
@@ -15883,42 +16207,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "Results in O(n\u00b2) instead of the optimal O(n) sliding window approach.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(n\u00b2) instead of the optimal O(n) sliding window approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Resetting the entire window on duplicates",
+            "description": "Instead of moving only the left pointer past the duplicate.",
+            "badSnippet": "# Common Mistake: Resetting the entire window on duplicates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of moving only the left pointer past the duplicate.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrectly updating the maximum length",
+            "description": "Updating before removing duplicates can produce incorrect answers.",
+            "badSnippet": "# Common Mistake: Incorrectly updating the maximum length",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Updating before removing duplicates can produce incorrect answers.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Not tracking character positions",
+            "description": "Using only a set without managing indices correctly.",
+            "badSnippet": "# Common Mistake: Not tracking character positions",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using only a set without managing indices correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting edge cases",
+            "description": "Empty strings and strings with all identical characters should be handled properly.",
+            "badSnippet": "# Common Mistake: Forgetting edge cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Empty strings and strings with all identical characters should be handled properly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "42": {
     "problemId": 42,
@@ -16273,42 +16606,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using the original word as the dictionary key",
+            "description": "Different anagrams won't be grouped together.",
+            "badSnippet": "# Common Mistake: Using the original word as the dictionary key",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Different anagrams won't be grouped together.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Forgetting to sort the characters",
+            "description": "\"eat\" and \"tea\" should have the same key.",
+            "badSnippet": "# Common Mistake: Forgetting to sort the characters",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "\"eat\" and \"tea\" should have the same key.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Using a mutable list as a dictionary key",
+            "description": "Lists are unhashable; use a tuple or sorted string.",
+            "badSnippet": "# Common Mistake: Using a mutable list as a dictionary key",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Lists are unhashable; use a tuple or sorted string.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Ignoring case sensitivity",
+            "description": "\"Eat\" and \"eat\" may need normalization depending on requirements.",
+            "badSnippet": "# Common Mistake: Ignoring case sensitivity",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "\"Eat\" and \"eat\" may need normalization depending on requirements.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning only the keys",
+            "description": "The expected output is grouped lists of words, not just dictionary keys.",
+            "badSnippet": "# Common Mistake: Returning only the keys",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The expected output is grouped lists of words, not just dictionary keys.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "43": {
     "problemId": 43,
@@ -16663,42 +17005,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "O(n\u00b2) instead of the intended O(n) two-pointer solution.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) instead of the intended O(n) two-pointer solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Moving the taller pointer",
+            "description": "The shorter line determines the current area; moving the taller one can't improve it.",
+            "badSnippet": "# Common Mistake: Moving the taller pointer",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The shorter line determines the current area; moving the taller one can't improve it.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect area calculation",
+            "description": "Forgetting to multiply the minimum height by the width.",
+            "badSnippet": "# Common Mistake: Incorrect area calculation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to multiply the minimum height by the width.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Ignoring equal heights",
+            "description": "Pointer movement should still be handled correctly when heights are equal.",
+            "badSnippet": "# Common Mistake: Ignoring equal heights",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Pointer movement should still be handled correctly when heights are equal.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Updating the maximum after moving pointers",
+            "description": "Compute the current area before changing pointer positions.",
+            "badSnippet": "# Common Mistake: Updating the maximum after moving pointers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Compute the current area before changing pointer positions.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "44": {
     "problemId": 44,
@@ -17053,42 +17404,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using a sliding window",
+            "description": "Sliding windows don't work reliably when negative numbers are present.",
+            "badSnippet": "# Common Mistake: Using a sliding window",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Sliding windows don't work reliably when negative numbers are present.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Forgetting to initialize the prefix sum map",
+            "description": "Missing {0: 1} causes subarrays starting at index 0 to be overlooked.",
+            "badSnippet": "# Common Mistake: Forgetting to initialize the prefix sum map",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing {0: 1} causes subarrays starting at index 0 to be overlooked.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Storing only the latest prefix sum",
+            "description": "Frequencies of prefix sums are needed, not just one occurrence.",
+            "badSnippet": "# Common Mistake: Storing only the latest prefix sum",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Frequencies of prefix sums are needed, not just one occurrence.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Using nested loops",
+            "description": "Leads to O(n\u00b2) instead of O(n).",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Leads to O(n\u00b2) instead of O(n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning after the first match",
+            "description": "The problem asks for the total number of qualifying subarrays.",
+            "badSnippet": "# Common Mistake: Returning after the first match",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The problem asks for the total number of qualifying subarrays.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "45": {
     "problemId": 45,
@@ -17443,42 +17803,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Forgetting to sort the intervals",
+            "description": "Merging only works correctly after sorting by start time.",
+            "badSnippet": "# Common Mistake: Forgetting to sort the intervals",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Merging only works correctly after sorting by start time.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Comparing the wrong interval endpoints",
+            "description": "Checking incorrect boundaries causes missed merges.",
+            "badSnippet": "# Common Mistake: Comparing the wrong interval endpoints",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Checking incorrect boundaries causes missed merges.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Appending intervals too early",
+            "description": "Before confirming whether they overlap.",
+            "badSnippet": "# Common Mistake: Appending intervals too early",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Before confirming whether they overlap.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Missing the last interval",
+            "description": "Forgetting to add the final merged interval after the loop.",
+            "badSnippet": "# Common Mistake: Missing the last interval",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to add the final merged interval after the loop.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Treating touching intervals incorrectly",
+            "description": "For example, [1,4] and [4,5] usually should merge if endpoints are inclusive.",
+            "badSnippet": "# Common Mistake: Treating touching intervals incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "For example, [1,4] and [4,5] usually should merge if endpoints are inclusive.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "46": {
     "problemId": 46,
@@ -17833,42 +18202,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using three nested loops",
+            "description": "O(n\u00b3) instead of O(n\u00b2) after sorting.",
+            "badSnippet": "# Common Mistake: Using three nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b3) instead of O(n\u00b2) after sorting.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Forgetting to sort the array",
+            "description": "The two-pointer approach depends on sorted input.",
+            "badSnippet": "# Common Mistake: Forgetting to sort the array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The two-pointer approach depends on sorted input.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Not skipping duplicate values",
+            "description": "Produces duplicate triplets in the output.",
+            "badSnippet": "# Common Mistake: Not skipping duplicate values",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces duplicate triplets in the output.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Incorrect pointer movement",
+            "description": "Moving the wrong pointer after comparing the sum.",
+            "badSnippet": "# Common Mistake: Incorrect pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Moving the wrong pointer after comparing the sum.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning duplicate triplets",
+            "description": "Each valid triplet should appear only once.",
+            "badSnippet": "# Common Mistake: Returning duplicate triplets",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Each valid triplet should appear only once.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "47": {
     "problemId": 47,
@@ -18223,42 +18601,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Sorting the array first",
+            "description": "O(n log n) instead of the expected O(n) hash-set approach.",
+            "badSnippet": "# Common Mistake: Sorting the array first",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n log n) instead of the expected O(n) hash-set approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Starting a sequence from every number",
+            "description": "Only begin counting if num - 1 doesn't exist.",
+            "badSnippet": "# Common Mistake: Starting a sequence from every number",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Only begin counting if num - 1 doesn't exist.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Ignoring duplicate numbers",
+            "description": "Duplicates can incorrectly inflate sequence lengths.",
+            "badSnippet": "# Common Mistake: Ignoring duplicate numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Duplicates can incorrectly inflate sequence lengths.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Resetting the count incorrectly",
+            "description": "Losing track of the current sequence length.",
+            "badSnippet": "# Common Mistake: Resetting the count incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Losing track of the current sequence length.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Mishandling empty arrays",
+            "description": "Should return 0 instead of causing errors.",
+            "badSnippet": "# Common Mistake: Mishandling empty arrays",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Should return 0 instead of causing errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "48": {
     "problemId": 48,
@@ -18613,42 +19000,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "Results in O(n\u00b2) instead of O(n).",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(n\u00b2) instead of O(n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Building the wrong type of stack",
+            "description": "A monotonic decreasing stack is required.",
+            "badSnippet": "# Common Mistake: Building the wrong type of stack",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A monotonic decreasing stack is required.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting unanswered days",
+            "description": "Days with no warmer temperature should remain 0.",
+            "badSnippet": "# Common Mistake: Forgetting unanswered days",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Days with no warmer temperature should remain 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Comparing indices incorrectly",
+            "description": "The stack should store indices, not just temperatures.",
+            "badSnippet": "# Common Mistake: Comparing indices incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The stack should store indices, not just temperatures.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Popping only once",
+            "description": "Multiple colder temperatures may need to be removed.",
+            "badSnippet": "# Common Mistake: Popping only once",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Multiple colder temperatures may need to be removed.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "49": {
     "problemId": 49,
@@ -19003,42 +19399,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Calculating water using only neighboring bars",
+            "description": "Water depends on the maximum heights to the left and right.",
+            "badSnippet": "# Common Mistake: Calculating water using only neighboring bars",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Water depends on the maximum heights to the left and right.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using nested loops",
+            "description": "O(n\u00b2) instead of O(n) using two pointers or precomputed arrays.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "O(n\u00b2) instead of O(n) using two pointers or precomputed arrays.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Incorrect pointer movement",
+            "description": "Moving the wrong pointer leads to incorrect water calculations.",
+            "badSnippet": "# Common Mistake: Incorrect pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Moving the wrong pointer leads to incorrect water calculations.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Allowing negative trapped water",
+            "description": "Water at each position should never be negative.",
+            "badSnippet": "# Common Mistake: Allowing negative trapped water",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Water at each position should never be negative.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring edge cases",
+            "description": "Arrays with fewer than three bars cannot trap water.",
+            "badSnippet": "# Common Mistake: Ignoring edge cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Arrays with fewer than three bars cannot trap water.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "50": {
     "problemId": 50,
@@ -19393,42 +19798,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1",
-        "title": "Using 'if' Instead of 'while' for Skipping Spaces",
-        "description": "Using an IF statement only skips a single space per iteration. If the input contains multiple consecutive spaces (e.g. 'a   a'), an IF statement leaves spaces un-skipped and compares a space against a letter!",
-        "badSnippet": "if not s[left].isalnum():\n    left += 1\n# Bug: Only skips 1 space, fails on 'a   a'!",
-        "failingInput": "\"a   a\"",
-        "consequence": "Fails on inputs with multiple spaces or consecutive symbols.",
-        "howToFix": "Replace 'if' with 'while left < right and not s[left].isalnum(): left += 1'."
+            "id": "m1",
+            "title": "Recomputing the maximum for every window",
+            "description": "Results in O(nk) instead of O(n).",
+            "badSnippet": "# Common Mistake: Recomputing the maximum for every window",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(nk) instead of O(n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2",
-        "title": "IndexError Crash on Space-Only Strings",
-        "description": "Forgetting the 'left < right' check inside the inner skip while-loop allows 'left' to increment past the end of the string.",
-        "badSnippet": "while not s[left].isalnum():\n    left += 1\n# Bug: Crashes on '    ' with IndexError!",
-        "failingInput": "\"      \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Include 'left < right' in every inner loop: 'while left < right and not s[left].isalnum():'."
+            "id": "m2",
+            "title": "Using a regular queue",
+            "description": "A deque is needed to efficiently maintain the maximum.",
+            "badSnippet": "# Common Mistake: Using a regular queue",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A deque is needed to efficiently maintain the maximum.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3",
-        "title": "Forgetting Case Normalization (.lower())",
-        "description": "Comparing characters directly without .lower() causes uppercase 'A' and lowercase 'a' to mismatch.",
-        "badSnippet": "if s[left] != s[right]:\n    return False",
-        "failingInput": "\"Racecar\"",
-        "consequence": "Returns False for valid palindromes like 'Racecar'.",
-        "howToFix": "Use s[left].lower() != s[right].lower() or add 32 to ASCII value."
+            "id": "m3",
+            "title": "Forgetting to remove out-of-window indices",
+            "description": "Old elements may incorrectly remain as the maximum.",
+            "badSnippet": "# Common Mistake: Forgetting to remove out-of-window indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Old elements may incorrectly remain as the maximum.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m4",
-        "title": "Claiming s[::-1] is O(1) Extra Space",
-        "description": "Python strings are immutable. Slicing s[::-1] creates a brand-new copy of the string on the heap.",
-        "badSnippet": "return s == s[::-1]  # Uses O(N) memory!",
-        "failingInput": "Large string in memory-constrained environment",
-        "consequence": "Fails space complexity requirement in technical interviews.",
-        "howToFix": "Use two pointers moving inward in-place."
+            "id": "m4",
+            "title": "Removing values instead of indices",
+            "description": "Duplicate values make index tracking essential.",
+            "badSnippet": "# Common Mistake: Removing values instead of indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Duplicate values make index tracking essential.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Producing results before the first full window",
+            "description": "The first maximum should be recorded only after the window reaches size k.",
+            "badSnippet": "# Common Mistake: Producing results before the first full window",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The first maximum should be recorded only after the window reaches size k.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "51": {
     "problemId": 51,
@@ -19696,33 +20110,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-51",
-        "title": "Two-Pass Hash Map Self-Matching",
-        "description": "Pre-populating the whole map first can cause an element to match itself when target == 2 * x.",
-        "badSnippet": "seen = {x: i for i, x in enumerate(nums)}\nfor i, x in enumerate(nums):\n    if target - x in seen: # BUG: matches itself!\n        print(f\"{i} {seen[target - x]}\"); break",
-        "failingInput": "nums = [3, 2, 4], target = 6",
-        "consequence": "At index 0 (value 3), target - 3 = 3 which is in seen at index 0. Prints '0 0' instead of '1 2'.",
-        "howToFix": "Use a single pass checking `if diff in seen` before adding `seen[x] = i`."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "Leads to O(n\u00b2) instead of the optimal O(n) hash map solution.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Leads to O(n\u00b2) instead of the optimal O(n) hash map solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-51",
-        "title": "Sorting In-Place Without Original Indices",
-        "description": "Sorting nums alters element positions, making indices returned invalid for the original array.",
-        "badSnippet": "nums.sort()\nl, r = 0, len(nums) - 1\nwhile l < r:\n    if nums[l] + nums[r] == target:\n        print(f\"{l} {r}\"); break # BUG: sorted indices!",
-        "failingInput": "nums = [3, 2, 4], target = 6",
-        "consequence": "Array becomes [2, 3, 4], prints sorted indices '0 2' instead of original indices '1 2'.",
-        "howToFix": "Pair each element with `enumerate(nums)` before sorting."
+            "id": "m2",
+            "title": "Returning values instead of indices",
+            "description": "Many interview versions require the indices, not the numbers themselves.",
+            "badSnippet": "# Common Mistake: Returning values instead of indices",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Many interview versions require the indices, not the numbers themselves.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-51",
-        "title": "Printing Python List Instead of Space-Separated",
-        "description": "Printing a list object `[0, 1]` instead of space-separated strings `0 1`.",
-        "badSnippet": "print([seen[diff], i]) # BUG: outputs '[0, 1]'",
-        "failingInput": "nums = [2, 7, 11, 15], target = 9",
-        "consequence": "Output format mismatch in automated interview test graders.",
-        "howToFix": "Use `print(f\"{seen[diff]} {i}\")`."
+            "id": "m3",
+            "title": "Checking the current element after inserting it into the map",
+            "description": "Can incorrectly use the same element twice.",
+            "badSnippet": "# Common Mistake: Checking the current element after inserting it into the map",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Can incorrectly use the same element twice.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Assuming the array is sorted",
+            "description": "Applying the two-pointer technique on an unsorted array gives incorrect results.",
+            "badSnippet": "# Common Mistake: Assuming the array is sorted",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Applying the two-pointer technique on an unsorted array gives incorrect results.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting duplicate values",
+            "description": "Arrays like [3,3] with target 6 should still work correctly.",
+            "badSnippet": "# Common Mistake: Forgetting duplicate values",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Arrays like [3,3] with target 6 should still work correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "52": {
     "problemId": 52,
@@ -20001,33 +20433,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-52",
-        "title": "Moving Taller Pointer Inward",
-        "description": "Advancing the taller height pointer instead of the shorter height pointer.",
-        "badSnippet": "if heights[l] > heights[r]: # BUG: moves taller line\n    l += 1\nelse:\n    r -= 1",
-        "failingInput": "heights = [1, 8, 6, 2, 5, 4, 8, 3, 7]",
-        "consequence": "Misses optimal container [8, ..., 7] of area 49 because it discards the taller boundary too early.",
-        "howToFix": "Move the shorter pointer: `if heights[l] < heights[r]: l += 1`."
+            "id": "m1",
+            "title": "Using brute force",
+            "description": "Comparing every pair results in O(n\u00b2).",
+            "badSnippet": "# Common Mistake: Using brute force",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Comparing every pair results in O(n\u00b2).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-52",
-        "title": "Subtracting Heights Instead of Finding Minimum",
-        "description": "Taking the difference of heights instead of the minimum vertical height.",
-        "badSnippet": "area = (r - l) * abs(heights[r] - heights[l]) # BUG: difference instead of min",
-        "failingInput": "heights = [1, 1]",
-        "consequence": "Calculates area = 1 * 0 = 0 instead of 1 * 1 = 1.",
-        "howToFix": "Use `min(heights[l], heights[r])` for water capacity."
+            "id": "m2",
+            "title": "Moving the taller pointer",
+            "description": "The shorter line limits the area; moving the taller pointer cannot increase it.",
+            "badSnippet": "# Common Mistake: Moving the taller pointer",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The shorter line limits the area; moving the taller pointer cannot increase it.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-52",
-        "title": "Terminating Early on Equal Heights",
-        "description": "Breaking when heights are equal instead of moving a pointer.",
-        "badSnippet": "if heights[l] == heights[r]: break # BUG: stops too early",
-        "failingInput": "heights = [2, 3, 4, 5, 18, 17, 6]",
-        "consequence": "Terminates before discovering tall interior pairs like [18, 17].",
-        "howToFix": "Advance either pointer when heights are equal."
+            "id": "m3",
+            "title": "Wrong area calculation",
+            "description": "Using the larger height instead of the minimum height.",
+            "badSnippet": "# Common Mistake: Wrong area calculation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Using the larger height instead of the minimum height.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Updating pointers before computing area",
+            "description": "Can skip the maximum container.",
+            "badSnippet": "# Common Mistake: Updating pointers before computing area",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Can skip the maximum container.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring equal-height cases",
+            "description": "Either pointer can move, but the implementation must remain correct.",
+            "badSnippet": "# Common Mistake: Ignoring equal-height cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Either pointer can move, but the implementation must remain correct.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "53": {
     "problemId": 53,
@@ -20304,33 +20754,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-53",
-        "title": "Using `nums[i] == nums[i+1]` to Skip Outer Duplicates",
-        "description": "Checking `nums[i] == nums[i+1]` skips the first occurrence of a number instead of the subsequent duplicate occurrences.",
-        "badSnippet": "if nums[i] == nums[i + 1]: continue # BUG: skips before evaluating!",
-        "failingInput": "nums = [-1, -1, 2]",
-        "consequence": "Skips the first -1 and misses the only valid triplet [-1, -1, 2].",
-        "howToFix": "Check `if i > 0 and nums[i] == nums[i - 1]: continue`."
+            "id": "m1",
+            "title": "Forgetting to sort the array",
+            "description": "The two-pointer approach depends on sorted input.",
+            "badSnippet": "# Common Mistake: Forgetting to sort the array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The two-pointer approach depends on sorted input.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-53",
-        "title": "Missing Inner Pointer Duplicate Skip",
-        "description": "Only incrementing l and decrementing r by 1 after a match without skipping duplicate values.",
-        "badSnippet": "triplets.append(...)\nl += 1\nr -= 1 # BUG: next elements might be identical, producing duplicate triplets",
-        "failingInput": "nums = [-2, 0, 0, 2, 2]",
-        "consequence": "Outputs duplicate triplet '-2 0 2' twice.",
-        "howToFix": "Use while loops to advance l and decrement r while adjacent values match."
+            "id": "m2",
+            "title": "Using three nested loops",
+            "description": "Produces O(n\u00b3) instead of O(n\u00b2).",
+            "badSnippet": "# Common Mistake: Using three nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces O(n\u00b3) instead of O(n\u00b2).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-53",
-        "title": "Missing 'NONE' on Empty Output",
-        "description": "Printing nothing when no triplet sums to 0 instead of printing 'NONE'.",
-        "badSnippet": "# Only prints if found, leaves stdout empty if none",
-        "failingInput": "nums = [1, 2, 3]",
-        "consequence": "Test runner expects 'NONE', fails assertion.",
-        "howToFix": "Add `if not triplets: print('NONE')`."
+            "id": "m3",
+            "title": "Not skipping duplicate numbers",
+            "description": "Generates duplicate triplets.",
+            "badSnippet": "# Common Mistake: Not skipping duplicate numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Generates duplicate triplets.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Incorrect pointer movement",
+            "description": "Moving the wrong pointer after evaluating the sum.",
+            "badSnippet": "# Common Mistake: Incorrect pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Moving the wrong pointer after evaluating the sum.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning duplicate results",
+            "description": "Every triplet should be unique.",
+            "badSnippet": "# Common Mistake: Returning duplicate results",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Every triplet should be unique.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "54": {
     "problemId": 54,
@@ -20604,33 +21072,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-54",
-        "title": "Initializing `closest = 0`",
-        "description": "Initializing closest to 0 instead of a real triplet sum causes bugs when target is large.",
-        "badSnippet": "closest = 0 # BUG: 0 might not be achievable by any triplet",
-        "failingInput": "nums = [1, 1, 1, 0], target = -100",
-        "consequence": "Triplets sum to 2 or 3. Code outputs 0 because abs(0 - (-100)) is never updated if condition is flawed.",
-        "howToFix": "Initialize `closest = nums[0] + nums[1] + nums[2]`."
+            "id": "m1",
+            "title": "Forgetting to sort the array",
+            "description": "Two pointers won't work correctly otherwise.",
+            "badSnippet": "# Common Mistake: Forgetting to sort the array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Two pointers won't work correctly otherwise.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-54",
-        "title": "Moving Both Pointers Inward on Distance Improvement",
-        "description": "Moving both pointers when distance improves instead of following directional sum comparison.",
-        "badSnippet": "if abs(curr - target) < abs(closest - target):\n    closest = curr\n    l += 1; r -= 1 # BUG: wrong directional decision",
-        "failingInput": "nums = [-1, 2, 1, -4], target = 1",
-        "consequence": "Skips valid combinations that could be even closer.",
-        "howToFix": "Base pointer movement on `if curr < target: l += 1 else: r -= 1`."
+            "id": "m2",
+            "title": "Comparing sums incorrectly",
+            "description": "Not using the absolute difference from the target.",
+            "badSnippet": "# Common Mistake: Comparing sums incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not using the absolute difference from the target.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-54",
-        "title": "Forgetting to Sort Before Using Two Pointers",
-        "description": "Applying two pointers on unsorted array.",
-        "badSnippet": "# nums.sort() omitted!\nl, r = i + 1, n - 1",
-        "failingInput": "nums = [4, 0, 5, -5, 3, 3, 0, -4, -5]",
-        "consequence": "Directional assumptions fail completely, producing wildly inaccurate closest sum.",
-        "howToFix": "Call `nums.sort()` before running two pointers."
+            "id": "m3",
+            "title": "Updating the closest sum incorrectly",
+            "description": "Replacing it even when the new sum is farther away.",
+            "badSnippet": "# Common Mistake: Updating the closest sum incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Replacing it even when the new sum is farther away.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Returning immediately",
+            "description": "Stopping before exploring potentially closer sums.",
+            "badSnippet": "# Common Mistake: Returning immediately",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Stopping before exploring potentially closer sums.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Wrong pointer movement",
+            "description": "Increasing or decreasing the wrong pointer.",
+            "badSnippet": "# Common Mistake: Wrong pointer movement",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Increasing or decreasing the wrong pointer.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "55": {
     "problemId": 55,
@@ -20896,33 +21382,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-55",
-        "title": "Checking `j > 0` instead of `j > i + 1`",
-        "description": "Checking `j > 0` in the inner loop compares `nums[j]` with `nums[i]`, skipping the first candidate if it matches nums[i].",
-        "badSnippet": "if j > 0 and nums[j] == nums[j - 1]: continue # BUG: compares across loops!",
-        "failingInput": "nums = [2, 2, 2, 2, 2], target = 8",
-        "consequence": "Skips valid quadruplets because index 1 matches index 0.",
-        "howToFix": "Use `if j > i + 1 and nums[j] == nums[j - 1]: continue`."
+            "id": "m1",
+            "title": "Using four nested loops",
+            "description": "Complexity becomes O(n\u2074).",
+            "badSnippet": "# Common Mistake: Using four nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Complexity becomes O(n\u2074).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-55",
-        "title": "Not Skipping Duplicates on Two Pointers",
-        "description": "Only doing `l += 1; r -= 1` without skipping identical adjacent elements.",
-        "badSnippet": "quads.append(...); l += 1; r -= 1 # BUG: duplicates produced",
-        "failingInput": "nums = [-2, 0, 0, 0, 2], target = 0",
-        "consequence": "Emits identical quadruplet multiple times.",
-        "howToFix": "Add while loops to advance l and decrement r past duplicates."
+            "id": "m2",
+            "title": "Forgetting to sort",
+            "description": "Makes duplicate removal difficult.",
+            "badSnippet": "# Common Mistake: Forgetting to sort",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Makes duplicate removal difficult.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-55",
-        "title": "Omitting 'NONE' on Empty Match",
-        "description": "Not printing 'NONE' when no quadruplet sums to target.",
-        "badSnippet": "for q in quads: print(q) # BUG: nothing printed if empty",
-        "failingInput": "nums = [1, 2, 3, 4], target = 100",
-        "consequence": "Automated grader expects 'NONE', fails on empty stdout.",
-        "howToFix": "Add `if not quads: print('NONE')`."
+            "id": "m3",
+            "title": "Not skipping duplicates",
+            "description": "Produces repeated quadruplets.",
+            "badSnippet": "# Common Mistake: Not skipping duplicates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces repeated quadruplets.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Integer overflow",
+            "description": "Large values can overflow in Java/C++ during addition.",
+            "badSnippet": "# Common Mistake: Integer overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Large values can overflow in Java/C++ during addition.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect pointer updates",
+            "description": "Missing valid quadruplets.",
+            "badSnippet": "# Common Mistake: Incorrect pointer updates",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing valid quadruplets.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "56": {
     "problemId": 56,
@@ -21207,33 +21711,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-56",
-        "title": "Jumping `start` Backward",
-        "description": "Failing to check `seen[char] >= start` pulls `start` back to an old index.",
-        "badSnippet": "if char in seen: # BUG: does not check if inside current window!\n    start = seen[char] + 1",
-        "failingInput": "s = \"abba\"",
-        "consequence": "At second 'a' (idx 3), jumps start back to 1 (first 'a' + 1), including the duplicate 'b' inside the window.",
-        "howToFix": "Use `if char in seen and seen[char] >= start: start = seen[char] + 1`."
+            "id": "m1",
+            "title": "Using nested loops",
+            "description": "Produces O(n\u00b2) instead of O(n).",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces O(n\u00b2) instead of O(n).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-56",
-        "title": "Crashing on Empty Input",
-        "description": "Using `sys.stdin.read().split()[0]` on empty input causes IndexError.",
-        "badSnippet": "s = sys.stdin.read().split()[0] # BUG: crashes if input is empty",
-        "failingInput": "s = \"\"",
-        "consequence": "Throws IndexError: list index out of range.",
-        "howToFix": "Use `lines = sys.stdin.read().splitlines(); s = lines[0] if lines else ''`."
+            "id": "m2",
+            "title": "Resetting the window completely",
+            "description": "Instead of moving only the left pointer.",
+            "badSnippet": "# Common Mistake: Resetting the window completely",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of moving only the left pointer.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-56",
-        "title": "Window Length Off-by-One",
-        "description": "Calculating window size as `end - start` instead of `end - start + 1`.",
-        "badSnippet": "max_len = max(max_len, end - start) # BUG: undercounts by 1",
-        "failingInput": "s = \"a\"",
-        "consequence": "Outputs 0 instead of 1 for a single character string.",
-        "howToFix": "Use `end - start + 1` for inclusive range size."
+            "id": "m3",
+            "title": "Incorrect maximum length calculation",
+            "description": "Updating before removing duplicates.",
+            "badSnippet": "# Common Mistake: Incorrect maximum length calculation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Updating before removing duplicates.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Using only a set",
+            "description": "Without tracking indices, duplicates aren't handled efficiently.",
+            "badSnippet": "# Common Mistake: Using only a set",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Without tracking indices, duplicates aren't handled efficiently.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring empty strings",
+            "description": "Should return 0.",
+            "badSnippet": "# Common Mistake: Ignoring empty strings",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Should return 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "57": {
     "problemId": 57,
@@ -21497,33 +22019,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-57",
-        "title": "Forgetting Even-Length Palindromes",
-        "description": "Only calling `expand(i, i)` and omitting `expand(i, i + 1)`.",
-        "badSnippet": "longest = expand(i, i) # BUG: misses even palindromes like 'bb'",
-        "failingInput": "s = \"cbbd\"",
-        "consequence": "Returns 'b' instead of 'bb'.",
-        "howToFix": "Always check both `expand(i, i)` and `expand(i, i + 1)`."
+            "id": "m1",
+            "title": "Checking every substring",
+            "description": "Results in O(n\u00b3) complexity.",
+            "badSnippet": "# Common Mistake: Checking every substring",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Results in O(n\u00b3) complexity.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-57",
-        "title": "Off-by-One Slicing on Expansion Exit",
-        "description": "Returning `s[l:r + 1]` instead of `s[l + 1:r]` when expansion loop exits.",
-        "badSnippet": "while l >= 0 and r < len(s) and s[l] == s[r]:\n    l -= 1; r += 1\nreturn s[l:r + 1] # BUG: includes mismatched characters!",
-        "failingInput": "s = \"babad\"",
-        "consequence": "Includes the characters that caused the while-loop to terminate.",
-        "howToFix": "Return `s[l + 1:r]` to back up past the mismatched characters."
+            "id": "m2",
+            "title": "Expanding from only one center",
+            "description": "Even-length palindromes are missed.",
+            "badSnippet": "# Common Mistake: Expanding from only one center",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Even-length palindromes are missed.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-57",
-        "title": "Crashing on Empty String",
-        "description": "Not checking if input string is empty before accessing `s[0]`.",
-        "badSnippet": "s = input()\nlongest = s[0] # BUG: IndexError on empty string",
-        "failingInput": "s = \"\"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Add `if not s: print(''); return` guard."
+            "id": "m3",
+            "title": "Incorrect boundary checks",
+            "description": "Causes index errors.",
+            "badSnippet": "# Common Mistake: Incorrect boundary checks",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes index errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Returning the length",
+            "description": "The problem expects the substring itself.",
+            "badSnippet": "# Common Mistake: Returning the length",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The problem expects the substring itself.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting single-character palindromes",
+            "description": "Every character is a palindrome of length 1.",
+            "badSnippet": "# Common Mistake: Forgetting single-character palindromes",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Every character is a palindrome of length 1.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "58": {
     "problemId": 58,
@@ -21805,33 +22345,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-58",
-        "title": "Infinite Loop on `num_rows = 1`",
-        "description": "Failing to handle `num_rows = 1` causes `curr` to bounce infinitely at row 0.",
-        "badSnippet": "# Missing num_rows == 1 guard!\nstep = 1\nfor char in s:\n    rows[curr] += char\n    if curr == 0: step = 1\n    elif curr == num_rows - 1: step = -1",
-        "failingInput": "s = \"AB\", num_rows = 1",
-        "consequence": "curr becomes 1, causing IndexError: list index out of range on rows of size 1.",
-        "howToFix": "Add `if num_rows == 1 or num_rows >= len(s): print(s); return` at start."
+            "id": "m1",
+            "title": "Incorrect direction changes",
+            "description": "Not switching between downward and upward traversal correctly.",
+            "badSnippet": "# Common Mistake: Incorrect direction changes",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not switching between downward and upward traversal correctly.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-58",
-        "title": "Using `if` instead of `elif` for Boundary Check",
-        "description": "Using two independent `if` statements can immediately undo the step change when num_rows = 2.",
-        "badSnippet": "if curr == 0: step = 1\nif curr == num_rows - 1: step = -1 # BUG: flips step twice when num_rows=2",
-        "failingInput": "s = \"ABC\", num_rows = 2",
-        "consequence": "Direction gets corrupted on small row counts.",
-        "howToFix": "Use `if ... elif ...` to ensure only one boundary check executes."
+            "id": "m2",
+            "title": "Mishandling one row",
+            "description": "If numRows == 1, the original string should be returned.",
+            "badSnippet": "# Common Mistake: Mishandling one row",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "If numRows == 1, the original string should be returned.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-58",
-        "title": "Allocating Massive Sparse Matrix",
-        "description": "Creating an `n x num_rows` full matrix filled with empty spaces.",
-        "badSnippet": "grid = [[' ']*len(s) for _ in range(num_rows)] # BUG: Memory Limit Exceeded",
-        "failingInput": "s of length 100,000 with num_rows = 1000",
-        "consequence": "Allocates 100 million entries, crashing with Memory Limit Exceeded (MLE).",
-        "howToFix": "Use `rows = [''] * num_rows` to only store non-empty characters."
+            "id": "m3",
+            "title": "Index out-of-range errors",
+            "description": "Moving beyond available rows.",
+            "badSnippet": "# Common Mistake: Index out-of-range errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Moving beyond available rows.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Building rows incorrectly",
+            "description": "Appending characters to the wrong row.",
+            "badSnippet": "# Common Mistake: Building rows incorrectly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Appending characters to the wrong row.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting to join the rows",
+            "description": "Returning the list instead of the final string.",
+            "badSnippet": "# Common Mistake: Forgetting to join the rows",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Returning the list instead of the final string.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "59": {
     "problemId": 59,
@@ -22105,33 +22663,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-59",
-        "title": "Passing Full String to `int()` Directly",
-        "description": "Calling `int(s)` directly without parsing prefix digits.",
-        "badSnippet": "val = int(s) # BUG: ValueError on '1337c0d3' or '42 words'",
-        "failingInput": "s = \"1337c0d3\"",
-        "consequence": "Crashes with ValueError: invalid literal for int() with base 10.",
-        "howToFix": "Parse digit by digit using `while idx < len(s) and s[idx].isdigit()`."
+            "id": "m1",
+            "title": "Ignoring leading whitespace",
+            "description": "Input should be trimmed before parsing.",
+            "badSnippet": "# Common Mistake: Ignoring leading whitespace",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Input should be trimmed before parsing.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-59",
-        "title": "Forgetting 32-Bit Range Clamping",
-        "description": "Returning arbitrary large integer without clamping to [-2\u00b3\u00b9, 2\u00b3\u00b9 - 1].",
-        "badSnippet": "return sign * val # BUG: returns 9999999999999999999",
-        "failingInput": "s = \"-91283472332\"",
-        "consequence": "Returns -91283472332 instead of clamped minimum -2147483648.",
-        "howToFix": "Clamp using `max(-2**31, min(2**31 - 1, val))`."
+            "id": "m2",
+            "title": "Mishandling '+' and '-' signs",
+            "description": "Only one optional sign should be processed.",
+            "badSnippet": "# Common Mistake: Mishandling '+' and '-' signs",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Only one optional sign should be processed.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-59",
-        "title": "Empty String Index Crash on `s[0]`",
-        "description": "Checking `if s[0] == '-'` before verifying string is non-empty.",
-        "badSnippet": "s = s.lstrip()\nif s[0] == '-': # BUG: IndexError if s was just spaces",
-        "failingInput": "s = \"   \"",
-        "consequence": "Crashes with IndexError: string index out of range.",
-        "howToFix": "Add `if not s: print(0); return` immediately after lstrip()."
+            "id": "m3",
+            "title": "Ignoring integer overflow",
+            "description": "Values beyond 32-bit range should be clamped.",
+            "badSnippet": "# Common Mistake: Ignoring integer overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Values beyond 32-bit range should be clamped.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Continuing after non-digit characters",
+            "description": "Parsing should stop at the first invalid character.",
+            "badSnippet": "# Common Mistake: Continuing after non-digit characters",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Parsing should stop at the first invalid character.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Returning an exception",
+            "description": "Invalid input should return 0 according to the standard atoi specification.",
+            "badSnippet": "# Common Mistake: Returning an exception",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Invalid input should return 0 according to the standard atoi specification.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "60": {
     "problemId": 60,
@@ -22404,33 +22980,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-60",
-        "title": "Index Out of Bounds in Vertical Scan",
-        "description": "Checking `s[i]` without first ensuring `i < len(s)`.",
-        "badSnippet": "for i in range(len(strs[0])):\n    for s in strs[1:]:\n        if s[i] != strs[0][i]: # BUG: crashes if s is shorter than strs[0]!",
-        "failingInput": "strs = [\"flower\", \"flow\"]",
-        "consequence": "At index 4, accessing flow[4] throws IndexError: string index out of range.",
-        "howToFix": "Check `if i == len(s) or s[i] != strs[0][i]:`."
+            "id": "m1",
+            "title": "Comparing only the first two strings",
+            "description": "All strings must be considered.",
+            "badSnippet": "# Common Mistake: Comparing only the first two strings",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "All strings must be considered.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-60",
-        "title": "Failing on Single Word Input",
-        "description": "Assuming there are at least two words.",
-        "badSnippet": "s1, s2 = strs[0], strs[1] # BUG: IndexError on ['a']",
-        "failingInput": "strs = [\"a\"]",
-        "consequence": "Crashes on single-word inputs.",
-        "howToFix": "If len(strs) == 1, immediately return strs[0]."
+            "id": "m2",
+            "title": "Accessing characters beyond string length",
+            "description": "Causes index errors.",
+            "badSnippet": "# Common Mistake: Accessing characters beyond string length",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes index errors.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-60",
-        "title": "Splitting by Space in Multi-Word Inputs",
-        "description": "Using raw `input().split()` when empty input is provided.",
-        "badSnippet": "strs = input().split()\nfirst = strs[0] # BUG: IndexError on empty input",
-        "failingInput": "Empty input line",
-        "consequence": "Crashes with IndexError.",
-        "howToFix": "Verify `if not strs: print(''); sys.exit(0)`."
+            "id": "m3",
+            "title": "Returning the longest string",
+            "description": "Instead of the longest shared prefix.",
+            "badSnippet": "# Common Mistake: Returning the longest string",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Instead of the longest shared prefix.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Ignoring empty strings",
+            "description": "If any string is empty, the answer is an empty prefix.",
+            "badSnippet": "# Common Mistake: Ignoring empty strings",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "If any string is empty, the answer is an empty prefix.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not stopping at the first mismatch",
+            "description": "Wastes unnecessary comparisons.",
+            "badSnippet": "# Common Mistake: Not stopping at the first mismatch",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Wastes unnecessary comparisons.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "61": {
     "problemId": 61,
@@ -22697,33 +23291,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-61",
-        "title": "String Slicing Without Handling Minus Sign",
-        "description": "Calling `str(x)[::-1]` directly on negative numbers places the '-' at the end of the string.",
-        "badSnippet": "rev = int(str(x)[::-1]) # BUG: \"-123\" becomes \"321-\", crashing int()",
-        "failingInput": "x = -123",
-        "consequence": "Crashes with ValueError: invalid literal for int() with base 10: '321-'.",
-        "howToFix": "Use `sign = -1 if x < 0 else 1` and reverse `str(abs(x))`."
+            "id": "m1",
+            "title": "Ignoring integer overflow",
+            "description": "The reversed number may exceed the 32-bit signed integer range and should return 0.",
+            "badSnippet": "# Common Mistake: Ignoring integer overflow",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The reversed number may exceed the 32-bit signed integer range and should return 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-61",
-        "title": "Missing 32-Bit Overflow Clamp",
-        "description": "Returning reversed numbers without checking if they exceed 32-bit limits.",
-        "badSnippet": "# Missing overflow check, returns rev directly",
-        "failingInput": "x = 1534236469",
-        "consequence": "Returns 9646324351 instead of 0.",
-        "howToFix": "Add `if rev < -2**31 or rev > 2**31 - 1: print(0)`."
+            "id": "m2",
+            "title": "Forgetting negative numbers",
+            "description": "The sign should be preserved after reversing.",
+            "badSnippet": "# Common Mistake: Forgetting negative numbers",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The sign should be preserved after reversing.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-61",
-        "title": "Python Modulo on Negative Numbers",
-        "description": "Using `x % 10` directly while `x < 0` produces mathematical complement instead of digit.",
-        "badSnippet": "while x != 0:\n    rev = rev * 10 + x % 10 # BUG: -123 % 10 is 7!\n    x //= 10",
-        "failingInput": "x = -123",
-        "consequence": "Produces corrupted arithmetic result.",
-        "howToFix": "Store sign and apply `x = abs(x)` before loop."
+            "id": "m3",
+            "title": "Reversing using string conversion only",
+            "description": "Many interviewers expect an arithmetic solution using modulo and division.",
+            "badSnippet": "# Common Mistake: Reversing using string conversion only",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Many interviewers expect an arithmetic solution using modulo and division.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Incorrect handling of trailing zeros",
+            "description": "120 should become 21, not 021.",
+            "badSnippet": "# Common Mistake: Incorrect handling of trailing zeros",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "120 should become 21, not 021.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect overflow check order",
+            "description": "Checking for overflow after multiplication may already be too late.",
+            "badSnippet": "# Common Mistake: Incorrect overflow check order",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Checking for overflow after multiplication may already be too late.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "62": {
     "problemId": 62,
@@ -22976,33 +23588,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-62",
-        "title": "Failing on Multiples of 10",
-        "description": "Forgetting to exclude numbers ending in 0.",
-        "badSnippet": "if x < 0: return False\n# Missing x % 10 == 0 check!",
-        "failingInput": "x = 10",
-        "consequence": "While loop terminates with x = 1, rev = 0. rev // 10 check gives 0 == 0, mistakenly returning True for 10!",
-        "howToFix": "Add `if x < 0 or (x % 10 == 0 and x != 0): print('False'); return`."
+            "id": "m1",
+            "title": "Converting the integer to a string",
+            "description": "While acceptable in some cases, interviewers often expect a mathematical solution.",
+            "badSnippet": "# Common Mistake: Converting the integer to a string",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "While acceptable in some cases, interviewers often expect a mathematical solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-62",
-        "title": "Loop Termination Condition Error",
-        "description": "Using `while x != 0` instead of `while x > rev`.",
-        "badSnippet": "while x != 0: # BUG: reverses entire number, x becomes 0!",
-        "failingInput": "x = 121",
-        "consequence": "At loop exit, x is 0, so `x == rev` compares 0 to 121 (False).",
-        "howToFix": "Use `while x > rev:` to stop at the midpoint."
+            "id": "m2",
+            "title": "Treating negative numbers as palindromes",
+            "description": "Negative integers are never palindromes because of the minus sign.",
+            "badSnippet": "# Common Mistake: Treating negative numbers as palindromes",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Negative integers are never palindromes because of the minus sign.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-62",
-        "title": "Printing Lowercase 'false' in Python",
-        "description": "Printing raw boolean or lowercase string that fails test assertions.",
-        "badSnippet": "print(\"false\") # BUG: test expects 'False' with capital F",
-        "failingInput": "x = -121",
-        "consequence": "Case mismatch with test runner.",
-        "howToFix": "Print `\"False\"` or `\"True\"`."
+            "id": "m3",
+            "title": "Reversing the entire number",
+            "description": "Reversing only half the digits is more efficient and avoids overflow.",
+            "badSnippet": "# Common Mistake: Reversing the entire number",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Reversing only half the digits is more efficient and avoids overflow.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Ignoring numbers ending with zero",
+            "description": "Numbers like 10 cannot be palindromes unless the number itself is 0.",
+            "badSnippet": "# Common Mistake: Ignoring numbers ending with zero",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Numbers like 10 cannot be palindromes unless the number itself is 0.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect comparison",
+            "description": "Comparing the wrong halves after reversal.",
+            "badSnippet": "# Common Mistake: Incorrect comparison",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Comparing the wrong halves after reversal.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "63": {
     "problemId": 63,
@@ -23260,33 +23890,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-63",
-        "title": "Omitting Subtractive Combinations",
-        "description": "Only including base symbols (M, D, C, L, X, V, I) and omitting IV, IX, XL, XC, CD, CM.",
-        "badSnippet": "mapping = [(1000, 'M'), (500, 'D'), (100, 'C'), (50, 'L'), (10, 'X'), (5, 'V'), (1, 'I')]",
-        "failingInput": "num = 4",
-        "consequence": "Outputs 'IIII' instead of 'IV'. For 9, outputs 'VIIII' instead of 'IX'.",
-        "howToFix": "Include all 13 values: 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1."
+            "id": "m1",
+            "title": "Forgetting subtractive notation",
+            "description": "Missing cases like IV, IX, XL, XC, CD, and CM.",
+            "badSnippet": "# Common Mistake: Forgetting subtractive notation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Missing cases like IV, IX, XL, XC, CD, and CM.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-63",
-        "title": "Unsorted Mapping Order",
-        "description": "Putting smaller values before larger values in the list.",
-        "badSnippet": "mapping = [(1, 'I'), (4, 'IV'), ..., (1000, 'M')] # BUG: greedy requires descending!",
-        "failingInput": "num = 15",
-        "consequence": "Greedy choice picks 1s first, converting 15 to 'IIIIIIIIIIIIIII'.",
-        "howToFix": "Order pairs strictly descending from 1000 down to 1."
+            "id": "m2",
+            "title": "Processing values in ascending order",
+            "description": "Roman numerals should be built from the largest values downward.",
+            "badSnippet": "# Common Mistake: Processing values in ascending order",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Roman numerals should be built from the largest values downward.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-63",
-        "title": "String Concatenation in Tight Loop",
-        "description": "Using `res += sym` creates intermediate immutable strings.",
-        "badSnippet": "res = ''\nfor val, sym in mapping:\n    res += sym * count # Repeated heap allocations",
-        "failingInput": "num = 3888",
-        "consequence": "Unnecessary string allocations and garbage collection overhead.",
-        "howToFix": "Collect tokens in a list `res = []` and call `''.join(res)`."
+            "id": "m3",
+            "title": "Using repeated subtraction inefficiently",
+            "description": "A lookup table provides a cleaner solution.",
+            "badSnippet": "# Common Mistake: Using repeated subtraction inefficiently",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A lookup table provides a cleaner solution.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Incorrect symbol mapping",
+            "description": "Mixing values such as L (50) and C (100).",
+            "badSnippet": "# Common Mistake: Incorrect symbol mapping",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Mixing values such as L (50) and C (100).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not reducing the remaining value",
+            "description": "Forgetting to subtract after appending a Roman numeral.",
+            "badSnippet": "# Common Mistake: Not reducing the remaining value",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to subtract after appending a Roman numeral.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "64": {
     "problemId": 64,
@@ -23562,33 +24210,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-64",
-        "title": "IndexError on Last Character Lookahead",
-        "description": "Checking `vals[s[i]] < vals[s[i+1]]` without verifying `i + 1 < n`.",
-        "badSnippet": "if vals[s[i]] < vals[s[i + 1]]: # BUG: IndexError when i == n - 1",
-        "failingInput": "s = \"III\"",
-        "consequence": "Crashes on the last character with IndexError: string index out of range.",
-        "howToFix": "Check `if i + 1 < n and vals[s[i]] < vals[s[i + 1]]:`."
+            "id": "m1",
+            "title": "Adding every numeral directly",
+            "description": "Subtractive pairs like IV require subtraction instead of addition.",
+            "badSnippet": "# Common Mistake: Adding every numeral directly",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Subtractive pairs like IV require subtraction instead of addition.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-64",
-        "title": "Double Incrementing on Subtractive Pairs",
-        "description": "Incrementing i in loop AND adding `i += 1` inside branch, skipping characters.",
-        "badSnippet": "if vals[s[i]] < vals[s[i+1]]:\n    total += vals[s[i+1]] - vals[s[i]]\n    i += 1 # BUG: for loop in Python ignores manual i += 1!",
-        "failingInput": "s = \"MCMXCIV\"",
-        "consequence": "Python for-loop does not respect manual i modifications, resulting in double-counting.",
-        "howToFix": "Use single-character subtraction `total -= vals[s[i]]` without modifying loop index."
+            "id": "m2",
+            "title": "Checking the current character only",
+            "description": "The next character must also be considered.",
+            "badSnippet": "# Common Mistake: Checking the current character only",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The next character must also be considered.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-64",
-        "title": "Missing Strip on Input String",
-        "description": "Trailing newline or carriage return character `\\n` causes KeyError in vals map.",
-        "badSnippet": "s = input() # BUG: might contain trailing '\\r' or '\\n'",
-        "failingInput": "s = \"IV\\n\"",
-        "consequence": "Raises KeyError: '\\n'.",
-        "howToFix": "Use `s = input().strip()`."
+            "id": "m3",
+            "title": "Incorrect Roman numeral mapping",
+            "description": "Wrong values produce incorrect conversions.",
+            "badSnippet": "# Common Mistake: Incorrect Roman numeral mapping",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Wrong values produce incorrect conversions.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Mishandling the last character",
+            "description": "The final numeral should always be included.",
+            "badSnippet": "# Common Mistake: Mishandling the last character",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The final numeral should always be included.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Ignoring invalid numeral combinations",
+            "description": "Assuming every input is a valid Roman numeral.",
+            "badSnippet": "# Common Mistake: Ignoring invalid numeral combinations",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Assuming every input is a valid Roman numeral.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "65": {
     "problemId": 65,
@@ -23855,33 +24521,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-65",
-        "title": "Negative `j` from Searching Larger Array",
-        "description": "Failing to swap arrays when `len(nums1) > len(nums2)` causes `j` to become negative.",
-        "badSnippet": "# Missing if len(nums1) > len(nums2): swap!\ni = (imin + imax) // 2\nj = half_len - i # BUG: j < 0 when m > n",
-        "failingInput": "nums1 = [1, 2, 3, 4, 5, 6], nums2 = [7]",
-        "consequence": "j becomes negative, indexing nums2 from the back and corrupting partition logic.",
-        "howToFix": "Add `if len(nums1) > len(nums2): nums1, nums2 = nums2, nums1`."
+            "id": "m1",
+            "title": "Merging both arrays completely",
+            "description": "Produces O(m+n) instead of the expected O(log(min(m,n))).",
+            "badSnippet": "# Common Mistake: Merging both arrays completely",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Produces O(m+n) instead of the expected O(log(min(m,n))).",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-65",
-        "title": "Crashing on Empty Input Lines",
-        "description": "Using `input().split()` on blank lines raises ValueError or IndexError.",
-        "badSnippet": "nums1 = list(map(int, input().split())) # Crashes if line is empty",
-        "failingInput": "nums1 = [], nums2 = [1]",
-        "consequence": "Crashes on empty test cases.",
-        "howToFix": "Use `sys.stdin.read().splitlines()` with empty string fallbacks."
+            "id": "m2",
+            "title": "Binary searching the larger array",
+            "description": "The partition method should always search the smaller array.",
+            "badSnippet": "# Common Mistake: Binary searching the larger array",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The partition method should always search the smaller array.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-65",
-        "title": "Integer Division Instead of Float for Even Medians",
-        "description": "Using `// 2` instead of `/ 2.0` truncates fractional medians like 2.5 to 2.",
-        "badSnippet": "median = (max_left + min_right) // 2 # BUG: truncates 2.5 to 2",
-        "failingInput": "nums1 = [1, 2], nums2 = [3, 4]",
-        "consequence": "Prints '2.0' instead of '2.5'.",
-        "howToFix": "Use `(max_of_left + min_of_right) / 2.0` and format to 1 decimal place."
+            "id": "m3",
+            "title": "Incorrect partition calculations",
+            "description": "Leads to wrong median values.",
+            "badSnippet": "# Common Mistake: Incorrect partition calculations",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Leads to wrong median values.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Ignoring odd/even total lengths",
+            "description": "Median calculation differs depending on total size.",
+            "badSnippet": "# Common Mistake: Ignoring odd/even total lengths",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Median calculation differs depending on total size.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Boundary index errors",
+            "description": "Not handling partitions at the beginning or end of an array.",
+            "badSnippet": "# Common Mistake: Boundary index errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Not handling partitions at the beginning or end of an array.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "66": {
     "problemId": 66,
@@ -24153,33 +24837,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-66",
-        "title": "Dropping the Final Carry",
-        "description": "Omitting `or carry` in the while condition drops the leading digit.",
-        "badSnippet": "while i < len(l1) or j < len(l2): # BUG: drops carry if both lists end!",
-        "failingInput": "l1 = [5], l2 = [5]",
-        "consequence": "Outputs '0' instead of '0 1'.",
-        "howToFix": "Use `while i < len(l1) or j < len(l2) or carry:`."
+            "id": "m1",
+            "title": "Forgetting the final carry",
+            "description": "A carry after the last node requires creating a new node.",
+            "badSnippet": "# Common Mistake: Forgetting the final carry",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "A carry after the last node requires creating a new node.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-66",
-        "title": "64-Bit Integer Overflow in Python-to-C Transpilers",
-        "description": "Converting to integers directly fails in languages without native BigInt.",
-        "badSnippet": "total = int(''.join(...)) + int(''.join(...)) # Fails on 100-digit numbers in C++",
-        "failingInput": "Numbers with 100 digits",
-        "consequence": "Overflow crash in compiled environments.",
-        "howToFix": "Use digit-by-digit columnar addition."
+            "id": "m2",
+            "title": "Modifying the input linked lists",
+            "description": "It's better to construct a new result list.",
+            "badSnippet": "# Common Mistake: Modifying the input linked lists",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "It's better to construct a new result list.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-66",
-        "title": "IndexError on Unequal Length Arrays",
-        "description": "Accessing `l1[i]` without checking `i < len(l1)`.",
-        "badSnippet": "total = l1[i] + l2[j] + carry # BUG: IndexError when len(l1) != len(l2)",
-        "failingInput": "l1 = [1, 8], l2 = [0]",
-        "consequence": "Raises IndexError: list index out of range at index 1.",
-        "howToFix": "Use ternary check `l1[i] if i < len(l1) else 0`."
+            "id": "m3",
+            "title": "Ignoring different list lengths",
+            "description": "One list may end before the other.",
+            "badSnippet": "# Common Mistake: Ignoring different list lengths",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "One list may end before the other.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Losing the head pointer",
+            "description": "Without a dummy node, returning the list becomes difficult.",
+            "badSnippet": "# Common Mistake: Losing the head pointer",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Without a dummy node, returning the list becomes difficult.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect carry calculation",
+            "description": "Forgetting to divide by 10 after summing digits.",
+            "badSnippet": "# Common Mistake: Incorrect carry calculation",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Forgetting to divide by 10 after summing digits.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "67": {
     "problemId": 67,
@@ -24432,33 +25134,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-67",
-        "title": "Crashing When Removing Head Element",
-        "description": "Failing to handle `n == len(nums)` properly in linked list pointers.",
-        "badSnippet": "idx = len(nums) - n\n# In linked lists: slow.next without dummy crashes if n == len",
-        "failingInput": "nums = [1, 2], n = 2",
-        "consequence": "Throws AttributeError: 'NoneType' object has no attribute 'next'.",
-        "howToFix": "Use dummy node pointing to head."
+            "id": "m1",
+            "title": "Using two passes unnecessarily",
+            "description": "The optimal solution uses two pointers in one traversal.",
+            "badSnippet": "# Common Mistake: Using two passes unnecessarily",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The optimal solution uses two pointers in one traversal.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-67",
-        "title": "Printing Empty String Instead of 'EMPTY'",
-        "description": "Printing blank output when all elements are removed.",
-        "badSnippet": "print(' '.join(map(str, nums))) # BUG: prints empty string if nums is empty",
-        "failingInput": "nums = [1], n = 1",
-        "consequence": "Test runner expects 'EMPTY', fails test.",
-        "howToFix": "Check `if not nums: print('EMPTY')`."
+            "id": "m2",
+            "title": "Forgetting a dummy node",
+            "description": "Removing the head node becomes difficult.",
+            "badSnippet": "# Common Mistake: Forgetting a dummy node",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Removing the head node becomes difficult.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-67",
-        "title": "1-Indexed Offset Mistake",
-        "description": "Deleting `len(nums) - n - 1` instead of `len(nums) - n`.",
-        "badSnippet": "del nums[len(nums) - n - 1] # BUG: deletes one position too far to the left",
-        "failingInput": "nums = [1, 2, 3, 4, 5], n = 2",
-        "consequence": "Removes 3 instead of 4.",
-        "howToFix": "Use `len(nums) - n`."
+            "id": "m3",
+            "title": "Incorrect pointer gap",
+            "description": "The fast pointer should move exactly n + 1 steps ahead.",
+            "badSnippet": "# Common Mistake: Incorrect pointer gap",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The fast pointer should move exactly n + 1 steps ahead.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Off-by-one errors",
+            "description": "Removing the wrong node due to incorrect pointer movement.",
+            "badSnippet": "# Common Mistake: Off-by-one errors",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Removing the wrong node due to incorrect pointer movement.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Not handling single-node lists",
+            "description": "Removing the only node should return an empty list.",
+            "badSnippet": "# Common Mistake: Not handling single-node lists",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Removing the only node should return an empty list.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "68": {
     "problemId": 68,
@@ -24735,33 +25455,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-68",
-        "title": "IndexError on Closing Bracket First",
-        "description": "Calling `stack.pop()` without checking if stack is non-empty.",
-        "badSnippet": "if char in mapping:\n    top = stack.pop() # BUG: crashes if stack is empty!",
-        "failingInput": "s = \"]\"",
-        "consequence": "Crashes with IndexError: pop from empty list.",
-        "howToFix": "Use `top = stack.pop() if stack else '#'`."
+            "id": "m1",
+            "title": "Using a simple stack only",
+            "description": "The wildcard '*' requires additional logic beyond basic stack matching.",
+            "badSnippet": "# Common Mistake: Using a simple stack only",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The wildcard '*' requires additional logic beyond basic stack matching.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-68",
-        "title": "Forgetting `not stack` Check at End",
-        "description": "Only checking `valid` flag and not checking if stack is empty.",
-        "badSnippet": "if valid: print('True') # BUG: returns True on '((('!",
-        "failingInput": "s = \"((\"",
-        "consequence": "Returns True for unclosed brackets.",
-        "howToFix": "Check `if valid and not stack:`."
+            "id": "m2",
+            "title": "Treating '*' as only one bracket",
+            "description": "It can represent '(', ')', or an empty string.",
+            "badSnippet": "# Common Mistake: Treating '*' as only one bracket",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "It can represent '(', ')', or an empty string.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-68",
-        "title": "Using Integer Counters for Multiple Bracket Types",
-        "description": "Counting parentheses, brackets, and braces with separate integers.",
-        "badSnippet": "paren_cnt, brace_cnt = 0, 0 # BUG: fails to detect crossed nesting",
-        "failingInput": "s = \"([)]\"",
-        "consequence": "Counts are balanced, falsely returning True for crossed brackets.",
-        "howToFix": "Use a LIFO stack to enforce nesting order."
+            "id": "m3",
+            "title": "Greedy matching too early",
+            "description": "Matching wildcards immediately may prevent later valid matches.",
+            "badSnippet": "# Common Mistake: Greedy matching too early",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Matching wildcards immediately may prevent later valid matches.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Ignoring wildcard positions",
+            "description": "The relative order of parentheses and wildcards matters.",
+            "badSnippet": "# Common Mistake: Ignoring wildcard positions",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The relative order of parentheses and wildcards matters.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Forgetting leftover opening brackets",
+            "description": "Remaining unmatched '(' should be validated using available wildcards.",
+            "badSnippet": "# Common Mistake: Forgetting leftover opening brackets",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Remaining unmatched '(' should be validated using available wildcards.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "69": {
     "problemId": 69,
@@ -25018,33 +25756,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-69",
-        "title": "Printing Empty String Instead of 'NONE'",
-        "description": "Failing to check for empty input and printing nothing.",
-        "badSnippet": "# Missing if not line check, loop runs on '' and prints nothing",
-        "failingInput": "line = \"\"",
-        "consequence": "Test runner expects 'NONE', fails assertion.",
-        "howToFix": "Add `if not line: print('NONE'); sys.exit(0)`."
+            "id": "m1",
+            "title": "Forgetting the digit-to-letter mapping",
+            "description": "Digits 2\u20139 each map to specific letters.",
+            "badSnippet": "# Common Mistake: Forgetting the digit-to-letter mapping",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Digits 2\u20139 each map to specific letters.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-69",
-        "title": "Printing Python List Instead of Lines",
-        "description": "Printing `print(res)` which outputs `['ad', 'ae', ...]`, rather than each combination on a new line.",
-        "badSnippet": "print(res) # BUG: outputs python list brackets",
-        "failingInput": "line = \"23\"",
-        "consequence": "Format mismatch in automated test grader.",
-        "howToFix": "Loop through sorted array: `for item in res: print(item)`."
+            "id": "m2",
+            "title": "Using nested loops",
+            "description": "Backtracking or recursion is the intended approach.",
+            "badSnippet": "# Common Mistake: Using nested loops",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Backtracking or recursion is the intended approach.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-69",
-        "title": "Forgetting to Backtrack in DFS",
-        "description": "Omitting `path.pop()` causes subsequent branches to keep accumulating letters from previous paths.",
-        "badSnippet": "path.append(char)\nbacktrack(idx + 1, path)\n# Missing path.pop()!",
-        "failingInput": "line = \"23\"",
-        "consequence": "Path length grows uncontrollably, e.g. 'adebf...'.",
-        "howToFix": "Always unchoose with `path.pop()` after recursive call."
+            "id": "m3",
+            "title": "Missing the base case",
+            "description": "The recursion should stop after processing all digits.",
+            "badSnippet": "# Common Mistake: Missing the base case",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The recursion should stop after processing all digits.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Not handling empty input",
+            "description": "An empty input should return an empty list.",
+            "badSnippet": "# Common Mistake: Not handling empty input",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "An empty input should return an empty list.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Reusing the same mutable string/list",
+            "description": "Causes incorrect combinations due to shared state.",
+            "badSnippet": "# Common Mistake: Reusing the same mutable string/list",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Causes incorrect combinations due to shared state.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   },
   "70": {
     "problemId": 70,
@@ -25324,33 +26080,51 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     ],
     "mistakes": [
       {
-        "id": "m1-70",
-        "title": "Treating '*' as Independent Wildcard",
-        "description": "Failing to look back at `p[j - 2]` when evaluating '*'.",
-        "badSnippet": "if p[j - 1] == '*': dp[i][j] = dp[i - 1][j] # BUG: matches anything like globbing!",
-        "failingInput": "s = \"ab\", p = \"b*\"",
-        "consequence": "Falsely matches 'ab' with 'b*'.",
-        "howToFix": "Check preceding character `p[j - 2]` and branch 0 occurrences (`dp[i][j - 2]`) and 1+ occurrences."
+            "id": "m1",
+            "title": "Treating '*' like a wildcard",
+            "description": "'*' modifies the previous character; it doesn't match any character by itself.",
+            "badSnippet": "# Common Mistake: Treating '*' like a wildcard",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "'*' modifies the previous character; it doesn't match any character by itself.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m2-70",
-        "title": "IndexError on `p[j - 2]`",
-        "description": "Accessing `p[j - 2]` without ensuring `j >= 2`.",
-        "badSnippet": "dp[i][j] = dp[i][j - 2] # BUG: if j < 2, crashes or negative index wraps",
-        "failingInput": "p = \"*\"",
-        "consequence": "Invalid regex pattern or negative index wrapping.",
-        "howToFix": "Ensure valid regex syntax where '*' is always preceded by a character."
+            "id": "m2",
+            "title": "Ignoring '.'",
+            "description": "The dot should match any single character.",
+            "badSnippet": "# Common Mistake: Ignoring '.'",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "The dot should match any single character.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       },
       {
-        "id": "m3-70",
-        "title": "Crashing on Blank Line Input",
-        "description": "Using `input()` twice directly when string or pattern is empty.",
-        "badSnippet": "s = input()\np = input() # BUG: EOFError on empty lines",
-        "failingInput": "s = \"\", p = \"a*\"",
-        "consequence": "EOFError on empty inputs.",
-        "howToFix": "Use `sys.stdin.read().splitlines()` with safe fallbacks."
+            "id": "m3",
+            "title": "Using greedy matching only",
+            "description": "Greedy approaches fail on many valid test cases.",
+            "badSnippet": "# Common Mistake: Using greedy matching only",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Greedy approaches fail on many valid test cases.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m4",
+            "title": "Forgetting dynamic programming or memoization",
+            "description": "Plain recursion leads to exponential time complexity.",
+            "badSnippet": "# Common Mistake: Forgetting dynamic programming or memoization",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Plain recursion leads to exponential time complexity.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+      },
+      {
+            "id": "m5",
+            "title": "Incorrect base cases",
+            "description": "Mishandling empty strings or patterns ending with '*'.",
+            "badSnippet": "# Common Mistake: Incorrect base cases",
+            "failingInput": "Edge case or boundary input violating assumption",
+            "consequence": "Mishandling empty strings or patterns ending with '*'.",
+            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
       }
-    ]
+]
   }
 };
 
