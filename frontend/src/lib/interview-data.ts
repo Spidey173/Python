@@ -3233,203 +3233,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Missing Number in Sequence in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Missing Number in Sequence using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain your approach.",
+        "whatInterviewerChecks": "Explaining XOR cancellation logic clearly step by step.",
+        "bestReplyScript": "There are multiple ways to solve this problem, but my preferred approach is using XOR because it is efficient and avoids overflow issues.\n\nThe steps are:\n1. XOR all numbers from 0 to n.\n2. XOR all elements in the given array.\n3. The duplicate XOR operations cancel each other out.\n4. The remaining value is the missing number.\n\nExample:\nInput: nums = [3, 0, 1]\nNumbers from 0 to 3: 0 ^ 1 ^ 2 ^ 3 = 0\nArray: 3 ^ 0 ^ 1 = 2\nFinal: 0 ^ 2 = 2\n\nOutput: 2\n\nThis works because every number appears twice except the missing one.\n\nComplexity\n• Time: O(n)\n• Space: O(1)",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_9(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "XOR self-cancellation property (x ^ x = 0)",
+          "XOR identity property (x ^ 0 = x)",
+          "Single pass accumulating array elements & indices 0..n",
+          "O(n) time and O(1) space"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Missing Number in Sequence?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Algorithmic Intuition & Trade-offs",
+        "question": "2. Why use XOR instead of summation?",
+        "whatInterviewerChecks": "Explaining integer overflow risks in fixed-width languages.",
+        "bestReplyScript": "XOR is preferred because it avoids integer overflow and uses constant extra space.\n\nWith the summation method:\n• Calculate the expected sum using the formula: n × (n + 1) / 2\n• Subtract the actual array sum.\n\nWhile simple, this may overflow in some programming languages when n is very large (e.g. integer multiplication exceeding 32-bit/64-bit bounds in C++/Java).\n\nXOR doesn't involve large arithmetic, making it a safer and more robust solution.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Missing Number in Sequence:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "Gauss sum formula: n*(n+1)//2 risk of integer overflow",
+          "XOR bitwise ops stay within bit-width bounds",
+          "No risk of arithmetic overflow"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Missing Number in Sequence if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Method Comparison",
+        "question": "3. Compare both methods.",
+        "whatInterviewerChecks": "Evaluating Summation vs XOR pros and cons.",
+        "bestReplyScript": "Method | Time | Space | Pros | Cons\nSummation | O(n) | O(1) | Easy to understand | Can overflow in some languages\nXOR | O(n) | O(1) | No overflow, very efficient | Slightly less intuitive\n\nBoth methods are optimal in terms of time and space.\n\nIn interviews, mentioning both approaches and choosing XOR demonstrates deeper understanding.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_9(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Summation: Math-intuitive, potential overflow risk",
+          "XOR: Bit-wise safe, robust in C++/Java/Go",
+          "Both run in O(n) time & O(1) space"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Time & Space Complexity Proof",
+        "question": "4. What's the complexity?",
+        "whatInterviewerChecks": "Proving linear time and zero memory bounds.",
+        "bestReplyScript": "The array is traversed only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nThis is optimal because every element must be checked at least once.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Linear O(n) single pass",
+          "Strict O(1) space (accumulating scalar XOR state)",
+          "Optimal lower bound Ω(n) to examine all input elements"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Multiple Missing Numbers Extension",
+        "question": "5. What if multiple numbers are missing?",
+        "whatInterviewerChecks": "Extending algorithm to k missing numbers.",
+        "bestReplyScript": "The XOR approach works only when exactly one number is missing.\n\nIf multiple numbers are missing, I could use:\n• A hash set: Store elements in O(n) space and check range 0..n.\n• A boolean array / In-place cyclic sort: Place numbers at their matching indices.\n• Bitset / Boolean array.\n• System of equations (Sum & Sum of Squares) for 2 missing numbers.\n\nExample:\nExpected: 0 1 2 3 4 5\nGiven: 0 2 4\nMissing: 1 3 5\n\nIn this case, single XOR alone cannot identify all missing numbers without extra equations or data structures.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Single XOR yields compound XOR (a ^ b) for 2 missing numbers",
+          "Use diff bit mask partitioning to separate 2 missing numbers",
+          "Use Hash Set or Cyclic Sort for K missing numbers"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Immutability & Side Effects",
+        "question": "6. Can you solve without modifying the array?",
+        "whatInterviewerChecks": "Functional read-only state preservation.",
+        "bestReplyScript": "Yes.\n\nBoth the XOR and summation methods only read the array.\n\nThey never change any element.\n\nExample:\nOriginal: [3, 0, 1]\nAfter the algorithm: Still [3, 0, 1]\n\nThis is useful when the input array should remain unchanged in production.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Missing Number in Sequence:\nassert solve_9([]) == 0\nassert solve_9([5]) == 5\nassert solve_9([-1, -5, -2]) != 0\nassert solve_9([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Read-only traversal",
+          "Preserves caller's input array",
+          "No side effects on shared data structures"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Edge Cases & Boundaries",
+        "question": "7. What edge cases exist?",
+        "whatInterviewerChecks": "Identifying key sequence boundary cases.",
+        "bestReplyScript": "Important edge cases include:\n\nMissing first number: Input [1, 2, 3] -> Output 0\n\nMissing last number: Input [0, 1, 2] -> Output 3\n\nSingle element: Input [0] -> Output 1\n\nEmpty array: Input [] -> Output 0\n\nTesting these cases ensures the solution works correctly in all scenarios.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Missing boundary 0",
+          "Missing boundary N",
+          "Single-element array [0]",
+          "Empty input []"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Order Independence",
+        "question": "8. What if numbers aren't sorted?",
+        "whatInterviewerChecks": "Explaining commutative and associative algebraic properties.",
+        "bestReplyScript": "Sorting is not required.\n\nBoth XOR and summation work regardless of the order.\n\nExample:\nInput: [4, 2, 1, 0] -> Missing number: 3\n\nSince XOR (and addition) are commutative and associative (independent of order), the algorithm still works correctly.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "XOR is commutative: A ^ B = B ^ A",
+          "XOR is associative: (A ^ B) ^ C = A ^ (B ^ C)",
+          "Unsorted input produces identical XOR output"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Test Suite Design",
+        "question": "9. How would you test this?",
+        "whatInterviewerChecks": "Creating comprehensive test cases.",
+        "bestReplyScript": "I would create test cases covering normal and edge cases.\n\nInput | Expected Output\n[3, 0, 1] | 2\n[0, 1] | 2\n[1] | 0\n[0] | 1\n[] | 0\n[4, 2, 1, 0] | 3\n\nThese tests verify correctness under different input conditions.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Random unsorted inputs",
+          "Sequential missing boundaries",
+          "Single-element sequences"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Integer Overflow Deep Dive",
+        "question": "10. Can overflow occur?",
+        "whatInterviewerChecks": "Language-specific primitive type overflow constraints.",
+        "bestReplyScript": "It depends on the approach.\n\nUsing the summation method, overflow may occur in languages with fixed-size integers like C++ or Java if n is very large.\n\nExample: Expected Sum = n × (n + 1) / 2\nThis multiplication may exceed 32-bit signed integer limit (2,147,483,647).\n\nThe XOR approach avoids this issue because it performs bitwise operations instead of large arithmetic.\n\nIn Python, integers automatically grow in size (arbitrary-precision integers), so overflow is generally not a concern in Python specifically, but XOR remains best practice for cross-language compatibility.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "C++/Java 32-bit int overflow at N ~ 65,536 if multiplying N*(N+1)",
+          "Use 64-bit long long in C++ or XOR approach",
+          "Python automatically handles arbitrarily large integers"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "XOR Bit Manipulation Mechanics",
+        "question": "11. Why does XOR work?",
+        "whatInterviewerChecks": "Bitwise XOR algebraic identity rules.",
+        "bestReplyScript": "XOR has two important properties:\n1. A number XOR itself equals 0 (x ^ x = 0).\n2. A number XOR 0 equals the number itself (x ^ 0 = x).\n\nExample:\n5 ^ 5 = 0\n7 ^ 0 = 7\n\nSince every number in the range 0..n appears twice (once in range, once in array) except the missing one, all matching pairs cancel out to zero.\n\nThe only value left is the missing number.\n\nThis is why the XOR method works.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Self-inverse property: x ^ x = 0",
+          "Identity element: x ^ 0 = x",
+          "Pairwise cancellation leaves only the single missing element"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Binary Search Adaptation",
+        "question": "12. Can binary search solve this?",
+        "whatInterviewerChecks": "O(log n) Binary Search approach on sorted inputs.",
+        "bestReplyScript": "Yes, but only if the array is sorted.\n\nThe idea is:\n• Compare the index with the value.\n• Normally, nums[i] == i.\n• Once the missing number occurs, nums[i] becomes greater than i (nums[i] == i + 1).\n\nExample:\nIndex: 0 1 2 3\nValue: 0 1 3 4\n\nAt index 2, value is 3 (> 2), indicating the missing number is 2.\n\nComplexity:\n• Time: O(log n)\n• Space: O(1)\n\nThis approach only works on sorted arrays.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Requires pre-sorted array input",
+          "Binary search condition: if nums[mid] > mid -> search left half, else search right half",
+          "Time: O(log n), Space: O(1)"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Optimal Trade-off Decision",
+        "question": "13. What's the optimal solution?",
+        "whatInterviewerChecks": "Selecting the best strategy based on input constraints.",
+        "bestReplyScript": "The optimal solution depends on the constraints.\n\nFor an unsorted array:\n• XOR\n• O(n) Time, O(1) Space\nThis is generally considered the best solution.\n\nThe summation method has the same complexity but may overflow in some languages.\n\nFor a pre-sorted array:\n• Binary Search\n• O(log n) Time, O(1) Space\n\nTherefore, XOR is usually preferred for general unsorted inputs.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Unsorted: XOR -> O(n) time, O(1) space",
+          "Pre-sorted: Binary Search -> O(log n) time, O(1) space",
+          "XOR prevents overflow across all platforms"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Candidate Pitfalls & Mistakes",
+        "question": "14. What mistakes do candidates make?",
+        "whatInterviewerChecks": "Identifying common interview pitfalls.",
+        "bestReplyScript": "Some common mistakes include:\n• Using sorting unnecessarily, increasing time complexity to O(n log n).\n• Forgetting that the numbers range from 0 to n (missing range boundary n).\n• Incorrectly calculating the expected sum.\n• Not handling edge cases like an empty array or missing 0.\n• Misusing XOR operations.\n\nThe most common mistake is forgetting to include 0 or n when computing the expected range.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Range includes N (size of array + 1 elements total)",
+          "Sorting unsorted array increases complexity to O(n log n)",
+          "Forgetting 0 index element"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Industrial Applications of XOR",
+        "question": "15. Where is XOR commonly used?",
+        "whatInterviewerChecks": "Real-world engineering applications of XOR.",
+        "bestReplyScript": "XOR is widely used in computer science.\n\nExamples include:\n• Finding a missing number or unique single number (Single Number I/II/III).\n• Bitwise toggling and flag manipulation.\n• Error detection and correction (RAID 5 parity, Hamming codes).\n• Cryptography (One-Time Pad, symmetric ciphers).\n• Data integrity checks (CRC checksums).\n• Low-level system programming & memory swaps (x ^ y ^ x).\n\nUnderstanding XOR is valuable because it appears frequently in coding interviews and system-level programming.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "RAID 5 disk parity calculation",
+          "Cryptography & symmetric key ciphers",
+          "Error detection (Checksums & Hamming codes)",
+          "Bitwise feature flag toggles"
+        ]
       }
     ],
     "mistakes": [
