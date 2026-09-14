@@ -498,7 +498,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       const passedCount = res.test_results?.filter((t) => t.passed).length || 0;
       const totalCount = res.test_results?.length || 0;
       const testSummary = res.test_results && res.test_results.length > 0
-        ? `rootdir: /Users/spidey./Desktop/Python\ncollected ${totalCount} items\n\n` +
+        ? `rootdir: ~/Python\ncollected ${totalCount} items\n\n` +
           res.test_results.map((t) => `test_solution.py::test_case_${t.test_case_index} ${t.passed ? 'PASSED' : 'FAILED'}${!t.passed && t.actual_output ? ` (got: ${t.actual_output.trim()})` : ''}`).join('\n') +
           `\n\n============================== ${passedCount}/${totalCount} passed in ${(duration / 1000).toFixed(2)}s ==============================`
         : (res.stdout || '');
@@ -586,7 +586,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         {
           id: Math.random().toString(36).substring(7),
           command: trimmed,
-          stdout: '/Users/spidey./Desktop/Python',
+          stdout: '~/Python',
           stderr: '',
           exitCode: 0,
           durationMs: 4,
@@ -602,7 +602,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         {
           id: Math.random().toString(36).substring(7),
           command: trimmed,
-          stdout: 'spidey.',
+          stdout: 'developer',
           stderr: '',
           exitCode: 0,
           durationMs: 3,
@@ -1372,12 +1372,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                     {/* Command History Stream */}
                     {terminalHistory.map((item) => (
                       <div key={item.id} className="space-y-0.5">
-                        {/* Authentic zsh Prompt matching user screenshot */}
+                        {/* Authentic zsh Prompt */}
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className={`text-[12px] select-none ${item.exitCode === 0 ? 'text-[#858585]' : 'text-[#f48771]'}`}>○</span>
-                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
-                          <span className="text-[#cccccc]">Python</span>
-                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#22c55e] font-bold select-none">➜</span>
+                          <span className="text-[#38bdf8] font-medium select-none">Python</span>
+                          <span className="text-[#22c55e] select-none">❯</span>
                           <span className="text-[#ffffff] ml-1">{item.command}</span>
                         </div>
 
@@ -1414,10 +1413,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                       <div className="space-y-0.5 pt-0.5">
                         {/* Command line */}
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[12px] select-none text-[#858585]">○</span>
-                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
-                          <span className="text-[#cccccc]">Python</span>
-                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#22c55e] font-bold select-none">➜</span>
+                          <span className="text-[#38bdf8] font-medium select-none">Python</span>
+                          <span className="text-[#22c55e] select-none">❯</span>
                           <span className="text-[#ffffff] ml-1">python3 solution.py</span>
                         </div>
 
@@ -1463,10 +1461,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                     {isRunning && !interactiveSession.active && (
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[12px] select-none text-[#58A6FF] animate-pulse">●</span>
-                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
-                          <span className="text-[#cccccc]">Python</span>
-                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#22c55e] font-bold select-none animate-pulse">➜</span>
+                          <span className="text-[#38bdf8] font-medium select-none">Python</span>
+                          <span className="text-[#22c55e] select-none">❯</span>
                           <span className="text-[#ffffff] ml-1">python3 solution.py</span>
                         </div>
                       </div>
@@ -1481,10 +1478,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                         }}
                         className="flex items-center gap-1.5 flex-wrap pt-0.5"
                       >
-                        <span className="text-[12px] select-none text-[#858585]">○</span>
-                        <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
-                        <span className="text-[#cccccc]">Python</span>
-                        <span className="text-[#cccccc]">%</span>
+                        <span className="text-[#22c55e] font-bold select-none">➜</span>
+                        <span className="text-[#38bdf8] font-medium select-none">Python</span>
+                        <span className="text-[#22c55e] select-none">❯</span>
                         <div className="relative inline-flex items-center ml-1 flex-1">
                           <input
                             ref={terminalInputRef}
