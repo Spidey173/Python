@@ -82,6 +82,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [runResponse, setRunResponse] = useState<CodeRunResponse | null>(null);
   const [terminalHistory, setTerminalHistory] = useState<TerminalHistoryEntry[]>([]);
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState<number>(-1);
+  const [isTerminalFocused, setIsTerminalFocused] = useState<boolean>(true);
   const terminalEndRef = useRef<HTMLDivElement | null>(null);
   const terminalInputRef = useRef<HTMLInputElement | null>(null);
   const [terminalInput, setTerminalInput] = useState<string>('');
@@ -492,21 +495,21 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       setLastExecutionRuntime(duration);
       const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+      const passedCount = res.test_results?.filter((t) => t.passed).length || 0;
+      const totalCount = res.test_results?.length || 0;
       const testSummary = res.test_results && res.test_results.length > 0
-        ? res.test_results.map((t) => `  • Case ${t.test_case_index} (${t.description}): ${t.passed ? 'PASSED' : 'FAILED'}${t.actual_output ? ` -> Output: ${t.actual_output.trim()}` : ''}`).join('\n')
-        : '';
-
-      const terminalStdout = testSummary
-        ? `${res.stdout ? res.stdout + '\n' : ''}[Visible Test Cases Evaluation]:\n${testSummary}`
+        ? `rootdir: /Users/spidey./Desktop/Python\ncollected ${totalCount} items\n\n` +
+          res.test_results.map((t) => `test_solution.py::test_case_${t.test_case_index} ${t.passed ? 'PASSED' : 'FAILED'}${!t.passed && t.actual_output ? ` (got: ${t.actual_output.trim()})` : ''}`).join('\n') +
+          `\n\n============================== ${passedCount}/${totalCount} passed in ${(duration / 1000).toFixed(2)}s ==============================`
         : (res.stdout || '');
 
       setTerminalHistory((prev) => [
         ...prev.slice(-25),
         {
           id: Math.random().toString(36).substring(7),
-          command: 'pytest tests/ -v (Visible Test Suite)',
+          command: 'pytest tests/ -v',
           stdin: undefined,
-          stdout: terminalStdout,
+          stdout: testSummary,
           stderr: res.stderr || (res.security_error ? `[Security Error] ${res.security_error}` : ''),
           exitCode,
           durationMs: duration,
@@ -560,24 +563,127 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     const trimmed = terminalInput.trim();
     setTerminalInput('');
 
+    if (trimmed) {
+      setCommandHistory((prev) => [...prev, trimmed]);
+      setHistoryIndex(-1);
+    }
+
     if (!trimmed) {
       handleRunCode();
       return;
     }
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     if (trimmed === 'clear' || trimmed === 'cls') {
       setTerminalHistory([]);
       return;
     }
 
+    if (trimmed === 'pwd') {
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: '/Users/spidey./Desktop/Python',
+          stderr: '',
+          exitCode: 0,
+          durationMs: 4,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'whoami') {
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: 'spidey.',
+          stderr: '',
+          exitCode: 0,
+          durationMs: 3,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'ls' || trimmed === 'dir') {
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: 'solution.py   test_cases.py   README.md',
+          stderr: '',
+          exitCode: 0,
+          durationMs: 6,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'python --version' || trimmed === 'python3 --version' || trimmed === 'py --version') {
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: 'Python 3.12.3',
+          stderr: '',
+          exitCode: 0,
+          durationMs: 8,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed === 'date') {
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: new Date().toString(),
+          stderr: '',
+          exitCode: 0,
+          durationMs: 3,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed.startsWith('echo ')) {
+      const echoText = trimmed.replace(/^echo\s+/, '').replace(/^["']|["']$/g, '');
+      setTerminalHistory((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          command: trimmed,
+          stdout: echoText,
+          stderr: '',
+          exitCode: 0,
+          durationMs: 3,
+          timestamp: timeStr,
+        },
+      ]);
+      return;
+    }
+
     if (trimmed === 'help') {
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       setTerminalHistory((prev) => [
         ...prev,
         {
           id: Math.random().toString(36).substring(7),
           command: 'help',
-          stdout: `Available Terminal Commands:\n  python3 solution.py     Run current code interactively in terminal\n  pytest tests/           Run visible automated test cases\n  <value>                 Directly pass value as input and execute\n  clear                   Clear terminal scrollback\n  help                    Show this guidance`,
+          stdout: `VS Code Terminal Commands:\n  python3 solution.py     Run current Python code in sandbox\n  pytest                  Run test cases\n  clear                   Clear terminal scrollback (Ctrl+L)\n  pwd, ls, whoami, echo   Standard shell utilities\n  <value>                 Pass input directly to script stdin`,
           stderr: '',
           exitCode: 0,
           durationMs: 0,
@@ -589,6 +695,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     if (trimmed === 'pytest' || trimmed === 'pytest tests/' || trimmed === 'test') {
       handleRunTestCases();
+      return;
+    }
+
+    if (trimmed === 'python' || trimmed === 'python3' || trimmed === 'run') {
+      handleRunCode();
       return;
     }
 
@@ -607,7 +718,37 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   };
 
   const handleTerminalKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape' || (e.ctrlKey && e.key === 'c')) {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length === 0) return;
+      const nextIndex = historyIndex + 1;
+      if (nextIndex < commandHistory.length) {
+        setHistoryIndex(nextIndex);
+        setTerminalInput(commandHistory[commandHistory.length - 1 - nextIndex]);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const nextIndex = historyIndex - 1;
+        setHistoryIndex(nextIndex);
+        setTerminalInput(commandHistory[commandHistory.length - 1 - nextIndex]);
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1);
+        setTerminalInput('');
+      }
+      return;
+    }
+
+    if (e.ctrlKey && (e.key === 'l' || e.key === 'L')) {
+      e.preventDefault();
+      setTerminalHistory([]);
+      return;
+    }
+
+    if (e.key === 'Escape' || (e.ctrlKey && (e.key === 'c' || e.key === 'C'))) {
       e.preventDefault();
       if (interactiveSession.active) {
         setInteractiveSession({ active: false, prompts: [], collectedInputs: [], currentStep: 0 });
@@ -618,7 +759,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           {
             id: Math.random().toString(36).substring(7),
             command: 'python3 solution.py',
-            stdout: '^C\n[KeyboardInterrupt: Terminated by user]',
+            stdout: '^C',
             stderr: '',
             exitCode: 130,
             durationMs: 0,
@@ -1126,270 +1267,238 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             />
           </div>
 
-          {/* Real Interactive Terminal Console Dock */}
+          {/* Real Interactive VS Code Terminal Console Dock */}
           {!consoleCollapsed && (
             <div
-              className={`border-t border-[#21262D] bg-[#020408] flex flex-col shrink-0 transition-all duration-200 ${
+              className={`border-t border-[#2b2b2b] bg-[#181818] flex flex-col shrink-0 transition-all duration-200 select-text ${
                 dockHeight === 'expanded' ? 'h-80' : 'h-64'
               }`}
             >
-              {/* Terminal Dock Header */}
-              <div className="h-10 border-b border-[#161B22] bg-[#0A0E17] px-3.5 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
+              {/* VS Code Terminal Dock Header */}
+              <div className="h-[35px] border-b border-[#2b2b2b] bg-[#181818] px-3 flex items-center justify-between shrink-0 select-none">
+                {/* Left Tabs (VS Code Panel Tabs) */}
+                <div className="flex items-center h-full gap-4 text-[11px] font-sans font-medium tracking-wide">
                   <button
                     onClick={() => setActiveConsoleTab('terminal')}
-                    className={`px-3.5 py-1.5 text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors ${
+                    className={`h-full flex items-center gap-1.5 px-0.5 transition-colors cursor-pointer relative ${
                       activeConsoleTab === 'terminal'
-                        ? 'bg-[#161B22] text-[#E6EDF3] border border-white/10'
-                        : 'text-[#8B949E] hover:text-[#E6EDF3]'
+                        ? 'text-[#ffffff] border-b-2 border-[#007acc]'
+                        : 'text-[#969696] hover:text-[#cccccc]'
                     }`}
                   >
-                    <Terminal className="h-4 w-4 text-emerald-400" />
-                    <span>Terminal</span>
+                    <span>TERMINAL</span>
                     {interactiveSession.active && (
-                      <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" title="Input prompt waiting for typing" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
                     )}
-                    {isRunning && <span className="h-2 w-2 rounded-full bg-[#58A6FF] animate-ping" />}
+                    {isRunning && <span className="h-1.5 w-1.5 rounded-full bg-[#58A6FF] animate-ping" />}
                   </button>
 
                   <button
                     onClick={() => setActiveConsoleTab('tests')}
-                    className={`px-3.5 py-1.5 text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors ${
+                    className={`h-full flex items-center gap-1.5 px-0.5 transition-colors cursor-pointer relative ${
                       activeConsoleTab === 'tests'
-                        ? 'bg-[#161B22] text-[#E6EDF3] border border-white/10'
-                        : 'text-[#8B949E] hover:text-[#E6EDF3]'
+                        ? 'text-[#ffffff] border-b-2 border-[#007acc]'
+                        : 'text-[#969696] hover:text-[#cccccc]'
                     }`}
                   >
-                    <CheckSquare className="h-4 w-4 text-[#58A6FF]" />
-                    <span>Test Cases</span>
+                    <span>TEST CASES</span>
                     {runResponse?.test_results && runResponse.test_results.length > 0 && (
-                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#21262D] text-emerald-400 font-semibold">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#2b2b2b] text-[#cccccc]">
                         {runResponse.test_results.filter((t) => t.passed).length}/{runResponse.test_results.length}
                       </span>
                     )}
                   </button>
                 </div>
 
-                {/* Right Controls: Run Tests, Exit code badge, Clear, Height toggle */}
-                <div className="flex items-center gap-2">
+                {/* Right Action Toolbar (VS Code Terminal Actions) */}
+                <div className="flex items-center gap-1 text-[#cccccc]">
+                  {/* Active Terminal / Shell Dropdown Badge */}
+                  <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded hover:bg-[#2b2b2b] text-[#cccccc] text-xs font-mono transition-colors cursor-pointer mr-1">
+                    <Terminal className="h-3.5 w-3.5 text-[#858585]" />
+                    <span className="text-[11px]">1: zsh</span>
+                  </div>
+
+                  {/* Run Code / Run Tests Quick Action */}
                   <button
                     onClick={handleRunTestCases}
                     disabled={isRunning || isSubmitting}
-                    className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold text-[#58A6FF] bg-[#161B22] hover:bg-[#21262D] border border-white/10 transition-colors cursor-pointer disabled:opacity-50"
-                    title="Run all visible test cases"
+                    className="flex items-center gap-1 px-2 py-1 rounded text-xs text-[#cccccc] hover:bg-[#2b2b2b] hover:text-white transition-colors cursor-pointer disabled:opacity-40 mr-1"
+                    title="Run visible test cases"
                   >
-                    <Play className="h-3 w-3 fill-current text-[#58A6FF]" />
-                    <span>Run Test Cases</span>
+                    <Play className="h-3 w-3 fill-current text-[#4ec9b0]" />
+                    <span className="text-[11px]">Run Tests</span>
                   </button>
 
-                  {runResponse && (
-                    <span
-                      className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-md border ${
-                        runResponse.success
-                          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-400'
-                          : 'border-red-500/40 bg-red-500/15 text-red-400'
-                      }`}
-                    >
-                      {runResponse.success ? 'Exit 0' : 'Exit 1'}
-                    </span>
-                  )}
-
+                  {/* Clear Terminal Icon */}
                   <button
                     onClick={() => setTerminalHistory([])}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
-                    title="Clear Terminal"
+                    className="p-1 rounded text-[#858585] hover:text-[#cccccc] hover:bg-[#2b2b2b] transition-colors cursor-pointer"
+                    title="Clear Terminal (Ctrl+L)"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
 
+                  {/* Expand / Minimize Height */}
                   <button
                     onClick={() => setDockHeight((p) => (p === 'normal' ? 'expanded' : 'normal'))}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
-                    title={dockHeight === 'expanded' ? 'Shrink' : 'Expand'}
+                    className="p-1 rounded text-[#858585] hover:text-[#cccccc] hover:bg-[#2b2b2b] transition-colors cursor-pointer"
+                    title={dockHeight === 'expanded' ? 'Collapse Terminal' : 'Maximize Terminal'}
                   >
                     {dockHeight === 'expanded' ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
                   </button>
 
+                  {/* Close Terminal Dock */}
                   <button
                     onClick={() => setConsoleCollapsed(true)}
-                    className="p-1 rounded-md text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors cursor-pointer"
-                    title="Close Dock"
+                    className="p-1 rounded text-[#858585] hover:text-[#cccccc] hover:bg-[#2b2b2b] transition-colors cursor-pointer"
+                    title="Close Terminal Panel (Ctrl+J)"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>
 
-              {/* Terminal Shell Canvas */}
+              {/* VS Code Terminal Shell Canvas */}
               <div
                 onClick={() => terminalInputRef.current?.focus()}
-                className="flex-1 overflow-y-auto p-4 font-mono text-xs sm:text-sm select-text bg-[#020408] cursor-text"
+                className="flex-1 overflow-y-auto px-4 py-3 font-mono text-[13px] leading-[1.45] text-[#cccccc] bg-[#181818] cursor-text selection:bg-[#264f78]"
+                style={{
+                  fontFamily: 'Menlo, Monaco, Consolas, "Courier New", monospace',
+                }}
               >
-                {/* 1. Real Interactive Terminal Stream (VS Code Style) */}
+                {/* 1. Terminal Stream Tab */}
                 {activeConsoleTab === 'terminal' && (
-                  <div className="space-y-3">
+                  <div className="space-y-1">
+                    {/* Command History Stream */}
                     {terminalHistory.map((item) => (
-                      <div key={item.id} className="space-y-1">
-                        {/* Terminal Command Line */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-emerald-400 font-bold">python@workspace</span>
-                          <span className="text-[#8B949E]">:</span>
-                          <span className="text-[#58A6FF] font-medium">~/workspace</span>
-                          <span className="text-[#8B949E]">$</span>
-                          <span className="text-[#E6EDF3] font-semibold">{item.command}</span>
+                      <div key={item.id} className="space-y-0.5">
+                        {/* Authentic zsh Prompt matching user screenshot */}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-[12px] select-none ${item.exitCode === 0 ? 'text-[#858585]' : 'text-[#f48771]'}`}>○</span>
+                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
+                          <span className="text-[#cccccc]">Python</span>
+                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#ffffff] ml-1">{item.command}</span>
                         </div>
 
-                        {/* Interactive Prompts Echo */}
-                        {item.interactivePrompts && item.interactivePrompts.length > 0 ? (
-                          <div className="space-y-0.5 pl-2 border-l-2 border-amber-500/40">
+                        {/* Interactive Prompts / Stdin echo */}
+                        {item.interactivePrompts && item.interactivePrompts.length > 0 && (
+                          <div className="space-y-0.5 text-[#cccccc]">
                             {item.interactivePrompts.map((ip, idx) => (
-                              <div key={idx} className="flex items-center gap-1.5 text-xs sm:text-sm">
-                                <span className="text-amber-300/90 font-medium">{ip.prompt || 'Input: '}</span>
-                                <span className="text-[#E6EDF3] font-semibold">{ip.value}</span>
+                              <div key={idx} className="flex items-baseline">
+                                <span>{ip.prompt || 'Input: '}</span>
+                                <span className="text-[#ffffff] ml-1">{ip.value}</span>
                               </div>
                             ))}
                           </div>
-                        ) : item.stdin ? (
-                          <div className="text-[#8B949E] text-xs pl-2 border-l-2 border-[#30363D]">
-                            [stdin feed]: {item.stdin}
-                          </div>
-                        ) : null}
+                        )}
 
-                        {/* Stdout Output */}
+                        {/* Stdout Output (natural terminal formatting) */}
                         {item.stdout && (
-                          <pre className="text-[#E6EDF3] whitespace-pre-wrap leading-relaxed">
+                          <pre className="text-[#cccccc] whitespace-pre-wrap font-mono m-0 p-0 leading-[1.45]">
                             {item.stdout}
                           </pre>
                         )}
 
-                        {/* Stderr Output */}
+                        {/* Stderr Output (VS Code red text) */}
                         {item.stderr && (
-                          <pre className="text-red-400 whitespace-pre-wrap leading-relaxed bg-red-500/10 p-2.5 rounded-lg border border-red-500/30">
+                          <pre className="text-[#f48771] whitespace-pre-wrap font-mono m-0 p-0 leading-[1.45]">
                             {item.stderr}
                           </pre>
                         )}
-
-                        {/* Process Exit Badge */}
-                        <div className="text-[11px] text-[#8B949E] flex items-center gap-3 pt-1">
-                          <span className={item.exitCode === 0 ? 'text-emerald-400 font-semibold' : 'text-red-400 font-semibold'}>
-                            [Process completed with exit code {item.exitCode}]
-                          </span>
-                          <span>•</span>
-                          <span>{item.durationMs}ms</span>
-                          <span>•</span>
-                          <span>{item.timestamp}</span>
-                        </div>
                       </div>
                     ))}
 
-                    {/* Interactive Active Session (Waiting for user typing in terminal) */}
+                    {/* Interactive Active Session (Waiting for Python input() prompt) */}
                     {interactiveSession.active && (
-                      <div className="space-y-2 pt-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-emerald-400 font-bold">python@workspace</span>
-                          <span className="text-[#8B949E]">:</span>
-                          <span className="text-[#58A6FF] font-medium">~/workspace</span>
-                          <span className="text-[#8B949E]">$</span>
-                          <span className="text-[#E6EDF3] font-semibold">python3 solution.py</span>
+                      <div className="space-y-0.5 pt-0.5">
+                        {/* Command line */}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[12px] select-none text-[#858585]">○</span>
+                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
+                          <span className="text-[#cccccc]">Python</span>
+                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#ffffff] ml-1">python3 solution.py</span>
                         </div>
 
-                        {/* Previous answered inputs in this run */}
+                        {/* Previously answered prompts in this run */}
                         {interactiveSession.collectedInputs.map((val, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5 text-xs sm:text-sm pl-2 border-l-2 border-amber-500/40">
-                            <span className="text-amber-300 font-medium">{interactiveSession.prompts[idx] || 'Input: '}</span>
-                            <span className="text-[#E6EDF3] font-semibold">{val}</span>
+                          <div key={idx} className="flex items-baseline text-[#cccccc]">
+                            <span>{interactiveSession.prompts[idx] || 'Input: '}</span>
+                            <span className="text-[#ffffff] ml-1">{val}</span>
                           </div>
                         ))}
 
-                        {/* Active Prompt Line with Focused Input */}
+                        {/* Current Interactive input prompt line */}
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();
                             handleInteractiveInputSubmit();
                           }}
-                          className="flex items-center gap-2 text-xs sm:text-sm bg-[#161B22]/80 p-2 rounded-xl border border-amber-500/40 shadow-inner"
+                          className="flex items-center flex-wrap"
                         >
-                          <span className="text-amber-300 font-bold whitespace-nowrap">
+                          <span className="text-[#cccccc]">
                             {interactiveSession.prompts[interactiveSession.currentStep] || 'Enter input: '}
                           </span>
-                          <input
-                            ref={terminalInputRef}
-                            type="text"
-                            value={terminalInput}
-                            onChange={(e) => setTerminalInput(e.target.value)}
-                            onKeyDown={handleTerminalKeyDown}
-                            placeholder="Type value & hit Enter (or Esc to cancel)..."
-                            className="flex-1 bg-transparent border-none outline-none text-[#E6EDF3] font-mono text-xs sm:text-sm font-semibold placeholder:text-[#6E7681] caret-[#58A6FF] p-0"
-                            autoFocus
-                          />
-                          <button
-                            type="submit"
-                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer transition-colors shadow"
-                          >
-                            Enter ↵
-                          </button>
-                        </form>
-
-                        {/* Quick paste helper for beginner if problem has test cases */}
-                        {problem?.visible_test_cases?.[0]?.input && (
-                          <div className="flex items-center gap-2 text-[11px] text-[#8B949E] pl-1">
-                            <span>Quick test with Example 1:</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const lines = problem.visible_test_cases[0].input.split('\n');
-                                const val = lines[interactiveSession.currentStep] !== undefined ? lines[interactiveSession.currentStep] : problem.visible_test_cases[0].input;
-                                setTerminalInput(val);
-                                terminalInputRef.current?.focus();
-                              }}
-                              className="px-2 py-0.5 rounded bg-[#161B22] border border-[#30363D] hover:border-[#58A6FF] text-[#58A6FF] transition-all cursor-pointer"
-                            >
-                              Paste &quot;{problem.visible_test_cases[0].input.split('\n')[interactiveSession.currentStep] || problem.visible_test_cases[0].input}&quot;
-                            </button>
+                          <div className="relative inline-flex items-center ml-1 flex-1">
+                            <input
+                              ref={terminalInputRef}
+                              type="text"
+                              value={terminalInput}
+                              onChange={(e) => setTerminalInput(e.target.value)}
+                              onKeyDown={handleTerminalKeyDown}
+                              onFocus={() => setIsTerminalFocused(true)}
+                              onBlur={() => setIsTerminalFocused(false)}
+                              autoFocus
+                              spellCheck={false}
+                              autoComplete="off"
+                              className="w-full bg-transparent border-none outline-none text-[#ffffff] font-mono text-[13px] p-0 m-0 caret-[#ffffff]"
+                            />
                           </div>
-                        )}
+                        </form>
                       </div>
                     )}
 
-                    {/* Active Running State (when communicating with sandbox) */}
+                    {/* Active Running State (Executing sandbox command) */}
                     {isRunning && !interactiveSession.active && (
-                      <div className="space-y-1 animate-pulse">
-                        <div className="flex items-center gap-2">
-                          <span className="text-emerald-400 font-bold">python@workspace</span>
-                          <span className="text-[#8B949E]">:</span>
-                          <span className="text-[#58A6FF] font-medium">~/workspace</span>
-                          <span className="text-[#8B949E]">$</span>
-                          <span className="text-[#E6EDF3]">python3 solution.py</span>
-                        </div>
-                        <div className="text-xs text-[#58A6FF] flex items-center gap-2">
-                          <RefreshCw className="h-3 w-3 animate-spin" />
-                          <span>Executing code in Python 3.12 sandbox...</span>
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[12px] select-none text-[#58A6FF] animate-pulse">●</span>
+                          <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
+                          <span className="text-[#cccccc]">Python</span>
+                          <span className="text-[#cccccc]">%</span>
+                          <span className="text-[#ffffff] ml-1">python3 solution.py</span>
                         </div>
                       </div>
                     )}
 
-                    {/* Ready Prompt (Interactive Bash Shell) */}
+                    {/* Ready Prompt (Exact VS Code prompt line with cursor) */}
                     {!isRunning && !interactiveSession.active && (
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
                           handleTerminalCommandSubmit();
                         }}
-                        className="flex items-center gap-2 pt-1"
+                        className="flex items-center gap-1.5 flex-wrap pt-0.5"
                       >
-                        <span className="text-emerald-400 font-bold">python@workspace</span>
-                        <span className="text-[#8B949E]">:</span>
-                        <span className="text-[#58A6FF] font-medium">~/workspace</span>
-                        <span className="text-[#8B949E]">$</span>
-                        <input
-                          ref={terminalInputRef}
-                          type="text"
-                          value={terminalInput}
-                          onChange={(e) => setTerminalInput(e.target.value)}
-                          onKeyDown={handleTerminalKeyDown}
-                          placeholder="python3 solution.py, clear, or type input... (Enter ↵)"
-                          className="flex-1 bg-transparent border-none outline-none text-[#E6EDF3] font-mono text-xs sm:text-sm placeholder:text-[#484F58] caret-[#58A6FF] p-0"
-                        />
+                        <span className="text-[12px] select-none text-[#858585]">○</span>
+                        <span className="text-[#cccccc]">spidey.@Spideys-MacBook-Air</span>
+                        <span className="text-[#cccccc]">Python</span>
+                        <span className="text-[#cccccc]">%</span>
+                        <div className="relative inline-flex items-center ml-1 flex-1">
+                          <input
+                            ref={terminalInputRef}
+                            type="text"
+                            value={terminalInput}
+                            onChange={(e) => setTerminalInput(e.target.value)}
+                            onKeyDown={handleTerminalKeyDown}
+                            onFocus={() => setIsTerminalFocused(true)}
+                            onBlur={() => setIsTerminalFocused(false)}
+                            spellCheck={false}
+                            autoComplete="off"
+                            className="w-full bg-transparent border-none outline-none text-[#ffffff] font-mono text-[13px] p-0 m-0 caret-[#ffffff]"
+                          />
+                        </div>
                       </form>
                     )}
 
@@ -1399,7 +1508,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
                 {/* 2. Test Cases Tab */}
                 {activeConsoleTab === 'tests' && (
-                  <div className="space-y-3 font-sans">
+                  <div className="space-y-3 font-sans text-xs">
                     <div className="flex items-center gap-2">
                       {(runResponse?.test_results && runResponse.test_results.length > 0
                         ? runResponse.test_results
@@ -1412,14 +1521,14 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                           <button
                             key={idx}
                             onClick={() => setSelectedCaseIndex(idx)}
-                            className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 ${
+                            className={`px-3 py-1 rounded text-xs font-mono font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
                               isSelected
-                                ? 'bg-[#1F6FEB] text-white'
-                                : 'bg-[#161B22] text-[#8B949E] hover:bg-[#21262D]'
+                                ? 'bg-[#094771] text-white border border-[#007acc]'
+                                : 'bg-[#252526] text-[#cccccc] hover:bg-[#2d2d2d] border border-transparent'
                             }`}
                           >
                             {result !== undefined && (
-                              <span className={`w-2 h-2 rounded-full ${result.passed ? 'bg-emerald-400' : 'bg-red-400'}`} />
+                              <span className={`w-2 h-2 rounded-full ${result.passed ? 'bg-[#4ec9b0]' : 'bg-[#f48771]'}`} />
                             )}
                             <span>Case {idx + 1}</span>
                           </button>
@@ -1433,23 +1542,23 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                       const testCase = problem?.visible_test_cases?.[selectedCaseIndex];
 
                       return (
-                        <div className="p-3.5 rounded-xl border border-[#21262D] bg-[#0A0E17] space-y-2 font-mono text-xs">
+                        <div className="p-3 rounded border border-[#2b2b2b] bg-[#1e1e1e] space-y-2 font-mono text-xs">
                           {testCase?.input && (
                             <div>
-                              <span className="text-[#8B949E] text-[10px] block">Input:</span>
-                              <div className="p-2 rounded bg-[#161B22] text-[#58A6FF] mt-1">{testCase.input}</div>
+                              <span className="text-[#858585] text-[11px] block font-sans">Input:</span>
+                              <div className="p-2 rounded bg-[#181818] border border-[#2b2b2b] text-[#9cdcfe] mt-1 font-mono">{testCase.input}</div>
                             </div>
                           )}
                           <div>
-                            <span className="text-[#8B949E] text-[10px] block">Expected:</span>
-                            <div className="p-2 rounded bg-[#161B22] text-emerald-400 mt-1">
+                            <span className="text-[#858585] text-[11px] block font-sans">Expected:</span>
+                            <div className="p-2 rounded bg-[#181818] border border-[#2b2b2b] text-[#4ec9b0] mt-1 font-mono">
                               {result?.expected_output || testCase?.expected || 'Output value'}
                             </div>
                           </div>
                           {result && (
                             <div>
-                              <span className="text-[#8B949E] text-[10px] block">Your Output:</span>
-                              <div className={`p-2 rounded mt-1 ${result.passed ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'}`}>
+                              <span className="text-[#858585] text-[11px] block font-sans">Your Output:</span>
+                              <div className={`p-2 rounded mt-1 font-mono border ${result.passed ? 'bg-[#181818] text-[#4ec9b0] border-[#4ec9b0]/30' : 'bg-[#181818] text-[#f48771] border-[#f48771]/30'}`}>
                                 {result.actual_output || '(no output)'}
                               </div>
                             </div>
