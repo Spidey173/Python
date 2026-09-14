@@ -163,7 +163,7 @@ ${code ? `- User's current editor code:\n\`\`\`python\n${code}\n\`\`\`` : ''}`;
 function generateClaudeGradeFallback(
   message: string,
   code: string,
-  challengeId: number,
+  _challengeId: number,
   knowledge?: (typeof ALL_50_MENTOR_KNOWLEDGE)[number],
   approaches?: RankedSolution[]
 ): string {
@@ -181,6 +181,10 @@ function generateClaudeGradeFallback(
 
   // 3. Alternative approaches
   if (q.includes('another way') || q.includes('other approach') || q.includes('alternative')) {
+    if (approaches && approaches.length > 1) {
+      const names = approaches.map((a) => a.title).join(' or ');
+      return `A few ways to think about it: ${names}. Which one fits your intuition best?`;
+    }
     return "One option is two pointers. Another is cleaning the string first and comparing it to its reverse.";
   }
 
@@ -206,18 +210,24 @@ function generateClaudeGradeFallback(
     );
   }
 
-  // 5. "What is this problem?" / "Explain"
+  // 5. "What is this problem?" / "Explain" / "How to solve"
   if (
     q.includes('what is this problem') ||
     q.includes('explain') ||
     q.includes('how to solve') ||
     q.includes('what does this mean')
   ) {
+    if (knowledge?.conceptName) {
+      return `This challenge centers around ${knowledge.conceptName}. Try breaking down the core transformation step by step.`;
+    }
     return "You're checking whether the string reads identically forwards and backwards after stripping out non-alphanumerics. One thing to think about first: does the input contain spaces or punctuation?";
   }
 
   // 6. Hints & Clues request / Stuck
   if (q.includes('stuck') || q.includes('hint') || q.includes('clue') || q.includes('nudge')) {
+    if (knowledge?.hints?.[0]?.nudge) {
+      return knowledge.hints[0].nudge;
+    }
     return "I'd start by comparing characters from both ends and moving toward the center.";
   }
 

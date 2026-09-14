@@ -1,17 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
 import { persistence } from '@/lib/persistence';
-import { ChapterGroup, ChallengeSummary } from '@/lib/types';
+import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import {
-  Search, CheckCircle2, Circle, ArrowRight, BookOpen,
-  Filter, Check, Code, Layers, SlidersHorizontal, Zap, Sparkles
+  Search, CheckCircle2, Circle, ArrowRight, Zap
 } from 'lucide-react';
 
 function CurriculumExplorerContent() {

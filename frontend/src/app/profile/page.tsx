@@ -12,13 +12,11 @@ import {
   calculateRealAverageRuntime,
 } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
-import { DifficultyBadge, StatusPill } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import {
-  User, CheckCircle2, Flame, Clock, Calendar,
-  Layers, ArrowRight, TrendingUp, BarChart2,
-  Check, Zap, Activity, ChevronRight, ChevronLeft, Play, Code2, Sparkles,
-  ChevronDown
+  User, CheckCircle2, Flame, Clock,
+  Layers, ArrowRight, BarChart2,
+  Check, Zap, Activity, ChevronRight, ChevronLeft
 } from 'lucide-react';
 
 // Circular Radial Progress Ring for Whole Completion
@@ -90,12 +88,10 @@ export default function ProgressPage() {
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionLogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        setLoading(true);
         const chaps = await api.getChapters().catch(() => []);
         if (!user) {
           setChapters(chaps);
@@ -114,8 +110,6 @@ export default function ProgressPage() {
         setSubmissions(subs);
       } catch (err) {
         console.error('Failed to load progress analytics:', err);
-      } finally {
-        setLoading(false);
       }
     }
     loadData();

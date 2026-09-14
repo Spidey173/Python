@@ -3,15 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { sounds } from '@/lib/audio-engine';
-import { useAuth } from '@/lib/auth-context';
 import { User, ChapterGroup } from '@/lib/types';
-import {
-  Shield, Users, Activity, Plus, Trash2, Edit,
-  Check, RefreshCw, Zap, Coins, Heart, AlertCircle
-} from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 export default function AdminDashboardPage() {
-  const { user } = useAuth();
   const [metrics, setMetrics] = useState<{
     total_users: number;
     total_challenges: number;
@@ -24,15 +19,6 @@ export default function AdminDashboardPage() {
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [activeTab, setActiveTab] = useState<'analytics' | 'challenges' | 'users'>('analytics');
   const [loading, setLoading] = useState(true);
-
-  // New Challenge Form State
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newChapterId, setNewChapterId] = useState(1);
-  const [newLevelNumber, setNewLevelNumber] = useState(51);
-  const [newObjective, setNewObjective] = useState('');
-  const [newStarterCode, setNewStarterCode] = useState('print("Hello")');
-  const [newExpected, setNewExpected] = useState('Hello');
 
   const loadData = async () => {
     try {

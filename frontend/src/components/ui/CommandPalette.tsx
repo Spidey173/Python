@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Search, Code, BookOpen, LayoutDashboard, BarChart2,
-  Terminal, Sidebar, ArrowRight, CornerDownLeft, ExternalLink,
+  Terminal, Sidebar, CornerDownLeft,
   RotateCcw, Copy, Check
 } from 'lucide-react';
 import { DifficultyBadge } from './Badge';

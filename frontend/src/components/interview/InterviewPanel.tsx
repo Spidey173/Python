@@ -48,6 +48,13 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
     'fallback-q1': true,
   });
 
+  const handleClose = () => {
+    setIsOpen(false);
+    if (onClose) {
+      onClose();
+    }
+  };
+
   // Handle ESC key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,13 +82,6 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
 
   const toggleQA = (id: string) => {
     setExpandedQA((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-    if (onClose) {
-      onClose();
-    }
   };
 
   // Filter questions by search

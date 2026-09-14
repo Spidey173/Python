@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, use, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import { api } from '@/lib/api';
 import { persistence, createDebouncedSaver } from '@/lib/persistence';
 import { registerGlobalShortcuts } from '@/lib/shortcuts';
 import {
-  ChallengeDetail, CodeRunResponse, TestCaseResult,
+  ChallengeDetail, CodeRunResponse,
   ChapterGroup, ChallengeSummary
 } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
@@ -16,8 +16,8 @@ import { CommandPalette } from '@/components/ui/CommandPalette';
 import { useAuth } from '@/lib/auth-context';
 import { soundFX } from '@/lib/audio';
 import {
-  MentorMessage, HintTier, getMentorKnowledge,
-  analyzeExecutionForMentor, ProblemMentorKnowledge
+  MentorMessage, HintTier,
+  analyzeExecutionForMentor
 } from '@/lib/mentor-engine';
 import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
 import { SolutionVault } from '@/components/mentor/SolutionVault';
@@ -25,10 +25,8 @@ import { MissionCompleteModal } from '@/components/mentor/MissionCompleteModal';
 import { InterviewPanel } from '@/components/interview/InterviewPanel';
 import {
   Play, RotateCcw, ArrowLeft, Clock, BookOpen,
-  Code2, Check, ArrowRight, X, AlertCircle, Sidebar,
-  Terminal, ChevronDown, ChevronUp, Copy, Trash2,
-  Award, Sparkles, Trophy, Compass, ShieldCheck,
-  CheckSquare, Layers, Circle, RefreshCw, Bot, Lock, Unlock,
+  Check, X, Terminal, ChevronDown, ChevronUp, Copy, Trash2,
+  CheckSquare, RefreshCw, Bot, Lock, Unlock,
   Briefcase, Zap
 } from 'lucide-react';
 
@@ -60,22 +58,19 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [allProblems, setAllProblems] = useState<ChallengeSummary[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
   const [code, setCode] = useState<string>('');
-  const [loading, setLoading] = useState(true);
 
   // Layout & Tabs
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [consoleCollapsed, setConsoleCollapsed] = useState(false);
   const [dockHeight, setDockHeight] = useState<'normal' | 'expanded'>('normal');
   // Left Panel Tab: Problem Spec, Mentor, Solution Vault, Interview Q&A
   const [activeTab, setActiveTab] = useState<'spec' | 'mentor' | 'vault' | 'interview'>('spec');
   const [activeConsoleTab, setActiveConsoleTab] = useState<'terminal' | 'tests'>('terminal');
   const [selectedCaseIndex, setSelectedCaseIndex] = useState(0);
-  const [customStdin, setCustomStdin] = useState<string>('');
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   // Mentor & Hint State
   const [messages, setMessages] = useState<MentorMessage[]>([]);
-  const [hintTier, setHintTier] = useState<HintTier>(1);
+  const hintTier: HintTier = 1;
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingPhase, setThinkingPhase] = useState<string>('');
   const [isSolutionUnlocked, setIsSolutionUnlocked] = useState<boolean>(false);
@@ -209,12 +204,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   useEffect(() => {
     async function loadWorkspace() {
       try {
-        setLoading(true);
-        const [prob, chapters, solved, unlockedSolutions, savedDraft, layoutSettings] = await Promise.all([
+        const [prob, chapters, solved, savedDraft, layoutSettings] = await Promise.all([
           api.getChallenge(problemId),
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds(),
-          persistence.getUnlockedSolutionIds(),
           persistence.loadDraft(problemId),
           persistence.loadLayoutSettings(),
         ]);
@@ -255,7 +248,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setCode(initialCode);
 
         // Layout restore
-        setSidebarCollapsed(layoutSettings.navigatorCollapsed);
         setConsoleCollapsed(layoutSettings.consoleCollapsed);
         await persistence.setLastActiveProblemId(problemId);
 
@@ -277,8 +269,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         ]);
       } catch (err) {
         console.error('Failed to load problem workspace:', err);
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -433,7 +423,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         },
       ]);
 
-      const feedback = analyzeExecutionForMentor(res, problem, code);
+      const feedback = analyzeExecutionForMentor(res);
       if (!res.success) {
         soundFX.playFailureThud();
       }
@@ -524,7 +514,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         },
       ]);
 
-      const feedback = analyzeExecutionForMentor(res, problem, code);
+      const feedback = analyzeExecutionForMentor(res);
       if (!res.success || (res.test_results && res.test_results.some((t) => !t.passed))) {
         soundFX.playFailureThud();
       }
@@ -723,7 +713,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     const unregister = registerGlobalShortcuts({
       onRun: () => handleRunCode(),
       onSubmit: handleSubmitCode,
-      onToggleSidebar: () => setSidebarCollapsed((p) => !p),
       onToggleConsole: () => setConsoleCollapsed((p) => !p),
       onOpenCommandPalette: () => setCommandPaletteOpen(true),
     });
@@ -954,14 +943,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             {/* VIEW: MENTOR CHAT */}
             {activeTab === 'mentor' && (
               <MentorChatPanel
-                problem={problem || ({ id: problemId, title: 'Challenge', objective: '' } as any)}
-                currentCode={code}
                 messages={messages}
-                hintTier={hintTier}
                 isThinking={isThinking}
                 thinkingPhase={thinkingPhase}
-                isSolutionUnlocked={isSolutionUnlocked}
-                onOpenSolutionVault={() => setActiveTab('vault')}
                 onSendCustomPrompt={handleSendCustomPrompt}
               />
             )}

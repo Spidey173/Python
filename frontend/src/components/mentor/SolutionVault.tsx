@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import {
-  Lock, Unlock, ShieldAlert, Sparkles, Trophy, Check,
+  Lock, Unlock, Sparkles, Trophy, Check,
   Copy, ArrowRight, Zap, AlertTriangle, BookOpen, Clock,
-  Cpu, Award, ExternalLink, HelpCircle
+  Cpu, HelpCircle
 } from 'lucide-react';
 import { ChallengeDetail } from '@/lib/types';
 import { soundFX } from '@/lib/audio';

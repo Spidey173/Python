@@ -12,12 +12,11 @@ import {
   calculateRealStreak,
 } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
-import { DifficultyBadge, StatusPill } from '@/components/ui/Badge';
+import { DifficultyBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import {
-  Play, CheckCircle2, Flame, Target, ArrowRight,
-  ChevronRight, Zap, Sparkles, GitBranch, Repeat,
-  Code2, Hash, Boxes, Terminal, Check, Award, Layers, Code
+  Play, CheckCircle2, Flame, Target,
+  ChevronRight, Check
 } from 'lucide-react';
 
 // Modern Circular SVG Gauge Component
@@ -71,37 +70,20 @@ function CircularProgressGauge({
   );
 }
 
-// Icon mapping per module index
-const MODULE_ICONS = [
-  Layers,      // 1: Variables
-  GitBranch,   // 2: Operators & Logic
-  Repeat,      // 3: Loops
-  Code2,       // 4: Functions
-  Terminal,    // 5: Strings
-  Code,        // 6: Lists
-  Hash,        // 7: Comprehensions & Dicts
-  Sparkles,    // 8: Advanced Algorithms
-  Boxes,       // 9: Object-Oriented
-  Award,       // 10: Real-World Systems
-];
-
 export default function DashboardPage() {
   const router = useRouter();
   const { user, isGuest } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signup');
+  const authTab: 'signin' | 'signup' | 'guest' = 'signup';
 
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
   const [lastActiveId, setLastActiveId] = useState<number>(1);
   const [submissions, setSubmissions] = useState<SubmissionLogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeStageTab, setActiveStageTab] = useState<'all' | 'stage1' | 'stage2' | 'stage3'>('all');
 
   useEffect(() => {
     async function loadData() {
       try {
-        setLoading(true);
         if (!user) {
           // Fresh unauthenticated visitor session has 0 solved, 0 submissions, 0 streak
           const chaps = await api.getChapters().catch(() => []);
@@ -111,8 +93,9 @@ export default function DashboardPage() {
           setSubmissions([]);
           return;
         }
-        const [chaps, localSolved, lastId, subs] = await Promise.all([
-          api.getChapters().catch(() => []),
+
+        const chaps = await api.getChapters().catch(() => []);
+        const [localSolved, lastId, subs] = await Promise.all([
           persistence.getSolvedIds(),
           persistence.getLastActiveProblemId(),
           persistence.getSubmissions(),
@@ -125,8 +108,6 @@ export default function DashboardPage() {
         setSubmissions(subs);
       } catch (e) {
         console.error('Failed to load dashboard state:', e);
-      } finally {
-        setLoading(false);
       }
     }
     loadData();
@@ -177,10 +158,7 @@ export default function DashboardPage() {
     );
   }, [allProblems, lastActiveId]);
 
-  // Recommendations: First 3 unsolved problems
-  const upNextProblems = useMemo(() => {
-    return allProblems.filter((p) => !solvedIds.includes(p.id)).slice(0, 3);
-  }, [allProblems, solvedIds]);
+
 
   // 7-day study streak tracking visualization
   const streakDays = useMemo(() => {
@@ -215,13 +193,7 @@ export default function DashboardPage() {
     return { label: 'DSA Foundation', color: 'text-[#58A6FF] border-[#58A6FF]/40 bg-[#58A6FF]/10' };
   }, [solvedCount]);
 
-  // Filter modules by Stage
-  const filteredChapters = useMemo(() => {
-    if (activeStageTab === 'stage1') return chapters.filter((c) => c.chapter_id >= 1 && c.chapter_id <= 3);
-    if (activeStageTab === 'stage2') return chapters.filter((c) => c.chapter_id >= 4 && c.chapter_id <= 7);
-    if (activeStageTab === 'stage3') return chapters.filter((c) => c.chapter_id >= 8 && c.chapter_id <= 10);
-    return chapters;
-  }, [chapters, activeStageTab]);
+
 
   return (
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] py-7 px-4 sm:px-6 lg:px-8">

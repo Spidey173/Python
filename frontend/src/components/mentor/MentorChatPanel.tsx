@@ -4,22 +4,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Bot, Send, Code2, RefreshCw, Volume2, VolumeX
 } from 'lucide-react';
-import { ChallengeDetail } from '@/lib/types';
-import {
-  MentorMessage,
-  HintTier,
-} from '@/lib/mentor-engine';
+import { MentorMessage } from '@/lib/mentor-engine';
 import { soundFX } from '@/lib/audio';
 
 interface MentorChatPanelProps {
-  problem: ChallengeDetail;
-  currentCode: string;
   messages: MentorMessage[];
-  hintTier?: HintTier;
   isThinking: boolean;
   thinkingPhase: string;
-  isSolutionUnlocked?: boolean;
-  onOpenSolutionVault?: () => void;
   onSendCustomPrompt: (prompt: string) => void;
 }
 
@@ -151,14 +142,9 @@ function renderFormattedText(text: string) {
 }
 
 export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
-  problem,
-  currentCode,
   messages,
-  hintTier,
   isThinking,
   thinkingPhase,
-  isSolutionUnlocked,
-  onOpenSolutionVault,
   onSendCustomPrompt,
 }) => {
   const [inputText, setInputText] = useState('');
@@ -310,7 +296,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
             disabled={isThinking}
             className="px-2.5 py-1 rounded-full border border-white/10 bg-[#161B22]/70 hover:bg-[#21262D] hover:border-[#58A6FF]/30 text-xs text-[#C9D1D9] hover:text-white transition-all shrink-0 disabled:opacity-40 cursor-pointer"
           >
-            I'm stuck
+            I&apos;m stuck
           </button>
           <button
             type="button"

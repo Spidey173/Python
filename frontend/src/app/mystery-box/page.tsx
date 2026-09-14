@@ -4,10 +4,7 @@ import React, { useState } from 'react';
 import { api } from '@/lib/api';
 import { sounds } from '@/lib/audio-engine';
 import { useAuth } from '@/lib/auth-context';
-import {
-  Gift, Coins, Sparkles, Heart, Zap, Award,
-  Check, ArrowRight, Shield
-} from 'lucide-react';
+import { Gift, Coins, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface RewardModalState {

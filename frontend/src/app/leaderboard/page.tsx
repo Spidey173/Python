@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { sounds } from '@/lib/audio-engine';
 import { LeaderboardEntry } from '@/lib/types';
-import { Trophy, Medal, Crown, Star, Flame, Zap } from 'lucide-react';
+import { Trophy, Crown, Star, Flame } from 'lucide-react';
 
 export default function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -26,7 +26,6 @@ export default function LeaderboardPage() {
   }, []);
 
   const topThree = leaderboard.slice(0, 3);
-  const restOfList = leaderboard.slice(3);
 
   return (
     <div className="min-h-screen bg-[#080808] text-white py-12 px-4 sm:px-6 lg:px-8 cyber-grid-bg">

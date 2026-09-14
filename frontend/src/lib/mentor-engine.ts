@@ -99,9 +99,7 @@ export function getMentorKnowledge(problem: ChallengeDetail): ProblemMentorKnowl
 
 // Reactive execution analysis: analyzes test results and compiler output to produce real conversational coaching
 export function analyzeExecutionForMentor(
-  runRes: CodeRunResponse,
-  problem: ChallengeDetail,
-  userCode: string
+  runRes: CodeRunResponse
 ): { mood: MentorMessage['mood']; responseText: string; codeSnippet?: string } {
   const stderr = runRes.stderr || '';
   const stdout = runRes.stdout || '';

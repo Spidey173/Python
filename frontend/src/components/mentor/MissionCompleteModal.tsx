@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import {
-  Trophy, Sparkles, CheckCircle2, ArrowRight, BookOpen,
-  Unlock, Flame, Award, ShieldCheck, Zap
+  Trophy, Sparkles, CheckCircle2, ArrowRight,
+  Unlock, Award, Zap
 } from 'lucide-react';
 import { soundFX } from '@/lib/audio';
 
@@ -88,7 +88,7 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
             <Sparkles className="w-3.5 h-3.5" /> MISSION COMPLETE
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            You conquered #{problemId}
+            You conquered #{problemId}{problemTitle ? `: ${problemTitle}` : ''}
           </h2>
           <p className="text-xs sm:text-sm text-emerald-300/90 font-medium">
             You solved it without looking at the answer.
