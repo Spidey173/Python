@@ -300,6 +300,48 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
+      {/* 3. Subtle Quick Conversational Prompts */}
+      <div className="px-4 py-2 border-t border-[#21262D] bg-[#0E131E]/60 shrink-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 select-none scrollbar-none">
+          <button
+            type="button"
+            onClick={() => onSendCustomPrompt("Give me a small hint without spoiling the solution.")}
+            disabled={isThinking}
+            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+          >
+            <span>💡</span>
+            <span>Hint</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onSendCustomPrompt("Explain what this challenge is asking in plain English.")}
+            disabled={isThinking}
+            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+          >
+            <span>👀</span>
+            <span>Explain this</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onSendCustomPrompt("Let's think through the approach together before writing code.")}
+            disabled={isThinking}
+            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+          >
+            <span>🧠</span>
+            <span>Think with me</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onSendCustomPrompt("Show me a similar example pattern on abstract data without solving this problem.")}
+            disabled={isThinking}
+            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+          >
+            <span>💻</span>
+            <span>Show similar example</span>
+          </button>
+        </div>
+      </div>
+
       {/* 4. Compact Input Prompt Form */}
       <div className="p-4 border-t border-[#21262D] bg-[#111622]/90 shrink-0">
         <form onSubmit={handleSend} className="flex items-center gap-3">
