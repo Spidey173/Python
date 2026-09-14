@@ -64,12 +64,52 @@ export const api = {
   },
 
   async guestLogin(): Promise<{ access_token: string; user: User }> {
-    return request('/auth/guest', {
-      method: 'POST',
-    });
+    try {
+      return await request('/auth/guest', {
+        method: 'POST',
+      });
+    } catch (err) {
+      console.warn('Backend guest auth endpoint unreachable, initializing offline-ready guest session:', err);
+      const guestId = 'runner_' + Math.random().toString(36).substring(2, 9);
+      const fallbackUser: User = {
+        id: Date.now(),
+        username: guestId,
+        email: `${guestId}@pythonquest.io`,
+        role: 'guest',
+        xp: 0,
+        coins: 100,
+        level: 1,
+        lives: 5,
+        streak: 1,
+        avatar: 'cyber-snake',
+        theme: 'cyber-dark',
+        created_at: new Date().toISOString(),
+      };
+      return {
+        access_token: 'local_guest_' + Date.now(),
+        user: fallbackUser,
+      };
+    }
   },
 
   async getMe(): Promise<User> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('pq_token') : null;
+    if (token && token.startsWith('local_guest_')) {
+      return {
+        id: 9999,
+        username: 'runner_guest',
+        email: 'guest@pythonquest.io',
+        role: 'guest',
+        xp: 0,
+        coins: 100,
+        level: 1,
+        lives: 5,
+        streak: 1,
+        avatar: 'cyber-snake',
+        theme: 'cyber-dark',
+        created_at: new Date().toISOString(),
+      };
+    }
     return request('/auth/me');
   },
 

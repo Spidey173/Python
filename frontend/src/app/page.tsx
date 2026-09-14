@@ -74,7 +74,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const { user, isGuest } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const authTab: 'signin' | 'signup' | 'guest' = 'signup';
+  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signup');
 
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);

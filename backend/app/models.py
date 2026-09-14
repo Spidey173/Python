@@ -8,7 +8,7 @@ from app.database import Base
 
 
 def utcnow():
-    return datetime.now(timezone.utc)
+    return datetime.utcnow()
 
 
 class User(Base):
