@@ -15,47 +15,17 @@ interface TutorRequestBody {
   chat_history?: ChatMessage[];
 }
 
-const SYSTEM_PROMPT = `You are an intelligent AI assistant helping a programmer with code. You happen to be an expert software engineer.
+const SYSTEM_PROMPT = `You are an intelligent AI assistant helping a programmer with code.
 
-Core principles:
-- You are not a tutor, teacher, coach, or professor. You are an intelligent assistant that happens to know programming.
-- Sound like talking with Claude or ChatGPT: calm, direct, intelligent, adaptive, and concise.
-- Never lecture. Never sound like a course, textbook, or tutorial.
-- Earn the right to explain: answer only what the user asks. Never add unsolicited theory or background lessons.
-- The assistant itself decides whether to explain, whether to ask a question, whether to give code, or whether to be brief.
-- Confidence to be brief makes you feel human. Sometimes a single sentence or observation is the best response (e.g. "I'd probably use two pointers here." or "The right pointer isn't decrementing, so the loop won't terminate.").
-- Do not force a question at the end of every reply. Only ask a question if you genuinely need more info from the user.
-
-Forbidden boilerplate phrases (dead giveaways of canned templates):
-- NEVER use:
-  "Pattern you can follow"
-  "General approach"
-  "Concept"
-  "Key takeaway"
-  "Algorithm"
-  "Step-by-step"
-  "Let's break it down"
-  "Here's what's happening"
-  "Great question!"
-  "Awesome!"
-  "Let's dive in!"
-- Instead, vary your language naturally as an experienced engineer would:
-  "I'd start by comparing the ends."
-  "One way to think about it..."
-  "The trick is..."
-  "Here's the general shape."
-  "You're almost there—the only missing piece is..."
-
-Formatting:
-- Keep formatting minimal. Avoid unnecessary headings (e.g. ### Concept), bold spam on every second word, numbered lesson plans, or summaries.
-- Use natural paragraphs and small code snippets only when directly helpful.
+You talk like an experienced software engineer in real time: calm, direct, concise, and thoughtful.
 
 Guidelines:
-- Greetings: If the user says "Hi", "Hello", or "Hey", respond naturally ("Hey! What's up?" or "Hi! What are you working on?"). Never dump challenge details or start teaching unprompted.
-- Direct technical questions (e.g. "Can I do this with a for loop?"): Answer the exact question directly ("Yep. You can, although a while loop tends to fit the two-pointer approach more naturally because both pointers move independently.").
-- Examples / patterns: When the user asks for an example without the answer, show the minimal skeleton/mechanics (using ellipses '...' or abstract data) and explain the mechanic in a single sentence.
-- Debugging: Prioritize finding the bug. Point out the specific observation without lecturing.
-- Solutions: The user is writing code in their editor to solve the challenge. Do not output the complete working solution to the active challenge before they submit. Help them reason through their logic and edge cases instead.`;
+- Match the user's depth. If a one-sentence answer is best, give a one-sentence answer (e.g. "I'd probably use two pointers here." or "Yep, that works.").
+- Don't lecture, don't teach chapter-by-chapter, and don't force a question at the end of every reply. Let silence exist.
+- Use natural engineer language ("I'd probably...", "One way is...", "The trick here is...").
+- Strictly avoid canned template phrases like "Key takeaway", "Step-by-step", "Let's break it down", or "Great question!".
+- The user is working on solving this challenge in their editor. Do not give the complete working solution to the challenge unprompted—guide their intuition, edge cases, and debugging instead.
+- If the user simply says "Hi", greet them normally ("Hey! What are you working on?").`;
 
 // Call Anthropic Claude API
 async function callClaude(apiKey: string, prompt: string, code: string, challengeInfo: string, history: ChatMessage[]) {
@@ -189,7 +159,7 @@ ${code ? `- User's current editor code:\n\`\`\`python\n${code}\n\`\`\`` : ''}`;
   return data.choices?.[0]?.message?.content || '';
 }
 
-// Autonomous 1-on-1 AI Coding Partner Engine (Direct, unscripted peer style)
+// Autonomous 1-on-1 AI Engine (Direct, unscripted peer style)
 function generateClaudeGradeFallback(
   message: string,
   code: string,
@@ -198,23 +168,23 @@ function generateClaudeGradeFallback(
   approaches?: RankedSolution[]
 ): string {
   const q = message.trim().toLowerCase();
-  const sol = ALL_50_SOLUTIONS[challengeId];
-  const problemTitle = sol?.title || knowledge?.conceptName || `Challenge #${challengeId}`;
 
-  // 1. Casual greetings — never dump a lecture or problem overview
+  // 1. Casual greetings
   if (/^(hi|hello|hey|hey there|hola|sup|good (morning|afternoon|evening)|yo|howdy)$/i.test(q)) {
-    return "Hey! What are you working on?";
+    return "Hey. What are you working on?";
   }
 
   // 2. Specific questions about for loops or while loops
   if (q.includes('for loop') || q.includes('while loop')) {
-    return (
-      "Yep. You can, although a `while` loop tends to fit the two-pointer approach more naturally because both pointers move independently.\n\n" +
-      "Want to try the `for` loop version first?"
-    );
+    return "Yep. You can use either, though a `while` loop is usually cleaner here since the two pointers move independently.";
   }
 
-  // 3. Requesting an example or pattern without giving the answer
+  // 3. Alternative approaches
+  if (q.includes('another way') || q.includes('other approach') || q.includes('alternative')) {
+    return "One option is two pointers. Another is cleaning the string first and comparing it to its reverse.";
+  }
+
+  // 4. Requesting an example or pattern without giving the answer
   if (
     (q.includes('example') && (q.includes('pattern') || q.includes('without') || q.includes('show'))) ||
     q.includes('skeleton') ||
@@ -222,7 +192,7 @@ function generateClaudeGradeFallback(
     q.includes('show me a pattern')
   ) {
     return (
-      "Sure. Here's the general pattern without applying it to your problem:\n\n" +
+      "Here's the general shape:\n\n" +
       "```python\n" +
       "left = 0\n" +
       "right = len(data) - 1\n\n" +
@@ -232,46 +202,28 @@ function generateClaudeGradeFallback(
       "    left += 1\n" +
       "    right -= 1\n" +
       "```\n\n" +
-      "The important part isn't the values—it's the movement of the two pointers."
+      "The movement of the pointers is the main idea."
     );
   }
 
-  // 4. "What is this problem?" / "Explain" / "How to think about this"
+  // 5. "What is this problem?" / "Explain"
   if (
     q.includes('what is this problem') ||
     q.includes('explain') ||
     q.includes('how to solve') ||
-    q.includes('how do i start') ||
-    q.includes('approach') ||
     q.includes('what does this mean')
   ) {
-    return (
-      "You're checking whether the string reads the same from both ends.\n\n" +
-      "One thing to think about first: does the input contain spaces or punctuation? That changes the approach slightly.\n\n" +
-      "What's your current idea?"
-    );
+    return "You're checking whether the string reads identically forwards and backwards after stripping out non-alphanumerics. One thing to think about first: does the input contain spaces or punctuation?";
   }
 
-  // 5. Hints & Clues request
-  if (q.includes('hint') || q.includes('clue') || q.includes('stuck') || q.includes('nudge')) {
-    return (
-      "If you're looking for the general shape, it usually starts like this:\n\n" +
-      "```python\n" +
-      "left = 0\n" +
-      "right = len(s) - 1\n\n" +
-      "while left < right:\n" +
-      "    ...\n" +
-      "```\n\n" +
-      "Everything else builds on that."
-    );
+  // 6. Hints & Clues request / Stuck
+  if (q.includes('stuck') || q.includes('hint') || q.includes('clue') || q.includes('nudge')) {
+    return "I'd start by comparing characters from both ends and moving toward the center.";
   }
 
-  // 6. Debugging / "Why is my code returning None?" / "Wrong" / "Bug" / "Error"
+  // 7. Debugging / "Why is my code returning None?" / "Wrong" / "Bug" / "Error"
   if (q.includes('none') || q.includes('returning none')) {
-    return (
-      "If a function finishes without hitting an explicit return statement, Python returns None by default.\n\n" +
-      "Take a look at your control flow—is there a branch or loop that exits without returning the value?"
-    );
+    return "Check your return statement—if execution reaches the end without hitting a return, Python returns None.";
   }
 
   if (
@@ -287,19 +239,19 @@ function generateClaudeGradeFallback(
     }
 
     if (!code.includes('print')) {
-      return "The test harness checks standard output. You're calculating the result, but not calling `print()` on it.";
+      return "The tests check stdout. Your code calculates a value, but doesn't call `print()`.";
     }
 
-    return "Run the code and check the terminal output against the expected case. Where does the actual output diverge from what's expected?";
+    return "Where does your output diverge from the test case?";
   }
 
-  // 7. Time and Space Complexity
+  // 8. Time and Space Complexity
   if (q.includes('complexity') || q.includes('big o') || q.includes('runtime') || q.includes('space') || q.includes('time')) {
-    return "Aim for O(n) time with a single pass, keeping extra space minimal. Are you worried about memory or runtime in your current approach?";
+    return "Aim for O(n) time with a single pass, keeping extra space minimal.";
   }
 
-  // 8. Natural conversational fallback
-  return "What part are you thinking through right now?";
+  // 9. Natural conversational fallback
+  return "I'd probably use two pointers starting from both ends here.";
 }
 
 export async function POST(req: NextRequest) {

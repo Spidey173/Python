@@ -203,10 +203,10 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
 
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-extrabold text-[#E6EDF3] tracking-tight">Coding Partner</span>
+              <span className="text-sm font-bold text-[#E6EDF3] tracking-tight">AI</span>
             </div>
-            <span className="text-xs text-[#8B949E] font-medium block">
-              {isThinking ? thinkingPhase || 'Thinking...' : 'AI Coding Partner'}
+            <span className="text-xs text-[#8B949E] font-normal block">
+              {isThinking ? 'Thinking...' : 'Online'}
             </span>
           </div>
         </div>
@@ -240,7 +240,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
                 {isMentor && (
                   <>
                     <Bot className="w-3.5 h-3.5 text-[#58A6FF]" />
-                    <span className="font-bold text-[#58A6FF]">Partner</span>
+                    <span className="font-bold text-[#58A6FF]">AI</span>
                   </>
                 )}
                 {isUser && <span className="font-bold text-[#8B949E]">You</span>}
@@ -300,44 +300,33 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* 3. Subtle Quick Conversational Prompts */}
-      <div className="px-4 py-2 border-t border-[#21262D] bg-[#0E131E]/60 shrink-0">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 select-none scrollbar-none">
+      {/* 3. Subtle Suggested Prompts */}
+      <div className="px-4 py-2 border-t border-[#21262D] bg-[#0E131E]/40 shrink-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 select-none scrollbar-none text-xs">
+          <span className="text-[11px] text-[#6E7681] mr-0.5">Suggested:</span>
           <button
             type="button"
-            onClick={() => onSendCustomPrompt("Give me a small hint without spoiling the solution.")}
+            onClick={() => onSendCustomPrompt("I'm stuck.")}
             disabled={isThinking}
-            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+            className="px-2.5 py-1 rounded-full border border-white/10 bg-[#161B22]/70 hover:bg-[#21262D] hover:border-[#58A6FF]/30 text-xs text-[#C9D1D9] hover:text-white transition-all shrink-0 disabled:opacity-40 cursor-pointer"
           >
-            <span>💡</span>
-            <span>Hint</span>
+            I'm stuck
           </button>
           <button
             type="button"
-            onClick={() => onSendCustomPrompt("Explain what this challenge is asking in plain English.")}
+            onClick={() => onSendCustomPrompt("Can you explain what this problem is asking?")}
             disabled={isThinking}
-            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+            className="px-2.5 py-1 rounded-full border border-white/10 bg-[#161B22]/70 hover:bg-[#21262D] hover:border-[#58A6FF]/30 text-xs text-[#C9D1D9] hover:text-white transition-all shrink-0 disabled:opacity-40 cursor-pointer"
           >
-            <span>👀</span>
-            <span>Explain this</span>
+            Explain the problem
           </button>
           <button
             type="button"
-            onClick={() => onSendCustomPrompt("Let's think through the approach together before writing code.")}
+            onClick={() => onSendCustomPrompt("Is there another way to approach this?")}
             disabled={isThinking}
-            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
+            className="px-2.5 py-1 rounded-full border border-white/10 bg-[#161B22]/70 hover:bg-[#21262D] hover:border-[#58A6FF]/30 text-xs text-[#C9D1D9] hover:text-white transition-all shrink-0 disabled:opacity-40 cursor-pointer"
           >
-            <span>🧠</span>
-            <span>Think with me</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onSendCustomPrompt("Show me a similar example pattern on abstract data without solving this problem.")}
-            disabled={isThinking}
-            className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#161B22]/80 hover:bg-[#21262D] hover:border-[#58A6FF]/40 text-xs text-[#C9D1D9] hover:text-white transition-all flex items-center gap-1.5 shrink-0 disabled:opacity-40 cursor-pointer"
-          >
-            <span>💻</span>
-            <span>Show similar example</span>
+            Show another way
           </button>
         </div>
       </div>
