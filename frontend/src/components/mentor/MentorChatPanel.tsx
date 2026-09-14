@@ -20,9 +20,6 @@ interface MentorChatPanelProps {
   thinkingPhase: string;
   isSolutionUnlocked?: boolean;
   onOpenSolutionVault?: () => void;
-  onRequestHint?: (tier: HintTier) => void;
-  onRequestConcept?: () => void;
-  onRequestExample?: () => void;
   onSendCustomPrompt: (prompt: string) => void;
 }
 
@@ -162,9 +159,6 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
   thinkingPhase,
   isSolutionUnlocked,
   onOpenSolutionVault,
-  onRequestHint,
-  onRequestConcept,
-  onRequestExample,
   onSendCustomPrompt,
 }) => {
   const [inputText, setInputText] = useState('');
@@ -209,10 +203,10 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
 
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-sm font-extrabold text-[#E6EDF3] tracking-tight">Mentor</span>
+              <span className="text-sm font-extrabold text-[#E6EDF3] tracking-tight">Coding Partner</span>
             </div>
             <span className="text-xs text-[#8B949E] font-medium block">
-              {isThinking ? thinkingPhase || 'Thinking...' : 'AI Programming Partner'}
+              {isThinking ? thinkingPhase || 'Thinking...' : 'AI Coding Partner'}
             </span>
           </div>
         </div>
@@ -241,16 +235,12 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
               className={`flex flex-col space-y-1.5 animate-fadeIn ${isUser ? 'items-end' : 'items-start'
                 }`}
             >
-              {/* Sender Name & Mood */}
+              {/* Sender Name */}
               <div className="flex items-center gap-2 text-xs font-mono text-[#8B949E] px-1">
                 {isMentor && (
                   <>
                     <Bot className="w-3.5 h-3.5 text-[#58A6FF]" />
-                    <span className="font-bold text-[#58A6FF]">Mentor</span>
-                    <span>•</span>
-                    <span className="capitalize text-xs text-[#8B949E]">
-                      {msg.mood || 'coaching'}
-                    </span>
+                    <span className="font-bold text-[#58A6FF]">Partner</span>
                   </>
                 )}
                 {isUser && <span className="font-bold text-[#8B949E]">You</span>}
@@ -325,7 +315,7 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
             type="submit"
             disabled={!inputText.trim() || isThinking}
             className="p-3 rounded-xl bg-[#1F6FEB] hover:bg-[#388BFD] text-white disabled:opacity-40 transition-colors shrink-0 shadow-md shadow-[#1F6FEB]/20 cursor-pointer"
-            title="Send to Mentor"
+            title="Send"
           >
             <Send className="w-4.5 h-4.5" />
           </button>

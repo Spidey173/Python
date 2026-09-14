@@ -48,103 +48,6 @@ interface TerminalHistoryEntry {
   timestamp: string;
 }
 
-/**
- * Returns an abstract algorithmic demonstration using generic sample data
- * so that the active challenge solution is never leaked before submission.
- */
-function getConceptualPattern(conceptName: string): string {
-  const c = (conceptName || '').toLowerCase();
-  if (c.includes('pointer') || c.includes('palindrome')) {
-    return `# Conceptual Pattern: Two-Pointer Traversal (Generic Array)
-# Demonstrates comparing elements from both ends towards the center
-items = [10, 20, 30, 20, 10]
-left, right = 0, len(items) - 1
-is_symmetric = True
-
-while left < right:
-    if items[left] != items[right]:
-        is_symmetric = False
-        break
-    left += 1
-    right -= 1
-
-print(f"Symmetric pattern: {is_symmetric}")`;
-  }
-  if (c.includes('count') || c.includes('frequency') || c.includes('hash') || c.includes('map') || c.includes('anagram')) {
-    return `# Conceptual Pattern: Frequency Counting with Dictionary
-# Demonstrates accumulating item counts and querying unique values
-fruits = ["apple", "banana", "apple", "orange", "banana"]
-frequencies = {}
-
-for item in fruits:
-    frequencies[item] = frequencies.get(item, 0) + 1
-
-# Finding items that appear exactly once:
-singles = [k for k, v in frequencies.items() if v == 1]
-print(f"Unique occurrences: {singles}")`;
-  }
-  if (c.includes('stack')) {
-    return `# Conceptual Pattern: Last-In First-Out (Stack Structure)
-# Demonstrates balancing open/close delimiters using a list as a stack
-stack = []
-tokens = ["(", "[", "]", ")"]
-
-for token in tokens:
-    if token in "([":
-        stack.append(token)
-    elif stack:
-        stack.pop()
-
-print(f"Balanced structure: {len(stack) == 0}")`;
-  }
-  if (c.includes('sliding') || c.includes('window')) {
-    return `# Conceptual Pattern: Sliding Window Accumulator
-# Demonstrates updating a fixed window without re-summing from scratch
-numbers = [2, 1, 5, 1, 3, 2]
-window_size = 3
-max_sum = 0
-current_sum = sum(numbers[:window_size])
-
-for i in range(len(numbers) - window_size):
-    current_sum = current_sum - numbers[i] + numbers[i + window_size]
-    max_sum = max(max_sum, current_sum)
-
-print(f"Max window sum: {max_sum}")`;
-  }
-  if (c.includes('binary') || c.includes('search')) {
-    return `# Conceptual Pattern: Binary Search on Ordered Space
-# Demonstrates halving the search space on sorted inputs
-sorted_list = [1, 3, 5, 7, 9, 11, 13]
-target = 7
-low, high = 0, len(sorted_list) - 1
-found_index = -1
-
-while low <= high:
-    mid = (low + high) // 2
-    if sorted_list[mid] == target:
-        found_index = mid
-        break
-    elif sorted_list[mid] < target:
-        low = mid + 1
-    else:
-        high = mid - 1
-
-print(f"Found target index: {found_index}")`;
-  }
-  // Generic fallback
-  return `# Conceptual Algorithmic Pattern (Abstract Demonstration)
-# 1. Prepare and normalize generic data
-raw_collection = ["alpha", "beta", "gamma"]
-filtered = [x.strip().lower() for x in raw_collection if x]
-
-# 2. Accumulate or process
-result_accumulator = []
-for entry in filtered:
-    result_accumulator.append(entry.upper())
-
-# 3. Format final result
-print(result_accumulator)`;
-}
 
 export default function WorkspacePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -359,8 +262,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         // Solution is strictly locked until the user submits code and passes all test suites in this session
         setIsSolutionUnlocked(false);
 
-        // Initialize Mentor with calm partner message
-        const greetingText = `I'm ready to work through "${prob.title || 'this challenge'}" with you. What are you thinking for the approach?`;
+        // Initialize Partner with natural conversational opening
+        const greetingText = "Hey! What's your initial take on this one?";
         setMessages([
           {
             id: 'init-greeting',
@@ -425,89 +328,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     }
   };
 
-  // 5. Progressive Hint Requests
-  const handleRequestHint = (tier: HintTier) => {
-    if (!problem || isThinking) return;
-    const knowledge = getMentorKnowledge(problem);
-    const targetHint = knowledge.hints[tier - 1] || knowledge.hints[0];
 
-    setHintTier(tier);
-    soundFX.playHintDing();
-
-    // Append user request
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userPrompt = tier === 1 ? 'Give me a clue' : 'Give me another clue';
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substring(7),
-        sender: 'user',
-        text: userPrompt,
-        fullText: userPrompt,
-        status: 'done',
-        mood: 'curious',
-        timestamp: timeStr,
-      },
-    ]);
-
-    // Stream Mentor Clue
-    const cleanTitle = targetHint.title.replace(/^Tier\s*\d+:\s*/i, '');
-    const tipText = targetHint.reflectionQuestion ? `\n\n${targetHint.reflectionQuestion}` : '';
-    const mentorNudge = `💡 **${cleanTitle}**\n\n${targetHint.nudge}${tipText}`;
-    setTimeout(() => {
-      streamMentorText(mentorNudge, 'coaching', targetHint.codeSnippet);
-    }, 200);
-  };
-
-  const handleRequestConcept = () => {
-    if (!problem || isThinking) return;
-    const knowledge = getMentorKnowledge(problem);
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substring(7),
-        sender: 'user',
-        text: 'Explain the core concept behind this challenge.',
-        fullText: 'Explain the core concept behind this challenge.',
-        status: 'done',
-        mood: 'curious',
-        timestamp: timeStr,
-      },
-    ]);
-
-    const conceptText = `🧠 Concept: ${knowledge.conceptName}\n\n${knowledge.conceptExplanation}\n\n💡 Interview Note: ${knowledge.interviewTrap}`;
-    setTimeout(() => {
-      streamMentorText(conceptText, 'coaching');
-    }, 200);
-  };
-
-  const handleRequestExample = () => {
-    if (!problem || isThinking) return;
-    const knowledge = getMentorKnowledge(problem);
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substring(7),
-        sender: 'user',
-        text: 'Show me an example pattern without giving the answer.',
-        fullText: 'Show me an example pattern without giving the answer.',
-        status: 'done',
-        mood: 'curious',
-        timestamp: timeStr,
-      },
-    ]);
-
-    const exampleIntro = `Here is an idiomatic structural pattern demonstrating the **${knowledge.conceptName}** principle on abstract sample data. Adapt this general algorithm structure to match your challenge:`;
-    const conceptualSnippet = getConceptualPattern(knowledge.conceptName);
-    setTimeout(() => {
-      streamMentorText(exampleIntro, 'coaching', conceptualSnippet);
-    }, 200);
-  };
 
   const handleSendCustomPrompt = async (prompt: string) => {
     if (!problem || isThinking) return;
@@ -1141,9 +962,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                 thinkingPhase={thinkingPhase}
                 isSolutionUnlocked={isSolutionUnlocked}
                 onOpenSolutionVault={() => setActiveTab('vault')}
-                onRequestHint={handleRequestHint}
-                onRequestConcept={handleRequestConcept}
-                onRequestExample={handleRequestExample}
                 onSendCustomPrompt={handleSendCustomPrompt}
               />
             )}

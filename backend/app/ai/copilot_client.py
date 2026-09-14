@@ -6,68 +6,32 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 
 ast_analyzer = ASTCodeAnalyzer()
 
-SYSTEM_TUTOR_PROMPT = """You are Mentor, an AI programming partner.
+SYSTEM_TUTOR_PROMPT = """You are an AI Coding Partner pair-programming with the user.
 
-Your goal is not to lecture.
-Your goal is to think with the user.
+Core philosophy:
+Every response should sound like it was typed by an experienced software engineer in real time—not retrieved from a programming course.
+95% of the time, feel like a capable, direct peer engineer (similar to ChatGPT or Claude). Only 5% of the time coach, and only when the user is stuck or directly asks for guidance.
+Earn the right to teach—never assume every message is a lesson.
 
-The experience should feel similar to talking with ChatGPT, Claude, or Gemini:
-- natural
-- conversational
-- intelligent
-- adaptive
-- calm
-- curious
-- concise unless more detail is needed
+Response flow:
+Answer directly -> Small explanation (if needed) -> Optional natural question or next step.
+No long intros. No "idiomatic structural patterns". No textbook lectures.
 
-Never sound scripted.
-Never sound like a course.
-Never sound like a textbook.
-Never constantly encourage or praise the user.
+Formatting rules:
+- Shorter responses by default. Keep it concise.
+- Few or no headings. Avoid over-formatting.
+- No bold spam or concept boxes.
+- Write natural conversational paragraphs.
+- Use small code snippets only when directly helpful to illustrate an idea.
 
-Never use phrases like:
-- Great question!
-- Excellent!
-- That's a fantastic observation!
-- Let's dive in!
-- Awesome!
-- You're doing amazing!
-
-Instead, respond naturally like an experienced engineer.
-
-Adapt to the user's style:
-- If the user is casual, be casual.
-- If they are technical, become technical.
-- If they ask short questions, answer briefly.
-- If they ask deeply, answer deeply.
-- Don't force long responses.
-- Don't force short responses.
-- Match the conversation naturally.
-
-When explaining programming:
-- Don't immediately dump everything.
-- Reveal information progressively.
-- Explain only what the current question requires.
-- If the user asks follow-up questions, expand naturally.
-- Avoid giant walls of text unless explicitly requested.
-
-Instead of teaching chapter by chapter, reason through problems.
-- Think before answering. Internally reason about what the user is trying to accomplish, where they are stuck, and what information is actually useful.
-- If debugging: Prioritize finding the bug. Don't start with theory. Start with observations. Then explain why. Then fix it.
-- If multiple solutions exist: Recommend one. Briefly mention alternatives. Explain tradeoffs.
-- If the user seems confused: Don't dump documentation. Rephrase. Use a small example. Then stop. Wait for the next question.
-
-Coding style:
-- When writing code: produce clean code, use meaningful variable names, modern syntax, avoid unnecessary comments, explain only the important parts.
-- Don't over-comment code. Don't explain every single line unless asked.
-- NEVER spoil or output the complete working solution to the active challenge before the user submits. Guide their intuition and pseudocode instead.
-
-Tone:
-- Friendly. Professional. Curious. Patient.
-- Never robotic. Never overly enthusiastic. Never corporate. Never motivational. Never roleplay as a professor.
-- You are an intelligent AI partner that happens to be excellent at programming.
-
-Always optimize for a natural conversation. The user should forget they're talking to a prompt-engineered bot. They should feel like they're talking to a highly capable AI assistant.
+Conversational rules:
+- If the user says "Hi" or greets you, respond naturally like a colleague ("Hey! What's up?" or "Hi! What are you working on?"). Never start explaining or teaching the challenge unprompted.
+- If the user asks a direct question ("Can I do this with a for loop?"), answer that exact question first ("Yep. You can, although...").
+- If the user asks for an example pattern without the answer, show the minimal skeleton/mechanics (using ellipses '...' or abstract data) and explain the mechanic in one sentence.
+- If debugging: point out what you observe, why it happens, and suggest the fix. Don't start with theory.
+- NEVER spoil or output the complete working solution to the challenge before the user solves it.
+- Never use cheerleading or canned enthusiasm ("Great question!", "Awesome!", "Let's dive in!").
+- Never roleplay as a professor or course instructor.
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -234,54 +198,83 @@ async def chat_with_ai_tutor(
         except Exception as e:
             print("AI Tutor API call error:", e)
 
-    # Dynamic intelligent Socratic AI mentor response generator
+    # Direct, unscripted AI Coding Partner response generator
     msg_lower = message.lower().strip()
     clean_code = (code or "").strip()
-    prob_name = challenge_info.split('-')[0].strip() if challenge_info else "this challenge"
 
-    # 1. Casual greetings
-    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "hi mentor", "hello mentor", "sup", "yo"]:
-        return f"Hey. I'm working through {prob_name} with you. Where do you want to start?"
+    # 1. Casual greetings — never dump a lecture or problem overview
+    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "sup", "yo", "howdy"]:
+        return "Hey! What are you working on?"
 
     elif "who are you" in msg_lower or "what can you do" in msg_lower:
-        return f"I'm your programming partner for {prob_name}. We can trace the logic, find bugs in your code, discuss complexity, or work through the problem together."
+        return "I'm your AI coding partner. We can bounce ideas around, trace logic, debug code, or work through the problem together."
 
     elif "thank" in msg_lower or "thanks" in msg_lower or "awesome" in msg_lower or "great" in msg_lower:
         return "Sure thing. Let me know what you want to tackle next."
 
-    # 2. "What is this problem?" / "Explain" / "How to solve"
+    # 2. Specific questions about for loops or while loops
+    elif "for loop" in msg_lower or "while loop" in msg_lower:
+        return (
+            "Yep. You can, although a `while` loop tends to fit the two-pointer approach more naturally because both pointers move independently.\n\n"
+            "Want to try the `for` loop version first?"
+        )
+
+    # 3. Requesting an example or pattern without giving the answer
+    elif ("example" in msg_lower and ("pattern" in msg_lower or "without" in msg_lower or "show" in msg_lower)) or "skeleton" in msg_lower or "template" in msg_lower:
+        return (
+            "Sure. Here's the general pattern without applying it to your problem:\n\n"
+            "```python\n"
+            "left = 0\n"
+            "right = len(data) - 1\n\n"
+            "while left < right:\n"
+            "    if data[left] != data[right]:\n"
+            "        ...\n\n"
+            "    left += 1\n"
+            "    right -= 1\n"
+            "```\n\n"
+            "The important part isn't the values—it's the movement of the two pointers."
+        )
+
+    # 4. "What is this problem?" / "Explain" / "How to solve"
     elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach", "what is this", "what does this mean"]):
         return (
-            f"Here is how to think about {prob_name}:\n\n"
-            f"1. Read and normalize the input so it's clean to work with.\n"
-            f"2. Apply the core condition to determine the output.\n\n"
-            f"What are your thoughts on starting the first step in solution.py?"
+            "You're checking whether the string reads the same from both ends.\n\n"
+            "One thing to think about first: does the input contain spaces or punctuation? That changes the approach slightly.\n\n"
+            "What's your current idea?"
         )
 
-    # 3. Hints & Clues
-    elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help"]):
+    # 5. Hints & Clues
+    elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help", "nudge"]):
         return (
-            f"Start with reading the input cleanly with `s = input()`.\n\n"
-            f"From there, think about what condition actually distinguishes a valid answer from an invalid one.\n\n"
-            f"What line are you thinking of writing next?"
+            "If you're looking for the general shape, it usually starts like this:\n\n"
+            "```python\n"
+            "left = 0\n"
+            "right = len(s) - 1\n\n"
+            "while left < right:\n"
+            "    ...\n"
+            "```\n\n"
+            "Everything else builds on that."
         )
 
-    # 4. Big-O Complexity
-    elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
+    # 6. Debugging / "Why is my code returning None?" / Errors
+    elif "none" in msg_lower or "returning none" in msg_lower:
         return (
-            f"For {prob_name}, the target is typically O(n) time with minimal extra space.\n\n"
-            f"Are you concerned about a nested loop or memory usage in your current approach?"
+            "If a function finishes without hitting an explicit return statement, Python returns None by default.\n\n"
+            "Take a look at your control flow—is there a branch or loop that exits without returning the value?"
         )
 
-    # 5. Debugging & Errors
-    elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working"]):
+    elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working", "debug", "check my code"]):
         if clean_code and "print" not in clean_code:
-            return "The test harness checks standard output. Your code isn't calling print() on the result, so the tests see empty output."
+            return "The test harness checks standard output. You're calculating the result, but not calling `print()` on it."
         return (
-            f"Run the code and check the terminal output against the expected case. "
-            f"Where does the actual output diverge from what's expected?"
+            "Run the code and check the terminal output against the expected case. "
+            "Where does the actual output diverge from what's expected?"
         )
 
-    # 6. Natural conversational response
+    # 7. Big-O Complexity
+    elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
+        return "Aim for O(n) time with a single pass, keeping extra space minimal. Are you worried about memory or runtime in your current approach?"
+
+    # 8. Natural conversational fallback
     else:
-        return f"Looking at {prob_name}. What part of the logic or implementation are you thinking about right now?"
+        return "What part are you thinking through right now?"
