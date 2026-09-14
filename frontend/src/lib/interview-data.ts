@@ -587,203 +587,200 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Reverse Words in a Sentence in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Reverse Words in a Sentence using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Basic Solution & Steps",
+        "question": "1. Explain your solution.",
+        "whatInterviewerChecks": "Word extraction, list reversal, string join operations, and algorithmic flow.",
+        "bestReplyScript": "My approach is to extract each word from the sentence and then rebuild the sentence in reverse order.\n\nThe steps are:\n1. Identify all the words in the sentence.\n2. Store them in a list.\n3. Reverse the order of the list.\n4. Join the words back into a single string with spaces.\n\nFor example:\nInput: \"The sky is blue\"\nWords: [\"The\", \"sky\", \"is\", \"blue\"]\nReverse: [\"blue\", \"is\", \"sky\", \"The\"]\nOutput: \"blue is sky The\"\n\nThis approach is simple, easy to understand, and works efficiently for most cases.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
+          "Extract words into list",
+          "Reverse word list order",
+          "Join words with space delimiter",
+          "O(n) time & O(n) space"
         ],
-        "codeSnippet": "def solve_2(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+        "codeSnippet": "def reverseWords(s: str) -> str:\n    words = s.split()\n    words.reverse()\n    return ' '.join(words)"
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Reverse Words in a Sentence?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Whitespace Handling",
+        "question": "2. How do you handle multiple consecutive spaces?",
+        "whatInterviewerChecks": "Behavior of Python's split() without arguments vs explicit space delimiters.",
+        "bestReplyScript": "If I use Python's split() without arguments, it automatically ignores extra spaces, tabs, and newlines.\n\nExample:\nInput: \"  hello    world   \"\nsplit() -> [\"hello\", \"world\"]\nAfter reversing and joining: \"world hello\"\n\nIf I need to preserve the exact spacing, I would use a manual traversal approach instead of split().",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
+          "split() automatically handles extra spaces",
+          "Strips leading and trailing spaces",
+          "Ignores internal consecutive spaces",
+          "Reverses sanitized tokens"
         ],
-        "codeSnippet": "# Complexity Analysis for Reverse Words in a Sentence:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+        "codeSnippet": "s = \"  hello    world   \"\nwords = s.split() # ['hello', 'world']\nresult = ' '.join(words[::-1]) # 'world hello'"
       },
       {
         "id": "q3",
         "category": "No Built-ins Follow-up",
-        "question": "How do you implement Reverse Words in a Sentence if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "question": "3. Can you solve it without using split()?",
+        "whatInterviewerChecks": "Manual string traversal, state machines, and word boundary extraction.",
+        "bestReplyScript": "Yes. Instead of using split(), I can traverse the string character by character.\n\nThe process is:\n1. Skip leading spaces.\n2. Find the beginning of a word.\n3. Continue until reaching a space.\n4. Store the word.\n5. Repeat until the end of the string.\n6. Reverse the collected words.\n7. Join them.\n\nThis approach demonstrates understanding of how strings are processed internally without relying entirely on built-in functions.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
+          "Manual character traversal",
+          "Track word boundaries",
+          "Collect words in a list",
+          "Reverse and join manually"
         ],
-        "codeSnippet": "def solve_manual_2(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+        "codeSnippet": "def reverse_words_manual(s: str) -> str:\n    words = []\n    n = len(s)\n    i = 0\n    while i < n:\n        while i < n and s[i] == ' ':\n            i += 1\n        if i >= n:\n            break\n        j = i\n        while j < n and s[j] != ' ':\n            j += 1\n        words.append(s[i:j])\n        i = j\n    return ' '.join(reversed(words))"
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Complexity Analysis",
+        "question": "4. What's the complexity?",
+        "whatInterviewerChecks": "Asymptotic time and space complexity evaluation.",
+        "bestReplyScript": "Each character is visited only once while extracting words. Reversing the list and joining the words also takes linear time.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the string.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Time Complexity: O(n)",
+          "Space Complexity: O(n)",
+          "Linear single pass extraction",
+          "Auxiliary list takes O(n) memory"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Whitespace Preservation Variant",
+        "question": "5. How would you preserve leading/trailing spaces?",
+        "whatInterviewerChecks": "Custom parsing logic when default string stripping cannot be used.",
+        "bestReplyScript": "Using default split() removes leading, trailing, and extra spaces automatically.\n\nIf the requirement is to preserve original spacing, I would avoid default split(). Instead, I would process the string manually by identifying both words and space blocks as tokens, then reconstruct the sentence while maintaining their relative placement.\n\nThis requires additional token tracking logic but preserves formatting exactly.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Avoid default split()",
+          "Tokenize both words and space blocks",
+          "Reconstruct preserving layout",
+          "Requires custom parsing"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "In-Place Processing Variant",
+        "question": "6. How would you reverse words in-place?",
+        "whatInterviewerChecks": "Two-step in-place reversal: reverse entire string, then reverse each word.",
+        "bestReplyScript": "Strings in Python are immutable, so they cannot be modified in-place.\n\nHowever, if the input were a mutable character array, I would:\n1. Reverse the entire array.\n2. Reverse each individual word in-place using two pointers.\n\nExample:\nOriginal: \"The sky\"\nReverse whole string: \"yks ehT\"\nReverse each word: \"sky The\"\n\nThis achieves the result using O(1) extra space.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
+          "Mutable char array requirement",
+          "Step 1: Reverse whole array",
+          "Step 2: Reverse each word",
+          "Achieves O(1) auxiliary space"
         ],
-        "codeSnippet": "# Edge case test suite for Reverse Words in a Sentence:\nassert solve_2([]) == 0\nassert solve_2([5]) == 5\nassert solve_2([-1, -5, -2]) != 0\nassert solve_2([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+        "codeSnippet": "def reverseWords_in_place(a: list) -> None:\n    # 1. Reverse entire list\n    a.reverse()\n    # 2. Reverse each word individually\n    n = len(a)\n    start = 0\n    for end in range(n + 1):\n        if end == n or a[end] == ' ':\n            # Reverse slice a[start:end] in-place\n            l, r = start, end - 1\n            while l < r:\n                a[l], a[r] = a[r], a[l]\n                l += 1; r -= 1\n            start = end + 1"
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Punctuation Rules",
+        "question": "7. What if punctuation must remain attached?",
+        "whatInterviewerChecks": "Token boundary definition for non-alphanumeric trailing symbols.",
+        "bestReplyScript": "If punctuation belongs to the word, I treat it as part of the word token.\n\nExample:\nInput: \"Hello, world!\"\nOutput: \"world! Hello,\"\n\nThe comma remains attached to \"Hello\" and the exclamation mark remains attached to \"world\". Only the positions of the word tokens change.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Punctuation included in word token",
+          "Word boundaries defined by whitespace",
+          "Relative word-internal order preserved",
+          "Token positions reversed"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Unicode & Internationalization",
+        "question": "8. How do you handle Unicode whitespace?",
+        "whatInterviewerChecks": "Understanding Python's Unicode-aware split() for tabs, newlines, and non-breaking spaces.",
+        "bestReplyScript": "Unicode includes different types of whitespace besides the normal ASCII space character.\n\nFortunately, Python's split() without arguments automatically handles Unicode whitespace such as tabs (\\t), newlines (\\n), carriage returns (\\r), and non-breaking spaces.\n\nIf implementing parsing manually, I would use char.isspace() instead of checking only for ' '.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Python split() is Unicode-aware",
+          "Handles \\t, \\n, \\r, and Unicode spaces",
+          "Use char.isspace() for manual parsing",
+          "Ensures cross-language compatibility"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Large-Scale & Memory Optimization",
+        "question": "9. How would you process a very large string?",
+        "whatInterviewerChecks": "Memory optimization, streaming, chunking, and line-by-line processing.",
+        "bestReplyScript": "For very large inputs, memory usage becomes important. Instead of storing the entire string multiple times, I would:\n- Scan the string once,\n- Extract words efficiently,\n- Avoid unnecessary string copies,\n- Process data in streaming chunks if reading from a file.\n\nThe goal is to minimize additional RAM allocations while maintaining linear O(n) time complexity.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Single-pass scanning",
+          "Streaming / chunked processing",
+          "Minimize heap string copies",
+          "Maintain O(n) linear time"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Conceptual Distinction",
+        "question": "10. What's the difference between reversing words and reversing characters?",
+        "whatInterviewerChecks": "Understanding word token order vs character sequence inversion.",
+        "bestReplyScript": "Reversing words changes the order of the word tokens while keeping each word's characters unchanged.\nExample:\nInput: \"I love Python\"\nOutput: \"Python love I\"\n\nReversing characters reverses every individual character in the entire string.\nExample:\nInput: \"I love Python\"\nOutput: \"nohtyP evol I\"\n\nThese are two completely different operations.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Reversing words: word order inverted, internal letters unchanged",
+          "Reversing characters: all letters inverted",
+          "Distinct algorithmic targets"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Edge Case Handling",
+        "question": "11. What edge cases did you consider?",
+        "whatInterviewerChecks": "Empty strings, single words, leading/trailing/multiple spaces, space-only strings.",
+        "bestReplyScript": "I considered the following edge cases:\n1. Empty string (\"\") -> \"\"\n2. Single word (\"Python\") -> \"Python\"\n3. Multiple spaces (\"hello     world\") -> \"world hello\"\n4. Leading spaces (\"   hello world\") -> \"world hello\"\n5. Trailing spaces (\"hello world    \") -> \"world hello\"\n6. Only spaces (\"      \") -> \"\"\n\nTesting these cases ensures the algorithm behaves correctly under all input conditions.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Empty string & single word",
+          "Multiple consecutive spaces",
+          "Leading & trailing spaces",
+          "Spaces-only input -> empty output"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Testing & Quality Assurance",
+        "question": "12. How would you test your solution?",
+        "whatInterviewerChecks": "Structured unit testing covering typical and boundary scenarios.",
+        "bestReplyScript": "I would create test cases for different scenarios:\n- Normal sentence: \"The sky is blue\" -> \"blue is sky The\"\n- Single word: \"hello\" -> \"hello\"\n- Empty string: \"\" -> \"\"\n- Extra spaces: \" hello    world \" -> \"world hello\"\n- Punctuation: \"Hello, world!\" -> \"world! Hello,\"\n\nTesting across multiple categories improves confidence in the solution's correctness.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Normal multi-word sentence",
+          "Single word & empty string",
+          "Extra whitespace stripping",
+          "Punctuation preservation"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Two-Pointer Method",
+        "question": "13. Can this be solved using two pointers?",
+        "whatInterviewerChecks": "Two-pointer index scanning on mutable arrays.",
+        "bestReplyScript": "Yes. If the string is represented as a mutable character array, I can use the two-pointer technique:\n1. Reverse the entire array using two pointers at the ends.\n2. Use two pointers to locate the start and end of each word.\n3. Reverse each word individually using two pointers.\n\nThis avoids using extra space and is commonly asked in interviews for in-place string manipulation.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Two pointers for full array reversal",
+          "Two pointers for word boundaries",
+          "In-place word reversal",
+          "O(1) auxiliary space"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Tab & Whitespace Delimiters",
+        "question": "14. What if words are separated by tabs?",
+        "whatInterviewerChecks": "Handling \\t and general whitespace in Python.",
+        "bestReplyScript": "Python's split() without arguments automatically treats tabs (\\t) as whitespace delimiters.\nExample:\nInput: \"Hello\\tWorld\"\nOutput: \"World Hello\"\n\nIf implementing parsing manually, I must ensure that tabs (\\t), newlines (\\n), and other whitespace characters are treated as valid separators alongside spaces.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "split() treats \\t as whitespace",
+          "Handles mixed spaces and tabs",
+          "Manual parsing must check char.isspace()"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Real-World Applications",
+        "question": "15. Where is this useful in real-world systems?",
+        "whatInterviewerChecks": "Practical engineering applications of text parsing and reversal algorithms.",
+        "bestReplyScript": "Reversing words and text tokenization techniques are widely used in:\n- Text editors for formatting and line restructuring.\n- Natural Language Processing (NLP) during text preprocessing.\n- Search engines when analyzing and reordering query terms.\n- Document formatting and text transformation tools.\n- Data cleaning pipelines where text needs to be normalized before ingestion.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Text editor formatting",
+          "NLP text preprocessing",
+          "Search engine query analysis",
+          "Data cleaning pipelines"
+        ]
       }
     ],
     "mistakes": [
@@ -977,203 +974,192 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for First Non-Repeating Character in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve First Non-Repeating Character using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithmic Steps & Workflow",
+        "question": "1. Explain your algorithm.",
+        "whatInterviewerChecks": "Two-pass hash map algorithm, frequency counting, and string traversal.",
+        "bestReplyScript": "My algorithm uses two passes through the string.\n\nStep 1: Count the frequency of every character using a hash map (dictionary).\n\nStep 2: Traverse the string again and return the first character whose frequency is 1.\n\nExample:\nInput: \"leetcode\"\n\nFrequency Map:\nl -> 1\ne -> 3\nt -> 1\nc -> 1\no -> 1\nd -> 1\n\nFirst character with frequency 1: 'l'\n\nUsing two passes makes the solution simple, readable, and efficient.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
+          "Two-pass algorithm",
+          "Pass 1: Frequency map",
+          "Pass 2: Find first freq 1",
+          "O(n) time & O(n) space"
         ],
-        "codeSnippet": "def solve_3(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+        "codeSnippet": "def firstUniqChar(s: str) -> int:\n    from collections import Counter\n    counts = Counter(s)\n    for idx, ch in enumerate(s):\n        if counts[ch] == 1:\n            return idx\n    return -1"
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of First Non-Repeating Character?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Data Structure Justification",
+        "question": "2. Why did you use a hash map?",
+        "whatInterviewerChecks": "Understanding average O(1) hash table lookup/insert vs O(n²) nested loop searches.",
+        "bestReplyScript": "A hash map allows me to store the frequency of each character efficiently.\n\nFor every character:\n- If it's already in the map, increment its count.\n- Otherwise, initialize its count to 1.\n\nHash map operations (insert, lookup, update) take O(1) average time, making the overall algorithm O(n).\n\nWithout a hash map, I would have to count occurrences repeatedly using nested loops, leading to O(n²) time complexity.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for First Non-Repeating Character:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "O(1) average time for hash lookup/insert",
+          "Avoids O(n²) nested scanning",
+          "O(n) total time complexity"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement First Non-Repeating Character if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "One-Pass Limitations",
+        "question": "3. Can this be solved in one pass?",
+        "whatInterviewerChecks": "Understanding future character uncertainty in single-pass string processing.",
+        "bestReplyScript": "Not in the general case. When reading a character for the first time, I don't yet know whether it will appear again later in the string.\n\nFor example, given input \"aab\", when I read the first 'a', it looks unique, but another 'a' appears later.\n\nTherefore, I need to process the complete string before confidently identifying the first non-repeating character.\n\nSome advanced streaming solutions use a queue along with a hash map, but they still maintain frequency information as characters arrive.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_3(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Future character occurrence unknown",
+          "Must inspect whole input before final decision",
+          "Queue + Hash Map for streaming inputs"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Complexity Analysis",
+        "question": "4. What's the complexity?",
+        "whatInterviewerChecks": "Time and space complexity bounds.",
+        "bestReplyScript": "The string is traversed twice:\n- First pass -> Build the frequency map.\n- Second pass -> Find the first unique character.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the string.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Time Complexity: O(n)",
+          "Space Complexity: O(n)",
+          "Two linear passes",
+          "O(n) max hash map entries"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Unicode Compatibility",
+        "question": "5. How would you handle Unicode?",
+        "whatInterviewerChecks": "Python 3 dict Unicode key support.",
+        "bestReplyScript": "Python dictionaries support Unicode characters naturally.\n\nFor example:\n\"नमस्ते\"\n\"こんにちは\"\n\"😀😃😀\"\n\nEach Unicode character becomes a key in the dictionary, so the same algorithm works without modification. The only difference is that the character set is much larger than the English alphabet.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Python dict handles Unicode keys seamlessly",
+          "Works on non-English scripts & emojis",
+          "Zero algorithm modifications required"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Streaming Data Design",
+        "question": "6. What if the string is streamed?",
+        "whatInterviewerChecks": "Queue + Hash Map pattern for real-time stream processing.",
+        "bestReplyScript": "In a stream, I cannot revisit earlier characters easily.\n\nA good approach is to use:\n- A hash map to store frequencies.\n- A queue to store characters in the order they appear.\n\nWhenever a new character arrives:\n1. Update its frequency in the map.\n2. Add it to the queue if it's the first occurrence.\n3. Remove characters from the front of the queue while their frequency is greater than 1.\n\nThe front of the queue always represents the first non-repeating character seen so far.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
+          "Queue + Hash Map combination",
+          "Push new chars, pop non-uniques from head",
+          "O(1) time per stream item",
+          "Front of queue is current answer"
         ],
-        "codeSnippet": "# Edge case test suite for First Non-Repeating Character:\nassert solve_3([]) == 0\nassert solve_3([5]) == 5\nassert solve_3([-1, -5, -2]) != 0\nassert solve_3([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+        "codeSnippet": "from collections import deque, Counter\n\nclass FirstUniqueStream:\n    def __init__(self):\n        self.counts = Counter()\n        self.q = deque()\n\n    def add(self, ch: str):\n        self.counts[ch] += 1\n        if self.counts[ch] == 1:\n            self.q.append(ch)\n        while self.q and self.counts[self.q[0]] > 1:\n            self.q.popleft()\n\n    def getFirstUnique(self) -> str:\n        return self.q[0] if self.q else None"
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Return Value Variant",
+        "question": "7. How would you return the character instead of the index?",
+        "whatInterviewerChecks": "Adapting function signature and return values.",
+        "bestReplyScript": "Instead of returning the index position, I simply return the character itself.\n\nExample:\nInput: \"leetcode\" -> Output: 'l'\nInput: \"aabb\" -> Output: None\n\nThe overall algorithm remains exactly the same; only the final return statement changes.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Return char instead of int index",
+          "Return None if no unique char exists",
+          "Core 2-pass logic remains unchanged"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "No Unique Character Case",
+        "question": "8. What happens if every character repeats?",
+        "whatInterviewerChecks": "Handling edge case when no unique character exists.",
+        "bestReplyScript": "If every character appears more than once, then there is no non-repeating character.\n\nExample:\nInput: \"aabbcc\"\n\nEvery frequency is greater than 1. In this case, I would return None, -1, or an empty string depending on the problem requirements.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Check for empty traversal",
+          "Return fallback value (None / -1 / '')",
+          "Explicit edge handling"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Memory vs Speed Trade-off",
+        "question": "9. Can you avoid extra memory?",
+        "whatInterviewerChecks": "Understanding O(1) space vs O(n²) time trade-off.",
+        "bestReplyScript": "Yes, but it comes at the cost of performance.\n\nWithout extra memory, I would:\n1. Pick each character one by one.\n2. Count its occurrences by scanning the entire string.\n3. Return the first character whose count is 1.\n\nThis reduces space complexity to O(1) but increases time complexity to O(n²). For large inputs, using a hash map is much better.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Nested scanning = O(1) space",
+          "O(n²) time penalty",
+          "Hash map preferred for speed"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Fixed Alphabet Optimization",
+        "question": "10. How would you optimize for only lowercase letters?",
+        "whatInterviewerChecks": "Fixed-size array [26] optimization.",
+        "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can replace the hash map with a fixed-size array of 26 integers.\n\nMapping: ord(ch) - ord('a') maps to indices 0..25.\n\nThis provides:\n- Constant O(1) space (26 integers max).\n- Faster array lookup than a hash map.\n- Simpler memory layout.\n\nTime complexity remains O(n).",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
+          "Array size 26 for 'a'-'z'",
+          "ord(ch) - ord('a') index mapping",
+          "Constant O(1) space limit",
+          "Faster memory access"
         ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+        "codeSnippet": "def firstUniqChar_array(s: str) -> int:\n    counts = [0] * 26\n    for ch in s:\n        counts[ord(ch) - ord('a')] += 1\n    for idx, ch in enumerate(s):\n        if counts[ord(ch) - ord('a')] == 1:\n            return idx\n    return -1"
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Data Structure Selection",
+        "question": "11. Which data structure fits best?",
+        "whatInterviewerChecks": "Matching data structure to constraints (General, Fixed Alphabet, Streaming).",
+        "bestReplyScript": "The best choice depends on the input scenario:\n- Hash Map -> General-purpose solution for any character set.\n- Fixed Array [26] -> Best when the character set is strictly fixed (e.g. lowercase English letters).\n- Queue + Hash Map -> Best for real-time streaming data.\n\nFor general technical interviews, I choose a hash map because it is efficient, simple, and handles all character sets.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Hash Map: general purpose",
+          "Array[26]: fixed alphabet",
+          "Queue + Hash Map: streaming data"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Edge Case Matrix",
+        "question": "12. What edge cases exist?",
+        "whatInterviewerChecks": "Testing empty strings, single chars, all repeats, first/last char unique.",
+        "bestReplyScript": "I would test the following cases:\n1. Empty string (\"\") -> None\n2. Single character (\"a\") -> 'a'\n3. All repeating (\"aabb\") -> None\n4. First character unique (\"leetcode\") -> 'l'\n5. Last character unique (\"aabbc\") -> 'c'\n\nTesting these cases ensures the algorithm handles all possible scenarios.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Empty string & single char",
+          "All repeating characters",
+          "First vs Last character unique"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Testing Suite",
+        "question": "13. How would you test this?",
+        "whatInterviewerChecks": "QA table of test cases.",
+        "bestReplyScript": "I would create test cases covering different situations:\n- \"leetcode\" -> 'l'\n- \"loveleetcode\" -> 'v'\n- \"aabb\" -> None\n- \"a\" -> 'a'\n- \"\" -> None\n- \"abcabcde\" -> 'd'\n\nTesting normal, edge, and boundary cases increases confidence in the solution.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Normal strings ('leetcode')",
+          "Overlapping repeats ('loveleetcode')",
+          "All repeats ('aabb')",
+          "Boundary cases ('a', '')"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Common Pitfalls",
+        "question": "14. What common mistakes occur?",
+        "whatInterviewerChecks": "Awareness of order preservation and frequency bugs.",
+        "bestReplyScript": "Some common mistakes include:\n- Returning the character with the smallest frequency instead of the FIRST non-repeating character in order.\n- Forgetting that order matters (iterating over hash keys instead of the original string).\n- Returning the wrong index or char.\n- Not handling empty strings.\n- Using nested loops resulting in O(n²) time.\n- Forgetting to return a fallback value when no unique character exists.\n\nA second traversal of the original string guarantees order preservation.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Iterating over hash map instead of original string loses order",
+          "Nested loops -> O(n²)",
+          "Missing fallback return"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Real-World Applications",
+        "question": "15. Where is frequency counting used in practice?",
+        "whatInterviewerChecks": "Engineering applications of hash map frequency counting.",
+        "bestReplyScript": "Frequency counting is widely used in software development:\n- Word frequency analysis in search engines.\n- Text analytics for finding common words.\n- Log analysis to identify frequent error events.\n- Data compression algorithms like Huffman Coding.\n- Fraud detection by identifying unusual activity patterns.\n- Character counting in anagram and string-matching problems.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Search engine word analysis",
+          "Huffman coding data compression",
+          "Log & fraud event detection",
+          "Anagram & text analytics"
+        ]
       }
     ],
     "mistakes": [
@@ -1367,203 +1353,196 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Valid Anagram in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Valid Anagram using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Core Approach",
+        "question": "1. Explain your approach.",
+        "whatInterviewerChecks": "Core algorithmic intuition, step-by-step problem breakdown, and clarity.",
+        "bestReplyScript": "My approach is to compare the frequency of every character in both strings.\n\nThe steps are:\n1. If the lengths of the two strings are different, return False immediately.\n2. Count the frequency of each character in the first string using a hash map.\n3. Count the frequency of each character in the second string.\n4. Compare the two frequency maps.\n5. If they are identical, the strings are anagrams; otherwise, they are not.\n\nExample:\nInput:\ns = \"listen\"\nt = \"silent\"\n\nFrequency Map:\nl → 1\ni → 1\ns → 1\nt → 1\ne → 1\nn → 1\n\nBoth maps are identical.\n\nOutput:\nTrue\n\nThis approach is efficient, easy to understand, and works for any character set.\n\nComplexity\n• Time: O(n)\n• Space: O(n)",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_4(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "Check length mismatch first for O(1) early exit",
+          "Build frequency map using hash table/dict",
+          "Compare frequency counts between strings",
+          "O(n) time and O(n) space complexity"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Valid Anagram?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Data Structure Rationale",
+        "question": "2. Why use a frequency dictionary?",
+        "whatInterviewerChecks": "Data structure choice and understanding of hash map lookup/update efficiency.",
+        "bestReplyScript": "A frequency dictionary helps me count how many times each character appears.\n\nInstead of comparing every character repeatedly, I simply compare their frequencies.\n\nFor example:\n\nlisten\n\nl → 1\ni → 1\ns → 1\nt → 1\ne → 1\nn → 1\n\nsilent\n\ns → 1\ni → 1\nl → 1\ne → 1\nn → 1\nt → 1\n\nSince every character has the same count, the strings are anagrams.\n\nUsing a dictionary makes counting very efficient because lookup and update operations are O(1) on average.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Valid Anagram:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "Eliminates nested O(n²) comparison loops",
+          "O(1) average hash map lookup and insert",
+          "Simple key-value frequency matching",
+          "Scales well across diverse character sets"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Valid Anagram if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Alternative Approaches",
+        "question": "3. Can you solve it without sorting?",
+        "whatInterviewerChecks": "Trade-offs between sorting and frequency hash maps.",
+        "bestReplyScript": "Yes.\n\nSorting is one approach, but I prefer using a frequency dictionary because it is more efficient.\n\nThere are two common solutions:\n\nUsing Sorting\n• Sort both strings.\n• Compare the sorted strings.\n\nUsing a Hash Map\n• Count character frequencies.\n• Compare the counts.\n\nThe hash map approach avoids sorting and achieves linear time complexity.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_4(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Sorting requires O(n log n) time complexity",
+          "Hash map achieves optimal O(n) linear time",
+          "Avoids modifying or cloning input strings",
+          "Standard interview follow-up trade-off"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Algorithmic Trade-offs",
+        "question": "4. Compare sorting vs hashing.",
+        "whatInterviewerChecks": "Ability to evaluate time/space trade-offs structured in tabular format.",
+        "bestReplyScript": "Both approaches work, but they have different trade-offs.\n\nMethod | Time | Space | Advantages\nSorting | O(n log n) | O(1) or O(n) | Simple to implement\nHash Map | O(n) | O(n) | Faster for large inputs\n\nFor interviews, I usually choose the hash map approach because it has better time complexity.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Sorting: O(n log n) time, potentially O(1) auxiliary space",
+          "Hashing: O(n) linear time, O(n) auxiliary space",
+          "Hashing scales better for large input sizes",
+          "Sorting can be simpler for small in-place array scenarios"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Complexity Proof",
+        "question": "5. What's the complexity?",
+        "whatInterviewerChecks": "Asymptotic operation counting.",
+        "bestReplyScript": "Each character is processed once.\n\n• Building the frequency map takes O(n).\n• Comparing the maps also takes O(n).\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nwhere n is the length of the string.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Time: O(n) single or double pass",
+          "Space: O(n) or O(k) bounded by alphabet size k",
+          "n represents the length of the string"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Unicode & Encoding",
+        "question": "6. How would Unicode affect your solution?",
+        "whatInterviewerChecks": "Understanding of character encodings, UTF-8/UTF-16, and Python dict behavior.",
+        "bestReplyScript": "The algorithm itself does not change.\n\nPython dictionaries support Unicode characters naturally.\n\nExample:\n\"नमस्ते\"\n\"こんにちは\"\n\"résumé\"\n\nEach Unicode character is treated as a separate key in the dictionary.\n\nThe only difference is that there are more possible characters compared to the English alphabet.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Valid Anagram:\nassert solve_4([]) == 0\nassert solve_4([5]) == 5\nassert solve_4([-1, -5, -2]) != 0\nassert solve_4([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Python 3 strings natively support full Unicode range",
+          "Dict hash map keys handle arbitrary Unicode codepoints",
+          "Space bound increases to O(k) where k is unique Unicode points",
+          "Algorithm remains O(n) linear time"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Preprocessing & Edge Cases",
+        "question": "7. Should spaces and punctuation count?",
+        "whatInterviewerChecks": "Clarifying requirements and string normalization skills.",
+        "bestReplyScript": "It depends on the problem requirements.\n\nIf spaces and punctuation should be ignored, I would:\n1. Remove all non-alphanumeric characters.\n2. Convert everything to lowercase.\n3. Then compare the character frequencies.\n\nExample:\n\"A gentleman\"\n\"Elegant man\"\n\nAfter removing spaces and converting to lowercase:\nagentleman\nelegantman\n\nThese become valid anagrams.\n\nAlways clarify this requirement with the interviewer if it isn't specified.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Clarify rules with interviewer first",
+          "Normalize with isalnum() and lower() if required",
+          "Real-world anagrams often ignore spaces/casing",
+          "Ensures robustness against formatting noise"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Scalability & Large Data",
+        "question": "8. Can this work on very large inputs?",
+        "whatInterviewerChecks": "Memory optimization, streaming data processing, and single-pass techniques.",
+        "bestReplyScript": "Yes.\n\nThe hash map solution scales well because each character is processed only once.\n\nFor extremely large datasets:\n• I would avoid creating unnecessary copies of the strings.\n• Process the input efficiently.\n• If memory is limited, I could update one frequency map while reading the data (increment for s, decrement for t).\n\nThe algorithm remains O(n), making it suitable for large inputs.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Single counter map with increment/decrement technique",
+          "Early exit if count drops below 0",
+          "Stream character by character to avoid loading full string",
+          "O(n) linear runtime efficiency"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Space Optimization",
+        "question": "9. How would you solve it with constant space?",
+        "whatInterviewerChecks": "Fixed-size array optimization for restricted character sets.",
+        "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can use an array of size 26 instead of a dictionary.\n\nExample:\nIndex:\n0 → a\n1 → b\n...\n25 → z\n\nEach character updates its corresponding index.\n\nSince the array size never changes, the extra space is considered O(1).",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Fixed array of size 26 for 'a' through 'z'",
+          "Index calculation via ord(char) - ord('a')",
+          "Constant O(1) space bound (26 integers)",
+          "Prevents hash map overhead"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Edge Cases",
+        "question": "10. What edge cases exist?",
+        "whatInterviewerChecks": "Comprehensive testing awareness across edge conditions.",
+        "bestReplyScript": "Some important edge cases are:\n\nEmpty strings\n\"\"\n\"\"\nOutput:\nTrue\n\nDifferent lengths\n\"cat\"\n\"cats\"\nOutput:\nFalse\n\nSame letters\n\"listen\"\n\"silent\"\nOutput:\nTrue\n\nSame word\n\"hello\"\n\"hello\"\nOutput:\nTrue\n\nDifferent frequencies\n\"aabb\"\n\"abbb\"\nOutput:\nFalse\n\nTesting these cases ensures the algorithm works correctly in all scenarios.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Empty strings returns True",
+          "Unequal length returns False immediately",
+          "Identical strings returns True",
+          "Mismatched char counts return False"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Fixed Array Optimization",
+        "question": "11. Can you solve it using arrays instead of dictionaries?",
+        "whatInterviewerChecks": "Direct character array indexing vs hash table lookup.",
+        "bestReplyScript": "Yes.\n\nIf the character set is fixed (for example, only lowercase English letters), I can use an array of size 26.\n\nFor every character:\n• Increment the count for the first string.\n• Decrement the count for the second string.\n\nAt the end, if every element in the array is zero, the strings are anagrams.\n\nThis approach is slightly faster than using a dictionary because array indexing is very efficient.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Single fixed-size array of 26 integers",
+          "Increment on s, decrement on t",
+          "Verify all indices return to zero",
+          "Avoids dict hashing and dynamic allocations"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Frequency Mismatch Logic",
+        "question": "12. What if character counts differ?",
+        "whatInterviewerChecks": "Early termination upon detecting frequency imbalance.",
+        "bestReplyScript": "If even one character has a different frequency, the strings cannot be anagrams.\n\nExample:\n\"aabb\"\n\"aabc\"\n\nFrequency:\nString 1:\na → 2\nb → 2\n\nString 2:\na → 2\nb → 1\nc → 1\n\nSince the frequencies differ, I immediately return False.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Exact match required across all keys",
+          "Single mismatch guarantees False",
+          "Can fail fast as soon as a count drops below zero during second pass"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Test Suite Design",
+        "question": "13. How would you test it?",
+        "whatInterviewerChecks": "Structured unit testing strategy and test case design.",
+        "bestReplyScript": "I would create test cases for different situations.\n\nInput | Output\n\"listen\", \"silent\" | True\n\"cat\", \"act\" | True\n\"rat\", \"car\" | False\n\"\", \"\" | True\n\"aabb\", \"abbb\" | False\n\"Dormitory\", \"Dirty room\" (after preprocessing) | True\n\nTesting different categories improves confidence in the solution.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Standard anagram pairs",
+          "Non-anagram same-length strings",
+          "Length mismatch cases",
+          "Empty strings & spacing/case variants"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Common Mistakes",
+        "question": "14. What mistakes do candidates make?",
+        "whatInterviewerChecks": "Interview pitfall awareness and anti-patterns.",
+        "bestReplyScript": "Some common mistakes include:\n\n• Forgetting to compare string lengths first.\n• Comparing only unique characters instead of their frequencies.\n• Ignoring duplicate characters.\n• Forgetting about uppercase and lowercase differences.\n• Not handling spaces or punctuation when required.\n• Using sorting without understanding its higher time complexity.\n\nThe most common mistake is checking whether both strings contain the same characters without verifying how many times each character appears.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Using set(s) == set(t) (ignores character counts)",
+          "Forgetting initial length check",
+          "Ignoring letter case sensitivity",
+          "Overlooking O(n log n) sorting cost"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Real-World Applications",
+        "question": "15. Where are anagrams used practically?",
+        "whatInterviewerChecks": "System level intuition and real-world software engineering applications.",
+        "bestReplyScript": "Anagram checking has several practical applications.\n\nExamples include:\n• Spell-checking systems.\n• Word games like Scrabble and crossword puzzles.\n• Search engines for fuzzy matching.\n• Natural Language Processing (NLP).\n• Plagiarism detection.\n• Dictionary-based word matching.\n• Text analysis and pattern recognition.\n\nThe frequency-counting technique used here is also common in many other string-processing problems.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Search engines & fuzzy query matching",
+          "NLP text normalization & spell checkers",
+          "Plagiarism detection & anagram solvers",
+          "Foundational hash frequency counting pattern"
+        ]
       }
     ],
     "mistakes": [
@@ -1757,203 +1736,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Run-Length String Compression in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Run-Length String Compression using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain your compression logic.",
+        "whatInterviewerChecks": "Clear explanation of counting consecutive repeating characters.",
+        "bestReplyScript": "My approach is to count consecutive repeating characters and replace them with the character followed by its count.\n\nThe steps are:\n1. Start from the first character.\n2. Count how many times it repeats consecutively.\n3. Append the character and its count to the result.\n4. Move to the next different character.\n5. Repeat until the end of the string.\n\nExample:\nInput: \"aaabbcccc\"\nOutput: \"a3b2c4\"\n\nOnly consecutive repeated characters are compressed.\n\nFor example:\nInput: \"ababa\"\nOutput: \"a1b1a1b1a1\"\n\nThe 'a' characters are not consecutive, so they are counted separately.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_5(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "Count consecutive character occurrences",
+          "Append character and count to output buffer",
+          "Non-consecutive occurrences are counted independently",
+          "Time: O(n), Space: O(n)"
+        ]
       },
       {
         "id": "q2",
         "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Run-Length String Compression?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "question": "2. What's the time complexity?",
+        "whatInterviewerChecks": "Linear scan proof and space trade-off analysis.",
+        "bestReplyScript": "The algorithm scans the string only once.\n\nEach character is visited exactly once while counting consecutive occurrences.\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nIf compression is performed in-place on a mutable array, the extra space can be reduced to O(1).",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Run-Length String Compression:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "Single-pass scan visits each char once -> O(n)",
+          "Result string allocation -> O(n) space",
+          "In-place mutable array variant -> O(1) space"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Run-Length String Compression if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Compression Trade-offs",
+        "question": "3. When should compression not be applied?",
+        "whatInterviewerChecks": "Identifying anti-patterns where compression increases file size.",
+        "bestReplyScript": "Compression should not be applied when it doesn't reduce the size of the string.\n\nExample:\nInput: \"abcd\"\nCompressed: \"a1b1c1d1\"\n\nThe compressed version is longer than the original.\n\nA better implementation would compare both lengths and return the original string if compression doesn't save space.\n\nThis avoids unnecessary storage and improves efficiency.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_5(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "RLE expands strings with high unique-char ratios",
+          "Compare len(compressed) vs len(original)",
+          "Return original string if compressed length >= original"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Single Character Formatting",
+        "question": "4. How do you handle single characters?",
+        "whatInterviewerChecks": "Handling edge cases where count equals 1.",
+        "bestReplyScript": "A single character still has a count of 1.\n\nExample:\nInput: \"abbc\"\nCompressed: \"a1b2c1\"\n\nIf the problem states that counts of 1 should be omitted, the output becomes:\n\"ab2c\"\n\nI always follow the exact problem requirements.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Default format includes explicit '1'",
+          "Variant format omits count when count == 1",
+          "Clarify prompt constraints before implementing"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "In-Place Array Compression",
+        "question": "5. Can you compress in-place?",
+        "whatInterviewerChecks": "Two-pointer in-place array manipulation technique.",
+        "bestReplyScript": "Yes, if the input is a mutable character array.\n\nThe idea is:\n1. Use one pointer to read characters.\n2. Use another pointer to write the compressed result.\n3. Count repeated characters.\n4. Write the character and its count directly into the same array.\n\nExample:\nInput Array: [a, a, a, b, b, c]\nOutput Array: [a, 3, b, 2, c]\n\nThis achieves O(1) extra space.\n\nNote that in Python, strings are immutable, so we usually build a new string instead.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Requires mutable list/array input",
+          "Read pointer scans ahead, write pointer overwrites in-place",
+          "Achieves true O(1) auxiliary space",
+          "Python strings require new list/string building"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Decompression & Inversion",
+        "question": "6. How would you decompress the string?",
+        "whatInterviewerChecks": "Inverting RLE logic and parsing multi-digit numbers.",
+        "bestReplyScript": "To decompress:\n1. Read a character.\n2. Read the following number.\n3. Repeat the character that many times.\n4. Continue until the end.\n\nExample:\nInput: \"a3b2c4\"\nOutput: \"aaabbcccc\"\n\nIf counts contain multiple digits (like 12), I would read the complete number before expanding.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Run-Length String Compression:\nassert solve_5([]) == 0\nassert solve_5([5]) == 5\nassert solve_5([-1, -5, -2]) != 0\nassert solve_5([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Parse char followed by integer count",
+          "Accumulate consecutive digit characters for multi-digit counts",
+          "Repeat char count times into decompressed stream"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Edge Cases & Boundaries",
+        "question": "7. What edge cases exist?",
+        "whatInterviewerChecks": "Boundary test coverage across string variations.",
+        "bestReplyScript": "Some important edge cases include:\n\nEmpty string: \"\"\nOutput: \"\"\n\nSingle character: \"a\"\nOutput: \"a1\"\n\nAll same character: \"aaaaaa\"\nOutput: \"a6\"\n\nNo repetition: \"abcd\"\nOutput: \"a1b1c1d1\" (or \"abcd\" depending on requirements)\n\nMixed repetitions: \"aaabcc\"\nOutput: \"a3b1c2\"\n\nTesting these cases ensures the algorithm handles all possible inputs.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Empty string returns empty",
+          "Single char returns 'a1'",
+          "All-identical string compresses to maximum ratio",
+          "All-unique string triggers expansion check"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Ambiguous Input & Encoding",
+        "question": "8. How do repeated digits affect compression?",
+        "whatInterviewerChecks": "Handling numerical characters in RLE streams.",
+        "bestReplyScript": "If digits are part of the input, decompression can become ambiguous.\n\nExample:\nInput: \"111222\"\nCompressed: \"1323\"\n\nIt's unclear whether this means:\n• '1' repeated 3 times and '2' repeated 3 times, or\n• something else.\n\nTo avoid ambiguity, real compression formats often use separators or escape characters.\n\nExample: 1:3|2:3\n\nThis makes decompression reliable.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Digit inputs create ambiguity between data and counts",
+          "Use delimiter/separator schemes (e.g. 1:3|2:3)",
+          "Escape characters prevent collision"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Stream Processing",
+        "question": "9. How would you process a stream?",
+        "whatInterviewerChecks": "Streaming architecture and sliding state window.",
+        "bestReplyScript": "For a character stream, I only need to remember:\n• the current character\n• its count\n\nWhenever a different character arrives:\n1. Output the current character and its count.\n2. Start counting the new character.\n\nExample:\nIncoming: a, a, a, b, b, c\nOutput: a3, b2, c1\n\nThis allows compression without storing the entire input in memory.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Maintain current_char and count state variables",
+          "Flush (current_char, count) on character transition",
+          "Process arbitrary stream size with O(1) RAM"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Space Constraints",
+        "question": "10. Can you solve without extra space?",
+        "whatInterviewerChecks": "In-place list manipulation vs immutable string constraints.",
+        "bestReplyScript": "Yes, if the input is mutable.\n\nUsing two pointers:\n• One pointer reads the original characters.\n• The other writes the compressed output.\n\nThis modifies the input directly.\n\nSpace Complexity becomes O(1).\n\nIn Python, strings cannot be modified, so creating a new result string is usually the practical solution.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Two-pointer in-place write for mutable data",
+          "O(1) auxiliary space requirement",
+          "Python immutable string workaround"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Multi-Digit Counts",
+        "question": "11. What if counts exceed 9?",
+        "whatInterviewerChecks": "Handling multi-digit counts (>9) during compression and parsing.",
+        "bestReplyScript": "The algorithm still works.\n\nInstead of assuming the count is one digit, I convert the entire number to a string.\n\nExample:\nInput: aaaaaaaaaaaa (12 'a's)\nOutput: a12\n\nDuring decompression, I read all consecutive digits to reconstruct the correct count.\n\nThis allows handling any repetition count.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Convert integer count to string (str(count))",
+          "Multi-digit string concatenation ('a' + '12')",
+          "Parser reads all contiguous isdigit() characters"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Testing Strategy",
+        "question": "12. How would you test it?",
+        "whatInterviewerChecks": "Designing comprehensive test matrices.",
+        "bestReplyScript": "I would test various scenarios.\n\nInput | Expected Output\n\"aaabb\" | \"a3b2\"\n\"abcd\" | \"a1b1c1d1\" (or \"abcd\" if required)\n\"aaaa\" | \"a4\"\n\"\" | \"\"\n\"a\" | \"a1\"\n\"aaabcccc\" | \"a3b1c4\"\n\nThese tests cover normal cases, edge cases, and boundary conditions.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Standard repeating runs",
+          "Single character & empty string",
+          "All-same character long runs",
+          "Uncompressed fallback tests"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Real-World Applications",
+        "question": "13. Where is RLE used?",
+        "whatInterviewerChecks": "Practical software engineering use cases of RLE.",
+        "bestReplyScript": "Run-Length Encoding (RLE) is used in many real-world applications.\n\nExamples include:\n• Image compression for simple graphics and icons.\n• Fax machines to reduce transmitted black/white pixel data.\n• Bitmap image formats (BMP, TGA, TIFF).\n• Data compression pre-processing pipelines.\n• Document scanning where long sequences of white pixels occur.\n• Game development for compressing tile maps.\n\nAlthough RLE is simple, it works well when data contains many consecutive repeated values.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Fax transmission & scan line white space",
+          "Lossless image formats (BMP, TGA, TIFF)",
+          "Pre-processing step for DEFLATE/LZ77",
+          "Game grid & tilemap serialization"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Algorithmic Trade-offs",
+        "question": "14. What's the trade-off?",
+        "whatInterviewerChecks": "Evaluating when RLE shines vs when it degrades performance.",
+        "bestReplyScript": "The main trade-off is that RLE is effective only when there are many consecutive repeated characters.\n\nExample where it helps:\nInput: aaaaaaaaaa\nCompressed: a10\nMuch smaller.\n\nExample where it doesn't help:\nInput: abcdef\nCompressed: a1b1c1d1e1f1\nThe compressed version is actually larger.\n\nSo RLE is efficient for repetitive data but ineffective for random or highly varied data.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "High repetition data = high compression ratio",
+          "High entropy/random data = size expansion penalty",
+          "Selective compression check avoids expansion"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Memory Optimization",
+        "question": "15. How would you optimize memory usage?",
+        "whatInterviewerChecks": "Python string joining vs repeated concatenation optimization.",
+        "bestReplyScript": "To reduce memory usage, I would:\n• Avoid creating unnecessary intermediate strings.\n• Use a list buffer to collect parts and ''.join(parts) once at the end, since repeated string concatenation in a loop is O(N^2) in Python.\n• Compress in-place if the input is mutable.\n• Process streaming data incrementally instead of storing the entire input.\n\nThese optimizations improve both memory efficiency and performance, especially for large inputs.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Use list buffer + ''.join() to avoid O(N^2) string copies",
+          "Stream process with O(1) buffer",
+          "In-place pointer overwrite for mutable arrays"
+        ]
       }
     ],
     "mistakes": [
@@ -2147,203 +2111,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Move Zeroes to End in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Move Zeroes to End using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain your approach.",
+        "whatInterviewerChecks": "Step-by-step two-pointer approach explanation.",
+        "bestReplyScript": "I use the two-pointer technique to move all zeroes to the end while maintaining the relative order of the non-zero elements.\n\nThe steps are:\n1. Initialize a pointer (left) to track the position where the next non-zero element should be placed.\n2. Traverse the array using another pointer (right).\n3. Whenever a non-zero element is found:\n   • Swap it with the element at left.\n   • Increment left.\n4. After completing the traversal, all non-zero elements are at the beginning, and all zeroes are automatically moved to the end.\n\nExample:\nInput: [0, 1, 0, 3, 12]\nStep 1: [1, 0, 0, 3, 12]\nStep 2: [1, 3, 0, 0, 12]\nStep 3: [1, 3, 12, 0, 0]\nOutput: [1, 3, 12, 0, 0]\n\nThis approach is efficient because it only scans the array once.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_6(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "Left pointer tracks target non-zero write index",
+          "Right pointer scans array sequentially",
+          "Swap non-zero with left index and increment left",
+          "Single pass O(n) runtime, O(1) space"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Move Zeroes to End?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Two-Pointer Strategy Rationale",
+        "question": "2. Why use two pointers?",
+        "whatInterviewerChecks": "Understanding single-pass in-place mutation advantages.",
+        "bestReplyScript": "The two-pointer approach allows me to process the array in a single pass while modifying it in-place.\n\n• right scans every element.\n• left keeps track of where the next non-zero element should go.\n\nThis eliminates the need for an extra array and minimizes unnecessary operations.\n\nCompared to creating a new array, the two-pointer method is more memory-efficient.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Move Zeroes to End:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "Single pass traversal",
+          "In-place modification eliminates auxiliary array",
+          "Minimizes total array writes/swaps"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Move Zeroes to End if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Time & Space Complexity Proof",
+        "question": "3. What's the complexity?",
+        "whatInterviewerChecks": "Optimal lower bound complexity proof.",
+        "bestReplyScript": "Each element is visited only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nSince every element must be examined at least once, O(n) is the optimal time complexity.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_6(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Linear scan visits n elements -> O(n)",
+          "In-place scalar pointer state -> O(1) space",
+          "Optimal theoretical bound"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "In-Place Modification",
+        "question": "4. Can you solve it in-place?",
+        "whatInterviewerChecks": "Verifying memory bounds and zero extra allocations.",
+        "bestReplyScript": "Yes.\n\nThe two-pointer approach modifies the original array directly without using any additional array.\n\nExample:\nOriginal: [0, 1, 0, 3, 12]\nAfter processing: [1, 3, 12, 0, 0]\n\nOnly swaps are performed, so the extra space remains O(1).",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Direct array element swapping",
+          "Zero secondary array/list creation",
+          "Strict O(1) memory footprint"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Order Stability",
+        "question": "5. How do you preserve element order?",
+        "whatInterviewerChecks": "Understanding stability properties of non-zero array filtering.",
+        "bestReplyScript": "The order is preserved because non-zero elements are processed from left to right.\n\nExample:\nInput: [4, 0, 5, 0, 2]\nOutput: [4, 5, 2, 0, 0]\n\nNotice that 4, 5, and 2 remain in the same relative order.\n\nThis property is called stability, and it is important in many real-world applications.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Sequential left-to-right processing",
+          "First non-zero encounter occupies first available left slot",
+          "Guarantees stable relative order"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Algorithm Variation",
+        "question": "6. What if zeroes should move to the front?",
+        "whatInterviewerChecks": "Adapting two-pointer direction and target condition.",
+        "bestReplyScript": "The logic is similar.\n\nInstead of moving non-zero elements forward, I would move zeroes forward.\n\nExample:\nInput: [1, 0, 2, 0, 3]\nOutput: [0, 0, 1, 2, 3]\n\nOnly the direction of movement changes; the two-pointer technique still works.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Move Zeroes to End:\nassert solve_6([]) == 0\nassert solve_6([5]) == 5\nassert solve_6([-1, -5, -2]) != 0\nassert solve_6([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Right pointer scans array (or scan backwards)",
+          "Swap zeroes to the left pointer index",
+          "Same O(n) time and O(1) space guarantee"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Edge Cases & Boundaries",
+        "question": "7. What edge cases exist?",
+        "whatInterviewerChecks": "Comprehensive boundary testing.",
+        "bestReplyScript": "Some important edge cases are:\n\nEmpty array: [] → Output: []\n\nAll zeroes: [0, 0, 0] → Output: [0, 0, 0]\n\nNo zeroes: [1, 2, 3] → Output: [1, 2, 3]\n\nOne element: [0] → Output: [0]\n\nZero at the end: [1, 2, 3, 0] → Output: [1, 2, 3, 0]\n\nTesting these ensures the algorithm handles all boundary conditions correctly.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Empty input handles safely",
+          "All-zero and no-zero inputs preserve correctness",
+          "Single element and trailing zero boundaries"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Test Matrix Design",
+        "question": "8. How would you test it?",
+        "whatInterviewerChecks": "Structured unit test table generation.",
+        "bestReplyScript": "I would test a variety of cases.\n\nInput | Expected Output\n[0, 1, 0, 3, 12] | [1, 3, 12, 0, 0]\n[1, 2, 3] | [1, 2, 3]\n[0, 0, 0] | [0, 0, 0]\n[1, 0] | [1, 0]\n[] | []\n[0] | [0]\n\nTesting different inputs helps verify correctness and robustness.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Standard mixed zeroes/non-zeroes",
+          "All-zero & non-zero variants",
+          "Empty and single-element bounds"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "All-Zero Array Handling",
+        "question": "9. What happens with all zeroes?",
+        "whatInterviewerChecks": "Behavioral analysis under 100% zero payload.",
+        "bestReplyScript": "If every element is zero, no swaps are needed.\n\nExample:\nInput: [0, 0, 0, 0]\nOutput: [0, 0, 0, 0]\n\nThe algorithm still scans the array once and finishes in O(n) time.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Right pointer scans all zeroes without triggering swap",
+          "Left pointer remains at 0",
+          "Linear scan completes cleanly with zero side-effects"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Swap Optimization",
+        "question": "10. Can swaps be minimized?",
+        "whatInterviewerChecks": "Self-swap check optimization.",
+        "bestReplyScript": "Yes.\n\nBefore swapping, I can check if the left and right pointers point to the same index.\n\nIf they are equal, the element is already in the correct position, so no swap is needed.\n\nExample:\nInput: [1, 2, 3, 0]\n\nNo swaps are performed because every non-zero element is already where it should be.\n\nThis optimization reduces unnecessary operations.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Check if left != right before executing swap",
+          "Avoids redundant self-assignment memory writes",
+          "Optimizes array write operations on non-zero prefix arrays"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Swapping vs Overwriting",
+        "question": "11. What's the difference between swapping and overwriting?",
+        "whatInterviewerChecks": "Comparing 2-pass write fill vs 1-pass swap methods.",
+        "bestReplyScript": "Swapping:\n• Exchanges two elements.\n• Preserves both values in a single pass.\nExample: Swap [0, 5] → [5, 0]\n\nOverwriting:\n• Copies non-zero elements forward.\n• Fills remaining positions with zeroes afterward.\nExample: Input [0, 1, 0, 3] → Copy non-zero [1, 3, 0, 3] → Fill zeroes [1, 3, 0, 0]\n\nBoth methods have O(n) time complexity.\nOverwriting often performs fewer writes than swapping.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Swapping = 1 pass with dual element exchange",
+          "Overwriting = Pass 1 copy non-zeroes, Pass 2 fill trailing zeroes",
+          "Overwriting can reduce total write operations when zeroes dominate"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Data Structure Adaptation",
+        "question": "12. Can this work on linked lists?",
+        "whatInterviewerChecks": "Adapting array algorithms to Linked List pointer manipulation.",
+        "bestReplyScript": "Yes, but the implementation is different.\n\nSince linked lists do not support random access, swapping nodes is more complicated.\n\nA common approach is to:\n• Rearrange node values, or\n• Build two separate lists: one containing non-zero nodes, one containing zero nodes, then connect them.\n\nThe overall complexity remains O(n).",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Value swapping vs node pointer re-linking",
+          "Dual tail pointer partition technique (non_zero_head, zero_head)",
+          "O(n) time and O(1) space via pointer re-wiring"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Stability Mechanics",
+        "question": "13. Why is stability important?",
+        "whatInterviewerChecks": "Importance of order preservation in database and multi-key operations.",
+        "bestReplyScript": "A stable algorithm keeps the relative order of equal or related elements unchanged.\n\nExample:\nInput: [A, 0, B, 0, C]\nOutput: [A, B, C, 0, 0]\n\nNotice that A, B, and C appear in the same order.\n\nStability is important because changing the order of data can affect the correctness of other algorithms or business logic.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Preserves original sequence of valid elements",
+          "Crucial for multi-stage filtering and sorting pipelines",
+          "Prevents subtle business logic bugs"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Real-World Applications",
+        "question": "14. Where is this technique used?",
+        "whatInterviewerChecks": "System-level applications of two-pointer array compaction.",
+        "bestReplyScript": "The two-pointer technique is widely used in software development.\n\nExamples include:\n• Removing duplicates from sorted arrays.\n• Partitioning arrays (e.g. QuickSort partition).\n• Data filtering & garbage collection compaction.\n• Memory defragmentation.\n• Stream processing & sliding window problems.\n• Efficient in-place buffer management.\n\nThe idea of moving valid data forward while ignoring unwanted values appears in many real-world systems.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Memory compaction & defragmentation",
+          "QuickSort array partitioning",
+          "In-place buffer filtering & deduping",
+          "Stream garbage collection"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Common Mistakes",
+        "question": "15. What mistakes do candidates make?",
+        "whatInterviewerChecks": "Identifying interview anti-patterns.",
+        "bestReplyScript": "Some common mistakes include:\n\n• Using an extra array instead of solving it in-place.\n• Changing the order of non-zero elements.\n• Forgetting to move the left pointer.\n• Swapping unnecessarily.\n• Not handling arrays with no zeroes or all zeroes.\n• Using nested loops, increasing the time complexity to O(n²).\n\nThe most common interview mistake is not preserving the relative order of non-zero elements, which is usually a key requirement of the problem.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Violating order stability (e.g. standard two-pointer from both ends)",
+          "Allocating O(n) auxiliary list",
+          "O(n^2) nested loop implementation",
+          "Forgetting left pointer increment"
+        ]
       }
     ],
     "mistakes": [
@@ -2537,203 +2484,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Two Sum (Target Pair Indices) in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Two Sum (Target Pair Indices) using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain your solution.",
+        "whatInterviewerChecks": "Clear explanation of hash map complement lookup.",
+        "bestReplyScript": "I use a hash map (dictionary) to store numbers that I have already seen along with their indices.\n\nFor every number:\n1. Calculate the complement needed to reach the target.\n2. Check if the complement already exists in the hash map.\n3. If it exists, return the indices of the complement and the current number.\n4. Otherwise, store the current number and its index in the hash map.\n5. Continue until a valid pair is found.\n\nExample:\nInput: nums = [2, 7, 11, 15], target = 9\nStep 1: 2 -> Need 7, Store {2: 0}\nStep 2: 7 -> Need 2, 2 already exists!\nOutput: [0, 1]\n\nThis approach finds the answer in a single pass, making it both efficient and easy to understand.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_7(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "Hash map stores seen_value -> index mapping",
+          "Complement calculated as target - current_val",
+          "O(1) average lookup time per element",
+          "Single pass O(n) runtime and O(n) space"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Two Sum (Target Pair Indices)?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Hash Map Rationale",
+        "question": "2. Why use a hash map?",
+        "whatInterviewerChecks": "Comparing O(1) hash lookup vs O(n^2) nested loop search.",
+        "bestReplyScript": "A hash map provides O(1) average-time lookup.\n\nInstead of searching the array repeatedly, I can instantly check whether the required complement has already been seen.\n\nWithout a hash map:\nFor every element -> Search remaining array (takes O(n²)).\n\nWith a hash map:\nLookup complement takes O(1) on average, making the entire algorithm O(n).",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Two Sum (Target Pair Indices):\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "O(1) average lookup time via hash table",
+          "Replaces nested array search (O(n^2))",
+          "Reduces total time complexity to linear O(n)"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Two Sum (Target Pair Indices) if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Time & Space Complexity Proof",
+        "question": "3. What's the complexity?",
+        "whatInterviewerChecks": "Asymptotic operation counting and memory allocation.",
+        "bestReplyScript": "Each element is processed exactly once.\n\nFor every element:\n• Calculate the complement.\n• Perform a hash map lookup.\n• Insert into the hash map if needed.\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nThis is optimal because every element must be inspected at least once.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_7(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Single pass over n elements -> O(n) time",
+          "Up to n key-value pairs stored in hash table -> O(n) space",
+          "Optimal lower-bound for unsorted array"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Space Constraint Trade-offs",
+        "question": "4. Can you solve it without extra space?",
+        "whatInterviewerChecks": "Sorting + two-pointer alternative vs hash map trade-off.",
+        "bestReplyScript": "Yes.\n\nIf extra space is not allowed, one option is:\n1. Sort the array.\n2. Use two pointers to find the target sum.\n\nHowever, sorting changes the original order, so extra work is needed to recover the original indices.\n\nComplexity:\n• Time: O(n log n)\n• Space: O(1) (if sorting in-place)\n\nAlthough possible, the hash map approach is generally preferred because it is faster and preserves the original indices.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Sorting array enables O(1) space two-pointer approach",
+          "Sorting takes O(n log n) time and destroys original index order",
+          "Index tracking requires storing pairs, re-introducing space"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Return Value Variants",
+        "question": "5. How would you return values instead of indices?",
+        "whatInterviewerChecks": "Adapting return signatures for value-based pairs.",
+        "bestReplyScript": "Instead of returning the indices, I simply return the numbers that form the target sum.\n\nExample:\nInput: nums = [2, 7, 11, 15], target = 9\n\nInstead of: [0, 1]\nI return: [2, 7]\n\nThe search algorithm remains the same; only the return value changes.",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Return [complement, current_val]",
+          "Hash map can store boolean or set of seen values",
+          "Algorithm logic remains identical"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Multiple Solution Pairs",
+        "question": "6. What if multiple answers exist?",
+        "whatInterviewerChecks": "Handling multiple valid pairs and avoiding duplicates.",
+        "bestReplyScript": "It depends on the problem statement.\n\nIf only one valid answer is required, I return the first pair found.\n\nIf all pairs are required, I continue scanning the array while keeping track of the pairs already returned to avoid duplicates.\n\nExample:\nInput: [1, 2, 3, 4, 5], Target = 5\nPossible pairs: (1, 4) and (2, 3)\n\nAlways clarify the expected behavior with the interviewer.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Two Sum (Target Pair Indices):\nassert solve_7([]) == 0\nassert solve_7([5]) == 5\nassert solve_7([-1, -5, -2]) != 0\nassert solve_7([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Single pair: return immediately on first match",
+          "All pairs: continue loop and store unique pairs in set",
+          "Clarify duplicate handling rules"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "No-Solution Fallback",
+        "question": "7. What if no solution exists?",
+        "whatInterviewerChecks": "Handling missing target sum scenarios gracefully.",
+        "bestReplyScript": "If I finish scanning the array without finding a valid pair, I return a special value such as:\n• None\n• []\n• (-1, -1)\n\ndepending on the problem requirements.\n\nExample:\nInput: [1, 2, 3], Target = 10\nOutput: None",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Loop completes without complement match",
+          "Return default fallback (None, empty list, or sentinel)",
+          "Verify return type contract"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Sorted Array Variant",
+        "question": "8. How would you solve it for a sorted array?",
+        "whatInterviewerChecks": "Using two pointers on sorted input for O(n) time and O(1) space.",
+        "bestReplyScript": "For a sorted array, I would use the two-pointer technique.\n\nSteps:\n1. Place one pointer at the beginning.\n2. Place another pointer at the end.\n3. Calculate their sum.\n4. If the sum is too small, move the left pointer.\n5. If the sum is too large, move the right pointer.\n6. Repeat until the pair is found.\n\nExample:\nInput: [2, 7, 11, 15], Target = 9\n2 + 15 = 17 (Too large -> decrement right)\n2 + 11 = 13 (Too large -> decrement right)\n2 + 7 = 9 (Match! Found)\n\nThis approach runs in:\n• Time: O(n)\n• Space: O(1)",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "Left at 0, right at len(nums)-1",
+          "Adjust left/right based on sum vs target comparison",
+          "O(n) time and O(1) space optimal solution for sorted array"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "3-Sum Extension",
+        "question": "9. How would you extend this to Three Sum?",
+        "whatInterviewerChecks": "Extending 2-Sum building blocks to 3-Sum.",
+        "bestReplyScript": "Three Sum builds upon the Two Sum concept.\n\nSteps:\n1. Sort the array.\n2. Fix one element.\n3. Use two pointers to find the remaining two numbers.\n\nExample:\nFixed: -1 -> Find two numbers whose sum is 1.\n\nComplexity:\n• Sorting: O(n log n)\n• Two-pointer search for each element: O(n²)\n\nOverall: O(n²)",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Sort array first",
+          "Outer loop fixes nums[i], inner loop runs 2-Sum two-pointer search",
+          "Overall O(n^2) time complexity"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Testing Matrix",
+        "question": "10. How would you test your solution?",
+        "whatInterviewerChecks": "Designing comprehensive test case suites.",
+        "bestReplyScript": "I would test different categories.\n\nInput | Target | Expected Output\n[2, 7, 11, 15] | 9 | [0, 1]\n[3, 2, 4] | 6 | [1, 2]\n[3, 3] | 6 | [0, 1]\n[1, 2, 3] | 10 | None\n[-1, -2, -3, -4] | -6 | [1, 3]\n\nTesting different inputs ensures the solution works for positive numbers, negative numbers, duplicates, and cases with no solution.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Positive & negative numbers",
+          "Duplicate values forming target (e.g. 3+3=6)",
+          "No valid pair case",
+          "Unsorted input order"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Brute Force Comparison",
+        "question": "11. Why is brute force inefficient?",
+        "whatInterviewerChecks": "O(n^2) nested loop analysis.",
+        "bestReplyScript": "The brute-force approach checks every possible pair.\n\nExample:\nfor i in range(n):\n    for j in range(i+1, n):\n        check if nums[i] + nums[j] == target\n\nFor an array of size n, there are approximately n²/2 comparisons.\n\nTime Complexity: O(n²)\n\nThe hash map solution reduces this to O(n), making it much faster for large inputs.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Brute force uses two nested loops",
+          "Checks n*(n-1)/2 pairs -> O(n^2) time",
+          "Hash map trades O(n) space to achieve O(n) time"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Edge Cases & Boundaries",
+        "question": "12. What edge cases exist?",
+        "whatInterviewerChecks": "Identifying boundary failures.",
+        "bestReplyScript": "Important edge cases include:\n\nEmpty array: [] -> Return None\n\nOne element: [5] -> Return None\n\nDuplicate numbers: [3, 3], Target = 6 -> Output [0, 1]\n\nNegative numbers: [-2, -4, -6], Target = -8 -> Output [0, 2]\n\nNo solution: [1, 2, 3], Target = 10 -> Return None",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Empty and single-element inputs (< 2 elements)",
+          "Duplicate identical values forming target",
+          "Negative targets and negative array elements",
+          "Target absent from array"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Common Candidate Pitfalls",
+        "question": "13. What mistakes do candidates make?",
+        "whatInterviewerChecks": "Identifying common bugs and ordering errors.",
+        "bestReplyScript": "Some common mistakes include:\n• Using nested loops instead of a hash map.\n• Storing the current number before checking its complement, which can cause issues with duplicate values (e.g. self-pairing [3] for target 6).\n• Forgetting to handle duplicate numbers correctly.\n• Returning values when the problem asks for indices.\n• Ignoring the case where no valid pair exists.\n\nA common interview mistake is not thinking carefully about the order of hash map operations.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "Inserting into hash map BEFORE checking complement (self-pairing bug)",
+          "Returning array values instead of indices",
+          "Ignoring negative numbers",
+          "Failing to handle missing target gracefully"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Duplicate Element Handling",
+        "question": "14. Can duplicates affect your algorithm?",
+        "whatInterviewerChecks": "Preventing self-referential index matching bug.",
+        "bestReplyScript": "Yes.\n\nDuplicates must be handled carefully.\n\nExample: Input [3, 3], Target = 6\n\nIf I insert the current element into the hash map before checking the complement, I may accidentally use the same element twice.\n\nThe correct approach is:\n1. Check for the complement in seen.\n2. Then insert the current element into seen.\n\nThis ensures two different indices are returned.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Check seen map BEFORE inserting current element",
+          "Prevents matching an element with itself at the same index",
+          "Guarantees distinct index pairs"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Real-World Hashing Applications",
+        "question": "15. Where is hashing useful elsewhere?",
+        "whatInterviewerChecks": "Broad application of hash-based data structures.",
+        "bestReplyScript": "Hashing is one of the most widely used techniques in computer science.\n\nSome real-world applications include:\n• Fast data lookup and database indexing.\n• Caching systems (Redis, Memcached).\n• Password hashing & security (SHA-256, bcrypt).\n• Duplicate detection & frequency counting.\n• Symbol tables in compilers.\n• Finding intersections between datasets.\n\nMany DSA problems such as Two Sum, Group Anagrams, Longest Consecutive Sequence, Contains Duplicate, and Subarray Sum Equals K also rely heavily on hash maps.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Database indexing & Redis key-value stores",
+          "Compiler symbol tables",
+          "Cryptographic hash functions",
+          "Frequency counting & set intersection"
+        ]
       }
     ],
     "mistakes": [
@@ -2927,203 +2859,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
         "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Majority Element (Boyer-Moore) in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Majority Element (Boyer-Moore) using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
+        "category": "Algorithm Explanation",
+        "question": "1. Explain the Boyer-Moore Voting Algorithm.",
+        "whatInterviewerChecks": "Explaining candidate selection and vote cancellation mechanics.",
+        "bestReplyScript": "The Boyer-Moore Voting Algorithm is an efficient algorithm used to find the element that appears more than n/2 times in an array.\n\nThe key idea is vote cancellation.\n\nSteps:\n1. Assume the first element is the candidate.\n2. Keep a counter initialized to 1.\n3. Traverse the array.\n4. If the current element matches the candidate, increment the counter.\n5. Otherwise, decrement the counter.\n6. If the counter becomes 0, choose the current element as the new candidate and reset the counter to 1.\n7. After one complete traversal, the remaining candidate is the potential majority element.\n\nExample:\nInput: [2, 2, 1, 1, 1, 2, 2]\nCandidate starts at 2 (Count 1) -> 2 (Count 2) -> 1 (Count 1) -> 1 (Count 0).\nNew Candidate = 1 (Count 1) -> 1 (Count 2) -> 2 (Count 1) -> 2 (Count 0).\nNew Candidate = 2.\nFinal Candidate = 2.\n\nOutput: 2\n\nThis algorithm works because the majority element cannot be completely canceled out by all other elements.",
         "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_8(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+          "Vote cancellation principle",
+          "Candidate & count state variables",
+          "Increment when element matches candidate, decrement when different",
+          "Reset candidate when count reaches 0"
+        ]
       },
       {
         "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Majority Element (Boyer-Moore)?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
+        "category": "Algorithmic Intuition",
+        "question": "2. Why does it work?",
+        "whatInterviewerChecks": "Proving why majority element (> n/2) survives cancellation.",
+        "bestReplyScript": "The algorithm works because the majority element appears more than half the time.\n\nEvery time a different element is encountered, it cancels one occurrence of the current candidate.\n\nSince the majority element occurs more than all the other elements combined, it will always remain after all cancellations.\n\nExample: Input [3, 3, 4, 2, 3]\n3 (+1) -> 3 (+1) -> 4 (-1) -> 2 (-1) -> 3 (+1)\nRemaining candidate = 3\n\nThe majority element always survives the cancellation process.",
         "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Majority Element (Boyer-Moore):\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+          "Majority element count > n/2",
+          "Non-majority elements combined < n/2",
+          "Pairwise cancellation leaves majority element candidate surviving"
+        ]
       },
       {
         "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Majority Element (Boyer-Moore) if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
+        "category": "Time & Space Complexity Proof",
+        "question": "3. What's the complexity?",
+        "whatInterviewerChecks": "Asymptotic bounds and constant memory justification.",
+        "bestReplyScript": "The array is scanned only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nThis is one of the most space-efficient algorithms for this problem because it doesn't use any extra data structures.",
         "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_8(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+          "Linear O(n) single pass",
+          "Strictly O(1) constant stack space (candidate & count scalar variables)",
+          "No hash map memory allocations"
+        ]
       },
       {
         "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
+        "category": "Correctness Proof",
+        "question": "4. Can you prove its correctness?",
+        "whatInterviewerChecks": "Formal pairwise cancellation mathematical proof.",
+        "bestReplyScript": "Yes.\n\nThe proof is based on pairwise cancellation.\n\nImagine pairing every occurrence of the majority element with a different element.\n\nSince the majority element appears more than n/2 times, even after all possible pairings, some occurrences of the majority element remain unmatched.\n\nThose remaining occurrences ensure that the final candidate is the majority element.\n\nThis is why the algorithm always works when a majority element is guaranteed to exist.",
         "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+          "Pairwise matching of distinct elements",
+          "Majority occurrences exceed total remaining slots",
+          "Guarantees unmatched majority candidate at traversal end"
+        ]
       },
       {
         "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
+        "category": "Non-Guaranteed Majority Case",
+        "question": "5. What if no majority exists?",
+        "whatInterviewerChecks": "Addressing unverified candidate false positives.",
+        "bestReplyScript": "If the problem does not guarantee a majority element, the candidate returned by Boyer-Moore may not actually be a majority.\n\nExample: Input [1, 2, 3, 4]\nThe algorithm will still return a candidate, but no number appears more than n/2 times.\n\nTo handle this:\n1. Run Boyer-Moore to find the candidate.\n2. Traverse the array again and count how many times the candidate appears.\n3. Return it only if its count is greater than n/2.\n\nThis adds one extra pass but keeps the overall time complexity at O(n).",
         "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+          "Boyer-Moore returns a candidate even if no majority exists",
+          "Pass 2 verification counts candidate frequency",
+          "Validates count > n/2 in total 2*O(n) = O(n) time"
+        ]
       },
       {
         "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
+        "category": "Hash Map Comparison",
+        "question": "6. Why not use a hash map?",
+        "whatInterviewerChecks": "Comparing Hash Map O(n) space vs Boyer-Moore O(1) space.",
+        "bestReplyScript": "A hash map is also a valid solution.\n\nUsing a hash map:\n• Count the frequency of every element.\n• Return the element whose frequency exceeds n/2.\n\nComplexity:\n• Time: O(n)\n• Space: O(n)\n\nBoyer-Moore is preferred because:\n• It uses constant extra space O(1).\n• It is more memory-efficient.\n• It is the optimal solution when a majority element is guaranteed.",
         "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Majority Element (Boyer-Moore):\nassert solve_8([]) == 0\nassert solve_8([5]) == 5\nassert solve_8([-1, -5, -2]) != 0\nassert solve_8([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+          "Hash map requires O(n) space for frequency counters",
+          "Boyer-Moore achieves O(1) space efficiency",
+          "Ideal for memory-constrained and embedded environments"
+        ]
       },
       {
         "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
+        "category": "Candidate Verification Algorithm",
+        "question": "7. How would you verify the candidate?",
+        "whatInterviewerChecks": "Coding a 2nd pass frequency counter verification.",
+        "bestReplyScript": "After finding the candidate:\n1. Initialize a counter.\n2. Traverse the array again.\n3. Count the candidate's occurrences.\n4. If the count is greater than n/2, return it.\n5. Otherwise, report that no majority element exists.\n\nExample:\nCandidate = 2, Occurrences = 4, Array Size = 7\nSince 4 > 7/2 (3.5), majority is confirmed.\n\nVerification is important when the input does not guarantee a majority element.",
         "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+          "Pass 2 loop: sum(1 for x in nums if x == candidate)",
+          "Compare count > len(nums) // 2",
+          "Return candidate or fallback (-1 / None)"
+        ]
       },
       {
         "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
+        "category": "Streaming Data Architecture",
+        "question": "8. Can this work on a stream?",
+        "whatInterviewerChecks": "Applying Boyer-Moore to real-time streaming data.",
+        "bestReplyScript": "Yes.\n\nSince Boyer-Moore only stores:\n• the current candidate\n• the current vote count\n\nit can process elements one at a time as they arrive in a stream.\n\nExample incoming stream: 2, 2, 1, 1, 2, 2\n\nThe candidate and count are updated without storing the entire stream in memory.\n\nHowever, verifying the final candidate may require another pass or additional storage, which may not always be possible in streaming scenarios.",
         "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+          "O(1) state space makes it ideal for streaming data",
+          "Processes items one by one without unbounded buffering",
+          "Verification requires external reservoir sampling or 2nd pass"
+        ]
       },
       {
         "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
+        "category": "Edge Cases & Boundaries",
+        "question": "9. What edge cases exist?",
+        "whatInterviewerChecks": "Identifying boundary test conditions.",
+        "bestReplyScript": "Important edge cases include:\n\nSingle element: [5] -> Output 5\n\nAll elements same: [7, 7, 7, 7] -> Output 7\n\nMajority at the end: [1, 2, 3, 3, 3] -> Output 3\n\nNo majority: [1, 2, 3, 4] -> Verification fails\n\nMajority appears exactly n/2 times: [1, 1, 2, 2] -> No majority exists because the definition requires strictly MORE than n/2 (not equal to n/2).\n\nTesting these cases ensures correctness.",
         "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+          "Single-element array [x]",
+          "All identical elements",
+          "Majority concentrated at array suffix",
+          "Exact n/2 tie (not a majority!)"
+        ]
       },
       {
         "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
+        "category": "Theoretical Uniqueness Proof",
+        "question": "10. Can there be two majority elements?",
+        "whatInterviewerChecks": "Pigeonhole principle and strict majority uniqueness.",
+        "bestReplyScript": "No.\n\nA majority element must appear more than n/2 times.\n\nIf two different elements each appeared more than n/2 times, their total occurrences would exceed the array size (n/2 + n/2 = n), which is impossible.\n\nExample: Array Size = 10 -> Majority requires > 5 occurrences. Two different numbers cannot both appear more than 5 times.\n\nTherefore, at most one majority element can exist.",
         "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+          "Strict majority definition: count > floor(n/2)",
+          "Sum of two majorities > n (violates total size limit)",
+          "At most 1 majority element can exist in any dataset"
+        ]
       },
       {
         "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
+        "category": "Voting Analogy Intuition",
+        "question": "11. What's the intuition behind canceling votes?",
+        "whatInterviewerChecks": "Verbal communication of mathematical analogies.",
+        "bestReplyScript": "Think of each occurrence of the majority element as a vote.\n\nWhenever a different element appears, one vote is canceled.\n\nSince the majority element has more votes than all the other elements combined, it will still have votes remaining after all cancellations.\n\nExample: [3, 3, 3, 2, 2]\n3 (+1) -> 3 (+1) -> 3 (+1) -> 2 (-1) -> 2 (-1)\nRemaining votes = 1, Candidate = 3.\n\nThis voting analogy makes the algorithm easy to understand.",
         "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+          "Vote counter represents net surplus",
+          "Each opposing element cancels one majority vote",
+          "Majority surplus ensures count remains > 0 at end"
+        ]
       },
       {
         "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
+        "category": "Test Suite Design",
+        "question": "12. How would you test this?",
+        "whatInterviewerChecks": "Creating test tables covering edge and normal cases.",
+        "bestReplyScript": "I would test different scenarios.\n\nInput | Expected Output\n[3, 2, 3] | 3\n[2, 2, 1, 1, 1, 2, 2] | 2\n[1] | 1\n[7, 7, 7] | 7\n[1, 2, 3, 4] | No Majority\n[1, 1, 2, 2] | No Majority\n\nThese tests cover normal cases, edge cases, and validation scenarios.",
         "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+          "Odd and even length arrays",
+          "All-same, single element, and no-majority inputs",
+          "Verification failure cases"
+        ]
       },
       {
         "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
+        "category": "Real-World Applications",
+        "question": "13. Where is this algorithm used?",
+        "whatInterviewerChecks": "Industrial application of O(1) space stream voting.",
+        "bestReplyScript": "The Boyer-Moore Voting Algorithm is useful in situations where memory is limited.\n\nExamples include:\n• Election vote counting & exit polling.\n• Real-time data streams & network packet routing.\n• Log analysis and DDoS attack detection.\n• Sensor data processing in IoT devices.\n• Large datasets where storing frequency maps is too expensive.\n\nThe underlying idea of maintaining only a candidate and a counter makes it ideal for memory-constrained environments.",
         "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+          "IoT embedded sensor processing",
+          "Network traffic monitoring & DDoS detection",
+          "Real-time stream telemetry",
+          "High-throughput log analysis"
+        ]
       },
       {
         "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
+        "category": "Candidate Mistakes & Anti-Patterns",
+        "question": "14. What mistakes occur?",
+        "whatInterviewerChecks": "Identifying common candidate implementation errors.",
+        "bestReplyScript": "Some common mistakes include:\n• Forgetting to verify the candidate when a majority is not guaranteed.\n• Misunderstanding that the algorithm always returns a valid majority.\n• Incorrectly resetting the candidate.\n• Updating the counter in the wrong order.\n• Assuming the algorithm works for the most frequent element even if it isn't a majority (e.g. Mode vs Majority).\n\nThe biggest mistake is skipping the verification step when required.",
         "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+          "Confusing Majority (> n/2) with Mode (most frequent)",
+          "Omitting Pass 2 verification on unverified inputs",
+          "Resetting candidate when count reaches 0 vs before checking candidate"
+        ]
       },
       {
         "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
+        "category": "Parallel MapReduce Adaptation",
+        "question": "15. Can this be parallelized?",
+        "whatInterviewerChecks": "Distributed divide-and-conquer adaptation of Boyer-Moore.",
+        "bestReplyScript": "Yes, but it is more complex than the sequential version.\n\nOne approach is:\n1. Divide the array into smaller chunks.\n2. Run Boyer-Moore independently on each chunk to find local candidates.\n3. Combine the local candidates.\n4. Verify the final candidate by counting its occurrences in the entire array.\n\nAlthough possible, the standard Boyer-Moore algorithm is primarily designed for sequential processing, where it is already very efficient.",
         "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+          "Partition input into K chunks across threads/nodes",
+          "Compute (candidate, count) pair per partition",
+          "Combine pairs using vote reduction rules",
+          "Global verification pass confirms > n/2 count"
+        ]
       }
     ],
     "mistakes": [
