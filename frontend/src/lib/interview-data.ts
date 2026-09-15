@@ -18097,195 +18097,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "My approach for Daily Temperatures (Monotonic Stack) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Monotonic decreasing stack of indices, distance calculation `curr_i - prev_i`.",
+            "bestReplyScript": "I use a monotonic decreasing stack to keep track of the indices of days whose next warmer temperature hasn't been found yet.\n\nAs I iterate through the temperatures:\n1. If current temperature > temperature at stack top index:\n   - Pop the stack index `prev_i`.\n   - Calculate days waited: `res[prev_i] = curr_i - prev_i`.\n   - Repeat until stack is empty or top temperature is >= current.\n2. Push current index `curr_i` onto stack.\n3. Return result array initialized with 0s.\n\nExample: [73, 74, 75, 71, 69, 72, 76, 73] -> Output: [1, 1, 4, 2, 1, 1, 0, 0].\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Monotonic decreasing stack stores INDICES",
+                  "Pop stack when `temperatures[i] > temperatures[stack[-1]]`",
+                  "Distance calculation: `result[prev_i] = i - prev_i`",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Monotonic Stack Rationale",
             "question": "2. Why did you use a monotonic stack?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "I chose this approach for Daily Temperatures (Monotonic Stack) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Efficient resolution of waiting smaller temperatures.",
+            "bestReplyScript": "A monotonic decreasing stack lets me quickly find the next greater element.\n\nInstead of checking every future temperature using nested loops (O(n^2)), I store unresolved days in the stack. When a warmer day arrives, it resolves all smaller waiting days in a single pass.\n\nThis reduces time complexity from O(n^2) to linear O(n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Stack holds unresolved index waiting room",
+                  "Warmer day resolves multiple colder waiting days at once",
+                  "Reduces time complexity from O(n^2) to O(n)"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "Here is the complexity analysis for Daily Temperatures (Monotonic Stack):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Amortized linear O(n) proof (1 push & 1 pop per index).",
+            "bestReplyScript": "Each index in the array is:\n- Pushed onto the stack exactly once.\n- Popped from the stack at most once.\n\nTherefore:\n- Time Complexity: O(n) (amortized 2n total operations)\n- Space Complexity: O(n) (stack and result array)\n\nEven though there is a nested while loop, each index is processed at most twice across the entire run.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Push once, pop once per index",
+                  "Amortized Time Complexity: O(n)",
+                  "Space Complexity: O(n)"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Brute-Force Inefficiency",
             "question": "4. Why is the brute-force solution inefficient?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "I chose this approach for Daily Temperatures (Monotonic Stack) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n^2) nested loop comparison.",
+            "bestReplyScript": "The brute-force approach checks every future day for each temperature using nested loops.\n\nFor an array of size n:\n- Outer loop i from 0 to n-1, inner loop j from i+1 to n-1.\n- Worst-case time: O(n^2) (e.g. for strictly decreasing temperatures like [100, 90, 80, 70]).\n\nFor n = 100,000, O(n^2) takes 10 billion comparisons resulting in TLE. The monotonic stack solves it in linear O(n) time (~100,000 ops).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force: O(n^2) nested loops",
+                  "100,000 elements causes TLE",
+                  "Monotonic stack reduces runtime to linear O(n)"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Stack Mechanics & Decreasing Order Maintenance",
             "question": "5. How does the stack maintain useful information?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Decreasing temperature order maintained via index stack.",
+            "bestReplyScript": "The stack stores INDICES corresponding to strictly decreasing temperatures.\n\nExample Temperatures: [75, 72, 70] -> Stack indices map to values [75, 72, 70].\nWhen a warmer temperature like 76 arrives:\n- 76 > 70 -> Pop index of 70, res[idx] = curr - idx.\n- 76 > 72 -> Pop index of 72, res[idx] = curr - idx.\n- 76 > 75 -> Pop index of 75, res[idx] = curr - idx.\n\nThis guarantees the stack remains sorted in decreasing temperature order at all times.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stack contains indices of strictly decreasing temperatures",
+                  "Warmer arrival pops all smaller temperatures sequentially",
+                  "Eliminates redundant forward array scans"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "When handling Daily Temperatures (Monotonic Stack), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, strictly increasing, strictly decreasing, duplicates.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> []\n2. Single temperature ([30]) -> [0]\n3. Strictly increasing ([30, 40, 50]) -> [1, 1, 0]\n4. Strictly decreasing ([50, 40, 30]) -> [0, 0, 0] (stack retains all indices, result defaults to 0s)\n5. Duplicate temperatures ([70, 70, 71]) -> [2, 1, 0] (strict `>` comparison treats equal temperatures as not warmer).\n\nTesting these guards ensures complete correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Single element & empty array guards",
+                  "Strictly decreasing -> all 0s",
+                  "Duplicate temperatures (strict `>` requirement)"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "To thoroughly test Daily Temperatures (Monotonic Stack), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, increasing, decreasing, and equal temperatures.",
+            "bestReplyScript": "I would test:\n- [] -> []\n- [30] -> [0]\n- [30, 40, 50] -> [1, 1, 0]\n- [50, 40, 30] -> [0, 0, 0]\n- [73, 74, 75, 71, 69, 72, 76, 73] -> [1, 1, 4, 2, 1, 1, 0, 0]\n\nThese cover normal, increasing, decreasing, duplicate, and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 739 standard test cases",
+                  "Monotonic increasing vs decreasing tests",
+                  "Duplicate temperature tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "8. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "Common candidate pitfalls when solving Daily Temperatures (Monotonic Stack) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Daily Temperatures (LeetCode 739).",
+            "bestReplyScript": "Some common mistakes include:\n- Storing temperature VALUES in the stack instead of INDICES (makes calculating index difference `curr_i - prev_i` impossible!).\n- Using `>=` instead of `>` (incorrectly treats equal temperatures as 'warmer').\n- Forgetting to push `curr_i` onto stack after the inner while loop finishes.\n- Forgetting that un-popped elements in stack naturally default to 0.\n\nThe most common critical bug is storing values instead of indices in the stack.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Storing values instead of INDICES in stack (critical bug)",
+                  "Using `>=` instead of `>` (equal temp is not warmer)",
+                  "Forgetting to push current index to stack"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
+            "category": "No-Stack Space Trade-off",
             "question": "9. Can this be solved without a stack?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dynamic Programming array traversal right-to-left in O(1) extra space.",
+            "bestReplyScript": "Yes! We can solve it without a stack by traversing RIGHT-TO-LEFT using the already computed `result` array:\n1. Loop i from n-2 down to 0.\n2. Set `j = i + 1`.\n3. While `temperatures[i] >= temperatures[j]`:\n   - If `result[j] == 0` (no warmer day exists): set `j = i`, break.\n   - Else: jump `j += result[j]`!\n4. If `temperatures[i] < temperatures[j]`: `result[i] = j - i`.\n\nThis DP pointer-jumping approach runs in O(n) time and O(1) extra space (excluding result array).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Right-to-left pointer jumping: `j += result[j]`",
+                  "O(n) time and O(1) auxiliary space",
+                  "Reuses result array to skip cold days"
             ]
       },
       {
             "id": "q10",
-            "category": "Algorithmic Justification",
+            "category": "Previous Warmer Day Variant",
             "question": "10. How would you find the previous warmer day instead?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "I chose this approach for Daily Temperatures (Monotonic Stack) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Symmetric left-to-right monotonic stack processing.",
+            "bestReplyScript": "To find the PREVIOUS warmer day:\n1. Traverse array left-to-right.\n2. Maintain monotonic decreasing stack of indices.\n3. For current index i, pop stack while `temperatures[stack[-1]] <= temperatures[i]`.\n4. If stack is non-empty, top of stack `stack[-1]` is the previous warmer day index! `result[i] = i - stack[-1]`.\n5. Push i onto stack.\n\nTime O(n), Space O(n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Pop stack while `stackTop <= current`",
+                  "Top of stack is Previous Warmer Day",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where are monotonic stacks used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Canonical Monotonic Stack problem family.",
+            "bestReplyScript": "Monotonic stacks are widely used in:\n- Weather & Climate Analytics (Daily Temperatures).\n- Financial Stock Analysis (Stock Span Problem / Next Higher Close).\n- UI & Graphics Layout Engines (Largest Rectangle in Histogram / Maximum Binary Matrix).\n- Terrain & Fluid Simulations (Trapping Rain Water).\n- Compiler AST Parsing (Next Greater Element).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stock Span & Next Higher Close in finance",
+                  "Largest Rectangle in Histogram",
+                  "Trapping Rain Water & Fluid simulations"
             ]
       },
       {
             "id": "q12",
-            "category": "Step-by-Step Approach",
+            "category": "Duplicate Temperatures Handling",
             "question": "12. Can duplicate temperatures affect the algorithm?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "My approach for Daily Temperatures (Monotonic Stack) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Strict inequality `>` vs `>=` check.",
+            "bestReplyScript": "No, provided we use strict inequality `>`.\n\nSince equal temperatures are not 'warmer', when `temperatures[i] == temperatures[stack[-1]]`, the while loop condition `temperatures[i] > temperatures[stack[-1]]` evaluates to False.\n\nThus, equal temperature indices remain in the stack in non-increasing order. They will both wait for a strictly greater temperature to pop them.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Strict inequality `>` leaves equal temps in stack",
+                  "Equal temperatures do not pop each other",
+                  "Both wait for a strictly greater temperature"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Circular Array Variant",
             "question": "13. How would you solve a circular version of this problem?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Looping 2*n times with `i % n` index modulo (LeetCode 503).",
+            "bestReplyScript": "For a circular array (where temperature search wraps from end to beginning):\n- Traverse loop from 0 to 2*n - 1.\n- Use virtual index `curr_i = i % n`.\n- Monotonic stack logic remains identical.\n\nThis allows days near the end of the year to find warmer days at the beginning of the year in O(n) time and O(n) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Loop 2*n times with `i % n` indexing",
+                  "Store virtual indices on monotonic stack",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q14",
-            "category": "Step-by-Step Approach",
+            "category": "Brute Force vs Monotonic Stack Comparison",
             "question": "14. Compare stack and brute-force approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "My approach for Daily Temperatures (Monotonic Stack) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Nested loops checking all future days -> Time O(n^2), Space O(1).\n- Monotonic Stack: Single pass tracking unresolved indices -> Time O(n), Space O(n).\n- Right-to-Left DP: Pointer jumping using result array -> Time O(n), Space O(1).\n\nThe Monotonic Stack approach is the standard optimal interview solution.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brute force: O(n^2) time, O(1) space",
+                  "Monotonic Stack: O(n) time, O(n) space",
+                  "Right-to-left DP: O(n) time, O(1) space"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Intuitive Waiting Room Explanation",
             "question": "15. How would you explain the intuition behind monotonic stacks?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Daily Temperatures (Monotonic Stack).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Waiting room / Inbox metaphor for unresolved elements.",
+            "bestReplyScript": "Think of the stack as an 'unresolved inbox' of cold days waiting for a warmer day.\n\nDays sit in the inbox ordered from coldest to warmest.\nWhen a hot day arrives, it checks the inbox from top to bottom, resolves everyone colder than itself, and records how long they waited.\nThen the hot day enters the inbox to wait for an even hotter day!\n\nEach day enters and leaves the inbox once, guaranteeing O(n) efficiency.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Inbox of unresolved cold days",
+                  "Hot day resolves colder waiting days",
+                  "Each day enters & leaves inbox once -> O(n)"
             ]
       }
 ],
