@@ -14677,195 +14677,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Flood Fill (2D Component).",
-            "bestReplyScript": "My approach for Flood Fill (2D Component) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "DFS/BFS graph traversal, original vs new color check, 4-directional grid expansion.",
+            "bestReplyScript": "I solve this problem using Depth-First Search (DFS) or Breadth-First Search (BFS).\n\nThe idea is to start from the given pixel and change the color of all connected pixels that have the same original color.\n\nAlgorithm:\n1. Store original color = image[sr][sc].\n2. If original color == new color, return image immediately.\n3. Start DFS (or BFS) from cell (sr, sc).\n4. For each cell: check matrix bounds, verify it equals original color, change it to new color, and recursively visit 4 neighboring cells (up, down, left, right).\n5. Continue until all connected component pixels are recolored.\n\nExample: Start (1,1), Old 1 -> New 2 recolors connected 1s in component.\n\nComplexity: Time: O(m * n), Space: O(m * n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "DFS or BFS connected component traversal",
+                  "Immediate return if original color == new color",
+                  "4-directional expansion (up, down, left, right)",
+                  "Time: O(m * n), Space: O(m * n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "DFS vs BFS Choice",
             "question": "2. Why did you choose DFS or BFS?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Flood Fill (2D Component).",
-            "bestReplyScript": "I chose this approach for Flood Fill (2D Component) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Comparing recursive DFS simplicity vs queue BFS call stack safety.",
+            "bestReplyScript": "Both DFS and BFS correctly visit all 4-directionally connected component cells.\n\n- DFS: Easy to implement using recursion, cleaner code. Good for standard grid sizes.\n- BFS: Uses an explicit queue, avoids recursion depth call stack limits. Better for massive grids.\n\nBoth achieve the same linear time complexity O(m * n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "DFS uses recursion / call stack",
+                  "BFS uses explicit queue",
+                  "Both achieve linear O(m * n) time"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Flood Fill (2D Component).",
-            "bestReplyScript": "Here is the complexity analysis for Flood Fill (2D Component):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear scan bounds O(m * n) time & space.",
+            "bestReplyScript": "Each cell in the matrix is visited at most once.\nFor a grid with m rows and n columns:\n- Time Complexity: O(m * n)\n- Space Complexity: O(m * n) (worst-case call stack or queue memory for a fully connected grid).\n\nThis is optimal because every connected cell in the component must be visited and recolored.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(m * n)",
+                  "Space Complexity: O(m * n)",
+                  "Visits each cell at most once"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Same Color Guard Precondition",
             "question": "4. What happens if the new color is the same as the original color?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Infinite recursion / TLE cycle guard: `if image[sr][sc] == newColor: return image`.",
+            "bestReplyScript": "We must return immediately if original color == new color.\n\nIf we continue DFS without this check, changing color 1 to 1 will not mark cells as 'visited'. The algorithm will infinitely recurse between neighboring cells, resulting in a StackOverflowError or Time Limit Exceeded!\n\nFirst line guard: `if image[sr][sc] == newColor: return image`.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Infinite recursion prevention",
+                  "Original color == new color guard",
+                  "Returns original image immediately"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Visited Marker Strategy",
             "question": "5. How do you avoid infinite recursion?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "In-place color modification serving as implicit visited marker.",
+            "bestReplyScript": "After visiting a cell, I immediately change its color to the new color before exploring its 4 neighbors.\n\nThis in-place mutation acts as a visited marker! If the algorithm re-visits the cell, it no longer matches the original color, so the recursion condition fails and stops naturally.\n\nThis avoids creating a separate `visited` 2D boolean matrix.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "In-place color mutation = implicit visited marker",
+                  "Eliminates need for separate visited 2D array",
+                  "Prevents cycles naturally"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Flood Fill (2D Component).",
-            "bestReplyScript": "When handling Flood Fill (2D Component), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Single cell, newColor == originalColor, boundary starting cell, isolated pixel.",
+            "bestReplyScript": "Important edge cases include:\n1. Single cell image ([[5]]) -> Updated correctly.\n2. New color == original color -> Guard returns image immediately.\n3. Starting cell on boundary (0,0) -> Handled without out-of-bounds errors.\n4. Entire image has same color -> All m * n cells recolored.\n5. Isolated pixel (no matching neighbors) -> Only starting cell recolored.\n\nTesting these guards ensures complete safety.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Single cell & isolated pixel boundary",
+                  "Same color early exit guard",
+                  "Boundary matrix starting point"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Flood Fill (2D Component).",
-            "bestReplyScript": "To thoroughly test Flood Fill (2D Component), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix for single cell, same color, boundary start, isolated component.",
+            "bestReplyScript": "I would test:\n- Single cell -> Cell updated.\n- Entire grid same color -> Entire grid recolored.\n- No connected neighbors -> Only starting cell changes.\n- New color == old color -> No changes.\n- Boundary starting point -> Correct 4-directional flood fill.\n\nThese cover normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Same color guard verification",
+                  "Connected vs isolated component verification",
+                  "Boundary index safety tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Algorithmic Justification",
+            "category": "DFS vs BFS Comprehensive Comparison",
             "question": "8. Compare DFS and BFS for this problem.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Flood Fill (2D Component).",
-            "bestReplyScript": "I chose this approach for Flood Fill (2D Component) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Detailed recursion stack vs BFS queue memory comparison.",
+            "bestReplyScript": "Comparison:\n- DFS: Simple recursive code. Uses implicit call stack. Good for standard grids, but risks StackOverflow on huge grids.\n- BFS: Uses explicit FIFO Queue. Slightly more boilerplate code. Completely safe from stack overflow.\n\nBoth run in Time O(m * n) and Space O(m * n). In production with large images, BFS or iterative DFS is preferred.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "DFS: concise, call stack risk on huge grids",
+                  "BFS: queue-based, stack-overflow safe",
+                  "Time: O(m * n), Space: O(m * n)"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Flood Fill (2D Component).",
-            "bestReplyScript": "Common candidate pitfalls when solving Flood Fill (2D Component) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Flood Fill (LeetCode 733).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting the `if oldColor == newColor: return image` guard (causes infinite stack overflow).\n- Forgetting to check matrix boundary conditions (`0 <= r < m` and `0 <= c < n`).\n- Not recoloring the current cell before exploring neighbors.\n- Forgetting one of the 4 directional offsets.\n\nThe most common mistake is missing the same-color early exit guard.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Omitting same-color guard (infinite recursion)",
+                  "Out of bounds matrix indexing",
+                  "Recoloring after neighbor calls instead of before"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Iterative Implementation Options",
             "question": "10. Can this be solved iteratively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Iterative DFS with explicit stack vs BFS with deque.",
+            "bestReplyScript": "Yes. Instead of recursion, we can use an explicit stack (Iterative DFS) or deque (BFS).\n\nAlgorithm:\n1. Push (sr, sc) onto stack/queue.\n2. While stack/queue is non-empty:\n   - Pop cell (r, c).\n   - Color cell to newColor.\n   - Push unvisited valid 4-neighbors.\n\nThis completely eliminates recursion stack overflow risks.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Explicit stack (Iterative DFS) or Queue (BFS)",
+                  "Avoids system call stack limits",
+                  "Same O(m * n) time & space"
             ]
       },
       {
             "id": "q11",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "11. Where is flood fill used in real applications?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Flood Fill (2D Component).",
-            "bestReplyScript": "The algorithmic core of Flood Fill (2D Component) is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Graphics Paint bucket tool, Game mazes, Medical imaging segmentation.",
+            "bestReplyScript": "Flood fill is used in:\n- Graphics Software (MS Paint / Photoshop Bucket Fill tool).\n- Game Development (finding walkable terrain, fog of war, maze connectivity).\n- Medical Image Segmentation (identifying tumor region components in MRI scans).\n- Geographic Information Systems (GIS watershed & land mass analysis).",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "Photoshop / Paint Bucket Fill tool",
+                  "Game terrain & Fog of War connectivity",
+                  "Medical MRI image segmentation"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Huge Image Memory Management",
             "question": "12. How would you handle very large images?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Memory-chunking, iterative BFS, parallel domain decomposition.",
+            "bestReplyScript": "For huge images (e.g. 100,000 x 100,000 pixels):\n- Use BFS or iterative DFS to eliminate call stack overflow.\n- Process image in tiled memory blocks / disk chunks if image exceeds RAM.\n- Apply parallel domain decomposition across multi-threaded workers.\n\nIterative queue processing avoids OS stack memory limits.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Iterative queue processing prevents stack overflow",
+                  "Image tiling / block streaming",
+                  "Multi-threaded parallel domain decomposition"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Stack Overflow Cause & Mechanics",
             "question": "13. How can recursion cause a stack overflow?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Call stack frame limit (10,000 depth) vs large grid size.",
+            "bestReplyScript": "In Python or Java, system call stacks have max depth limits (e.g. 1,000 to 10,000 frames).\nIf a connected component has 100,000 pixels, recursive DFS creates 100,000 nested stack frames, triggering RecursionError / StackOverflowError.\n\nUsing an explicit stack or queue stores data in heap memory (gigabytes) rather than stack memory (megabytes).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "OS thread call stack limit (MBs vs Heap GBs)",
+                  "Deep connected components exceed max recursion depth",
+                  "Heap memory explicitly managed via queue/stack"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "8-Directional Connectivity Variation",
             "question": "14. Would 8-directional movement change the solution?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adding diagonal directional vectors `(-1,-1), (-1,1), (1,-1), (1,1)`.",
+            "bestReplyScript": "Yes. The algorithm logic remains identical, but the direction array expands from 4 to 8 directions.\n\nDirections:\n- 4-way: Up, Down, Left, Right\n- 8-way: Adds Top-Left, Top-Right, Bottom-Left, Bottom-Right\n\nThis connects diagonally adjacent pixels of the same color into a single component.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Direction array expands from 4 to 8 vectors",
+                  "Includes diagonal neighbors",
+                  "Identical O(m * n) complexity"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Memory Optimization",
             "question": "15. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Flood Fill (2D Component).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "In-place mutation, bitpacking, avoiding separate visited matrices.",
+            "bestReplyScript": "To optimize memory:\n1. Mutate image in-place (no image copying).\n2. Eliminate 2D `visited` array (color change serves as visited marker).\n3. Use iterative BFS with compact 1D integer encoding `r * n + c` to store coordinates as single integers in queue instead of tuples `(r, c)`.\n\nThis minimizes garbage collection and reduces memory footprint.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "In-place image mutation",
+                  "No 2D visited array",
+                  "Integer coordinate packing: `r * n + c`"
             ]
       }
 ],
