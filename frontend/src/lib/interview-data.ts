@@ -12814,195 +12814,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your solution.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Backspace String Compare.",
-            "bestReplyScript": "My approach for Backspace String Compare follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Stack processing (pushing non-#, popping on #) vs two-pointer space optimization.",
+            "bestReplyScript": "There are two common solutions: Stack approach (easy to understand) and Two-pointer approach (optimal space).\nIn interviews, I usually explain the stack approach first because it's simple, then mention the two-pointer optimization.\n\nStack Approach:\n1. Traverse each string.\n2. If the character is not '#', push it onto the stack.\n3. If the character is '#' and the stack is not empty, pop the top character.\n4. Build the final processed string for both inputs.\n5. Compare the two processed strings.\n\nExample: s = \"ab#c\" -> ac, t = \"ad#c\" -> ac. Answer = True.\n\nComplexity: Time: O(n + m), Space: O(n + m)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Stack simulation of backspaces (LIFO)",
+                  "Push non-# chars, pop on #",
+                  "Compare resulting string representations",
+                  "Time: O(n + m), Space: O(n + m)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Data Structure Rationale",
             "question": "2. Why did you use a stack (or two pointers)?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Backspace String Compare.",
-            "bestReplyScript": "I chose this approach for Backspace String Compare over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "LIFO behavior of backspace key.",
+            "bestReplyScript": "A backspace removes the most recently typed character. This is exactly how a stack (LIFO - Last In, First Out) works.\n\nExample: \"abc#\" -> Push a, b, c -> '#' pops c -> Remaining \"ab\".\n\nThe two-pointer approach is even better because it scans the strings from right to left, skipping deleted characters without using extra memory.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Backspace matches LIFO (Last In First Out)",
+                  "Stack naturally models recent character deletion",
+                  "Right-to-left two pointers eliminates auxiliary memory"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Backspace String Compare.",
-            "bestReplyScript": "Here is the complexity analysis for Backspace String Compare:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Stack O(n+m) space vs Two-Pointer O(1) space comparison.",
+            "bestReplyScript": "Complexity breakdown:\n- Stack Solution: Time O(n + m), Space O(n + m) (storing processed characters in stacks).\n- Two-Pointer Solution: Time O(n + m), Space O(1) (scans right-to-left in-place).\n\nThe two-pointer approach is optimal because no additional data structure is created.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Stack: Time O(n+m), Space O(n+m)",
+                  "Two Pointers: Time O(n+m), Space O(1)",
+                  "Two pointers achieves linear time with zero memory"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "O(1) Space Two-Pointer Strategy",
             "question": "4. Can you solve it using O(1) extra space?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Backspace String Compare.",
-            "bestReplyScript": "Here is the complexity analysis for Backspace String Compare:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Right-to-left two-pointer skip counter algorithm.",
+            "bestReplyScript": "Yes. Instead of building new strings, I use two pointers starting from the end of each string.\n\nAlgorithm:\n1. Start pointers i and j at the last characters of s and t.\n2. Maintain skip counters (skipS, skipT).\n3. When '#' is found, increment skip counter and decrement pointer.\n4. Skip valid characters while skip > 0.\n5. Compare the next valid characters from both strings.\n6. Continue until both strings are processed.\n\nThis achieves O(1) space complexity.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Right-to-left scan with skip counter",
+                  "Increment skip on '#', decrement skip on valid char",
+                  "O(1) auxiliary space"
             ]
       },
       {
             "id": "q5",
-            "category": "Time & Space Complexity",
+            "category": "Consecutive Backspaces & Underflow",
             "question": "5. How do consecutive backspaces affect the result?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Backspace String Compare.",
-            "bestReplyScript": "Here is the complexity analysis for Backspace String Compare:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Multiple '#' handling & empty stack boundary safeguards.",
+            "bestReplyScript": "Each backspace deletes one previous valid character.\nExample: \"abc###\" -> c deleted, b deleted, a deleted -> \"\".\n\nIf there are more backspaces than characters (underflow), the extra backspaces simply have no effect.\nExample: \"####abc\" -> initial 4 '#'s are ignored because there are no characters to delete -> \"abc\".",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Consecutive '#'s accumulate skip count",
+                  "Backspaces on empty string/stack are ignored",
+                  "Underflow safe"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Backspace String Compare.",
-            "bestReplyScript": "When handling Backspace String Compare, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty strings, only '#', more '#' than letters, different final strings.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty strings (\"\", \"\") -> True\n2. Only backspaces (\"###\", \"\") -> True (both become \"\")\n3. More backspaces than letters (\"a####\", \"\") -> True\n4. Different final strings (\"ab#\", \"ac#\") -> True (both become \"a\")\n5. Mismatched result (\"a#c\", \"b\") -> False (\"c\" vs \"b\")\n\nTesting these ensures the solution handles all cases correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty & all-# strings return True",
+                  "Underflow ('a####') handles safely",
+                  "Mismatched outputs return False"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Backspace String Compare.",
-            "bestReplyScript": "To thoroughly test Backspace String Compare, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix covering normal, empty, and multi-# cases.",
+            "bestReplyScript": "I would test:\n- (\"ab#c\", \"ad#c\") -> True\n- (\"ab##\", \"c#d#\") -> True\n- (\"a#c\", \"b\")     -> False\n- (\"####\", \"\")     -> True\n- (\"abc###\", \"\")   -> True\n\nThese cover normal cases, empty strings, and multiple backspaces.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Equivalent backspace patterns",
+                  "Total wipeout to empty strings",
+                  "Unequal result strings"
             ]
       },
       {
             "id": "q8",
-            "category": "Time & Space Complexity",
+            "category": "Leading Backspaces Behavior",
             "question": "8. What happens if the string starts with backspaces?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Backspace String Compare.",
-            "bestReplyScript": "Here is the complexity analysis for Backspace String Compare:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Leading '#' ignore rule.",
+            "bestReplyScript": "Nothing happens because there are no previous characters to delete.\n\nExample: \"###abc\".\nThe initial 3 '#' characters are ignored because the stack (or string prefix) is empty.\nFinal string: \"abc\".\n\nThe algorithm simply ignores extra backspaces when no characters are available to delete.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Leading '#'s are ignored",
+                  "Stack check `if stack: stack.pop()` prevents errors",
+                  "Skip counter bounds `skip = max(0, skip - 1)`"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Backspace String Compare.",
-            "bestReplyScript": "Common candidate pitfalls when solving Backspace String Compare include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Backspace String Compare.",
+            "bestReplyScript": "Some common mistakes include:\n- Calling pop() on an empty stack (causes IndexError).\n- Forgetting to check if stack is non-empty before popping on '#'.\n- Mishandling multiple consecutive backspaces in two-pointer logic.\n- Comparing original strings instead of processed ones.\n\nThe most common mistake is popping from an empty stack without checking `if stack` first.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Empty stack pop() IndexError bug",
+                  "Flawed skip counter logic in two pointers",
+                  "Comparing raw inputs instead of backspaced results"
             ]
       },
       {
             "id": "q10",
-            "category": "Step-by-Step Approach",
+            "category": "Stack vs Two-Pointer Trade-offs",
             "question": "10. Which approach is better: stack or two pointers?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Backspace String Compare.",
-            "bestReplyScript": "My approach for Backspace String Compare follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Trade-offs between readability and space complexity.",
+            "bestReplyScript": "Both produce correct results:\n- Stack: Easy to understand, intuitive, good for initial explanation. Disadvantage: O(n + m) space.\n- Two Pointers: O(1) space, optimal memory efficiency. Disadvantage: Slightly more complex right-to-left skip logic.\n\nIn interviews, I explain the stack solution first to establish baseline logic, then implement the O(1) two-pointer optimization.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Stack = highly readable, O(n+m) space",
+                  "Two Pointers = optimal O(1) space, right-to-left scan",
+                  "Start with stack, optimize to two pointers"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Can this work on a live text editor?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Backspace String Compare.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Text editor buffer simulation.",
+            "bestReplyScript": "Yes. The stack solution closely resembles how a text editor buffer processes keystrokes:\n- Type letter -> append to buffer.\n- Press backspace -> delete most recent character.\n\nText editors internally maintain undo/redo buffers using similar stack-based data structures.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Text editor keypress buffer",
+                  "Backspace / Del key simulation",
+                  "Undo / Redo stack architecture"
             ]
       },
       {
             "id": "q12",
-            "category": "Algorithmic Justification",
+            "category": "Comparing Multiple Strings",
             "question": "12. How would you compare multiple strings?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Backspace String Compare.",
-            "bestReplyScript": "I chose this approach for Backspace String Compare over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Generalizing string backspace reduction across N strings.",
+            "bestReplyScript": "I would process each string using a helper function `build(s)` into its final string representation.\n\nThen:\n- Compare processed strings using set() to check if all representations are identical.\n- Or compare adjacent pairs in a list.\n\nThe single-string reduction helper is reusable across any number of inputs.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Helper function `build(s)`",
+                  "Set deduplication `len(set(map(build, strings))) == 1`",
+                  "Reusable single-string reduction"
             ]
       },
       {
             "id": "q13",
-            "category": "Time & Space Complexity",
+            "category": "Custom Delimiter Support",
             "question": "13. What if the backspace character changes?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Backspace String Compare.",
-            "bestReplyScript": "Here is the complexity analysis for Backspace String Compare:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Configurable backspace character parameter.",
+            "bestReplyScript": "The algorithm does not depend specifically on '#'.\nIf the backspace character becomes '@' or '*':\n- Pass `backspace_char` as a parameter to the helper function.\n- Compare `char == backspace_char` instead of `char == '#'`.\n\nThe core stack / two-pointer algorithm remains identical.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Parameterize `backspace_char='#'`",
+                  "Zero structural code changes",
+                  "Configurable delimiter support"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Real-World Pattern Use Cases",
             "question": "14. Where is this pattern useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Backspace String Compare.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical applications of backspace editing logic.",
+            "bestReplyScript": "This pattern is useful in:\n- Command-line shells & terminal TTY raw mode line editing.\n- Text editors & word processors.\n- Real-time chat input validation.\n- Keyboard event stream processors.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Terminal TTY raw mode line editing",
+                  "CLI command buffer sanitization",
+                  "Keyboard event stream processing"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Optimal Solution Summary",
             "question": "15. How would you optimize your solution?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Backspace String Compare.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Right-to-left two-pointer implementation summary.",
+            "bestReplyScript": "The ultimate optimization is the right-to-left two-pointer approach:\n- O(n + m) time complexity.\n- O(1) auxiliary space complexity.\n- Zero string or stack object allocations.\n\nEach character is visited at most once from right to left, skipping backspaced items dynamically.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Right-to-left two pointers",
+                  "Time: O(n + m), Space: O(1)",
+                  "Zero memory allocation"
             ]
       }
 ],
