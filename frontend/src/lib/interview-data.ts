@@ -5594,195 +5594,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Subarray with Zero Sum.",
-            "bestReplyScript": "My approach for Subarray with Zero Sum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Prefix sum calculation, Hash set lookup for repeated prefix sums, single-pass logic.",
+            "bestReplyScript": "I use the prefix sum technique along with a hash set.\n\nThe idea is:\n- Keep a running sum while traversing the array.\n- If the running sum becomes 0, then the subarray from the beginning to the current index has a sum of 0.\n- If the same prefix sum appears again, the elements between those two indices must sum to 0.\n\nSteps:\n1. Initialize prefix_sum = 0.\n2. Create an empty hash set.\n3. Traverse the array.\n4. Add each element to prefix_sum.\n5. If prefix_sum == 0 or it already exists in the set, return True.\n6. Otherwise, store the prefix sum in the set.\n7. If the loop finishes, return False.\n\nExample:\nnums = [4, 2, -3, 1, 6]\nRunning Prefix Sum: 4 -> 6 -> 3 -> 4 (Already seen!). Subarray [2, -3, 1] sums to 0. Output: True.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Running prefix sum tracking",
+                  "Hash set for O(1) repeated prefix sum detection",
+                  "Detects prefix_sum == 0 or repeated sum",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Prefix Sum Justification",
             "question": "2. Why use prefix sums?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Subarray with Zero Sum.",
-            "bestReplyScript": "I chose this approach for Subarray with Zero Sum over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Understanding cumulative sums and zero-sum subarray mathematical proof.",
+            "bestReplyScript": "A prefix sum stores the cumulative sum from the beginning of the array up to the current index.\n\nIf two prefix sums are equal, the elements between them must sum to 0.\n\nExample: Array [3, 4, -7, 5] -> Prefix Sums: 3 -> 7 -> 0 -> 5.\nHere, the prefix sum becomes 0, which means 3 + 4 + (-7) = 0.\n\nPrefix sums allow us to detect zero-sum subarrays efficiently without checking every possible subarray.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Prefix sum = cumulative sum from index 0",
+                  "Repeated prefix sum means subarray between sums to 0",
+                  "Eliminates checking every possible subarray"
             ]
       },
       {
             "id": "q3",
-            "category": "Algorithmic Justification",
+            "category": "Hash Set Utility",
             "question": "3. Why is a hash set useful?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Subarray with Zero Sum.",
-            "bestReplyScript": "I chose this approach for Subarray with Zero Sum over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) average lookup for previous cumulative sum values.",
+            "bestReplyScript": "The hash set stores all previously seen prefix sums.\n\nWhen a prefix sum repeats, we immediately know that the subarray between the two occurrences has a sum of 0.\n\nExample: Prefix Sums: 5 -> 8 -> 5. Since 5 appears twice, 8 - 5 = 3, meaning elements between sum to 0.\n\nA hash set provides O(1) average lookup, making the algorithm efficient.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Stores historical prefix sums",
+                  "Average O(1) lookup time",
+                  "Triggers instant match on duplicate prefix sum"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "4. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Subarray with Zero Sum.",
-            "bestReplyScript": "Here is the complexity analysis for Subarray with Zero Sum:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic time and space complexity bounds.",
+            "bestReplyScript": "The array is traversed only once.\n\nFor each element:\n- Update prefix sum -> O(1)\n- Hash set lookup -> O(1) average\n- Hash set insertion -> O(1) average\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThis is the optimal solution.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Optimal single pass execution"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Mathematical Intuition",
             "question": "5. How do prefix sums detect a zero-sum subarray?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Mathematical identity sum(i..j) = prefix[j] - prefix[i-1] = 0.",
+            "bestReplyScript": "If two prefix sums are equal, the sum of the elements between them must be 0.\n\nExample: Array [1, 2, -2, 4] -> Prefix Sums: 1 -> 3 -> 1 -> 5.\nThe prefix sum 1 appears twice. Between those positions: 2 + (-2) = 0.\n\nSo, the repeated prefix sum indicates a zero-sum subarray.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "prefix[j] == prefix[i-1] => sum(i..j) = 0",
+                  "Visual proof with array indices",
+                  "Direct mathematical deduction"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Multiple Zero-Sum Subarrays",
             "question": "6. What if multiple zero-sum subarrays exist?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Early exit vs finding all zero-sum subarrays.",
+            "bestReplyScript": "The basic algorithm returns True as soon as it finds the first one.\n\nExample: Input [1, -1, 2, -2] contains subarrays [1, -1], [2, -2], and [1, -1, 2, -2].\n\nIf the problem asks to find all zero-sum subarrays, I would store all indices for each prefix sum instead of returning immediately.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Early return on first zero-sum match",
+                  "Extendable to find all zero-sum subarrays",
+                  "Map prefix sum to list of indices"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Returning Subarray Indices",
             "question": "7. Can you return their indices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Switching from Set to Hash Map (Prefix Sum -> Index).",
+            "bestReplyScript": "Yes. Instead of storing only prefix sums in a set, I would store: Prefix Sum -> Index.\n\nExample: Array [4, 2, -3, 1]\nPrefix Sums: 4 -> Index 0, 6 -> Index 1, 3 -> Index 2, 4 -> Index 3.\nSince 4 appears again: Previous Index = 0, Current Index = 3. Zero-sum subarray is from Index 1 to 3.\n\nUsing a dictionary allows us to return the exact indices of the subarray.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Use Hash Map (Prefix Sum -> Index)",
+                  "Zero-sum range is (prev_index + 1) to curr_index",
+                  "Provides exact boundary coordinates"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Subarray with Zero Sum.",
-            "bestReplyScript": "When handling Subarray with Zero Sum, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single zero, no zero-sum, entire array zero, negative numbers.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> False\n2. Single zero ([0]) -> True\n3. No zero-sum subarray ([1,2,3]) -> False\n4. Entire array sums to zero ([2,-2]) -> True\n5. Negative numbers ([-1,1]) -> True\n\nTesting these cases ensures the solution handles different scenarios correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Single element zero [0] check",
+                  "Entire array zero-sum ([2,-2])",
+                  "Negative number handling"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Subarray with Zero Sum.",
-            "bestReplyScript": "To thoroughly test Subarray with Zero Sum, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix with positive, negative, zero, and boundary inputs.",
+            "bestReplyScript": "I would create test cases for normal and edge cases:\n- [4,2,-3,1,6] -> True\n- [1,2,3] -> False\n- [0] -> True\n- [2,-2] -> True\n- [] -> False\n\nThese tests verify the correctness of the algorithm.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Normal zero-sum detection",
+                  "Single zero and negative numbers",
+                  "Empty array verification"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Streaming Data",
             "question": "10. Can this work on a stream of numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Real-time prefix sum tracking on continuous streams.",
+            "bestReplyScript": "Yes. As numbers arrive:\n1. Update the running prefix sum.\n2. Check if it is 0 or already exists in the hash set.\n3. Insert it if it is new.\n\nExample: Incoming 4 (Prefix 4) -> Incoming 2 (Prefix 6) -> Incoming -6 (Prefix 0) -> Return True!\n\nThis allows real-time detection without storing the entire array.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Incremental prefix sum tracking",
+                  "Stateful set lookup",
+                  "No full array storage required"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Target Sum Equals K Extension",
             "question": "11. What if the target sum is not zero?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Generalization to Subarray Sum Equals K checking prefix_sum - K.",
+            "bestReplyScript": "The same idea still works. Suppose the target sum is K.\n\nInstead of checking whether the current prefix sum already exists, I check whether: prefix_sum - K exists in the hash map.\n\nExample: Target = 5, Current Prefix = 12 -> Need: 12 - 5 = 7. If prefix sum 7 was seen before, then the subarray between sums to 5.\n\nThis technique is commonly used in Subarray Sum Equals K problems.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Check (prefix_sum - K) in hash map",
+                  "Generalizes zero-sum to target sum K",
+                  "Solves LeetCode 560 (Subarray Sum Equals K)"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is this technique used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Software engineering use cases for prefix sum & cumulative tracking.",
+            "bestReplyScript": "Prefix sums are widely used in:\n- Financial transaction analysis & Profit/Loss balance tracking.\n- Sensor data analysis & Time-series analytics.\n- Database range sum queries.\n- Competitive programming & Dynamic Programming.\n- Log analytics & image processing (Integral Images).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Financial ledger balance analysis",
+                  "Time-series & sensor data range queries",
+                  "Computer vision integral images"
             ]
       },
       {
             "id": "q13",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Mistakes",
             "question": "13. What mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Subarray with Zero Sum.",
-            "bestReplyScript": "Common candidate pitfalls when solving Subarray with Zero Sum include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in prefix sum zero-sum problems.",
+            "bestReplyScript": "Some common mistakes include:\n- Using nested loops, leading to O(n\u00b2) time.\n- Forgetting to check if the prefix sum itself is 0.\n- Not storing prefix sums correctly.\n- Using a list instead of a hash set for lookups.\n- Confusing prefix sums with cumulative averages.\n\nThe most common mistake is forgetting that a repeated prefix sum indicates a zero-sum subarray.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting prefix_sum == 0 base condition",
+                  "Using list lookup (O(n)) instead of set (O(1))",
+                  "Nested loops O(n\u00b2) anti-pattern"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "No Extra Space Alternative",
             "question": "14. Can this be solved without extra memory?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n^2) time vs O(1) space trade-offs.",
+            "bestReplyScript": "Yes, but it is much slower.\n\nOne approach is:\n1. Consider every starting index.\n2. Compute the sum of every possible subarray.\n\nComplexity: Time: O(n\u00b2), Space: O(1).\n\nThis avoids extra memory but is not practical for large arrays.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Nested loop subarray summation",
+                  "Time: O(n\u00b2)",
+                  "Space: O(1) memory trade-off"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Large Datasets & Distributed Systems",
             "question": "15. How would you optimize for large datasets?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray with Zero Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Memory optimization and distributed processing (Spark/Hadoop).",
+            "bestReplyScript": "For very large datasets, I would:\n- Process the data in a streaming fashion if possible.\n- Use efficient hash-based data structures.\n- Minimize memory by storing only the required prefix sums.\n- For distributed datasets, use frameworks like Spark or Hadoop when the data cannot fit into a single machine's memory.\n\nThe choice depends on problem constraints, but for most interview scenarios, the prefix sum + hash set solution is already optimal.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stream processing for continuous data",
+                  "Distributed map-reduce for out-of-memory arrays",
+                  "Optimal in-memory prefix set"
             ]
       }
 ],
