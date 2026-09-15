@@ -172,27 +172,27 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200 select-text font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200 select-text font-sans">
       {/* Main Full-Screen Modal Window */}
-      <div className="w-full max-w-6xl h-[92vh] flex flex-col bg-[#0D1117] border border-[#30363D] rounded-2xl shadow-2xl overflow-hidden relative">
+      <div className="w-full max-w-6xl h-full sm:h-[92vh] flex flex-col bg-[#0D1117] border-0 sm:border border-[#30363D] rounded-none sm:rounded-2xl shadow-2xl overflow-hidden relative">
         
         {/* Top Header Bar with Close Button */}
-        <div className="px-5 py-3.5 border-b border-[#30363D] bg-[#161B22] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md border border-[#30363D] bg-[#0D1117] text-[#58A6FF]">
+        <div className="px-3.5 sm:px-5 py-3 border-b border-[#30363D] bg-[#161B22] flex items-center justify-between shrink-0 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded border border-[#30363D] bg-[#0D1117] text-[#58A6FF] shrink-0">
               {data.difficulty}
             </span>
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#F0F6FC] flex items-center gap-2">
-                <span>{data.problemTitle} — Interview Study Hub</span>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-[#F0F6FC] truncate">
+                {data.problemTitle} — Interview Study Hub
               </h2>
-              <p className="text-xs text-[#8B949E]">
+              <p className="text-[11px] sm:text-xs text-[#8B949E] truncate hidden sm:block">
                 Master technical interview spoken scripts, CPython internals, and rookie coding traps.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <div className="hidden md:flex items-center gap-1.5 text-xs text-[#8B949E]">
               <Building2 className="w-3.5 h-3.5 text-[#58A6FF]" />
               <span>Asked by:</span>
@@ -206,7 +206,7 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
             {/* Prominent Top-Right Close Button (X) */}
             <button
               onClick={handleClose}
-              className="p-2 rounded-xl bg-[#21262D] hover:bg-[#30363D] border border-[#30363D] text-[#8B949E] hover:text-[#F0F6FC] transition-colors flex items-center gap-1.5 text-xs font-semibold"
+              className="p-1.5 sm:p-2 rounded-xl bg-[#21262D] hover:bg-[#30363D] border border-[#30363D] text-[#8B949E] hover:text-[#F0F6FC] transition-colors flex items-center gap-1.5 text-xs font-semibold"
               title="Close Interview Hub (Esc)"
             >
               <span className="hidden sm:inline text-xs text-[#8B949E]">Back to Code</span>
@@ -216,34 +216,34 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
         </div>
 
         {/* 2 Focused Mode Buttons */}
-        <div className="px-5 py-2.5 border-b border-[#30363D]/60 bg-[#161B22]/80 flex items-center gap-3 shrink-0">
+        <div className="px-3 sm:px-5 py-2 border-b border-[#30363D]/60 bg-[#161B22]/80 flex items-center gap-2 shrink-0 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('interview')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === 'interview'
                 ? 'bg-[#58A6FF] text-white shadow-md'
                 : 'text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#21262D]'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>💬 Interview Q&A ({data.questions.length})</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Interview Q&A ({data.questions.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('mistakes')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
               activeTab === 'mistakes'
                 ? 'bg-[#58A6FF] text-white shadow-md'
                 : 'text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#21262D]'
             }`}
           >
-            <AlertTriangle className="w-4 h-4 text-[#F85149]" />
-            <span>⚠️ Common Rookie Mistakes ({data.mistakes.length})</span>
+            <AlertTriangle className="w-3.5 h-3.5 text-[#F85149]" />
+            <span>Rookie Mistakes ({data.mistakes.length})</span>
           </button>
         </div>
 
         {/* Scrollable Content Container */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8 md:p-10 space-y-6">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 md:p-10 space-y-4 sm:space-y-6 pb-20 sm:pb-10">
           {/* ======================================================== */}
           {/* TAB 1: INTERVIEW QUESTIONS & ANSWERS                     */}
           {/* ======================================================== */}

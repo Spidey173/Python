@@ -271,8 +271,8 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto bg-[#0D1117] text-[#E6EDF3] py-6 sm:py-7 px-4 sm:px-6 lg:px-8">
-      <div className="w-full space-y-7">
+    <div className="flex-1 min-h-0 overflow-y-auto bg-[#0D1117] text-[#E6EDF3] pt-4 pb-28 sm:py-7 px-3.5 sm:px-6 lg:px-8">
+      <div className="w-full space-y-5 sm:space-y-7">
 
 
 
