@@ -4074,195 +4074,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach for counting word frequencies.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Word Frequency Counter.",
-            "bestReplyScript": "My approach for Word Frequency Counter follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Word splitting, frequency counting, hash map updates, and single-pass logic.",
+            "bestReplyScript": "I use a dictionary (hash map) where:\n- Key = word\n- Value = number of times the word appears.\n\nSteps:\n1. Split the text into individual words.\n2. Traverse each word.\n3. If the word already exists in the dictionary, increment its count.\n4. Otherwise, add it with a count of 1.\n5. After processing all words, the dictionary contains the frequency of every word.\n\nExample:\nInput: \"I love Python I love coding\"\nWords: I, love, Python, I, love, coding\nDictionary: {\"I\":2, \"love\":2, \"Python\":1, \"coding\":1}\n\nThis approach is efficient because each word is processed only once.\n\nComplexity: Time: O(n), Space: O(n) where n is the number of words.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Hash map (dictionary) for O(1) tracking",
+                  "Single pass traversal",
+                  "Key = word, Value = frequency count",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
             "category": "Algorithmic Justification",
             "question": "2. Why did you choose a dictionary (hash map)?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Word Frequency Counter.",
-            "bestReplyScript": "I chose this approach for Word Frequency Counter over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Lookup & insertion time complexity comparison vs lists.",
+            "bestReplyScript": "A dictionary provides O(1) average-time lookup and insertion.\n\nFor every word:\n- Check if it already exists.\n- Update its count if it does.\n- Otherwise, insert it.\n\nWithout a dictionary, we would need to search the existing words every time, resulting in O(n\u00b2) time.\n\nUsing a dictionary keeps the solution efficient at O(n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "O(1) average lookup and insertion",
+                  "Avoids O(n\u00b2) linear search in lists",
+                  "Keeps overall time complexity at O(n)"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Word Frequency Counter.",
-            "bestReplyScript": "Here is the complexity analysis for Word Frequency Counter:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic upper bounds for single pass and unique key storage.",
+            "bestReplyScript": "Suppose the text contains n words.\n\nEach word is processed exactly once.\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThe extra space is required to store unique words and their frequencies.\n\nIf every word is unique, the dictionary size will be n.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Dictionary size proportional to unique words"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Text Normalization: Case Sensitivity",
             "question": "4. How would you handle uppercase and lowercase words?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Case normalization techniques.",
+            "bestReplyScript": "To count words regardless of case, I would convert every word to the same case before counting.\n\nUsually, I use: word = word.lower()\n\nExample:\nInput: \"Python python PYTHON\"\nAfter lower(): python, python, python\nDictionary: {\"python\":3}\n\nThis ensures that different letter cases are treated as the same word.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Normalize using word.lower()",
+                  "Treats uppercase and lowercase as identical",
+                  "Ensures case-insensitive frequency counting"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Text Normalization: Punctuation",
             "question": "5. How would you ignore punctuation while counting?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Punctuation stripping using regex or string manipulation.",
+            "bestReplyScript": "Before counting words, I would remove punctuation using regular expressions or string processing.\n\nExample:\nInput: \"Hello, world! Hello.\"\nAfter removing punctuation: Hello world Hello\nDictionary: {\"Hello\":2, \"world\":1}\n\nIgnoring punctuation produces more accurate word frequencies.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Remove punctuation with re or string module",
+                  "Prevents 'word,' and 'word' from mismatching",
+                  "Produces clean, accurate frequencies"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Scalability & Memory Constraints",
             "question": "6. What if the text contains millions of words?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Chunking, line-by-line streaming, and distributed computing (Spark/Hadoop).",
+            "bestReplyScript": "For very large texts, loading the entire file into memory may not be practical.\n\nInstead, I would process the file line by line or chunk by chunk.\n\nFlow: Read one line -> Split into words -> Update dictionary -> Read next line.\n\nThis approach reduces memory usage while still producing correct frequencies.\n\nIf the dataset is extremely large, distributed frameworks like Hadoop or Spark can also be used.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Line-by-line / chunk-by-chunk streaming",
+                  "Lowers RAM memory footprint",
+                  "Scales to MapReduce / PySpark for distributed text"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Top-K Elements",
             "question": "7. How would you return the top K most frequent words?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Min-Heap / Max-Heap optimization for top K patterns.",
+            "bestReplyScript": "After building the frequency dictionary, I would use:\n- A max heap\n- Or sort the dictionary by frequency.\n\nExample:\nDictionary: apple: 8, banana: 5, orange: 2, mango: 6\nTop 2: apple, mango\n\nUsing a heap gives: Time: O(n log k), which is efficient when k is much smaller than n.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Heap / priority queue (heapq in Python)",
+                  "Time: O(n log k) instead of full O(n log n) sort",
+                  "Optimal when k << n"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Secondary Sorting & Tie Breaking",
             "question": "8. How would you sort words with the same frequency?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Multi-attribute sorting (frequency descending, alphabetical ascending).",
+            "bestReplyScript": "If two words have the same frequency, I would sort them alphabetically.\n\nExample:\nDictionary: apple: 3, banana: 3, cat: 2\nSorted result: apple, banana, cat\n\nSorting by:\n1. Frequency (descending)\n2. Alphabetical order (ascending)\n\nproduces consistent and predictable results.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Primary sort: Frequency (descending)",
+                  "Secondary sort: Lexicographical (ascending)",
+                  "Ensures deterministic tie-breaking"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Word Frequency Counter.",
-            "bestReplyScript": "When handling Word Frequency Counter, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty text, single word, all identical words, case variations, punctuation.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty text (\"\") -> {}\n2. One word (\"hello\") -> {\"hello\": 1}\n3. All words identical (\"hello hello hello\") -> {\"hello\": 3}\n4. Different letter cases (\"Hello hello HELLO\") -> {\"hello\": 3}\n5. Punctuation (\"Hello! Hello?\") -> {\"hello\": 2}\n\nTesting these cases ensures the solution is robust.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty string & single word checks",
+                  "All identical words",
+                  "Case sensitivity & punctuation boundary tests"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Manual Implementation vs Built-in",
             "question": "10. Can you solve this without Python's Counter?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Manual dict loop with `if word in freq` or `dict.get()`.",
+            "bestReplyScript": "Yes. I can implement the same logic using a normal dictionary.\n\nExample:\nfreq = {}\nfor word in words:\n    if word in freq:\n        freq[word] += 1\n    else:\n        freq[word] = 1\n\nThis produces the same result as collections.Counter.\n\nUnderstanding the manual implementation demonstrates a stronger grasp of hashing and frequency counting.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Manual dict loop using standard keys",
+                  "Demonstrates fundamental hashing knowledge",
+                  "Identical O(n) performance to collections.Counter"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-Time Streaming Data",
             "question": "11. How would you process a live text stream?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Stateful incremental updates in event-driven systems.",
+            "bestReplyScript": "For a live stream, I would update the dictionary as each word arrives.\n\nExample:\nIncoming \"hello\" -> Dictionary {\"hello\": 1}\nIncoming \"world\" -> Dictionary {\"hello\": 1, \"world\": 1}\nIncoming \"hello\" -> Dictionary {\"hello\": 2, \"world\": 1}\n\nThis allows real-time frequency counting without storing the entire stream.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stateful real-time hash map updates",
+                  "No full stream storage needed",
+                  "Ideal for websockets, logs, and messaging queues"
             ]
       },
       {
             "id": "q12",
             "category": "Testing & Verification",
             "question": "12. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Word Frequency Counter.",
-            "bestReplyScript": "To thoroughly test Word Frequency Counter, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test suite matrix across diverse sample inputs.",
+            "bestReplyScript": "I would test different scenarios:\n- \"a a b\" -> {a: 2, b: 1}\n- \"Hello hello\" -> {hello: 2}\n- \"\" -> {}\n- \"Python\" -> {python: 1}\n- \"cat, cat!\" -> {cat: 2}\n\nTesting different cases ensures the implementation handles normal inputs, edge cases, punctuation, and case sensitivity.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Normal input testing",
+                  "Empty & boundary inputs",
+                  "Punctuation and case normalization assertions"
             ]
       },
       {
             "id": "q13",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Mistakes",
             "question": "13. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Word Frequency Counter.",
-            "bestReplyScript": "Common candidate pitfalls when solving Word Frequency Counter include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Identifying rookie traps in frequency counting.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to convert words to lowercase when required.\n- Counting punctuation as part of words.\n- Using a list instead of a dictionary, resulting in slower performance.\n- Not handling empty input.\n- Sorting incorrectly when frequencies are equal.\n- Relying only on Counter without understanding how it works internally.\n\nThe most common mistake is forgetting to normalize the text before counting.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting text normalization",
+                  "Using list linear search (O(n\u00b2))",
+                  "Incorrect secondary sorting tie-breakers"
             ]
       },
       {
             "id": "q14",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "14. Where are frequency counters used in real-world systems?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Word Frequency Counter.",
-            "bestReplyScript": "The algorithmic core of Word Frequency Counter is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Practical software engineering use cases.",
+            "bestReplyScript": "Frequency counting is widely used in many applications, including:\n- Search engines (word ranking & TF-IDF).\n- Spam detection.\n- Text analytics & Natural Language Processing (NLP).\n- Word cloud generation.\n- Recommendation systems & log analysis.\n- Customer feedback analysis & social media trend detection.",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "Search engine TF-IDF indexing",
+                  "NLP tokenization & spam detection",
+                  "Log analytics & trend detection"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Multilingual & Internationalization",
             "question": "15. How would your solution change for multiple languages?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Word Frequency Counter.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Unicode normalization, CJK tokenization (Chinese/Japanese/Korean), and language boundaries.",
+            "bestReplyScript": "For multiple languages, I would:\n- Use Unicode-aware string processing and Unicode normalization (NFC/NFKC).\n- Apply language-specific tokenization because different languages (e.g. Japanese/Chinese) do not separate words with spaces.\n- Convert case carefully, as case rules vary across languages (e.g. Turkish 'i').\n- Handle punctuation and special characters according to the language.\n\nUnlike English, space-based split() does not work for CJK languages, requiring specialized tokenizers like MeCab or Jieba.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Unicode NFC/NFKC normalization",
+                  "CJK non-space tokenization (Jieba, MeCab)",
+                  "Language-specific locale case rules"
             ]
       }
 ],
@@ -4468,195 +4454,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Intersection of Two Arrays.",
-            "bestReplyScript": "My approach for Intersection of Two Arrays follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Set conversion, linear scan, lookup efficiency, and uniqueness constraints.",
+            "bestReplyScript": "I use a set because it provides fast lookup and automatically removes duplicate values.\n\nSteps:\n1. Convert the first array into a set.\n2. Traverse the second array.\n3. If an element exists in the set, add it to the result set.\n4. Return the result as a list.\n\nExample:\nInput: nums1 = [1,2,2,1], nums2 = [2,2]\nSet1 = {1,2}\nTraverse nums2: 2 -> Found, 2 -> Already in result\nOutput: [2]\n\nThis approach is efficient because each lookup in a set takes O(1) average time.\n\nComplexity: Time: O(n + m), Space: O(n) where n and m are the sizes of the two arrays.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Set for O(1) average lookup",
+                  "Automatic duplicate removal",
+                  "Single pass traversal over both arrays",
+                  "Time: O(n + m), Space: O(n)"
             ]
       },
       {
             "id": "q2",
             "category": "Algorithmic Justification",
             "question": "2. Why did you use a set?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Intersection of Two Arrays.",
-            "bestReplyScript": "I chose this approach for Intersection of Two Arrays over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Understanding set properties vs nested loops.",
+            "bestReplyScript": "A set has two major advantages:\n1. Fast lookup (average O(1)).\n2. Automatically removes duplicates.\n\nWithout a set, I would need nested loops to compare every element.\n\nExample: nums1 = [1,2,2] -> Set: {1,2}. The duplicate 2 is stored only once.\n\nThis makes the algorithm both simpler and faster.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Average O(1) lookup speed",
+                  "Automatic deduplication",
+                  "Avoids O(n * m) nested comparison"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Intersection of Two Arrays.",
-            "bestReplyScript": "Here is the complexity analysis for Intersection of Two Arrays:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic bounds for hash table creation vs second array traversal.",
+            "bestReplyScript": "Let n = size of nums1 and m = size of nums2.\n\nOperations:\n- Build set -> O(n)\n- Traverse second array -> O(m)\n\nOverall:\n- Time Complexity: O(n + m)\n- Space Complexity: O(n)\n\nThis is much faster than comparing every pair of elements.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time: O(n + m)",
+                  "Space: O(n) for set storage",
+                  "Optimal linear performance"
             ]
       },
       {
             "id": "q4",
-            "category": "Edge Case Analysis",
+            "category": "Preserving Duplicates (Intersection II)",
             "question": "4. How would you preserve duplicate elements?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Intersection of Two Arrays.",
-            "bestReplyScript": "When handling Intersection of Two Arrays, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Switching from Set to Frequency Map / Counter.",
+            "bestReplyScript": "If duplicates should be preserved, a set is not enough because it stores only unique values.\n\nInstead, I would use a frequency dictionary (hash map).\n\nExample:\nnums1 = [1,2,2,3], nums2 = [2,2,2]\nFrequency Map: 2 -> 2\nTraverse nums2: First 2 -> Add, Second 2 -> Add, Third 2 -> Count becomes 0, ignore.\nOutput: [2,2]\n\nThis preserves duplicates correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Use frequency hash map (Counter)",
+                  "Decrement count on match",
+                  "Correctly handles Intersection of Two Arrays II"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Sorted Arrays (Two Pointers)",
             "question": "5. What if both arrays are already sorted?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Two-pointer linear scan without hash map allocations.",
+            "bestReplyScript": "If both arrays are sorted, I would use the two-pointer technique.\n\nSteps:\n1. Place one pointer at the beginning of each array.\n2. Compare the elements.\n3. If equal, add to the result and move both pointers.\n4. If one value is smaller, move that pointer.\n5. Continue until one array ends.\n\nExample:\nnums1 = [1,2,3,5], nums2 = [2,3,4]\n1 < 2 -> Move pointer1\n2 = 2 -> Add\n3 = 3 -> Add\n5 > 4 -> Move pointer2\nOutput: [2,3]\n\nComplexity: Time: O(n + m), Space: O(1) (excluding output list).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Two-pointer approach on sorted arrays",
+                  "Time: O(n + m)",
+                  "Space: O(1) auxiliary space"
             ]
       },
       {
             "id": "q6",
-            "category": "Time & Space Complexity",
+            "category": "In-Place & Space Constraints",
             "question": "6. Can you solve it without extra space?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Intersection of Two Arrays.",
-            "bestReplyScript": "Here is the complexity analysis for Intersection of Two Arrays:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "In-place sorting trade-off analysis.",
+            "bestReplyScript": "Yes. If modifying the arrays is allowed:\n1. Sort both arrays in-place.\n2. Use the two-pointer approach.\n\nComplexity:\n- Sorting -> O(n log n + m log m)\n- Traversal -> O(n + m)\n- Extra Space -> O(1) (if sorting in-place)\n\nThis avoids using a hash set but takes more time due to sorting.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "In-place sorting + two pointers",
+                  "Time: O(n log n + m log m)",
+                  "Space: O(1) memory bound"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Scalability & Large Datasets",
             "question": "7. How would you handle very large arrays?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "External sorting, chunking, and distributed frameworks.",
+            "bestReplyScript": "For very large arrays that don't fit into memory, I would:\n- Process the arrays in chunks.\n- Use external sorting if needed.\n- Store intermediate results on disk.\n- For distributed systems, use frameworks like Hadoop or Spark.\n\nIf one array is much smaller, I would store only the smaller array in a set to reduce memory usage.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Chunking & external merge sort",
+                  "Distribute over Spark / Hadoop",
+                  "Store only the smaller array in memory"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Intersection of Two Arrays.",
-            "bestReplyScript": "When handling Intersection of Two Arrays, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty arrays, disjoint arrays, duplicates, negative numbers.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty arrays ([]) -> []\n2. No common elements ([1,2] & [3,4]) -> []\n3. All common elements ([1,2,3] & [1,2,3]) -> [1,2,3]\n4. Duplicate elements ([2,2,2] & [2]) -> [2]\n5. Negative numbers ([-2,-1,0] & [-1,0]) -> [-1,0]\n\nTesting these cases ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array safeguards",
+                  "Disjoint set boundaries",
+                  "Identical & negative number handling"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
+            "category": "Sorted Output Guarantee",
             "question": "9. How would you return the intersection in sorted order?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Post-sorting vs two-pointer sorted generation.",
+            "bestReplyScript": "There are two approaches:\n\nApproach 1: After finding the intersection set, simply sort the final output list (Time: O(k log k) where k is intersection size).\n\nApproach 2: If the input arrays are pre-sorted, the two-pointer approach naturally generates a sorted result in linear time without extra sorting.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Sort result list (O(k log k))",
+                  "Two-pointer approach naturally yields sorted output"
             ]
       },
       {
             "id": "q10",
             "category": "Testing & Verification",
             "question": "10. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Intersection of Two Arrays.",
-            "bestReplyScript": "To thoroughly test Intersection of Two Arrays, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, disjoint, negative inputs.",
+            "bestReplyScript": "I would test different scenarios:\n- [1,2,2,1] & [2,2] -> [2]\n- [1,2,3] & [4,5] -> []\n- [1,2,3] & [1,2,3] -> [1,2,3]\n- [] & [1] -> []\n- [-1,0,1] & [0,2] -> [0]\n\nTesting different inputs helps verify correctness and robustness.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Normal intersection verification",
+                  "Disjoint and empty array checks",
+                  "Negative number handling"
             ]
       },
       {
             "id": "q11",
-            "category": "Algorithmic Justification",
+            "category": "Hashing vs Brute-Force",
             "question": "11. Why is hashing faster than nested loops?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Intersection of Two Arrays.",
-            "bestReplyScript": "I chose this approach for Intersection of Two Arrays over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n * m) vs O(n + m) performance proof.",
+            "bestReplyScript": "With nested loops: For every element in nums1, compare with every element in nums2 -> Time Complexity O(n * m).\n\nWith hashing: Build set O(n) + Look up each element O(1) average -> Time Complexity O(n + m).\n\nThis makes hashing exponentially faster for large arrays.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Nested loops: O(n * m)",
+                  "Hashing: O(n + m)",
+                  "Exponentially faster scaling"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Binary Search Optimization",
             "question": "12. Can this be solved using binary search?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Binary search on sorted array: O(m log n).",
+            "bestReplyScript": "Yes. If one array is sorted:\n1. Traverse the unsorted array.\n2. Use binary search to check whether each element exists in the sorted array.\n\nExample: nums1 = [1,3,5,7] (sorted), nums2 = [3,4]\nSearch 3 -> Found, Search 4 -> Not found.\n\nComplexity: O(m log n). This is useful when one array is pre-sorted and much larger than the other.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Binary search on sorted array",
+                  "Time: O(m log n)",
+                  "Ideal when m << n and nums1 is sorted"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Asymmetric Array Optimization",
             "question": "13. What if one array is much smaller than the other?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Space optimization by placing only the smaller array into set.",
+            "bestReplyScript": "I would convert ONLY the smaller array into a set.\n\nExample: Small array = 100 elements, Large array = 1 million elements.\n\nStore only the small array in memory (100 elements). Then iterate through the 1-million element array.\n\nThis drastically reduces memory usage while maintaining O(n + m) time complexity.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Convert smaller array to set",
+                  "Drastically reduces auxiliary RAM space",
+                  "Maintains optimal O(n + m) runtime"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Real-World Applications",
             "question": "14. Where is set intersection used in practice?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Intersection of Two Arrays.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Software engineering use cases for set intersection.",
+            "bestReplyScript": "Set intersection has many real-world applications, including:\n- Finding mutual friends in social networks (Facebook, LinkedIn).\n- Search engine query keyword matching (Boolean AND queries).\n- Database INNER JOIN operations.\n- Recommendation engines & permission control lists.\n- Bioinformatics (finding common genes or DNA sequences).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Social media mutual friends",
+                  "Database INNER JOIN queries",
+                  "Search engine keyword matching",
+                  "Bioinformatics gene alignment"
             ]
       },
       {
             "id": "q15",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "15. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Intersection of Two Arrays.",
-            "bestReplyScript": "Common candidate pitfalls when solving Intersection of Two Arrays include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Identifying rookie mistakes in array intersection.",
+            "bestReplyScript": "Some common mistakes include:\n- Using nested loops instead of hashing.\n- Forgetting that the result should contain unique elements.\n- Returning duplicates when only unique values are required.\n- Not handling empty arrays.\n- Confusing this problem with Intersection of Two Arrays II (where duplicates are preserved).\n- Using a list instead of a set for lookups, leading to O(n) lookups.\n\nThe most common mistake is not reading the problem carefully to determine whether duplicates should be included or removed.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Using list lookup instead of set",
+                  "Confusing unique vs duplicate requirements",
+                  "Nested loop O(n * m) anti-pattern"
             ]
       }
 ],
