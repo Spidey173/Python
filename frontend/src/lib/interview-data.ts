@@ -2478,191 +2478,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain your solution.",
-        "whatInterviewerChecks": "Clear explanation of hash map complement lookup.",
-        "bestReplyScript": "I use a hash map (dictionary) to store numbers that I have already seen along with their indices.\n\nFor every number:\n1. Calculate the complement needed to reach the target.\n2. Check if the complement already exists in the hash map.\n3. If it exists, return the indices of the complement and the current number.\n4. Otherwise, store the current number and its index in the hash map.\n5. Continue until a valid pair is found.\n\nExample:\nInput: nums = [2, 7, 11, 15], target = 9\nStep 1: 2 -> Need 7, Store {2: 0}\nStep 2: 7 -> Need 2, 2 already exists!\nOutput: [0, 1]\n\nThis approach finds the answer in a single pass, making it both efficient and easy to understand.",
-        "keyPoints": [
-          "Hash map stores seen_value -> index mapping",
-          "Complement calculated as target - current_val",
-          "O(1) average lookup time per element",
-          "Single pass O(n) runtime and O(n) space"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Expand Around Center technique, 2n-1 centers (odd and even), boundary expansion `s[left] == s[right]`.",
+            "bestReplyScript": "I solve this problem using the Expand Around Center technique.\n\nThe key observation is that every palindrome has a center. The center can be:\n- A single character (odd-length palindrome), or\n- Between two characters (even-length palindrome).\n\nSteps:\n1. Iterate through every character in the string.\n2. Treat each position as the center of an odd-length palindrome (left = i, right = i).\n3. Also treat the gap between consecutive characters as the center of an even-length palindrome (left = i, right = i + 1).\n4. Expand outward while left >= 0 and right < n and `s[left] == s[right]`.\n5. Keep track of the longest palindrome found.\n6. Return the longest substring after checking all possible centers.\n\nThis approach is simple, efficient, and commonly expected in interviews.",
+            "keyPoints": [
+                  "2n - 1 total centers (n odd, n-1 even)",
+                  "Expand outward while `s[left] == s[right]`",
+                  "Track max_len and start_index",
+                  "Time: O(n^2), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Hash Map Rationale",
-        "question": "2. Why use a hash map?",
-        "whatInterviewerChecks": "Comparing O(1) hash lookup vs O(n^2) nested loop search.",
-        "bestReplyScript": "A hash map provides O(1) average-time lookup.\n\nInstead of searching the array repeatedly, I can instantly check whether the required complement has already been seen.\n\nWithout a hash map:\nFor every element -> Search remaining array (takes O(n²)).\n\nWith a hash map:\nLookup complement takes O(1) on average, making the entire algorithm O(n).",
-        "keyPoints": [
-          "O(1) average lookup time via hash table",
-          "Replaces nested array search (O(n^2))",
-          "Reduces total time complexity to linear O(n)"
-        ]
+            "id": "q2",
+            "category": "Expand Around Center Technique Rationale",
+            "question": "2. Why did you choose the expand-around-center technique?",
+            "whatInterviewerChecks": "O(1) space advantage over O(n^2) DP.",
+            "bestReplyScript": "I chose this approach because it is easy to understand, simple to implement, and more space-efficient than Dynamic Programming.\n\nIt checks every possible palindrome center directly without storing unnecessary information.\n\nCompared to Dynamic Programming:\n- Uses O(1) extra space.\n- Easier to explain during interviews.\n- Performs well for typical input sizes.",
+            "keyPoints": [
+                  "O(1) space efficiency",
+                  "Direct center expansion",
+                  "Easier implementation than DP"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Time & Space Complexity Proof",
-        "question": "3. What's the complexity?",
-        "whatInterviewerChecks": "Asymptotic operation counting and memory allocation.",
-        "bestReplyScript": "Each element is processed exactly once.\n\nFor every element:\n• Calculate the complement.\n• Perform a hash map lookup.\n• Insert into the hash map if needed.\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nThis is optimal because every element must be inspected at least once.",
-        "keyPoints": [
-          "Single pass over n elements -> O(n) time",
-          "Up to n key-value pairs stored in hash table -> O(n) space",
-          "Optimal lower-bound for unsorted array"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(n^2) quadratic time and O(1) constant auxiliary space bounds.",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n^2). For each of the 2n - 1 centers, we may expand up to the length of the string O(n).\n- Space Complexity: O(1). Only a few variables (start, max_len, pointers) are used regardless of input size.",
+            "keyPoints": [
+                  "Time Complexity: O(n^2)",
+                  "Space Complexity: O(1)",
+                  "2n - 1 centers expanded up to length n"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Space Constraint Trade-offs",
-        "question": "4. Can you solve it without extra space?",
-        "whatInterviewerChecks": "Sorting + two-pointer alternative vs hash map trade-off.",
-        "bestReplyScript": "Yes.\n\nIf extra space is not allowed, one option is:\n1. Sort the array.\n2. Use two pointers to find the target sum.\n\nHowever, sorting changes the original order, so extra work is needed to recover the original indices.\n\nComplexity:\n• Time: O(n log n)\n• Space: O(1) (if sorting in-place)\n\nAlthough possible, the hash map approach is generally preferred because it is faster and preserves the original indices.",
-        "keyPoints": [
-          "Sorting array enables O(1) space two-pointer approach",
-          "Sorting takes O(n log n) time and destroys original index order",
-          "Index tracking requires storing pairs, re-introducing space"
-        ]
+            "id": "q4",
+            "category": "Dynamic Programming Comparison",
+            "question": "4. How does your solution compare to Dynamic Programming?",
+            "whatInterviewerChecks": "O(1) space vs O(n^2) DP table space comparison.",
+            "bestReplyScript": "Comparison:\n- Expand Around Center: Time O(n^2), Space O(1). Simple implementation, preferred in interviews.\n- Dynamic Programming: Time O(n^2), Space O(n^2) (requires boolean table `dp[i][j]` storing whether substring i..j is palindrome).\n\nBoth have the same quadratic time complexity, but Expand Around Center uses significantly less memory.",
+            "keyPoints": [
+                  "Expand Around Center: O(n^2) time, O(1) space",
+                  "Dynamic Programming: O(n^2) time, O(n^2) space",
+                  "Expand Around Center avoids matrix table memory overhead"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Return Value Variants",
-        "question": "5. How would you return values instead of indices?",
-        "whatInterviewerChecks": "Adapting return signatures for value-based pairs.",
-        "bestReplyScript": "Instead of returning the indices, I simply return the numbers that form the target sum.\n\nExample:\nInput: nums = [2, 7, 11, 15], target = 9\n\nInstead of: [0, 1]\nI return: [2, 7]\n\nThe search algorithm remains the same; only the return value changes.",
-        "keyPoints": [
-          "Return [complement, current_val]",
-          "Hash map can store boolean or set of seen values",
-          "Algorithm logic remains identical"
-        ]
+            "id": "q5",
+            "category": "Manacher's Algorithm Overview",
+            "question": "5. What is Manacher's Algorithm, and when would you use it?",
+            "whatInterviewerChecks": "O(n) linear Manacher's Algorithm overview and interview applicability.",
+            "bestReplyScript": "Manacher's Algorithm finds the longest palindromic substring in O(n) linear time.\n\nIt uses previously computed palindrome radii and mirror indices to avoid redundant character comparisons.\n\nAlthough it is the fastest algorithm theoretically, it is complex to implement and explain under interview time limits.\nIn most coding interviews, the Expand Around Center approach is preferred because it is much simpler while remaining fast enough.",
+            "keyPoints": [
+                  "Manacher's Algorithm runs in O(n) linear time",
+                  "Uses mirror index symmetry to skip redundant checks",
+                  "Expand Around Center preferred in interviews due to simplicity"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Multiple Solution Pairs",
-        "question": "6. What if multiple answers exist?",
-        "whatInterviewerChecks": "Handling multiple valid pairs and avoiding duplicates.",
-        "bestReplyScript": "It depends on the problem statement.\n\nIf only one valid answer is required, I return the first pair found.\n\nIf all pairs are required, I continue scanning the array while keeping track of the pairs already returned to avoid duplicates.\n\nExample:\nInput: [1, 2, 3, 4, 5], Target = 5\nPossible pairs: (1, 4) and (2, 3)\n\nAlways clarify the expected behavior with the interviewer.",
-        "keyPoints": [
-          "Single pair: return immediately on first match",
-          "All pairs: continue loop and store unique pairs in set",
-          "Clarify duplicate handling rules"
-        ]
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty string, single char, all identical, no long palindrome, even vs odd palindromes.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> return \"\"\n2. Single character (\"a\") -> return \"a\"\n3. All identical characters (\"aaaa\") -> return \"aaaa\"\n4. No palindrome longer than 1 char (\"abc\") -> return any single character e.g. \"a\"\n5. Even-length palindrome (\"abba\") -> return \"abba\"\n6. Odd-length palindrome (\"racecar\") -> return \"racecar\"\n7. Multiple longest palindromes of same length (\"babad\") -> return either \"bab\" or \"aba\".",
+            "keyPoints": [
+                  "Empty string & single char guards",
+                  "Even vs odd length palindromes",
+                  "All identical chars & no long palindrome cases"
+            ]
       },
       {
-        "id": "q7",
-        "category": "No-Solution Fallback",
-        "question": "7. What if no solution exists?",
-        "whatInterviewerChecks": "Handling missing target sum scenarios gracefully.",
-        "bestReplyScript": "If I finish scanning the array without finding a valid pair, I return a special value such as:\n• None\n• []\n• (-1, -1)\n\ndepending on the problem requirements.\n\nExample:\nInput: [1, 2, 3], Target = 10\nOutput: None",
-        "keyPoints": [
-          "Loop completes without complement match",
-          "Return default fallback (None, empty list, or sentinel)",
-          "Verify return type contract"
-        ]
+            "id": "q7",
+            "category": "Starting Index & Substring Retrieval",
+            "question": "7. How would you return the starting index along with the substring?",
+            "whatInterviewerChecks": "Tracking `start` and `maxLen`.",
+            "bestReplyScript": "Whenever I find a longer palindrome during expansion:\n- Update `start = left + 1`\n- Update `maxLen = right - left - 1`\n\nAt the end:\n- Return the substring `s[start : start + maxLen]`.\n- If required, also return `start` index.\n\nExample: `Start = 3`, `Length = 5` -> Substring \"abcba\".",
+            "keyPoints": [
+                  "Track `start` index and `maxLen`",
+                  "Extract slice `s[start : start + maxLen]`",
+                  "Same O(n^2) time, O(1) space"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Sorted Array Variant",
-        "question": "8. How would you solve it for a sorted array?",
-        "whatInterviewerChecks": "Using two pointers on sorted input for O(n) time and O(1) space.",
-        "bestReplyScript": "For a sorted array, I would use the two-pointer technique.\n\nSteps:\n1. Place one pointer at the beginning.\n2. Place another pointer at the end.\n3. Calculate their sum.\n4. If the sum is too small, move the left pointer.\n5. If the sum is too large, move the right pointer.\n6. Repeat until the pair is found.\n\nExample:\nInput: [2, 7, 11, 15], Target = 9\n2 + 15 = 17 (Too large -> decrement right)\n2 + 11 = 13 (Too large -> decrement right)\n2 + 7 = 9 (Match! Found)\n\nThis approach runs in:\n• Time: O(n)\n• Space: O(1)",
-        "keyPoints": [
-          "Left at 0, right at len(nums)-1",
-          "Adjust left/right based on sum vs target comparison",
-          "O(n) time and O(1) space optimal solution for sorted array"
-        ]
+            "id": "q8",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering empty, single, even/odd, and standard examples.",
+            "bestReplyScript": "I would test:\n- \"\" -> \"\"\n- \"a\" -> \"a\"\n- \"aa\" -> \"aa\"\n- \"aba\" -> \"aba\"\n- \"abba\" -> \"abba\"\n- \"babad\" -> \"bab\" or \"aba\"\n- \"cbbd\" -> \"bb\"\n- \"abcdef\" -> Any single character e.g. \"a\"\n\nThese cover empty input, even and odd palindromes, and cases with no long palindrome.",
+            "keyPoints": [
+                  "LeetCode 5 standard test cases (babad, cbbd)",
+                  "Even vs odd palindrome tests",
+                  "Boundary guards (empty, single char)"
+            ]
       },
       {
-        "id": "q9",
-        "category": "3-Sum Extension",
-        "question": "9. How would you extend this to Three Sum?",
-        "whatInterviewerChecks": "Extending 2-Sum building blocks to 3-Sum.",
-        "bestReplyScript": "Three Sum builds upon the Two Sum concept.\n\nSteps:\n1. Sort the array.\n2. Fix one element.\n3. Use two pointers to find the remaining two numbers.\n\nExample:\nFixed: -1 -> Find two numbers whose sum is 1.\n\nComplexity:\n• Sorting: O(n log n)\n• Two-pointer search for each element: O(n²)\n\nOverall: O(n²)",
-        "keyPoints": [
-          "Sort array first",
-          "Outer loop fixes nums[i], inner loop runs 2-Sum two-pointer search",
-          "Overall O(n^2) time complexity"
-        ]
+            "id": "q9",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Longest Palindromic Substring (LeetCode 5).",
+            "bestReplyScript": "Common mistakes include:\n- Checking ONLY odd-length centers and forgetting even-length centers (e.g. failing on \"abba\").\n- Incorrect boundary checks during expansion (causing IndexError on `left < 0` or `right >= n`).\n- Returning length integer instead of substring string.\n- Updating max palindrome indices incorrectly.\n- Off-by-one errors when calculating length: `right - left - 1`.",
+            "keyPoints": [
+                  "Forgetting even-length centers (left = i, right = i + 1)",
+                  "Index out of bounds expansion error",
+                  "Off-by-one formula error: `right - left - 1`"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Testing Matrix",
-        "question": "10. How would you test your solution?",
-        "whatInterviewerChecks": "Designing comprehensive test case suites.",
-        "bestReplyScript": "I would test different categories.\n\nInput | Target | Expected Output\n[2, 7, 11, 15] | 9 | [0, 1]\n[3, 2, 4] | 6 | [1, 2]\n[3, 3] | 6 | [0, 1]\n[1, 2, 3] | 10 | None\n[-1, -2, -3, -4] | -6 | [1, 3]\n\nTesting different inputs ensures the solution works for positive numbers, negative numbers, duplicates, and cases with no solution.",
-        "keyPoints": [
-          "Positive & negative numbers",
-          "Duplicate values forming target (e.g. 3+3=6)",
-          "No valid pair case",
-          "Unsorted input order"
-        ]
+            "id": "q10",
+            "category": "Recursive Approach Feasibility",
+            "question": "10. Can this problem be solved recursively?",
+            "whatInterviewerChecks": "Recursive subproblem checks vs iterative expansion.",
+            "bestReplyScript": "Yes.\nA recursive solution can check whether substring `s[i..j]` is a palindrome by checking `s[i] == s[j]` and recursively checking `s[i+1..j-1]`.\n\nHowever:\n- It requires O(n^2) call stack frames without memoization (or recursion limit errors).\n- It has significant call stack overhead.\n- The iterative Expand Around Center approach is cleaner, faster, and uses O(1) stack space.",
+            "keyPoints": [
+                  "Recursive palindrome check has call stack overhead",
+                  "Requires memoization to avoid exponential execution",
+                  "Iterative Expand Around Center is preferred"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Brute Force Comparison",
-        "question": "11. Why is brute force inefficient?",
-        "whatInterviewerChecks": "O(n^2) nested loop analysis.",
-        "bestReplyScript": "The brute-force approach checks every possible pair.\n\nExample:\nfor i in range(n):\n    for j in range(i+1, n):\n        check if nums[i] + nums[j] == target\n\nFor an array of size n, there are approximately n²/2 comparisons.\n\nTime Complexity: O(n²)\n\nThe hash map solution reduces this to O(n), making it much faster for large inputs.",
-        "keyPoints": [
-          "Brute force uses two nested loops",
-          "Checks n*(n-1)/2 pairs -> O(n^2) time",
-          "Hash map trades O(n) space to achieve O(n) time"
-        ]
+            "id": "q11",
+            "category": "Massive Text Optimization (Manacher's Choice)",
+            "question": "11. How would you optimize your solution for very long strings?",
+            "whatInterviewerChecks": "When to upgrade to Manacher's O(n) algorithm.",
+            "bestReplyScript": "For very large strings (e.g. millions of characters):\n- Upgrade to Manacher's Algorithm, which guarantees linear O(n) time.\n- Transform string with dummy delimiters (e.g. `#a#b#c#`) to unify odd and even centers.\n\nFor moderate interview input sizes (n <= 1,000), Expand Around Center's O(n^2) is sufficiently fast.",
+            "keyPoints": [
+                  "Use Manacher's O(n) for millions of chars",
+                  "Dummy delimiter transformation `#a#b#c#`",
+                  "Expand Around Center sufficient for n <= 1,000"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Edge Cases & Boundaries",
-        "question": "12. What edge cases exist?",
-        "whatInterviewerChecks": "Identifying boundary failures.",
-        "bestReplyScript": "Important edge cases include:\n\nEmpty array: [] -> Return None\n\nOne element: [5] -> Return None\n\nDuplicate numbers: [3, 3], Target = 6 -> Output [0, 1]\n\nNegative numbers: [-2, -4, -6], Target = -8 -> Output [0, 2]\n\nNo solution: [1, 2, 3], Target = 10 -> Return None",
-        "keyPoints": [
-          "Empty and single-element inputs (< 2 elements)",
-          "Duplicate identical values forming target",
-          "Negative targets and negative array elements",
-          "Target absent from array"
-        ]
+            "id": "q12",
+            "category": "Real-World Applications",
+            "question": "12. Where are palindrome algorithms used in practice?",
+            "whatInterviewerChecks": "DNA sequence analysis, NLP, data compression.",
+            "bestReplyScript": "Palindrome algorithms are used in:\n- Bioinformatics & Genomic Analysis (detecting palindromic DNA restriction enzyme recognition sites).\n- Natural Language Processing (NLP) & Text Processing.\n- Data Compression & String Pattern Matching.\n- Cryptography & Computational Biology.",
+            "keyPoints": [
+                  "Genomic DNA restriction enzyme site detection",
+                  "Natural Language Processing string symmetry",
+                  "Data compression & pattern matching"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Common Candidate Pitfalls",
-        "question": "13. What mistakes do candidates make?",
-        "whatInterviewerChecks": "Identifying common bugs and ordering errors.",
-        "bestReplyScript": "Some common mistakes include:\n• Using nested loops instead of a hash map.\n• Storing the current number before checking its complement, which can cause issues with duplicate values (e.g. self-pairing [3] for target 6).\n• Forgetting to handle duplicate numbers correctly.\n• Returning values when the problem asks for indices.\n• Ignoring the case where no valid pair exists.\n\nA common interview mistake is not thinking carefully about the order of hash map operations.",
-        "keyPoints": [
-          "Inserting into hash map BEFORE checking complement (self-pairing bug)",
-          "Returning array values instead of indices",
-          "Ignoring negative numbers",
-          "Failing to handle missing target gracefully"
-        ]
+            "id": "q13",
+            "category": "Algorithm Comparison Matrix",
+            "question": "13. Compare expand-around-center, DP, and Manacher's Algorithm.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Expand Around Center: Time O(n^2), Space O(1). Easy difficulty. Best for interviews.\n- Dynamic Programming: Time O(n^2), Space O(n^2). Medium difficulty. Useful for learning DP table state.\n- Manacher's Algorithm: Time O(n), Space O(n). Hard difficulty. Best for production linear processing.\n\nExpand-around-center is usually the best interview choice because it balances simplicity and efficiency.",
+            "keyPoints": [
+                  "Expand Around Center: O(n^2) time, O(1) space (Easy)",
+                  "Dynamic Programming: O(n^2) time, O(n^2) space (Medium)",
+                  "Manacher's Algorithm: O(n) time, O(n) space (Hard)"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Duplicate Element Handling",
-        "question": "14. Can duplicates affect your algorithm?",
-        "whatInterviewerChecks": "Preventing self-referential index matching bug.",
-        "bestReplyScript": "Yes.\n\nDuplicates must be handled carefully.\n\nExample: Input [3, 3], Target = 6\n\nIf I insert the current element into the hash map before checking the complement, I may accidentally use the same element twice.\n\nThe correct approach is:\n1. Check for the complement in seen.\n2. Then insert the current element into seen.\n\nThis ensures two different indices are returned.",
-        "keyPoints": [
-          "Check seen map BEFORE inserting current element",
-          "Prevents matching an element with itself at the same index",
-          "Guarantees distinct index pairs"
-        ]
+            "id": "q14",
+            "category": "Unicode Character Support",
+            "question": "14. How would your solution handle Unicode characters?",
+            "whatInterviewerChecks": "Native language Unicode character equality.",
+            "bestReplyScript": "The algorithm remains identical.\n\nAs long as the programming language supports Unicode strings natively (comparing codepoints `s[left] == s[right]`), character expansion works correctly.\nNo algorithmic or structure changes are required.",
+            "keyPoints": [
+                  "Native language Unicode codepoint comparison",
+                  "No algorithmic changes required",
+                  "Works for multi-byte UTF-8 characters"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-World Hashing Applications",
-        "question": "15. Where is hashing useful elsewhere?",
-        "whatInterviewerChecks": "Broad application of hash-based data structures.",
-        "bestReplyScript": "Hashing is one of the most widely used techniques in computer science.\n\nSome real-world applications include:\n• Fast data lookup and database indexing.\n• Caching systems (Redis, Memcached).\n• Password hashing & security (SHA-256, bcrypt).\n• Duplicate detection & frequency counting.\n• Symbol tables in compilers.\n• Finding intersections between datasets.\n\nMany DSA problems such as Two Sum, Group Anagrams, Longest Consecutive Sequence, Contains Duplicate, and Subarray Sum Equals K also rely heavily on hash maps.",
-        "keyPoints": [
-          "Database indexing & Redis key-value stores",
-          "Compiler symbol tables",
-          "Cryptographic hash functions",
-          "Frequency counting & set intersection"
-        ]
+            "id": "q15",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which approach would you choose in a production environment and why?",
+            "whatInterviewerChecks": "Production trade-off rationale.",
+            "bestReplyScript": "It depends on the input scale:\n- Expand Around Center: Best for general production systems. Simple, zero extra memory allocations O(1), highly maintainable.\n- Manacher's Algorithm: Best for high-throughput genomic or massive text stream pipelines requiring strict linear O(n) performance.\n\nFor most production web applications, I choose Expand Around Center for its simplicity, zero GC overhead, and maintainability.",
+            "keyPoints": [
+                  "General production: Expand Around Center (zero GC overhead, simple)",
+                  "Massive text/genomics: Manacher's O(n) linear algorithm",
+                  "DP: avoided due to O(n^2) memory footprint"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
