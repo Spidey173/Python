@@ -6289,181 +6289,182 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your two-pointer approach.",
-            "whatInterviewerChecks": "Slow pointer (write index) and fast pointer (read index) coordination.",
-            "bestReplyScript": "I use the two-pointer technique because the array is already sorted, meaning duplicate elements are next to each other.\n- Pointer i (slow pointer): Tracks the position of the last unique element.\n- Pointer j (fast pointer): Scans through the array.\n\nSteps:\n1. Initialize i = 0.\n2. Traverse the array using j from index 1.\n3. If nums[j] is different from nums[i], it means we found a new unique element.\n4. Increment i and copy nums[j] to nums[i].\n5. After the loop, the number of unique elements is i + 1.\n\nExample: nums = [1,1,2,2,3]\ni=0, j=1 (duplicate, skip) -> j=2 (new 2: i=1, nums[1]=2) -> j=3 (duplicate) -> j=4 (new 3: i=2, nums[2]=3).\nUnique length = 3, modified array prefix: [1,2,3].\n\nComplexity: Time: O(n), Space: O(1)",
+            "whatInterviewerChecks": "Two-pointer fast/slow with dummy node, advancing fast n+1 steps, removing node via `slow.next = slow.next.next`.",
+            "bestReplyScript": "I use the two-pointer (fast and slow pointer) technique with a dummy node.\n\nSteps:\n1. Create a dummy node pointing to the head (`dummy = ListNode(0, head)`).\n2. Initialize both `fast` and `slow` pointers at the dummy node.\n3. Move the `fast` pointer n + 1 steps ahead.\n4. Move both pointers one step at a time until `fast` reaches `None` (end of list).\n5. At this point, `slow` is positioned right before the node to remove.\n6. Remove the node: `slow.next = slow.next.next`.\n7. Return `dummy.next`.\n\nThis removes the target node in a single pass traversal.",
             "keyPoints": [
-                  "Two pointers: slow i (unique position) and fast j (scanner)",
-                  "Copy new unique element: nums[++i] = nums[j]",
-                  "In-place modification of array prefix",
+                  "Dummy node `ListNode(0, head)` handles head deletion",
+                  "Advance `fast` pointer n + 1 steps ahead",
+                  "Simultaneous traversal until `fast` reaches end",
+                  "Node removal: `slow.next = slow.next.next`",
                   "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Precondition Justification",
-            "question": "2. Why must the array be sorted?",
-            "whatInterviewerChecks": "Adjacency property of duplicates in sorted arrays.",
-            "bestReplyScript": "The array must be sorted because all duplicate elements appear together.\n\nExample: Sorted [1,1,2,2,3,3] vs Unsorted [2,1,2,3,1].\nIn sorted arrays, we only need to compare the current element with the previous unique element.\nIf the array is unsorted, duplicates are scattered throughout, so comparing adjacent elements is no longer enough.\n\nWithout sorting, this two-pointer approach won't work correctly.",
+            "category": "Dummy Node Rationale",
+            "question": "2. Why did you use a dummy node?",
+            "whatInterviewerChecks": "Simplifying head node deletion edge case.",
+            "bestReplyScript": "A dummy node simplifies edge cases, especially when removing the head node (e.g. removing 1st node from end in a 1-node list, or n = length of list).\n\nWithout a dummy node, deleting the head requires a separate conditional branch (`if n == length: return head.next`).\n\nUsing a dummy node ensures every node, including the original head, has a valid predecessor, making the code clean and bug-free.",
             "keyPoints": [
-                  "Sorted array guarantees contiguous duplicates",
-                  "Only need to check previous unique element",
-                  "Unsorted arrays require Hash Set or O(n log n) sorting"
+                  "Eliminates special IF conditions for head deletion",
+                  "Ensures original head has a valid predecessor (`dummy`)",
+                  "Clean uniform logic for all node deletions"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Linear single-pass traversal and constant auxiliary space bounds.",
-            "bestReplyScript": "The array is traversed only once.\nEach element is visited exactly one time by the fast pointer j.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is the optimal solution because every element must be checked at least once.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Linear single-pass time O(n) and constant auxiliary space O(1).",
+            "bestReplyScript": "Let n be the total number of nodes in the linked list.\n\nComplexity analysis:\n- Time Complexity: O(n). We perform a single traversal where fast visits every node once.\n- Space Complexity: O(1) auxiliary space. Only two pointers (`fast`, `slow`) and a dummy node are used.",
             "keyPoints": [
                   "Time Complexity: O(n)",
                   "Space Complexity: O(1)",
-                  "Optimal single-pass lower bound"
+                  "Single pass linear traversal"
             ]
       },
       {
             "id": "q4",
-            "category": "In-Place Modification",
-            "question": "4. Can this be solved in-place?",
-            "whatInterviewerChecks": "In-place array overwriting without allocating new memory.",
-            "bestReplyScript": "Yes. The main advantage of this approach is that it modifies the original array without creating another array.\n\nExample:\nBefore: [1,1,2,2,3]\nAfter:  [1,2,3,2,3]\n\nOnly the first 3 elements are considered valid. No extra array is required, so extra space remains strictly O(1).",
+            "category": "Fast Pointer Gap Calculation Rationale",
+            "question": "4. Why is the fast pointer moved n steps ahead?",
+            "whatInterviewerChecks": "Creating an n-node gap so slow lands on `(N - n - 1)` predecessor node.",
+            "bestReplyScript": "Moving the fast pointer n + 1 steps from the dummy node creates a gap of n nodes between fast and slow.\n\nWhen fast reaches the end (`None`), slow lands exactly on the predecessor node (1 position before the Nth node from the end).\n\nThis allows us to un-link the target node directly using `slow.next = slow.next.next`.",
             "keyPoints": [
-                  "In-place element overwriting",
-                  "First k elements contain unique values",
-                  "Auxiliary memory strictly O(1)"
+                  "Creates a fixed gap of n nodes between fast and slow",
+                  "Fast reaching `None` positions slow at predecessor node",
+                  "Direct unlinking: `slow.next = slow.next.next`"
             ]
       },
       {
             "id": "q5",
-            "category": "Order Preservation & Stability",
-            "question": "5. How do you maintain the order?",
-            "whatInterviewerChecks": "Stability of relative element order.",
-            "bestReplyScript": "The algorithm copies unique elements in the exact order they are first encountered.\n\nExample: Input [1,1,2,2,3] -> Output [1,2,3].\nSince we never swap or rearrange elements out of sequence, the original order of unique values is preserved.\n\nThis property is called stability.",
+            "category": "Head Node Deletion Case Mechanics",
+            "question": "5. What happens if the node to remove is the head?",
+            "whatInterviewerChecks": "Slow remains at dummy node, `slow.next` updates `dummy.next` to `head.next`.",
+            "bestReplyScript": "If the node to remove is the head (i.e. n equals list length):\n- Moving fast n + 1 steps advances fast all the way to `None`.\n- Slow remains at the dummy node.\n- Executing `slow.next = slow.next.next` changes `dummy.next` from `head` to `head.next`.\n- Returning `dummy.next` seamlessly returns the new head.\n\nThe dummy node handles deleting the head node without extra checks.",
             "keyPoints": [
-                  "Sequential overwrite preserves order",
-                  "Maintains relative position stability",
-                  "Input [1,1,2] remains [1,2]"
+                  "Fast reaches `None` after n+1 steps if n = length",
+                  "Slow stays at `dummy` node",
+                  "`dummy.next` updates directly to `head.next`"
             ]
       },
       {
             "id": "q6",
-            "category": "Allowing Up to 2 Duplicates Extension",
-            "question": "6. What if duplicates can appear more than twice?",
-            "whatInterviewerChecks": "Remove Duplicates II variation (`nums[j] != nums[i-1]`).",
-            "bestReplyScript": "This is a variation of the problem (Remove Duplicates from Sorted Array II).\nInstead of allowing only one occurrence, we allow up to two (or k) occurrences.\n\nExample: Input [1,1,1,2,2,3] -> Output [1,1,2,2,3].\n\nThe idea is similar, but we compare the fast pointer element with the element two positions behind (nums[j] != nums[i-1]) instead of one.\n\nThe time complexity remains O(n).",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Single-node list [1] n=1, head removal [1,2] n=2, tail removal [1,2] n=1, n=length.",
+            "bestReplyScript": "Important edge cases include:\n1. Single-node list ([1], n=1) -> returns []\n2. Removing the head node ([1, 2], n=2) -> returns [2]\n3. Removing the tail node ([1, 2], n=1) -> returns [1]\n4. Removing a middle node ([1, 2, 3, 4, 5], n=2) -> returns [1, 2, 3, 5]\n5. n equals total list length -> head is deleted correctly.",
             "keyPoints": [
-                  "Remove Duplicates II variation",
-                  "Compare with element 2 positions behind: nums[j] != nums[i-1]",
-                  "Time: O(n), Space: O(1)"
+                  "Single node list deletion [1] n=1",
+                  "Head node deletion [1, 2] n=2",
+                  "Tail node deletion [1, 2] n=1"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Cases",
-            "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single element, all duplicates, no duplicates, negative numbers.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. One element ([5]) -> 1\n3. All duplicates ([2,2,2,2]) -> 1\n4. No duplicates ([1,2,3,4]) -> 4\n5. Negative numbers ([-3,-3,-2,-1,-1]) -> 3\n\nTesting these cases ensures the algorithm handles different scenarios correctly.",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, head removal, tail removal, single node.",
+            "bestReplyScript": "I would test:\n- [1,2,3,4,5], n=2 -> [1,2,3,5]\n- [1], n=1 -> []\n- [1,2], n=2 -> [2]\n- [1,2], n=1 -> [1]\n- [1,2,3], n=3 -> [2,3]\n\nThese cover normal deletion, single-node emptying, head node deletion, and tail deletion.",
             "keyPoints": [
-                  "Empty array safeguards",
-                  "Single element & all-duplicate boundaries",
-                  "Negative sorted integers"
+                  "LeetCode 19 standard test cases",
+                  "Single node list [1] n=1 returning []",
+                  "Head deletion [1,2] n=2 returning [2]"
             ]
       },
       {
             "id": "q8",
-            "category": "Testing & Verification",
-            "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test cases table matrix covering input, returned length, and prefix values.",
-            "bestReplyScript": "I would test both normal and edge cases:\n- [1,1,2] -> Length 2, Prefix [1,2]\n- [1,2,3] -> Length 3, Prefix [1,2,3]\n- [2,2,2] -> Length 1, Prefix [2]\n- [] -> Length 0, Prefix []\n- [5] -> Length 1, Prefix [5]\n\nThese tests verify correctness for different input types.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Remove Nth Node From End of List (LeetCode 19).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting the dummy node (causes AttributeError on head deletion when `n == length`).\n- Moving fast n steps instead of n + 1 steps (lands slow on target node instead of predecessor!).\n- Off-by-one errors in pointer update.\n- Returning `head` instead of `dummy.next` (fails when original head was deleted).\n- Memory leaks in C/C++ by not freeing deleted node memory.",
             "keyPoints": [
-                  "Test unique return length k",
-                  "Verify array prefix nums[0..k-1]",
-                  "Empty and single-element bounds"
+                  "Moving fast n steps instead of n + 1 steps",
+                  "Forgetting dummy node for head deletion",
+                  "Returning `head` instead of `dummy.next`"
             ]
       },
       {
             "id": "q9",
-            "category": "Empty Array Guard",
-            "question": "9. What if the array is empty?",
-            "whatInterviewerChecks": "Early exit guard returning 0.",
-            "bestReplyScript": "If the array is empty, there are no elements to process.\n\nExample: nums = []\nThe algorithm immediately returns 0.\n\nThis avoids accessing invalid indices (like nums[0]) and prevents runtime errors.",
+            "category": "Two-Pass Algorithm Alternative",
+            "question": "9. Can this problem be solved in two passes?",
+            "whatInterviewerChecks": "First pass length count L, second pass `L - n` node lookup.",
+            "bestReplyScript": "Yes.\nThe two-pass approach is:\n1. First Pass: Traverse list to calculate total length L.\n2. Target index: The node to remove is at index `(L - n)`.\n3. Second Pass: Traverse `(L - n)` steps from dummy node and execute `curr.next = curr.next.next`.\n\nComplexities: Time O(n), Space O(1).\nWhile simpler to conceptualize, it requires traversing the list twice, whereas the two-pointer approach does it in one single pass.",
             "keyPoints": [
-                  "Early exit check: if not nums: return 0",
-                  "Prevents IndexError on empty array",
-                  "O(1) immediate return"
+                  "Pass 1: calculate length L",
+                  "Pass 2: traverse to index `(L - n)` and unlink",
+                  "Requires 2 list traversals vs 1-pass Two-Pointer"
             ]
       },
       {
             "id": "q10",
-            "category": "Two-Pointer Necessity",
-            "question": "10. Why is one pointer not enough?",
-            "whatInterviewerChecks": "Dual responsibility: read scanner vs write target pointer.",
-            "bestReplyScript": "One pointer cannot simultaneously:\n1. Track the position of the last unique element where the next unique element should be written.\n2. Scan through the remaining elements of the array.\n\nUsing two pointers (slow write pointer and fast read pointer) keeps the algorithm clean, structured, and O(n) efficient.",
+            "category": "One-Pass vs Two-Pass Comparison Matrix",
+            "question": "10. Compare the one-pass and two-pass approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- One-Pass (Fast/Slow Pointers): Time O(n), Space O(1). Single traversal, optimal, preferred in interviews.\n- Two-Pass (Length Calculation): Time O(n), Space O(1). Two traversals, slightly simpler logic, acceptable alternative.\n\nThe single-pass two-pointer solution is preferred for interview excellence.",
             "keyPoints": [
-                  "Read pointer scans input",
-                  "Write pointer maintains unique prefix boundary",
-                  "Dual pointer coordination required"
+                  "One-Pass: 1 traversal, O(n) time, O(1) space (Optimal)",
+                  "Two-Pass: 2 traversals, O(n) time, O(1) space",
+                  "One-pass is preferred"
             ]
       },
       {
             "id": "q11",
-            "category": "Common Candidate Pitfalls",
-            "question": "11. What mistakes do candidates make?",
-            "whatInterviewerChecks": "Rookie traps in Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "Some common mistakes include:\n- Forgetting the array is sorted.\n- Using an extra array instead of modifying in-place.\n- Returning the modified array instead of the new length k.\n- Incorrectly updating the slow pointer.\n- Accessing invalid indices for empty arrays.\n\nThe most common mistake is forgetting that only the first k elements are considered valid after modification.",
+            "category": "Invalid n Input Boundary Safety",
+            "question": "11. How would you handle an invalid value of n?",
+            "whatInterviewerChecks": "Handling `n <= 0` or `n > length` in production APIs.",
+            "bestReplyScript": "If n is invalid (`n <= 0` or `n > length`):\n- In production APIs: Validate `n > 0`. If `fast` becomes `None` before completing n + 1 steps during initial movement, throw `ValueError(\"n exceeds list length\")`.\n- In LeetCode/interview problems: `n` is guaranteed to be valid (`1 <= n <= sz`).\n\nAdding explicit boundary checks makes the function robust for production use.",
             "keyPoints": [
-                  "Allocating extra memory (violating in-place constraint)",
-                  "Returning array instead of length k",
-                  "Index out of bounds on empty array"
+                  "Validate `n > 0` and `n <= length`",
+                  "Throw ValueError if `fast` becomes `None` during initial n+1 steps",
+                  "Production safety guard"
             ]
       },
       {
             "id": "q12",
-            "category": "Out-of-Place Alternative",
-            "question": "12. Can this be solved without modifying the array?",
-            "whatInterviewerChecks": "O(n) space allocation trade-off.",
-            "bestReplyScript": "Yes. We can create a new list and copy only unique elements into it.\n\nExample: Input [1,1,2,2,3] -> New list [1,2,3].\nComplexity: Time: O(n), Space: O(n).\n\nAlthough simpler and non-mutating, this does not satisfy the in-place requirement of the original problem.",
+            "category": "Two-Pointer Linked List Pattern Family",
+            "question": "12. Where is the two-pointer technique commonly used?",
+            "whatInterviewerChecks": "Canonical two-pointer problems.",
+            "bestReplyScript": "The two-pointer technique is widely used in:\n- Finding the Middle of a Linked List (LeetCode 876 - Fast/Slow 2x speed).\n- Linked List Cycle Detection (LeetCode 141 / 142 - Floyd's Tortoise & Hare).\n- Intersection of Two Linked Lists (LeetCode 160).\n- Reordering Linked Lists (LeetCode 143).\n- Sliding Window array/string problems.",
             "keyPoints": [
-                  "Create new output list",
-                  "Time: O(n), Space: O(n)",
-                  "Violates in-place O(1) requirement"
+                  "Middle of Linked List (2x fast pointer)",
+                  "Floyd's Cycle Detection (Tortoise and Hare)",
+                  "Intersection of Two Linked Lists"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Applications",
-            "question": "13. Where is this technique useful?",
-            "whatInterviewerChecks": "Software engineering applications for in-place deduplication.",
-            "bestReplyScript": "The two-pointer technique is widely used in:\n- Removing duplicates from sorted database records.\n- Data cleaning and ETL preprocessing.\n- Database query join & merge optimization.\n- In-place stream filtering & log compression.",
+            "category": "Recursive Solution Feasibility",
+            "question": "13. Can this be implemented recursively?",
+            "whatInterviewerChecks": "Backtracking node count recurrence.",
+            "bestReplyScript": "Yes.\nA recursive helper function can:\n1. Recurse down to the end of the list.\n2. Maintain a call-stack return count `k` while unwinding.\n3. When `k == n + 1`, current frame is the predecessor node! Execute `node.next = node.next.next`.\n\nHowever, recursion uses O(n) call stack space and risks stack overflow, whereas the iterative two-pointer solution is O(1) space.",
             "keyPoints": [
-                  "ETL data pipeline deduplication",
-                  "Database sorted index merging",
-                  "Log compaction & stream filtering"
+                  "Unwinds call stack counting `k` from end",
+                  "Unlinks node when `k == n + 1`",
+                  "Uses O(n) call stack space"
             ]
       },
       {
             "id": "q14",
-            "category": "Sorted Linked List Adaptation",
-            "question": "14. How would you adapt it for linked lists?",
-            "whatInterviewerChecks": "Adapting two pointers to LinkedList node references.",
-            "bestReplyScript": "The same idea works for a sorted linked list. Instead of copying values, we adjust node pointers.\n\nExample: 1 -> 1 -> 2 -> 2 -> 3 becomes 1 -> 2 -> 3.\n\nLogic:\n- Compare current.val with current.next.val.\n- If equal, skip duplicate node: current.next = current.next.next.\n- Otherwise, move forward: current = current.next.",
+            "category": "Doubly Linked List Generalization",
+            "question": "14. How would your solution change for a doubly linked list?",
+            "whatInterviewerChecks": "Updating both `next` and `prev` pointers.",
+            "bestReplyScript": "In a Doubly Linked List:\n1. Locate target node using the same two-pointer scan.\n2. Update both forward and backward pointers:\n   - `target.prev.next = target.next`\n   - `if target.next: target.next.prev = target.prev`\n\nHaving `prev` pointers simplifies deletion once target node is identified.",
             "keyPoints": [
-                  "Pointer adjustment: current.next = current.next.next",
-                  "In-place node unlinking",
-                  "Time: O(n), Space: O(1)"
+                  "Update both `next` and `prev` pointers",
+                  "`target.prev.next = target.next`",
+                  "`target.next.prev = target.prev`"
             ]
       },
       {
             "id": "q15",
-            "category": "Frequency Statistics Trade-off",
-            "question": "15. How would you preserve duplicate counts?",
-            "whatInterviewerChecks": "Frequency Map Counter vs in-place removal.",
-            "bestReplyScript": "If we need to preserve the number of occurrences of each element instead of removing duplicates, we can use a frequency dictionary (Counter).\n\nExample: Input [1,1,2,2,2,3] -> Frequency Map {1: 2, 2: 3, 3: 1}.\n\nThis is useful when we need analytical statistics rather than modifying the array. The trade-off is Time: O(n), Space: O(n).",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which approach would you choose in production and why?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "I choose the **One-Pass Two-Pointer with Dummy Node** solution because:\n- Single Traversal: Minimizes cache misses and pointer dereferences.\n- Constant Memory: Uses strictly O(1) auxiliary space.\n- Total Reliability: Dummy node handles head node deletion without edge-case IF branches.\n\nIt is the optimal, production-ready solution.",
             "keyPoints": [
-                  "Frequency dictionary (Counter)",
-                  "Preserves count metadata",
-                  "Trade-off: O(n) auxiliary space"
+                  "One-pass single traversal minimizes cache misses",
+                  "O(1) auxiliary space",
+                  "Dummy node guarantees bug-free head deletion"
             ]
       }
 ],
