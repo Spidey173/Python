@@ -195,207 +195,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Step-by-Step Approach",
-        "question": "1. Explain your approach step by step.",
-        "whatInterviewerChecks": "Two-pointer technique, array bounds, character filtering, and case normalization logic.",
-        "bestReplyScript": "My approach uses the two-pointer technique because we only need to compare characters from both ends of the string.\n\nThe steps are:\n1. Initialize one pointer (left) at the beginning of the string.\n2. Initialize another pointer (right) at the end.\n3. Skip characters that are not letters or digits.\n4. Convert both characters to lowercase so the comparison becomes case-insensitive.\n5. Compare the two characters. If they don't match, return False immediately.\n6. If they match, move both pointers toward the center.\n7. Continue until both pointers meet or cross.\n8. If every comparison matches, return True.",
-        "keyPoints": [
-          "Two-pointer technique from both ends",
-          "Skip non-alphanumeric characters",
-          "Case-insensitive comparison",
-          "Early exit on first mismatch"
-        ],
-        "codeSnippet": "def isPalindrome(s: str) -> bool:\n    left, right = 0, len(s) - 1\n    while left < right:\n        while left < right and not s[left].isalnum():\n            left += 1\n        while left < right and not s[right].isalnum():\n            right -= 1\n        if s[left].lower() != s[right].lower():\n            return False\n        left += 1\n        right -= 1\n    return True"
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Single-pass hash map strategy, complement calculation `target - current_number`, insert vs lookup order.",
+            "bestReplyScript": "I use a hash map to store numbers that I've already seen and their indices.\n\nFor each element in the array:\n1. Calculate the required complement: `complement = target - current_number`.\n2. Check whether the complement already exists in the hash map.\n3. If it exists, we've found the answer, so return both indices.\n4. Otherwise, store the current number and its index in the hash map.\n5. Continue until a pair is found.\n\nThis lets us find the pair in a single pass through the array.",
+            "keyPoints": [
+                  "Hash map stores seen numbers -> index",
+                  "Complement check: `target - num`",
+                  "Single pass execution",
+                  "Time: O(n), Space: O(n)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Algorithmic Justification",
-        "question": "2. Why did you choose the two-pointer approach?",
-        "whatInterviewerChecks": "Understanding of symmetry, space efficiency, and avoiding redundant string copies.",
-        "bestReplyScript": "I chose the two-pointer approach because a palindrome is symmetric. The first character should match the last, the second should match the second-last, and so on.\n\nUsing two pointers allows me to compare both ends simultaneously in a single pass.\n\nCompared to creating a reversed string:\n- It uses constant extra space O(1).\n- It avoids unnecessary copying of the string in heap memory.\n- It is more efficient for large inputs.\n\nThis makes it the optimal solution.",
-        "keyPoints": [
-          "Exploits symmetry",
-          "O(1) constant extra space",
-          "Single pass comparison",
-          "Avoids heap memory allocation"
-        ],
-        "codeSnippet": "# Comparing Two-Pointer vs Reversed String Copy:\n\n# ❌ Extra String Allocation (O(N) space):\ncleaned = [c.lower() for c in s if c.isalnum()]\nreturn cleaned == cleaned[::-1]\n\n# ✅ Two-Pointer Approach (O(1) space):\n# Compare characters in-place using two integer indices!"
+            "id": "q2",
+            "category": "Data Structure Rationale",
+            "question": "2. Why did you choose a hash map instead of a nested loop?",
+            "whatInterviewerChecks": "O(1) lookup vs O(n^2) time trade-off.",
+            "bestReplyScript": "A nested loop checks every possible pair, resulting in O(n^2) time.\n\nA hash map provides O(1) average lookup time, allowing us to find the complement immediately.\n\nSo the overall complexity improves from O(n^2) to O(n), making it much more efficient for large inputs.",
+            "keyPoints": [
+                  "Nested loops take O(n^2) time",
+                  "Hash map lookup takes O(1) average time",
+                  "Improves overall runtime to O(n)"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Complexity Analysis",
-        "question": "3. What's the time and space complexity?",
-        "whatInterviewerChecks": "Asymptotic time/space complexity analysis and optimality proof.",
-        "bestReplyScript": "The algorithm visits each character at most once.\n\n- Time Complexity: O(n)\n  Every character is processed once while moving the pointers.\n\n- Space Complexity: O(1)\n  Only two pointer variables are used. No additional arrays or strings are created.\n\nThis is optimal because every character must be checked at least once.",
-        "keyPoints": [
-          "Time Complexity: O(n)",
-          "Space Complexity: O(1)",
-          "Single pass traversal",
-          "Lower bound is O(n)"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(n) time and O(n) space bounds.",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n) because we traverse the array once, with O(1) average map operations.\n- Space Complexity: O(n) because, in the worst case, we store every element in the hash map.",
+            "keyPoints": [
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Optimal single pass trade-off"
+            ]
       },
       {
-        "id": "q4",
-        "category": "In-Place Processing",
-        "question": "4. Can you solve it without creating a new string?",
-        "whatInterviewerChecks": "In-place string inspection without allocating sanitized temporary strings.",
-        "bestReplyScript": "Yes. Instead of removing unwanted characters and creating another string, I simply move the pointers until they point to valid alphanumeric characters.\n\nFor example, given input \"A man, a plan, a canal: Panama\", instead of converting it into \"amanaplanacanalpanama\", I compare characters directly while skipping spaces and punctuation.\n\nThis saves memory and keeps the space complexity at O(1).",
-        "keyPoints": [
-          "Direct character comparison",
-          "In-place pointer traversal",
-          "No temporary string allocation",
-          "O(1) auxiliary space"
-        ]
+            "id": "q4",
+            "category": "Zero Memory Alternative Trade-off",
+            "question": "4. Can you solve this problem without extra space?",
+            "whatInterviewerChecks": "In-place sorting trade-off vs original index preservation.",
+            "bestReplyScript": "Yes.\nOne approach is:\n1. Sort the array.\n2. Use two pointers to find the target sum.\n\nThis uses O(1) extra space (if sorting is in-place), but sorting changes the original order, so original indices are lost.\nIf the problem requires original indices, we would need to store them before sorting.\nTime complexity becomes O(n log n) due to sorting.",
+            "keyPoints": [
+                  "Sort + Two Pointers uses O(1) space",
+                  "Time complexity increases to O(n log n)",
+                  "Sorting destroys original index order"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Character Filtering",
-        "question": "5. How do you ignore non-alphanumeric characters?",
-        "whatInterviewerChecks": "Handling spaces, commas, colons, and punctuation using .isalnum() or manual checks.",
-        "bestReplyScript": "While moving the pointers, I check whether the current character is alphanumeric. If it is not, I simply move that pointer forward (or backward).\n\nIn Python, this is easily done using char.isalnum(). Characters like spaces, commas, colons, and exclamation marks are skipped completely before performing any comparison.",
-        "keyPoints": [
-          "Using char.isalnum()",
-          "Skip punctuation and spaces",
-          "Pointers advance past non-letters",
-          "Only alphanumeric chars compared"
-        ],
-        "codeSnippet": "while left < right and not s[left].isalnum():\n    left += 1\nwhile left < right and not s[right].isalnum():\n    right -= 1"
+            "id": "q5",
+            "category": "Pre-Sorted Array Optimization",
+            "question": "5. What if the input array is already sorted?",
+            "whatInterviewerChecks": "Two-pointer algorithm for sorted arrays (LeetCode 167).",
+            "bestReplyScript": "If the array is already sorted, I would use the two-pointer approach.\n- One pointer starts at the beginning.\n- The other starts at the end.\n- If the sum is too small, move the left pointer.\n- If the sum is too large, move the right pointer.\n- Stop when the target is found.\n\nThis runs in Time Complexity O(n) and Space Complexity O(1).",
+            "keyPoints": [
+                  "Two pointers: left = 0, right = n - 1",
+                  "Adjust pointers based on current sum",
+                  "Time: O(n), Space: O(1)"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Edge Case Handling",
-        "question": "6. What edge cases did you consider?",
-        "whatInterviewerChecks": "Empty strings, single characters, punctuation-only strings, mixed cases, numbers.",
-        "bestReplyScript": "I considered several key edge cases:\n1. Empty string (\"\"): Valid palindrome.\n2. Single character (\"a\"): Always reads the same.\n3. Only punctuation (\"!!!\"): Nothing remains after ignoring punctuation, valid palindrome.\n4. Mixed uppercase and lowercase (\"RaceCar\"): Case-insensitive comparison handles it.\n5. Numbers (\"12321\"): Digits are alphanumeric and compared normally.\n6. Non-palindrome (\"hello\"): First mismatch returns False immediately.",
-        "keyPoints": [
-          "Empty string & single char",
-          "Punctuation-only input",
-          "Mixed case & numeric strings",
-          "Non-palindrome early exit"
-        ]
+            "id": "q6",
+            "category": "Returning All Pairs Variation",
+            "question": "6. How would you return all possible pairs instead of just one?",
+            "whatInterviewerChecks": "Collecting all pairs and deduplicating.",
+            "bestReplyScript": "Instead of returning immediately after finding one pair:\n- Continue scanning the array.\n- Store every valid pair in a result list.\n- If duplicate pairs should be avoided, maintain a set of visited pairs.\n\nThis ensures all unique pairs are returned.",
+            "keyPoints": [
+                  "Scan entire array without early return",
+                  "Store all valid pairs",
+                  "Use set to deduplicate pairs if required"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Unicode & Internationalization",
-        "question": "7. How would you handle Unicode characters?",
-        "whatInterviewerChecks": "Awareness of accented characters, emojis, scripts, and normalization (NFD/NFC).",
-        "bestReplyScript": "The basic solution works well for ASCII letters and digits. For Unicode strings, accented letters, emojis, and different language scripts may represent the same visual character differently.\n\nTo robustly handle Unicode, I would normalize the string using Unicode normalization before comparison. In Python, this can be done with unicodedata.normalize('NFD', s) to decompose accents and combine characters into canonical forms.",
-        "keyPoints": [
-          "Unicode decomposition & normalization",
-          "unicodedata.normalize('NFD', s)",
-          "Accented & combining characters",
-          "Canonical equivalence"
-        ],
-        "codeSnippet": "import unicodedata\n\ndef normalize_unicode(s: str) -> str:\n    # Decompose Unicode characters (e.g., 'é' -> 'e' + accent)\n    normalized = unicodedata.normalize('NFD', s)\n    return ''.join(c for c in normalized if not unicodedata.combining(c))"
+            "id": "q7",
+            "category": "Duplicate Values Handling",
+            "question": "7. How would your solution change if duplicate values exist?",
+            "whatInterviewerChecks": "Handling duplicates like `nums = [3, 3]`, `target = 6`.",
+            "bestReplyScript": "The hash map approach still works correctly.\n\nExample: nums = [3, 3], target = 6\nProcessing:\n- First 3 -> store in map: map[3] = 0.\n- Second 3 -> complement (3) already exists in map at index 0.\n- Return both indices [0, 1].\n\nIf the requirement is to return all unique pairs, additional duplicate handling is needed.",
+            "keyPoints": [
+                  "Single-pass hash map handles duplicates naturally",
+                  "Example: [3, 3] target 6 returns [0, 1]",
+                  "Complement lookup succeeds before overwrite"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Recursive Alternative",
-        "question": "8. How would you solve it recursively?",
-        "whatInterviewerChecks": "Understanding recursive call stack, base cases, and Python's recursion limit.",
-        "bestReplyScript": "The recursive idea is:\n1. Compare the first and last valid characters.\n2. If they match, recursively check the remaining substring.\n3. If they don't match, return False.\n4. Base cases: An empty string or single character returns True.\n\nAlthough recursion is elegant, I prefer the iterative two-pointer solution because recursion adds O(n) call stack space and risks RecursionError in Python for long strings.",
-        "keyPoints": [
-          "Recursive base case: len <= 1",
-          "Compare head and tail",
-          "O(n) recursion stack space",
-          "Risk of RecursionError in Python"
-        ],
-        "codeSnippet": "def isPalindrome_recursive(s: str) -> bool:\n    def helper(left: int, right: int) -> bool:\n        if left >= right:\n            return True\n        if not s[left].isalnum():\n            return helper(left + 1, right)\n        if not s[right].isalnum():\n            return helper(left, right - 1)\n        if s[left].lower() != s[right].lower():\n            return False\n        return helper(left + 1, right - 1)\n    return helper(0, len(s) - 1)"
+            "id": "q8",
+            "category": "Edge Cases",
+            "question": "8. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty array, single element, negative numbers, duplicates, no solution.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> No solution.\n2. Single element ([5]) -> Cannot form a pair.\n3. Negative numbers ([-3, 4, 3, 90]) -> Works normally.\n4. Duplicate numbers ([3, 3]) -> Returns both indices.\n5. No valid pair ([1, 2, 3], target 10) -> Return empty result or indicate no solution.\n\nLarge numbers should still work correctly without changing the algorithm.",
+            "keyPoints": [
+                  "Empty array & single element validation",
+                  "Negative number support",
+                  "Duplicate values and no-solution handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Problem Variant",
-        "question": "9. What if comparison is case-sensitive?",
-        "whatInterviewerChecks": "Adapting solution to modified constraints by removing .lower().",
-        "bestReplyScript": "If the comparison is case-sensitive, I would simply remove the .lower() conversion.\n\nFor example, for \"Madam\", without converting to lowercase, 'M' != 'm', so it returns False. The rest of the algorithm and pointer movements remain exactly the same.",
-        "keyPoints": [
-          "Remove .lower() call",
-          "Direct character comparison",
-          "Case-sensitive output",
-          "Same O(n) time & O(1) space"
-        ]
+            "id": "q9",
+            "category": "Testing & Verification",
+            "question": "9. How would you test your implementation?",
+            "whatInterviewerChecks": "Test matrix covering basic, duplicate, negative, empty, and no-solution cases.",
+            "bestReplyScript": "I would test:\n- [2, 7, 11, 15], target 9 -> [0, 1]\n- [3, 2, 4], target 6 -> [1, 2]\n- [3, 3], target 6 -> [0, 1]\n- [], target 5 -> No pair\n- [5], target 5 -> No pair\n- [-1, -2, -3, -4], target -6 -> Valid indices\n\nThese cover normal cases, duplicates, negatives, and edge cases.",
+            "keyPoints": [
+                  "Standard LeetCode 1 test cases",
+                  "Negative target/values tests",
+                  "Boundary guards (empty/single element)"
+            ]
       },
       {
-        "id": "q10",
-        "category": "No Built-ins Follow-up",
-        "question": "10. Can you solve it without using isalnum()?",
-        "whatInterviewerChecks": "ASCII range checks using ord() or comparison operators.",
-        "bestReplyScript": "Yes. Instead of isalnum(), I can manually check whether the character is:\n- Between 'a' and 'z': 'a' <= c <= 'z'\n- Between 'A' and 'Z': 'A' <= c <= 'Z'\n- Between '0' and '9': '0' <= c <= '9'\n\nThis avoids using built-in helper functions while working correctly across all ASCII characters.",
-        "keyPoints": [
-          "Manual ASCII range checks",
-          "ord() / comparison operators",
-          "No built-in dependency",
-          "Identical O(n) efficiency"
-        ],
-        "codeSnippet": "def is_alnum_manual(c: str) -> bool:\n    return ('a' <= c <= 'z') or ('A' <= c <= 'Z') or ('0' <= c <= '9')"
+            "id": "q10",
+            "category": "Common Candidate Pitfalls",
+            "question": "10. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Self-matching bug: inserting before checking complement.",
+            "bestReplyScript": "Common mistakes include:\n- Adding the current number to the map BEFORE checking its complement (causes self-matching bug: e.g. for `[3, 2, 4]`, target 6, inserting 3 first then checking `6 - 3 = 3` finds itself at index 0!).\n- Returning values instead of indices.\n- Not handling duplicate values correctly.\n- Assuming the array is sorted.\n- Forgetting to handle the 'no solution' case.\n\nA common error is inserting first and then checking.",
+            "keyPoints": [
+                  "Self-matching bug: inserting before checking complement",
+                  "Returning values instead of indices",
+                  "Assuming array is pre-sorted"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Theoretical Optimality",
-        "question": "11. Why is O(n) optimal?",
-        "whatInterviewerChecks": "Understanding lower bounds in computer science algorithms.",
-        "bestReplyScript": "A palindrome check requires examining every relevant character at least once. If we skip checking a character, we cannot guarantee the string is actually a palindrome.\n\nSince any valid algorithm must inspect the input characters, the lower bound for this problem is Ω(n).\n\nTherefore, an O(n) time solution is asymptotically optimal.",
-        "keyPoints": [
-          "Lower bound is Ω(n)",
-          "Must inspect input characters",
-          "Asymptotically optimal",
-          "Cannot do better than O(n)"
-        ]
+            "id": "q11",
+            "category": "Streaming Data Architecture",
+            "question": "11. How would you solve the problem for a stream of numbers?",
+            "whatInterviewerChecks": "Real-time streaming evaluation with dynamic hash map.",
+            "bestReplyScript": "For a stream:\n- Maintain a hash map of numbers seen so far.\n- For every new incoming number:\n  * Compute its complement.\n  * Check if the complement exists in the map.\n  * If yes, report the pair.\n  * Otherwise, store the new number and its stream index.\n\nThis allows processing numbers one at a time in O(1) time without storing the entire stream history in memory.",
+            "keyPoints": [
+                  "Maintain active seen hash map",
+                  "Process each arriving stream number in O(1)",
+                  "Real-time pair discovery"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Testing & Quality Assurance",
-        "question": "12. How would you test this function?",
-        "whatInterviewerChecks": "Comprehensive test suites covering basic, edge, and invalid cases.",
-        "bestReplyScript": "I would test different categories of inputs:\n1. Basic cases: \"madam\" -> True\n2. Mixed case: \"RaceCar\" -> True\n3. With punctuation: \"A man, a plan, a canal: Panama\" -> True\n4. Numbers: \"12321\" -> True\n5. Empty string: \"\" -> True\n6. Non-palindrome: \"hello\" -> False\n\nTesting multiple categories ensures the algorithm is robust against unexpected inputs.",
-        "keyPoints": [
-          "Basic & mixed-case inputs",
-          "Punctuation & numeric inputs",
-          "Empty & single char cases",
-          "Non-palindrome negative tests"
-        ]
+            "id": "q12",
+            "category": "Extension to 3Sum & K-Sum",
+            "question": "12. Can this problem be extended to Three Sum?",
+            "whatInterviewerChecks": "Building block relationship between 2Sum and 3Sum/K-Sum.",
+            "bestReplyScript": "Yes!\nFor Three Sum:\n1. Sort the array.\n2. Fix one element `nums[i]`.\n3. Use the two-pointer technique on the remaining elements to find 2Sum target `-nums[i]`.\n\nTime complexity becomes O(n^2).\nThe Two Sum problem is the fundamental building block for Three Sum and higher K-Sum problems.",
+            "keyPoints": [
+                  "2Sum is the core subproblem of 3Sum",
+                  "3Sum fixes one element and calls 2Sum",
+                  "Time: O(n^2)"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Common Pitfalls",
-        "question": "13. What common mistakes occur?",
-        "whatInterviewerChecks": "Awareness of typical bugs like IF vs WHILE, case sensitivity, and string mutation errors.",
-        "bestReplyScript": "Some common mistakes include:\n- Forgetting to ignore spaces and punctuation.\n- Not converting characters to the same case.\n- Using IF instead of WHILE when skipping consecutive non-alphanumeric characters.\n- Moving only one pointer after a successful comparison.\n- Creating unnecessary extra strings, increasing space complexity to O(n).\n- Incorrect loop conditions that miss comparisons.",
-        "keyPoints": [
-          "IF vs WHILE bug",
-          "Case-sensitivity bugs",
-          "Pointer update oversights",
-          "Unnecessary string copies"
-        ]
+            "id": "q13",
+            "category": "Real-World Applications",
+            "question": "13. Where is hash-based lookup used in real-world systems?",
+            "whatInterviewerChecks": "Database indexing, caching, password verification.",
+            "bestReplyScript": "Hash-based lookup is widely used in:\n- Database indexing & Hash Joins.\n- Caching systems (Redis, Memcached).\n- Password verification & Cryptographic hashing.\n- User authentication & Session lookups.\n- Compilers (Symbol tables).\n- DNS lookups & Duplicate detection.",
+            "keyPoints": [
+                  "Database Hash Joins",
+                  "Redis / Memcached key-value stores",
+                  "Compiler Symbol Tables & DNS lookups"
+            ]
       },
       {
-        "id": "q14",
-        "category": "System & Streaming Design",
-        "question": "14. Can this work on a character stream?",
-        "whatInterviewerChecks": "Random access vs streaming input limitations.",
-        "bestReplyScript": "Not directly. A palindrome requires comparing the beginning and the end of the input. In a character stream, future characters are not yet available, making direct comparison impossible.\n\nPossible solutions include:\n- Storing the stream in memory or disk first.\n- Buffering data when length is known.\n- Dual stream file seeking if the stream source supports random access.\n\nThus, the standard two-pointer approach requires random access to the entire input.",
-        "keyPoints": [
-          "Requires random access",
-          "Streams lack future characters",
-          "Buffering / disk storage needed",
-          "Cannot compare stream in real-time"
-        ]
+            "id": "q14",
+            "category": "Brute Force vs Optimal Comparison",
+            "question": "14. Compare the brute-force and optimal approaches.",
+            "whatInterviewerChecks": "Comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Two nested loops checking all pairs -> Time O(n^2), Space O(1).\n- Hash Map: Single pass complement lookup -> Time O(n), Space O(n).\n\nBrute force checks every pair, while the hash map finds the complement instantly, making it much faster for large arrays.",
+            "keyPoints": [
+                  "Brute force: O(n^2) time, O(1) space",
+                  "Hash Map: O(n) time, O(n) space",
+                  "Optimal single-pass linear runtime"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-World Applications",
-        "question": "15. Where is this pattern used in real applications?",
-        "whatInterviewerChecks": "Practical engineering applications of two-pointer and symmetric text algorithms.",
-        "bestReplyScript": "The two-pointer technique and symmetric text scanning are widely used in:\n- DNA sequence analysis to detect symmetric genetic patterns (palindromic repeats).\n- Text processing to filter punctuation and normalize case.\n- Compiler and parser design for token scanning.\n- Two-pointer algorithmic patterns like Container With Most Water, Trapping Rain Water, and Two Sum on sorted arrays.",
-        "keyPoints": [
-          "DNA sequence analysis",
-          "Text normalization & parsing",
-          "Two-pointer array patterns",
-          "Compiler token scanning"
-        ]
+            "id": "q15",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which solution would you use in production and why?",
+            "whatInterviewerChecks": "Choosing hash map for unsorted / index preservation vs two-pointer for sorted.",
+            "bestReplyScript": "If the array is unsorted and original indices are required, I would use the hash map solution because:\n- It runs in O(n) time.\n- It's easy to implement and maintain.\n- It preserves original indices.\n\nIf the input is already sorted and space is a constraint, I would choose the two-pointer approach because it uses O(1) extra space.",
+            "keyPoints": [
+                  "Unsorted / index required -> Hash Map (O(n) time, O(n) space)",
+                  "Pre-sorted array -> Two Pointers (O(n) time, O(1) space)",
+                  "Production rationale based on input constraints"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
