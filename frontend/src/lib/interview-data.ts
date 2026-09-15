@@ -10531,197 +10531,184 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
             "id": "q1",
-            "category": "Deep-Dive Question 1",
+            "category": "Step-by-Step Approach",
             "question": "1. Explain exponentiation by squaring.",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Divide-and-conquer strategy, base squaring and exponent halving rules for even vs odd exponents.",
+            "bestReplyScript": "Exponentiation by squaring is a divide-and-conquer algorithm used to compute x^n efficiently.\nInstead of multiplying x by itself n times, it repeatedly squares the base and halves the exponent.\n\nRules:\n- If n is even: x^n = (x^2)^(n/2)\n- If n is odd:  x^n = x * (x^2)^((n-1)/2)\n\nExample: 2^8 -> (2^2)^4 -> (4^2)^2 -> (16^2)^1 -> 256.\nInstead of 8 multiplications, we use only 3 squaring operations.\n\nComplexity: Time: O(log n), Space: O(1) iterative",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Divide-and-conquer binary exponentiation",
+                  "Even exponent: (x^2)^(n/2)",
+                  "Odd exponent: x * (x^2)^((n-1)/2)",
+                  "Time: O(log n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Repeated Multiplication vs Squaring",
             "question": "2. Why is this faster than repeated multiplication?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Fast Exponentiation (Pow).",
-            "bestReplyScript": "I chose this approach for Fast Exponentiation (Pow) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n) linear multiplications vs O(log n) logarithmic reduction.",
+            "bestReplyScript": "The normal approach multiplies the base n times (e.g. 2^10 requires 10 linear multiplications).\n\nExponentiation by squaring reduces the exponent by half at each step: 2^10 -> 2^5 -> 2^2 -> 2^1.\nSince the exponent is halved repeatedly, the number of operations becomes log2(n) instead of n, making it exponentially faster.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Linear O(n) multiplies vs Logarithmic O(log n) steps",
+                  "Halves exponent size at each step",
+                  "Reduces 1000 multiplications to ~10 operations"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Fast Exponentiation (Pow).",
-            "bestReplyScript": "Here is the complexity analysis for Fast Exponentiation (Pow):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic bounds for binary exponentiation.",
+            "bestReplyScript": "Since the exponent is divided by 2 in every iteration:\n- Time Complexity: O(log n)\n- Space Complexity: O(1) (Iterative), O(log n) (Recursive call stack)\n\nThis is much faster than the naive O(n) solution.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log n)",
+                  "Space Complexity: O(1) iterative",
+                  "Optimal exponentiation bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Edge Case Analysis",
+            "category": "Negative Exponents Strategy",
             "question": "4. How do you handle negative exponents?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Fast Exponentiation (Pow).",
-            "bestReplyScript": "When handling Fast Exponentiation (Pow), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Reciprocal identity x^(-n) = 1 / (x^n).",
+            "bestReplyScript": "A negative exponent means taking the reciprocal: x^(-n) = 1 / x^n.\nExample: 2^(-3) = 1 / (2^3) = 1 / 8 = 0.125.\n\nAlgorithm:\n1. If n is negative: replace x with 1/x and make n positive (or convert n = -n).\n2. Apply exponentiation by squaring on the positive exponent.\n\nNote: Handle 32-bit INT_MIN (-2^31) overflow by using 64-bit integer N = -n.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Reciprocal identity: x^(-n) = (1/x)^n",
+                  "Convert x = 1/x and n = -n",
+                  "Watch for INT_MIN overflow in C++/Java"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Zero Exponent Base Case",
             "question": "5. What if the exponent is zero?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Mathematical identity x^0 = 1 for any non-zero x.",
+            "bestReplyScript": "By mathematical definition, x^0 = 1 for any non-zero x.\nExamples: 5^0 = 1, 100^0 = 1, (-3)^0 = 1.\n\nSo if n == 0, we immediately return 1 as our base case without any further computation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base case x^0 = 1",
+                  "Returns 1 immediately",
+                  "O(1) base case check"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Recursive Formulation",
             "question": "6. Can you solve this recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recurrence half = pow(x, n // 2); return half * half if even else x * half * half.",
+            "bestReplyScript": "Yes. Recursive idea:\n- Base case: if n == 0 return 1.\n- Compute half = pow(x, n // 2).\n- If n is even: return half * half.\n- If n is odd:  return x * half * half.\n\nComplexity: Time O(log n), Space O(log n) due to the call stack.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recurrence: half = pow(x, n // 2)",
+                  "Even: half * half",
+                  "Odd: x * half * half",
+                  "Space: O(log n) call stack"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Fast Exponentiation (Pow).",
-            "bestReplyScript": "When handling Fast Exponentiation (Pow), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "n = 0, x = 0, negative n, x = 1, large n.",
+            "bestReplyScript": "Important edge cases include:\n1. Exponent is zero (2^0) -> 1\n2. Base is zero (0^5) -> 0\n3. Negative exponent (2^-2) -> 0.25\n4. Base is one (1^100) -> 1\n5. Large exponent (2^1000) -> Computes efficiently in O(log n).\n\nTesting these cases ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 base case",
+                  "Negative exponents (2^-2 = 0.25)",
+                  "Zero base (0^5 = 0)"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Fast Exponentiation (Pow).",
-            "bestReplyScript": "To thoroughly test Fast Exponentiation (Pow), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix for positive, zero, and negative exponents.",
+            "bestReplyScript": "I would test normal cases and edge cases:\n- (2, 3)  -> 8\n- (2, 0)  -> 1\n- (2, -2) -> 0.25\n- (1, 100)-> 1\n- (0, 5)  -> 0\n\nThese tests verify correctness for positive, zero, and negative exponents.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Positive exponent tests",
+                  "Negative exponent reciprocal tests",
+                  "Zero base and exponent tests"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Fast Exponentiation (Pow).",
-            "bestReplyScript": "Common candidate pitfalls when solving Fast Exponentiation (Pow) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Pow(x, n).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting the base case (n == 0).\n- Incorrect handling of negative exponents (not using reciprocal 1/x).\n- INT_MIN 32-bit overflow when converting n = -n in C++/Java (-(-2147483648) overflows signed int).\n- Using naive linear O(n) multiplication.\n\nThe most common mistake is not converting negative exponents into reciprocals correctly.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting negative exponent reciprocals",
+                  "INT_MIN (-2^31) overflow bug in C++/Java",
+                  "Linear O(n) multiplication anti-pattern"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Odd vs Even Exponent Mechanics",
             "question": "10. How do odd and even exponents differ?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Extra base multiplication on odd exponent steps.",
+            "bestReplyScript": "For an even exponent: 2^8 = (2^4)^2 -> No extra multiplication needed beyond squaring the base.\n\nFor an odd exponent: 2^9 = 2 * (2^4)^2 -> We multiply by the base one extra time because halving 9 (floor division 9 // 2 = 4) leaves one factor of x behind.\n\nThis distinction is the core mechanic of binary exponentiation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Even exponent: direct squaring (x^2)^(n/2)",
+                  "Odd exponent: extra base multiplication x * (x^2)^(n//2)",
+                  "Binary bit inspection equivalent"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where is fast exponentiation used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "RSA Cryptography, Modular Exponentiation, Matrix Power.",
+            "bestReplyScript": "Fast exponentiation is widely used in:\n- Cryptography (RSA encryption & Diffie-Hellman key exchange compute modular exponentiation b^e mod m).\n- Linear Recurrences & Dynamic Programming (Matrix Exponentiation for Fibonacci in O(log n)).\n- Scientific computing & Graphics 3D transformations.\n- Computer Algebra Systems.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "RSA Cryptography & Diffie-Hellman",
+                  "Modular Exponentiation (b^e mod m)",
+                  "Matrix Exponentiation for fast linear recurrences"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Integer Overflow Prevention",
             "question": "12. How would you prevent integer overflow?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "64-bit int / BigInt usage and modulo reduction.",
+            "bestReplyScript": "Overflow can occur when intermediate power values become large:\n- Use 64-bit floating point (double) for Pow(x, n) as in LeetCode 50.\n- In C++/Java integer exponentiation, use 64-bit long long or BigInteger.\n- If the problem specifies a modulus m, apply modulo at every step: (result * base) % m.\n\nThis keeps intermediate values small and within hardware limits.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Double precision float (IEEE 754)",
+                  "Modulo at every step for Modular Exponentiation",
+                  "64-bit long long / BigInt in typed languages"
             ]
       },
       {
             "id": "q13",
-            "category": "Algorithmic Justification",
+            "category": "Iterative vs Recursive Comparison",
             "question": "13. Compare recursive and iterative solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Fast Exponentiation (Pow).",
-            "bestReplyScript": "I chose this approach for Fast Exponentiation (Pow) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) space iterative vs O(log n) call stack recursive table comparison.",
+            "bestReplyScript": "Comparison:\n- Iterative: Time O(log n), Space O(1) - Bitwise loop inspecting exponent bits. Preferred for production.\n- Recursive: Time O(log n), Space O(log n) - Concise divide-and-conquer recursion.\n\nFor production code, the iterative version is preferred because it uses constant O(1) space without stack overflow risk.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Iterative: O(1) space bitwise loop",
+                  "Recursive: O(log n) call stack space",
+                  "Iterative preferred in production"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Modular Exponentiation",
             "question": "14. How would you compute modular exponentiation?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fast Exponentiation (Pow).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Modular arithmetic property (A * B) % m = ((A % m) * (B % m)) % m.",
+            "bestReplyScript": "Modular exponentiation computes (x^n) % m efficiently.\nInstead of calculating x^n first (which overflows), we apply modulo % m after every multiplication:\n\nIf n is odd: result = (result * base) % m\nbase = (base * base) % m\nn //= 2\n\nThis keeps intermediate numbers less than m and runs in O(log n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Apply modulo % m after every multiplication",
+                  "Prevents large integer overflow",
+                  "Time: O(log n), Space: O(1)"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Divide-and-Conquer Paradigm",
             "question": "15. Why is divide-and-conquer effective here?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Fast Exponentiation (Pow).",
-            "bestReplyScript": "I chose this approach for Fast Exponentiation (Pow) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Halving problem size logarithmically.",
+            "bestReplyScript": "Divide-and-conquer is effective because each step reduces the problem size by half.\n\nExample for 2^32: 2^32 -> 2^16 -> 2^8 -> 2^4 -> 2^2 -> 2^1.\nInstead of 32 linear multiplications, we solve only 5 squaring steps.\nHalving the exponent at each step transforms linear O(n) growth into logarithmic O(log n) speed.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Reduces problem size by half each step",
+                  "Transforms 32 multiplications into 5 squarings",
+                  "Logarithmic divide-and-conquer efficiency"
             ]
       }
 ],
