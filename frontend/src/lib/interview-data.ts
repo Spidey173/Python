@@ -955,195 +955,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithmic Steps & Workflow",
-        "question": "1. Explain your algorithm.",
-        "whatInterviewerChecks": "Two-pass hash map algorithm, frequency counting, and string traversal.",
-        "bestReplyScript": "My algorithm uses two passes through the string.\n\nStep 1: Count the frequency of every character using a hash map (dictionary).\n\nStep 2: Traverse the string again and return the first character whose frequency is 1.\n\nExample:\nInput: \"leetcode\"\n\nFrequency Map:\nl -> 1\ne -> 3\nt -> 1\nc -> 1\no -> 1\nd -> 1\n\nFirst character with frequency 1: 'l'\n\nUsing two passes makes the solution simple, readable, and efficient.",
-        "keyPoints": [
-          "Two-pass algorithm",
-          "Pass 1: Frequency map",
-          "Pass 2: Find first freq 1",
-          "O(n) time & O(n) space"
-        ],
-        "codeSnippet": "def firstUniqChar(s: str) -> int:\n    from collections import Counter\n    counts = Counter(s)\n    for idx, ch in enumerate(s):\n        if counts[ch] == 1:\n            return idx\n    return -1"
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach.",
+            "whatInterviewerChecks": "Sorting + Two-Pointer strategy, fixing outer loop element `nums[i]`, handling 2Sum target `-nums[i]`, skipping duplicates.",
+            "bestReplyScript": "I first sort the array, then fix one element at a time and use the two-pointer technique to find the other two numbers.\n\nSteps:\n1. Sort the array.\n2. Iterate through the array and treat each element as the first number of the triplet.\n3. For each fixed element:\n   - Place one pointer just after it (left = i + 1).\n   - Place another pointer at the end (right = n - 1).\n4. Calculate sum = nums[i] + nums[left] + nums[right].\n5. If the sum is:\n   - 0 -> Store the triplet and skip duplicate values.\n   - Less than 0 -> Move left forward.\n   - Greater than 0 -> Move right backward.\n6. Continue until left meets right.\n\nThis efficiently finds all unique triplets whose sum is zero.",
+            "keyPoints": [
+                  "Sort array first",
+                  "Fix element nums[i], set left = i + 1, right = n - 1",
+                  "Sum checks: 0 (record & skip duplicates), <0 (left++), >0 (right--)",
+                  "Time: O(n^2), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Data Structure Justification",
-        "question": "2. Why did you use a hash map?",
-        "whatInterviewerChecks": "Understanding average O(1) hash table lookup/insert vs O(n²) nested loop searches.",
-        "bestReplyScript": "A hash map allows me to store the frequency of each character efficiently.\n\nFor every character:\n- If it's already in the map, increment its count.\n- Otherwise, initialize its count to 1.\n\nHash map operations (insert, lookup, update) take O(1) average time, making the overall algorithm O(n).\n\nWithout a hash map, I would have to count occurrences repeatedly using nested loops, leading to O(n²) time complexity.",
-        "keyPoints": [
-          "O(1) average time for hash lookup/insert",
-          "Avoids O(n²) nested scanning",
-          "O(n) total time complexity"
-        ]
+            "id": "q2",
+            "category": "Sorting Requirement Rationale",
+            "question": "2. Why is sorting required before applying two pointers?",
+            "whatInterviewerChecks": "Enables two-pointer directionality and seamless duplicate skipping.",
+            "bestReplyScript": "Sorting is essential because the two-pointer technique relies on the numbers being in order.\n\nAfter sorting:\n- If the sum is too small, moving the left pointer increases the sum.\n- If the sum is too large, moving the right pointer decreases the sum.\n\nSorting also makes it easy to skip duplicate values, ensuring we return only unique triplets.",
+            "keyPoints": [
+                  "Enables Two-Pointer directional adjustment",
+                  "Sum too small -> left++, Sum too large -> right--",
+                  "Adjacent duplicates skipping"
+            ]
       },
       {
-        "id": "q3",
-        "category": "One-Pass Limitations",
-        "question": "3. Can this be solved in one pass?",
-        "whatInterviewerChecks": "Understanding future character uncertainty in single-pass string processing.",
-        "bestReplyScript": "Not in the general case. When reading a character for the first time, I don't yet know whether it will appear again later in the string.\n\nFor example, given input \"aab\", when I read the first 'a', it looks unique, but another 'a' appears later.\n\nTherefore, I need to process the complete string before confidently identifying the first non-repeating character.\n\nSome advanced streaming solutions use a queue along with a hash map, but they still maintain frequency information as characters arrive.",
-        "keyPoints": [
-          "Future character occurrence unknown",
-          "Must inspect whole input before final decision",
-          "Queue + Hash Map for streaming inputs"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "O(n log n) sort + O(n^2) loop scan = O(n^2) total time, O(1) space.",
+            "bestReplyScript": "Complexity analysis:\n- Sorting takes O(n log n).\n- The outer loop runs n times.\n- For each element, the two pointers scan the remaining array once, which is O(n).\n\nOverall:\n- Time Complexity: O(n^2)\n- Space Complexity: O(1) (excluding the output list).",
+            "keyPoints": [
+                  "Time Complexity: O(n^2)",
+                  "Space Complexity: O(1) auxiliary space",
+                  "Optimal lower bound for general 3Sum"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Complexity Analysis",
-        "question": "4. What's the complexity?",
-        "whatInterviewerChecks": "Time and space complexity bounds.",
-        "bestReplyScript": "The string is traversed twice:\n- First pass -> Build the frequency map.\n- Second pass -> Find the first unique character.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the string.",
-        "keyPoints": [
-          "Time Complexity: O(n)",
-          "Space Complexity: O(n)",
-          "Two linear passes",
-          "O(n) max hash map entries"
-        ]
+            "id": "q4",
+            "category": "Duplicate Triplets Elimination Strategy",
+            "question": "4. How do you avoid duplicate triplets?",
+            "whatInterviewerChecks": "Dual level duplicate skipping: outer loop `if nums[i] == nums[i-1]` and inner pointer loops.",
+            "bestReplyScript": "Duplicates can occur if the same value is processed multiple times.\n\nI avoid them by:\n1. Skipping duplicate values for the fixed element:\n   `if nums[i] == nums[i-1]: continue`\n2. After finding a valid triplet, move both pointers while skipping repeated values.\n\nThis guarantees that each triplet appears only once.",
+            "keyPoints": [
+                  "Outer loop skip: `if nums[i] == nums[i-1]`",
+                  "Inner pointer skips on `sum == 0` match",
+                  "Guarantees unique triplets"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Unicode Compatibility",
-        "question": "5. How would you handle Unicode?",
-        "whatInterviewerChecks": "Python 3 dict Unicode key support.",
-        "bestReplyScript": "Python dictionaries support Unicode characters naturally.\n\nFor example:\n\"नमस्ते\"\n\"こんにちは\"\n\"😀😃😀\"\n\nEach Unicode character becomes a key in the dictionary, so the same algorithm works without modification. The only difference is that the character set is much larger than the English alphabet.",
-        "keyPoints": [
-          "Python dict handles Unicode keys seamlessly",
-          "Works on non-English scripts & emojis",
-          "Zero algorithm modifications required"
-        ]
+            "id": "q5",
+            "category": "Brute-Force Inefficiency",
+            "question": "5. Why is brute force not practical?",
+            "whatInterviewerChecks": "O(n^3) triple nested loop.",
+            "bestReplyScript": "The brute-force solution uses three nested loops to check every possible triplet.\n\nIts complexity is:\n- O(n^3)\n\nFor an array of 1000 elements, this means checking billions of combinations, making it too slow.\n\nThe sorting + two-pointer solution reduces the complexity to O(n^2).",
+            "keyPoints": [
+                  "Brute force: 3 nested loops O(n^3) time",
+                  "Billions of operations for n=1000",
+                  "Sorting + two pointers reduces time to O(n^2)"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Streaming Data Design",
-        "question": "6. What if the string is streamed?",
-        "whatInterviewerChecks": "Queue + Hash Map pattern for real-time stream processing.",
-        "bestReplyScript": "In a stream, I cannot revisit earlier characters easily.\n\nA good approach is to use:\n- A hash map to store frequencies.\n- A queue to store characters in the order they appear.\n\nWhenever a new character arrives:\n1. Update its frequency in the map.\n2. Add it to the queue if it's the first occurrence.\n3. Remove characters from the front of the queue while their frequency is greater than 1.\n\nThe front of the queue always represents the first non-repeating character seen so far.",
-        "keyPoints": [
-          "Queue + Hash Map combination",
-          "Push new chars, pop non-uniques from head",
-          "O(1) time per stream item",
-          "Front of queue is current answer"
-        ],
-        "codeSnippet": "from collections import deque, Counter\n\nclass FirstUniqueStream:\n    def __init__(self):\n        self.counts = Counter()\n        self.q = deque()\n\n    def add(self, ch: str):\n        self.counts[ch] += 1\n        if self.counts[ch] == 1:\n            self.q.append(ch)\n        while self.q and self.counts[self.q[0]] > 1:\n            self.q.popleft()\n\n    def getFirstUnique(self) -> str:\n        return self.q[0] if self.q else None"
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty input, n < 3, all zeros [0,0,0,0], no valid triplets, duplicates.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> Return empty list.\n2. Less than three elements ([1, 2]) -> No triplet is possible.\n3. All zeros ([0, 0, 0, 0]) -> Return only [[0, 0, 0]].\n4. No valid triplets ([1, 2, 3]) -> Return empty list.\n5. Duplicate values ([-1, -1, 2]) -> Return the triplet only once.\n6. Negative and positive numbers ([-4, -1, -1, 0, 1, 2]) -> Should correctly find all valid triplets.",
+            "keyPoints": [
+                  "n < 3 returns []",
+                  "All zeros [0,0,0,0] returns [[0,0,0]]",
+                  "Duplicates and mixed positive/negative numbers"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Return Value Variant",
-        "question": "7. How would you return the character instead of the index?",
-        "whatInterviewerChecks": "Adapting function signature and return values.",
-        "bestReplyScript": "Instead of returning the index position, I simply return the character itself.\n\nExample:\nInput: \"leetcode\" -> Output: 'l'\nInput: \"aabb\" -> Output: None\n\nThe overall algorithm remains exactly the same; only the final return statement changes.",
-        "keyPoints": [
-          "Return char instead of int index",
-          "Return None if no unique char exists",
-          "Core 2-pass logic remains unchanged"
-        ]
+            "id": "q7",
+            "category": "First Triplet Early Exit",
+            "question": "7. How would you return only one valid triplet?",
+            "whatInterviewerChecks": "Early exit on first match.",
+            "bestReplyScript": "Instead of storing every valid triplet, I would return immediately after finding the first one.\n\nThis avoids unnecessary computation once a solution is found.",
+            "keyPoints": [
+                  "Return immediately on first valid match",
+                  "Avoids unnecessary outer/inner loop iterations",
+                  "Faster average execution time"
+            ]
       },
       {
-        "id": "q8",
-        "category": "No Unique Character Case",
-        "question": "8. What happens if every character repeats?",
-        "whatInterviewerChecks": "Handling edge case when no unique character exists.",
-        "bestReplyScript": "If every character appears more than once, then there is no non-repeating character.\n\nExample:\nInput: \"aabbcc\"\n\nEvery frequency is greater than 1. In this case, I would return None, -1, or an empty string depending on the problem requirements.",
-        "keyPoints": [
-          "Check for empty traversal",
-          "Return fallback value (None / -1 / '')",
-          "Explicit edge handling"
-        ]
+            "id": "q8",
+            "category": "Arbitrary Non-Zero Target Extension",
+            "question": "8. What if the target sum is not zero?",
+            "whatInterviewerChecks": "Adapting 3Sum to arbitrary target.",
+            "bestReplyScript": "The algorithm remains almost the same.\n\nInstead of comparing the sum with zero, compare it with the target.\n- if sum < target: left++\n- if sum > target: right--\n- if sum == target: found!\n\nThe complexity remains O(n^2).",
+            "keyPoints": [
+                  "Compare sum with target instead of 0",
+                  "Adjust pointers relative to target",
+                  "Complexity remains O(n^2)"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Memory vs Speed Trade-off",
-        "question": "9. Can you avoid extra memory?",
-        "whatInterviewerChecks": "Understanding O(1) space vs O(n²) time trade-off.",
-        "bestReplyScript": "Yes, but it comes at the cost of performance.\n\nWithout extra memory, I would:\n1. Pick each character one by one.\n2. Count its occurrences by scanning the entire string.\n3. Return the first character whose count is 1.\n\nThis reduces space complexity to O(1) but increases time complexity to O(n²). For large inputs, using a hash map is much better.",
-        "keyPoints": [
-          "Nested scanning = O(1) space",
-          "O(n²) time penalty",
-          "Hash map preferred for speed"
-        ]
+            "id": "q9",
+            "category": "Generalization to K-Sum Framework",
+            "question": "9. How would you generalize this to K-Sum?",
+            "whatInterviewerChecks": "Recursive reduction from K-Sum to 2-Sum.",
+            "bestReplyScript": "The general approach is:\n1. Sort the array.\n2. Fix one element.\n3. Recursively solve the remaining (K - 1)-Sum problem.\n4. When K becomes 2, solve it using the two-pointer technique.\n\nThis recursive strategy works for 4Sum, 5Sum, and higher.",
+            "keyPoints": [
+                  "Recursive reduction: K-Sum -> (K-1)-Sum",
+                  "Base case K = 2 uses Two Pointers",
+                  "Works for 4Sum, 5Sum, and higher"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Fixed Alphabet Optimization",
-        "question": "10. How would you optimize for only lowercase letters?",
-        "whatInterviewerChecks": "Fixed-size array [26] optimization.",
-        "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can replace the hash map with a fixed-size array of 26 integers.\n\nMapping: ord(ch) - ord('a') maps to indices 0..25.\n\nThis provides:\n- Constant O(1) space (26 integers max).\n- Faster array lookup than a hash map.\n- Simpler memory layout.\n\nTime complexity remains O(n).",
-        "keyPoints": [
-          "Array size 26 for 'a'-'z'",
-          "ord(ch) - ord('a') index mapping",
-          "Constant O(1) space limit",
-          "Faster memory access"
-        ],
-        "codeSnippet": "def firstUniqChar_array(s: str) -> int:\n    counts = [0] * 26\n    for ch in s:\n        counts[ord(ch) - ord('a')] += 1\n    for idx, ch in enumerate(s):\n        if counts[ord(ch) - ord('a')] == 1:\n            return idx\n    return -1"
+            "id": "q10",
+            "category": "Hash Set Alternative Comparison",
+            "question": "10. Can hashing solve this problem?",
+            "whatInterviewerChecks": "Hash Set 2Sum vs Two Pointers comparison.",
+            "bestReplyScript": "Yes.\n\nFor each fixed element, we can solve a Two Sum problem using a hash set.\n\nHowever:\n- Duplicate handling becomes more complicated.\n- Extra memory is required.\n- The sorted two-pointer solution is simpler and is the standard interview solution.\n\nBoth approaches have O(n^2) time complexity, but the two-pointer method is generally preferred.",
+            "keyPoints": [
+                  "Hash Set approach requires extra memory O(n)",
+                  "Duplicate handling in Hash Set is complicated",
+                  "Sorted two-pointer method is simpler and O(1) space"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Data Structure Selection",
-        "question": "11. Which data structure fits best?",
-        "whatInterviewerChecks": "Matching data structure to constraints (General, Fixed Alphabet, Streaming).",
-        "bestReplyScript": "The best choice depends on the input scenario:\n- Hash Map -> General-purpose solution for any character set.\n- Fixed Array [26] -> Best when the character set is strictly fixed (e.g. lowercase English letters).\n- Queue + Hash Map -> Best for real-time streaming data.\n\nFor general technical interviews, I choose a hash map because it is efficient, simple, and handles all character sets.",
-        "keyPoints": [
-          "Hash Map: general purpose",
-          "Array[26]: fixed alphabet",
-          "Queue + Hash Map: streaming data"
-        ]
+            "id": "q11",
+            "category": "Testing & Verification",
+            "question": "11. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases matrix covering normal, duplicate, empty, and all-zeros inputs.",
+            "bestReplyScript": "I would test:\n- [-1, 0, 1, 2, -1, -4] -> [[-1, -1, 2], [-1, 0, 1]]\n- [0, 0, 0] -> [[0, 0, 0]]\n- [1, 2, 3] -> []\n- [] -> []\n- [1, 2] -> []\n- [-2, 0, 2] -> [[-2, 0, 2]]\n\nThese cover duplicates, empty arrays, no solutions, and valid triplets.",
+            "keyPoints": [
+                  "LeetCode 15 standard test cases",
+                  "All zeros and empty array bounds",
+                  "No valid triplet test cases"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Edge Case Matrix",
-        "question": "12. What edge cases exist?",
-        "whatInterviewerChecks": "Testing empty strings, single chars, all repeats, first/last char unique.",
-        "bestReplyScript": "I would test the following cases:\n1. Empty string (\"\") -> None\n2. Single character (\"a\") -> 'a'\n3. All repeating (\"aabb\") -> None\n4. First character unique (\"leetcode\") -> 'l'\n5. Last character unique (\"aabbc\") -> 'c'\n\nTesting these cases ensures the algorithm handles all possible scenarios.",
-        "keyPoints": [
-          "Empty string & single char",
-          "All repeating characters",
-          "First vs Last character unique"
-        ]
+            "id": "q12",
+            "category": "Common Candidate Pitfalls",
+            "question": "12. What common mistakes occur?",
+            "whatInterviewerChecks": "Rookie traps in 3Sum.",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to sort the array.\n- Not skipping duplicate values.\n- Moving the wrong pointer.\n- Returning duplicate triplets.\n- Using three nested loops instead of the two-pointer approach.\n- Incorrect pointer updates after finding a valid triplet.",
+            "keyPoints": [
+                  "Forgetting to sort array",
+                  "Failing to skip duplicate fixed/pointer elements",
+                  "Using 3 nested loops O(n^3)"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Testing Suite",
-        "question": "13. How would you test this?",
-        "whatInterviewerChecks": "QA table of test cases.",
-        "bestReplyScript": "I would create test cases covering different situations:\n- \"leetcode\" -> 'l'\n- \"loveleetcode\" -> 'v'\n- \"aabb\" -> None\n- \"a\" -> 'a'\n- \"\" -> None\n- \"abcabcde\" -> 'd'\n\nTesting normal, edge, and boundary cases increases confidence in the solution.",
-        "keyPoints": [
-          "Normal strings ('leetcode')",
-          "Overlapping repeats ('loveleetcode')",
-          "All repeats ('aabb')",
-          "Boundary cases ('a', '')"
-        ]
+            "id": "q13",
+            "category": "Two Pointers vs Nested Loops Efficiency",
+            "question": "13. Why are two pointers more efficient than three nested loops?",
+            "whatInterviewerChecks": "Structural difference between O(n^3) and O(n^2).",
+            "bestReplyScript": "With brute force:\n- Every possible triplet is checked.\n- Complexity is O(n^3).\n\nWith sorting and two pointers:\n- One number is fixed.\n- The remaining two numbers are found in one linear scan.\n\nThis reduces the complexity to O(n^2), making it much faster for large arrays.",
+            "keyPoints": [
+                  "Brute force: 3 nested loops O(n^3)",
+                  "Two Pointers: fixes 1 element + linear 2Sum scan O(n)",
+                  "Reduces time to O(n^2)"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Common Pitfalls",
-        "question": "14. What common mistakes occur?",
-        "whatInterviewerChecks": "Awareness of order preservation and frequency bugs.",
-        "bestReplyScript": "Some common mistakes include:\n- Returning the character with the smallest frequency instead of the FIRST non-repeating character in order.\n- Forgetting that order matters (iterating over hash keys instead of the original string).\n- Returning the wrong index or char.\n- Not handling empty strings.\n- Using nested loops resulting in O(n²) time.\n- Forgetting to return a fallback value when no unique character exists.\n\nA second traversal of the original string guarantees order preservation.",
-        "keyPoints": [
-          "Iterating over hash map instead of original string loses order",
-          "Nested loops -> O(n²)",
-          "Missing fallback return"
-        ]
+            "id": "q14",
+            "category": "Real-World Applications",
+            "question": "14. Where is this pattern used in interviews?",
+            "whatInterviewerChecks": "Canonical problem family.",
+            "bestReplyScript": "This pattern is very common in interview problems, such as:\n- 4Sum\n- K-Sum\n- Two Sum II\n- 3Sum Closest\n- Container With Most Water\n- Remove Duplicates\n- Trapping Rain Water\n\nIt demonstrates understanding of sorting, two pointers, and optimization techniques.",
+            "keyPoints": [
+                  "4Sum & K-Sum variations",
+                  "3Sum Closest & Two Sum II",
+                  "Container With Most Water & Trapping Rain Water"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-World Applications",
-        "question": "15. Where is frequency counting used in practice?",
-        "whatInterviewerChecks": "Engineering applications of hash map frequency counting.",
-        "bestReplyScript": "Frequency counting is widely used in software development:\n- Word frequency analysis in search engines.\n- Text analytics for finding common words.\n- Log analysis to identify frequent error events.\n- Data compression algorithms like Huffman Coding.\n- Fraud detection by identifying unusual activity patterns.\n- Character counting in anagram and string-matching problems.",
-        "keyPoints": [
-          "Search engine word analysis",
-          "Huffman coding data compression",
-          "Log & fraud event detection",
-          "Anagram & text analytics"
-        ]
+            "id": "q15",
+            "category": "Brute Force, Hashing, and Two Pointers Comparison Matrix",
+            "question": "15. Compare brute-force, hashing, and two-pointer solutions.",
+            "whatInterviewerChecks": "Summary comparison matrix across 3 algorithms.",
+            "bestReplyScript": "Comparison Matrix:\n- Brute Force: Checks every triplet -> Time O(n^3), Space O(1). Too slow.\n- Hashing: Solves 2Sum with hash set -> Time O(n^2), Space O(n). Faster but needs extra memory and duplicate handling is harder.\n- Sorting + Two Pointers: Standard interview solution -> Time O(n^2), Space O(1) (excluding output list). Simple and efficient.",
+            "keyPoints": [
+                  "Brute Force: O(n^3) time, O(1) space",
+                  "Hashing: O(n^2) time, O(n) space",
+                  "Sorting + Two Pointers: O(n^2) time, O(1) space"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
