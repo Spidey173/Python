@@ -830,6 +830,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setActiveTab('vault');
         setSolvedIds((prev) => (prev.includes(problem.id) ? prev : [...prev, problem.id]));
         await persistence.markSolved(problem.id);
+
+        // Auto-advance lastActiveProblemId to next challenge so dashboard resumes next problem
+        const nextId = (problem.level_number || problem.id) + 1;
+        if (nextId <= (allProblems.length || 70)) {
+          await persistence.setLastActiveProblemId(nextId);
+        }
+
         window.dispatchEvent(new CustomEvent('pyforge_problem_solved', { detail: { problemId: problem.id } }));
         setShowMissionCompleteModal(true);
 

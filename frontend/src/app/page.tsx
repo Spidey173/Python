@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
@@ -100,7 +100,10 @@ export default function DashboardPage() {
           persistence.getLastActiveProblemId(),
           persistence.getSubmissions(),
         ]);
-        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const backendSolved = chaps
+          .flatMap((c) => c.levels)
+          .filter((l) => l.passed)
+          .flatMap((l) => [l.id, l.level_number].filter(Boolean) as number[]);
         const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
         setChapters(chaps);
         setSolvedIds(mergedSolved);
@@ -117,8 +120,15 @@ export default function DashboardPage() {
       setSubmissions([]);
       setLastActiveId(1);
     };
+    const handleProblemSolved = () => {
+      loadData();
+    };
     window.addEventListener('pyforge_auth_logout', handleLogout);
-    return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
+    window.addEventListener('pyforge_problem_solved', handleProblemSolved);
+    return () => {
+      window.removeEventListener('pyforge_auth_logout', handleLogout);
+      window.removeEventListener('pyforge_problem_solved', handleProblemSolved);
+    };
   }, [user]);
 
   const allProblems = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
@@ -140,23 +150,73 @@ export default function DashboardPage() {
     ).length;
   }, [user, submissions]);
 
-  // Find active problem to resume
+  // Helper to check if a problem is already solved
+  const isProblemSolved = useCallback(
+    (p: { id: number; level_number?: number; passed?: boolean } | null | undefined) => {
+      if (!p) return false;
+      return (
+        Boolean(p.passed) ||
+        solvedIds.includes(p.id) ||
+        (typeof p.level_number === 'number' && solvedIds.includes(p.level_number))
+      );
+    },
+    [solvedIds]
+  );
+
+  // Find active problem to resume:
+  // 1. If user was actively on an UNSOLVED problem, resume that one.
+  // 2. If the problem user was last on is already solved, pick the next unsolved problem after it.
+  // 3. Otherwise, pick the first unsolved problem in the curriculum.
+  // 4. If all problems are solved, fall back to the first problem for review.
   const currentProblem = useMemo(() => {
-    let activeId = lastActiveId;
-    if (activeId >= 151 && activeId <= 220) {
-      activeId = activeId - 150;
-    }
-    return (
-      allProblems.find((p) => p.id === activeId || p.level_number === activeId) ||
-      allProblems[0] || {
+    if (!allProblems || allProblems.length === 0) {
+      return {
         id: 1,
         title: 'Valid Palindrome',
         chapter_title: 'Module 1: Strings & Text Manipulation',
         difficulty: 'Easy',
         level_number: 1,
+        passed: false,
+      };
+    }
+
+    let activeId = lastActiveId;
+    if (activeId >= 151 && activeId <= 220) {
+      activeId = activeId - 150;
+    }
+
+    // 1. Check if the last active problem exists and is NOT yet solved
+    const candidate = allProblems.find((p) => p.id === activeId || p.level_number === activeId);
+    if (candidate && !isProblemSolved(candidate)) {
+      return candidate;
+    }
+
+    // 2. If candidate is already solved, find the first unsolved problem after candidate
+    if (candidate) {
+      const candidateIdx = allProblems.indexOf(candidate);
+      if (candidateIdx !== -1) {
+        const nextUnsolved = allProblems.slice(candidateIdx + 1).find((p) => !isProblemSolved(p));
+        if (nextUnsolved) return nextUnsolved;
       }
-    );
-  }, [allProblems, lastActiveId]);
+    }
+
+    // 3. Fall back to the very first unsolved problem in the entire curriculum
+    const firstUnsolved = allProblems.find((p) => !isProblemSolved(p));
+    if (firstUnsolved) {
+      return firstUnsolved;
+    }
+
+    // 4. All problems solved: return candidate or first problem
+    return candidate || allProblems[0];
+  }, [allProblems, lastActiveId, isProblemSolved]);
+
+  // Keep persistence in sync with current active problem
+  useEffect(() => {
+    if (currentProblem && (currentProblem.id || currentProblem.level_number)) {
+      const targetId = currentProblem.level_number || currentProblem.id;
+      persistence.setLastActiveProblemId(targetId);
+    }
+  }, [currentProblem]);
 
 
 
@@ -365,7 +425,9 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2.5 flex-wrap">
                 <span className="flex items-center gap-2 text-xs font-mono font-semibold text-[#3FB950]">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#3FB950] animate-pulse" />
-                  CONTINUE WHERE YOU LEFT OFF
+                  {isProblemSolved(currentProblem) && totalCount > 0 && solvedCount >= totalCount
+                    ? 'CURRICULUM COMPLETED'
+                    : 'CONTINUE WHERE YOU LEFT OFF'}
                 </span>
                 <span className="text-[#30363D]">•</span>
                 <span className="text-xs sm:text-sm text-[#8B949E] font-medium">{currentProblem.chapter_title}</span>
@@ -376,7 +438,9 @@ export default function DashboardPage() {
               </h2>
 
               <p className="text-sm sm:text-base text-[#8B949E] leading-relaxed">
-                Jump straight into the workspace. Your code drafts, test executions, and console logs are preserved automatically.
+                {isProblemSolved(currentProblem) && totalCount > 0 && solvedCount >= totalCount
+                  ? 'All core challenges completed! Review your code submissions, test suites, and alternative solutions anytime.'
+                  : 'Jump straight into the workspace. Your code drafts, test executions, and console logs are preserved automatically.'}
               </p>
 
               {/* Tags */}
@@ -402,7 +466,13 @@ export default function DashboardPage() {
                 className="gap-2.5 font-semibold text-sm px-6 py-3 shadow-lg shadow-[#238636]/20 cursor-pointer"
               >
                 <Play className="h-4 w-4 fill-current" />
-                <span>Resume Problem</span>
+                <span>
+                  {isProblemSolved(currentProblem) && totalCount > 0 && solvedCount >= totalCount
+                    ? 'Practice Again'
+                    : isProblemSolved(currentProblem)
+                    ? 'Review Problem'
+                    : 'Resume Problem'}
+                </span>
               </Button>
             </div>
           </div>
