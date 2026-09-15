@@ -5,17 +5,8 @@ import { api } from '@/lib/api';
 import { sounds } from '@/lib/audio-engine';
 import { User, ChapterGroup } from '@/lib/types';
 import { Shield } from 'lucide-react';
-import { AdminRoute } from '@/components/auth/AdminRoute';
 
 export default function AdminDashboardPage() {
-  return (
-    <AdminRoute>
-      <AdminDashboardContent />
-    </AdminRoute>
-  );
-}
-
-function AdminDashboardContent() {
   const [metrics, setMetrics] = useState<{
     total_users: number;
     total_challenges: number;

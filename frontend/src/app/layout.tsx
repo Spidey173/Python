@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { QueryProvider } from '@/lib/query-client';
 import { AuthProvider } from '@/lib/auth-context';
 import Navbar from '@/components/layout/Navbar';
 
@@ -23,12 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-full bg-[#0D1117]">
       <body className="h-full flex flex-col bg-[#0D1117] text-[#E6EDF3] selection:bg-[#1F6FEB]/30 selection:text-white antialiased overflow-hidden">
-        <QueryProvider>
-          <AuthProvider>
-            <Navbar />
-            <main className="flex-1 flex flex-col min-h-0 overflow-hidden">{children}</main>
-          </AuthProvider>
-        </QueryProvider>
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-1 flex flex-col min-h-0 overflow-hidden">{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );
