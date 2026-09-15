@@ -2858,190 +2858,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain the Boyer-Moore Voting Algorithm.",
-        "whatInterviewerChecks": "Explaining candidate selection and vote cancellation mechanics.",
-        "bestReplyScript": "The Boyer-Moore Voting Algorithm is an efficient algorithm used to find the element that appears more than n/2 times in an array.\n\nThe key idea is vote cancellation.\n\nSteps:\n1. Assume the first element is the candidate.\n2. Keep a counter initialized to 1.\n3. Traverse the array.\n4. If the current element matches the candidate, increment the counter.\n5. Otherwise, decrement the counter.\n6. If the counter becomes 0, choose the current element as the new candidate and reset the counter to 1.\n7. After one complete traversal, the remaining candidate is the potential majority element.\n\nExample:\nInput: [2, 2, 1, 1, 1, 2, 2]\nCandidate starts at 2 (Count 1) -> 2 (Count 2) -> 1 (Count 1) -> 1 (Count 0).\nNew Candidate = 1 (Count 1) -> 1 (Count 2) -> 2 (Count 1) -> 2 (Count 0).\nNew Candidate = 2.\nFinal Candidate = 2.\n\nOutput: 2\n\nThis algorithm works because the majority element cannot be completely canceled out by all other elements.",
-        "keyPoints": [
-          "Vote cancellation principle",
-          "Candidate & count state variables",
-          "Increment when element matches candidate, decrement when different",
-          "Reset candidate when count reaches 0"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Zigzag row simulation, direction flipping `curr_row == 0` or `curr_row == numRows - 1`, row concatenation.",
+            "bestReplyScript": "I solve this problem by simulating the zigzag writing process.\n\nSteps:\n1. If `numRows == 1` or `numRows >= len(s)`, return the original string because no zigzag is formed.\n2. Create an array (or list) of strings, one for each row.\n3. Start from the first row and move downward (`curr_row = 0`, `going_down = False`).\n4. At each character, append it to `rows[curr_row]`.\n5. When reaching `curr_row == 0` or `curr_row == numRows - 1`, toggle direction: `going_down = not going_down`.\n6. Update `curr_row += 1` if going down, else `-= 1`.\n7. Finally, concatenate all row strings to produce the converted output.\n\nThis directly follows the zigzag pattern described in the problem.",
+            "keyPoints": [
+                  "Special check: `numRows == 1` or `numRows >= len(s)`",
+                  "List of row strings `rows = [''] * numRows`",
+                  "Direction toggle when reaching top (0) or bottom (`numRows - 1`)",
+                  "Time: O(n), Space: O(n)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Algorithmic Intuition",
-        "question": "2. Why does it work?",
-        "whatInterviewerChecks": "Proving why majority element (> n/2) survives cancellation.",
-        "bestReplyScript": "The algorithm works because the majority element appears more than half the time.\n\nEvery time a different element is encountered, it cancels one occurrence of the current candidate.\n\nSince the majority element occurs more than all the other elements combined, it will always remain after all cancellations.\n\nExample: Input [3, 3, 4, 2, 3]\n3 (+1) -> 3 (+1) -> 4 (-1) -> 2 (-1) -> 3 (+1)\nRemaining candidate = 3\n\nThe majority element always survives the cancellation process.",
-        "keyPoints": [
-          "Majority element count > n/2",
-          "Non-majority elements combined < n/2",
-          "Pairwise cancellation leaves majority element candidate surviving"
-        ]
+            "id": "q2",
+            "category": "Zigzag Traversal Mechanics",
+            "question": "2. How does the zigzag traversal work?",
+            "whatInterviewerChecks": "Alternating downward vs upward movement.",
+            "bestReplyScript": "The traversal alternates between two directions:\n- Downward: Row 0 -> 1 -> 2 -> ... -> numRows - 1\n- Upward: Row numRows - 1 -> numRows - 2 -> ... -> 0\n\nExample for \"PAYPALISHIRING\", numRows = 3:\nRow 0: P   A   H   N\nRow 1: A P L S I I G\nRow 2: Y   I   R\n\nReading row by row produces \"PAHNAPLSIIGYIR\". The direction changes only when the first (0) or last (`numRows - 1`) row is reached.",
+            "keyPoints": [
+                  "Downward: 0 to numRows - 1",
+                  "Upward: numRows - 1 to 0",
+                  "Concatenating rows produces final string"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Time & Space Complexity Proof",
-        "question": "3. What's the complexity?",
-        "whatInterviewerChecks": "Asymptotic bounds and constant memory justification.",
-        "bestReplyScript": "The array is scanned only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nThis is one of the most space-efficient algorithms for this problem because it doesn't use any extra data structures.",
-        "keyPoints": [
-          "Linear O(n) single pass",
-          "Strictly O(1) constant stack space (candidate & count scalar variables)",
-          "No hash map memory allocations"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Linear O(n) time and linear O(n) space bounds.",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n) because each of the n characters is placed into its row container exactly once, and joining the rows takes O(n) time.\n- Space Complexity: O(n) to store the characters in the row containers and generate the final output string.",
+            "keyPoints": [
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Single-pass character placement"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Correctness Proof",
-        "question": "4. Can you prove its correctness?",
-        "whatInterviewerChecks": "Formal pairwise cancellation mathematical proof.",
-        "bestReplyScript": "Yes.\n\nThe proof is based on pairwise cancellation.\n\nImagine pairing every occurrence of the majority element with a different element.\n\nSince the majority element appears more than n/2 times, even after all possible pairings, some occurrences of the majority element remain unmatched.\n\nThose remaining occurrences ensure that the final candidate is the majority element.\n\nThis is why the algorithm always works when a majority element is guaranteed to exist.",
-        "keyPoints": [
-          "Pairwise matching of distinct elements",
-          "Majority occurrences exceed total remaining slots",
-          "Guarantees unmatched majority candidate at traversal end"
-        ]
+            "id": "q4",
+            "category": "Special Case numRows = 1 Rationale",
+            "question": "4. Why is `numRows = 1` a special case?",
+            "whatInterviewerChecks": "Infinite loop / index bounds guard for single row.",
+            "bestReplyScript": "If `numRows == 1`, every character stays in the single row (row 0).\n\nWithout a guard (`if numRows == 1: return s`), the direction-changing condition (`curr_row == 0` and `curr_row == numRows - 1` are BOTH true at the same time!) would toggle direction infinitely or fail to advance rows correctly.\n\nHandling `numRows == 1` early returns `s` cleanly.",
+            "keyPoints": [
+                  "Single row means no vertical movement",
+                  "Avoids direction toggle trap where 0 == numRows - 1",
+                  "Returns original string immediately"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Non-Guaranteed Majority Case",
-        "question": "5. What if no majority exists?",
-        "whatInterviewerChecks": "Addressing unverified candidate false positives.",
-        "bestReplyScript": "If the problem does not guarantee a majority element, the candidate returned by Boyer-Moore may not actually be a majority.\n\nExample: Input [1, 2, 3, 4]\nThe algorithm will still return a candidate, but no number appears more than n/2 times.\n\nTo handle this:\n1. Run Boyer-Moore to find the candidate.\n2. Traverse the array again and count how many times the candidate appears.\n3. Return it only if its count is greater than n/2.\n\nThis adds one extra pass but keeps the overall time complexity at O(n).",
-        "keyPoints": [
-          "Boyer-Moore returns a candidate even if no majority exists",
-          "Pass 2 verification counts candidate frequency",
-          "Validates count > n/2 in total 2*O(n) = O(n) time"
-        ]
+            "id": "q5",
+            "category": "Direction Tracking Strategy",
+            "question": "5. How did you determine the direction of traversal?",
+            "whatInterviewerChecks": "Boolean flag or integer multiplier `direction` (+1 / -1).",
+            "bestReplyScript": "I use a boolean flag `going_down` or direction multiplier `step = +1 / -1`:\n- `+1` (downward) increments `curr_row`.\n- `-1` (upward) decrements `curr_row`.\n\nWhenever:\n- We reach `curr_row == 0`: change direction to downward (`step = 1`).\n- We reach `curr_row == numRows - 1`: change direction to upward (`step = -1`).\n\nThis naturally drives the row movement across the zigzag curve.",
+            "keyPoints": [
+                  "Boolean `going_down` or step multiplier (+1 / -1)",
+                  "Toggle direction at boundary rows (0 and numRows - 1)",
+                  "Updates `curr_row += step`"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Hash Map Comparison",
-        "question": "6. Why not use a hash map?",
-        "whatInterviewerChecks": "Comparing Hash Map O(n) space vs Boyer-Moore O(1) space.",
-        "bestReplyScript": "A hash map is also a valid solution.\n\nUsing a hash map:\n• Count the frequency of every element.\n• Return the element whose frequency exceeds n/2.\n\nComplexity:\n• Time: O(n)\n• Space: O(n)\n\nBoyer-Moore is preferred because:\n• It uses constant extra space O(1).\n• It is more memory-efficient.\n• It is the optimal solution when a majority element is guaranteed.",
-        "keyPoints": [
-          "Hash map requires O(n) space for frequency counters",
-          "Boyer-Moore achieves O(1) space efficiency",
-          "Ideal for memory-constrained and embedded environments"
-        ]
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty string, single char, numRows = 1, numRows >= len(s), spaces/symbols.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> return \"\"\n2. Single character (\"A\", numRows=1) -> return \"A\"\n3. `numRows == 1` (\"ABCDE\", numRows=1) -> return \"ABCDE\"\n4. `numRows >= len(s)` (\"ABCDE\", numRows=10) -> return \"ABCDE\"\n5. Very long strings -> handled efficiently in O(n)\n6. Strings containing spaces or special characters -> processed identically to letters.",
+            "keyPoints": [
+                  "Empty string & single char guards",
+                  "numRows = 1 & numRows >= len(s) early exits",
+                  "Spaces and symbols preservation"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Candidate Verification Algorithm",
-        "question": "7. How would you verify the candidate?",
-        "whatInterviewerChecks": "Coding a 2nd pass frequency counter verification.",
-        "bestReplyScript": "After finding the candidate:\n1. Initialize a counter.\n2. Traverse the array again.\n3. Count the candidate's occurrences.\n4. If the count is greater than n/2, return it.\n5. Otherwise, report that no majority element exists.\n\nExample:\nCandidate = 2, Occurrences = 4, Array Size = 7\nSince 4 > 7/2 (3.5), majority is confirmed.\n\nVerification is important when the input does not guarantee a majority element.",
-        "keyPoints": [
-          "Pass 2 loop: sum(1 for x in nums if x == candidate)",
-          "Compare count > len(nums) // 2",
-          "Return candidate or fallback (-1 / None)"
-        ]
+            "id": "q7",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, numRows=1, numRows>=len(s), and LeetCode examples.",
+            "bestReplyScript": "I would test:\n- \"A\", numRows 1 -> \"A\"\n- \"ABC\", numRows 1 -> \"ABC\"\n- \"PAYPALISHIRING\", numRows 3 -> \"PAHNAPLSIIGYIR\"\n- \"PAYPALISHIRING\", numRows 4 -> \"PINALSIGYAHRPI\"\n- \"\", numRows 2 -> \"\"\n- \"ABCDE\", numRows 10 -> \"ABCDE\"\n\nThese cover normal cases, boundary cases, and common LeetCode 6 interview examples.",
+            "keyPoints": [
+                  "LeetCode 6 standard test cases (3 and 4 rows)",
+                  "numRows = 1 & numRows >= len(s) bounds",
+                  "Empty string test"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Streaming Data Architecture",
-        "question": "8. Can this work on a stream?",
-        "whatInterviewerChecks": "Applying Boyer-Moore to real-time streaming data.",
-        "bestReplyScript": "Yes.\n\nSince Boyer-Moore only stores:\n• the current candidate\n• the current vote count\n\nit can process elements one at a time as they arrive in a stream.\n\nExample incoming stream: 2, 2, 1, 1, 2, 2\n\nThe candidate and count are updated without storing the entire stream in memory.\n\nHowever, verifying the final candidate may require another pass or additional storage, which may not always be possible in streaming scenarios.",
-        "keyPoints": [
-          "O(1) state space makes it ideal for streaming data",
-          "Processes items one by one without unbounded buffering",
-          "Verification requires external reservoir sampling or 2nd pass"
-        ]
+            "id": "q8",
+            "category": "Mathematical Cycle Indexing Alternative",
+            "question": "8. Can this be solved without using multiple row containers?",
+            "whatInterviewerChecks": "Math formula cycle `2 * numRows - 2` index arithmetic.",
+            "bestReplyScript": "Yes!\nWe can calculate the exact indices mathematically without row string containers:\n- The zigzag pattern repeats in cycles of length `cycle_len = 2 * numRows - 2`.\n- For row 0 and row numRows - 1: step by `cycle_len`.\n- For inner rows i: step by `cycle_len`, and also include diagonal elements at `j + cycle_len - 2 * i`.\n\nWhile this mathematical approach uses O(1) auxiliary space (excluding result output), the row simulation is much easier to explain and less error-prone during an interview.",
+            "keyPoints": [
+                  "Cycle length formula: `2 * numRows - 2`",
+                  "Inner diagonal element formula: `j + cycle_len - 2 * i`",
+                  "Math uses O(1) space, but simulation is preferred for readability"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Edge Cases & Boundaries",
-        "question": "9. What edge cases exist?",
-        "whatInterviewerChecks": "Identifying boundary test conditions.",
-        "bestReplyScript": "Important edge cases include:\n\nSingle element: [5] -> Output 5\n\nAll elements same: [7, 7, 7, 7] -> Output 7\n\nMajority at the end: [1, 2, 3, 3, 3] -> Output 3\n\nNo majority: [1, 2, 3, 4] -> Verification fails\n\nMajority appears exactly n/2 times: [1, 1, 2, 2] -> No majority exists because the definition requires strictly MORE than n/2 (not equal to n/2).\n\nTesting these cases ensures correctness.",
-        "keyPoints": [
-          "Single-element array [x]",
-          "All identical elements",
-          "Majority concentrated at array suffix",
-          "Exact n/2 tie (not a majority!)"
-        ]
+            "id": "q9",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Zigzag Conversion (LeetCode 6).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting the `numRows == 1` early exit guard (causes index out of range or infinite loop).\n- Toggling direction AFTER updating row instead of BEFORE.\n- Missing diagonal elements when attempting mathematical index formulas.\n- Producing rows in the wrong order during string joining.\n- Using immutable string concatenation in loops (`row += char`) in languages like Java/C# instead of StringBuilder.",
+            "keyPoints": [
+                  "Forgetting `numRows == 1` guard",
+                  "Toggling direction at wrong point in loop",
+                  "String concatenation overhead in Java/C#"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Theoretical Uniqueness Proof",
-        "question": "10. Can there be two majority elements?",
-        "whatInterviewerChecks": "Pigeonhole principle and strict majority uniqueness.",
-        "bestReplyScript": "No.\n\nA majority element must appear more than n/2 times.\n\nIf two different elements each appeared more than n/2 times, their total occurrences would exceed the array size (n/2 + n/2 = n), which is impossible.\n\nExample: Array Size = 10 -> Majority requires > 5 occurrences. Two different numbers cannot both appear more than 5 times.\n\nTherefore, at most one majority element can exist.",
-        "keyPoints": [
-          "Strict majority definition: count > floor(n/2)",
-          "Sum of two majorities > n (violates total size limit)",
-          "At most 1 majority element can exist in any dataset"
-        ]
+            "id": "q10",
+            "category": "Reconstructing Original String",
+            "question": "10. How would you reconstruct the original string from the zigzag output?",
+            "whatInterviewerChecks": "Inverting the zigzag conversion matrix.",
+            "bestReplyScript": "To reconstruct the original string from the converted output:\n1. Determine how many characters belong to each row using the cycle length math.\n2. Slice the converted output string into its individual row substrings.\n3. Simulate the zigzag traversal order again using row pointers `row_ptrs = [0] * numRows`.\n4. At each step of the zigzag path, take `rows[curr_row][row_ptrs[curr_row]]` and advance that row's pointer.\n\nThis completely reconstructs the original string in O(n) time.",
+            "keyPoints": [
+                  "Determine row character counts using cycle math",
+                  "Slice converted output into row buffers",
+                  "Simulate zigzag path picking characters from row buffers"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Voting Analogy Intuition",
-        "question": "11. What's the intuition behind canceling votes?",
-        "whatInterviewerChecks": "Verbal communication of mathematical analogies.",
-        "bestReplyScript": "Think of each occurrence of the majority element as a vote.\n\nWhenever a different element appears, one vote is canceled.\n\nSince the majority element has more votes than all the other elements combined, it will still have votes remaining after all cancellations.\n\nExample: [3, 3, 3, 2, 2]\n3 (+1) -> 3 (+1) -> 3 (+1) -> 2 (-1) -> 2 (-1)\nRemaining votes = 1, Candidate = 3.\n\nThis voting analogy makes the algorithm easy to understand.",
-        "keyPoints": [
-          "Vote counter represents net surplus",
-          "Each opposing element cancels one majority vote",
-          "Majority surplus ensures count remains > 0 at end"
-        ]
+            "id": "q11",
+            "category": "Pattern Generalization",
+            "question": "11. Can this algorithm be generalized to other patterns?",
+            "whatInterviewerChecks": "Generalizing simulation to Wave, Spiral, Diagonal matrices.",
+            "bestReplyScript": "Yes!\nThe simulation framework generalizes easily to:\n- Wave patterns & Sine-wave text formatting.\n- Spiral Matrix & Diagonal Matrix traversals.\n- Snake-like grid movement.\n- Custom ASCII art text alignment.\n\nOnly the row/column state transition rules need to change.",
+            "keyPoints": [
+                  "Simulation framework applies to Wave, Spiral, Diagonal matrices",
+                  "Only state transition rules change",
+                  "Highly adaptable design"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Test Suite Design",
-        "question": "12. How would you test this?",
-        "whatInterviewerChecks": "Creating test tables covering edge and normal cases.",
-        "bestReplyScript": "I would test different scenarios.\n\nInput | Expected Output\n[3, 2, 3] | 3\n[2, 2, 1, 1, 1, 2, 2] | 2\n[1] | 1\n[7, 7, 7] | 7\n[1, 2, 3, 4] | No Majority\n[1, 1, 2, 2] | No Majority\n\nThese tests cover normal cases, edge cases, and validation scenarios.",
-        "keyPoints": [
-          "Odd and even length arrays",
-          "All-same, single element, and no-majority inputs",
-          "Verification failure cases"
-        ]
+            "id": "q12",
+            "category": "Real-World Applications",
+            "question": "12. Where might this pattern be useful?",
+            "whatInterviewerChecks": "Text formatting, graphics rendering, data encoding.",
+            "bestReplyScript": "Zigzag-style traversal appears in:\n- Graphics Rendering & Image Compression (JPEG Zigzag Scan order for DCT coefficient quantization).\n- Classical Cryptography & Ciphers (Rail Fence Cipher encryption/decryption).\n- Text Formatting & UI Multi-column layout layout algorithms.\n- Video encoding macroblock scanning.",
+            "keyPoints": [
+                  "JPEG Image Compression DCT Zigzag scan",
+                  "Rail Fence Cipher encryption in cryptography",
+                  "Video encoding macroblock scanning"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Real-World Applications",
-        "question": "13. Where is this algorithm used?",
-        "whatInterviewerChecks": "Industrial application of O(1) space stream voting.",
-        "bestReplyScript": "The Boyer-Moore Voting Algorithm is useful in situations where memory is limited.\n\nExamples include:\n• Election vote counting & exit polling.\n• Real-time data streams & network packet routing.\n• Log analysis and DDoS attack detection.\n• Sensor data processing in IoT devices.\n• Large datasets where storing frequency maps is too expensive.\n\nThe underlying idea of maintaining only a candidate and a counter makes it ideal for memory-constrained environments.",
-        "keyPoints": [
-          "IoT embedded sensor processing",
-          "Network traffic monitoring & DDoS detection",
-          "Real-time stream telemetry",
-          "High-throughput log analysis"
-        ]
+            "id": "q13",
+            "category": "Memory Optimization Strategies",
+            "question": "13. How would you optimize memory usage?",
+            "whatInterviewerChecks": "String Builders / character lists to avoid string copy allocations.",
+            "bestReplyScript": "To optimize memory:\n- Use character arrays or mutable StringBuilders (in Java/C#) for each row container instead of immutable string concatenation.\n- In Python, use `rows = [[] for _ in range(numRows)]`, append characters, then `''.join(''.join(r) for r in rows)`.\n\nSince output requires all n characters, O(n) space is optimal and unavoidable.",
+            "keyPoints": [
+                  "Use mutable StringBuilder / list of chars per row",
+                  "Avoid string object reallocation in loops",
+                  "O(n) space is optimal for output creation"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Candidate Mistakes & Anti-Patterns",
-        "question": "14. What mistakes occur?",
-        "whatInterviewerChecks": "Identifying common candidate implementation errors.",
-        "bestReplyScript": "Some common mistakes include:\n• Forgetting to verify the candidate when a majority is not guaranteed.\n• Misunderstanding that the algorithm always returns a valid majority.\n• Incorrectly resetting the candidate.\n• Updating the counter in the wrong order.\n• Assuming the algorithm works for the most frequent element even if it isn't a majority (e.g. Mode vs Majority).\n\nThe biggest mistake is skipping the verification step when required.",
-        "keyPoints": [
-          "Confusing Majority (> n/2) with Mode (most frequent)",
-          "Omitting Pass 2 verification on unverified inputs",
-          "Resetting candidate when count reaches 0 vs before checking candidate"
-        ]
+            "id": "q14",
+            "category": "Simulation vs Mathematical Comparison Matrix",
+            "question": "14. Compare simulation and mathematical approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Row Simulation: Time O(n), Space O(n). Easy to understand, simple implementation, zero math bugs. Preferred in interviews.\n- Mathematical Cycle: Time O(n), Space O(n) (or O(1) auxiliary). Complex index formulas, easy off-by-one errors. Useful for low-memory micro-optimizations.\n\nRow Simulation is preferred in coding interviews for readability.",
+            "keyPoints": [
+                  "Simulation: O(n) time, O(n) space (Easy & readable)",
+                  "Math Cycle: O(n) time, O(1) aux space (Complex index formulas)",
+                  "Simulation is preferred in interviews"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Parallel MapReduce Adaptation",
-        "question": "15. Can this be parallelized?",
-        "whatInterviewerChecks": "Distributed divide-and-conquer adaptation of Boyer-Moore.",
-        "bestReplyScript": "Yes, but it is more complex than the sequential version.\n\nOne approach is:\n1. Divide the array into smaller chunks.\n2. Run Boyer-Moore independently on each chunk to find local candidates.\n3. Combine the local candidates.\n4. Verify the final candidate by counting its occurrences in the entire array.\n\nAlthough possible, the standard Boyer-Moore algorithm is primarily designed for sequential processing, where it is already very efficient.",
-        "keyPoints": [
-          "Partition input into K chunks across threads/nodes",
-          "Compute (candidate, count) pair per partition",
-          "Combine pairs using vote reduction rules",
-          "Global verification pass confirms > n/2 count"
-        ]
+            "id": "q15",
+            "category": "Extremely Large Strings Behavior",
+            "question": "15. How would your solution behave for extremely large strings?",
+            "whatInterviewerChecks": "Linear scalability and memory footprint for large N.",
+            "bestReplyScript": "The algorithm scales linearly:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nFor extremely large strings (e.g. gigabytes of text):\n- Process stream in chunks.\n- Use pre-allocated character arrays to prevent memory fragmentation and GC pauses.\n\nThe O(n) linear performance guarantees optimal throughput.",
+            "keyPoints": [
+                  "Scales linearly with string length",
+                  "Pre-allocated char buffers prevent GC pauses",
+                  "Stream processing for massive inputs"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
