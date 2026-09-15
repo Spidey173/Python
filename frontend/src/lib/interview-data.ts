@@ -1716,191 +1716,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain your compression logic.",
-        "whatInterviewerChecks": "Clear explanation of counting consecutive repeating characters.",
-        "bestReplyScript": "My approach is to count consecutive repeating characters and replace them with the character followed by its count.\n\nThe steps are:\n1. Start from the first character.\n2. Count how many times it repeats consecutively.\n3. Append the character and its count to the result.\n4. Move to the next different character.\n5. Repeat until the end of the string.\n\nExample:\nInput: \"aaabbcccc\"\nOutput: \"a3b2c4\"\n\nOnly consecutive repeated characters are compressed.\n\nFor example:\nInput: \"ababa\"\nOutput: \"a1b1a1b1a1\"\n\nThe 'a' characters are not consecutive, so they are counted separately.",
-        "keyPoints": [
-          "Count consecutive character occurrences",
-          "Append character and count to output buffer",
-          "Non-consecutive occurrences are counted independently",
-          "Time: O(n), Space: O(n)"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Fixing first two numbers `i` and `j`, Two Pointers `left = j + 1`, `right = n - 1`, skipping duplicates at all 4 levels.",
+            "bestReplyScript": "I first sort the array, then fix the first two numbers using nested loops. For the remaining two numbers, I use the two-pointer technique.\n\nSteps:\n1. Sort the array.\n2. Fix the first element i.\n3. Fix the second element j.\n4. Initialize two pointers: left = j + 1, right = n - 1.\n5. Calculate sum = nums[i] + nums[j] + nums[left] + nums[right].\n6. If:\n   - sum == target -> Store the quadruplet and move both pointers while skipping duplicates.\n   - sum < target -> Move left forward.\n   - sum > target -> Move right backward.\n7. Continue until all valid quadruplets are found.\n\nThis avoids checking every possible combination and efficiently finds unique quadruplets.",
+            "keyPoints": [
+                  "Sort array first",
+                  "Nested loops fix elements `i` and `j`",
+                  "Two pointers `left = j + 1`, `right = n - 1` for remaining 2Sum target",
+                  "Skip duplicates at `i`, `j`, `left`, and `right`",
+                  "Time: O(n^3), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "2. What's the time complexity?",
-        "whatInterviewerChecks": "Linear scan proof and space trade-off analysis.",
-        "bestReplyScript": "The algorithm scans the string only once.\n\nEach character is visited exactly once while counting consecutive occurrences.\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nIf compression is performed in-place on a mutable array, the extra space can be reduced to O(1).",
-        "keyPoints": [
-          "Single-pass scan visits each char once -> O(n)",
-          "Result string allocation -> O(n) space",
-          "In-place mutable array variant -> O(1) space"
-        ]
+            "id": "q2",
+            "category": "Sorting Requirement Rationale",
+            "question": "2. Why did you sort the array first?",
+            "whatInterviewerChecks": "Enables two-pointer directionality and seamless duplicate skipping.",
+            "bestReplyScript": "Sorting is necessary because it:\n- Enables the two-pointer technique.\n- Makes it easy to skip duplicate values.\n- Lets us increase or decrease the sum by moving pointers predictably.\n\nWithout sorting, the optimal two-pointer solution would not work.",
+            "keyPoints": [
+                  "Enables Two-Pointer directional adjustment",
+                  "Makes duplicate skipping adjacent",
+                  "Predictable sum increase/decrease"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Compression Trade-offs",
-        "question": "3. When should compression not be applied?",
-        "whatInterviewerChecks": "Identifying anti-patterns where compression increases file size.",
-        "bestReplyScript": "Compression should not be applied when it doesn't reduce the size of the string.\n\nExample:\nInput: \"abcd\"\nCompressed: \"a1b1c1d1\"\n\nThe compressed version is longer than the original.\n\nA better implementation would compare both lengths and return the original string if compression doesn't save space.\n\nThis avoids unnecessary storage and improves efficiency.",
-        "keyPoints": [
-          "RLE expands strings with high unique-char ratios",
-          "Compare len(compressed) vs len(original)",
-          "Return original string if compressed length >= original"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "O(n log n) sort + O(n^3) nested loops = O(n^3) total time, O(1) space.",
+            "bestReplyScript": "Complexity analysis:\n- Sorting: O(n log n)\n- First loop: O(n)\n- Second loop: O(n)\n- Two-pointer scan: O(n)\n\nOverall:\n- Time Complexity: O(n^3)\n- Space Complexity: O(1) (excluding the output list and sorting space).",
+            "keyPoints": [
+                  "Time Complexity: O(n^3)",
+                  "Space Complexity: O(1) auxiliary space",
+                  "Optimal lower bound for general 4Sum"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Single Character Formatting",
-        "question": "4. How do you handle single characters?",
-        "whatInterviewerChecks": "Handling edge cases where count equals 1.",
-        "bestReplyScript": "A single character still has a count of 1.\n\nExample:\nInput: \"abbc\"\nCompressed: \"a1b2c1\"\n\nIf the problem states that counts of 1 should be omitted, the output becomes:\n\"ab2c\"\n\nI always follow the exact problem requirements.",
-        "keyPoints": [
-          "Default format includes explicit '1'",
-          "Variant format omits count when count == 1",
-          "Clarify prompt constraints before implementing"
-        ]
+            "id": "q4",
+            "category": "Duplicate Quadruplets Elimination Strategy",
+            "question": "4. How do you avoid duplicate quadruplets?",
+            "whatInterviewerChecks": "Skipping duplicates at all 4 stages.",
+            "bestReplyScript": "Since the array is sorted, I skip duplicate values at every stage.\n\n- Skip duplicate values for i (`if i > 0 and nums[i] == nums[i-1]: continue`).\n- Skip duplicate values for j (`if j > i + 1 and nums[j] == nums[j-1]: continue`).\n- After finding a valid quadruplet, move left and right past any duplicate values.\n\nThis ensures each unique quadruplet appears only once.",
+            "keyPoints": [
+                  "Skip duplicate `i` and `j` values",
+                  "Skip duplicate `left` and `right` pointer values on match",
+                  "Guarantees unique quadruplets without Hash Set"
+            ]
       },
       {
-        "id": "q5",
-        "category": "In-Place Array Compression",
-        "question": "5. Can you compress in-place?",
-        "whatInterviewerChecks": "Two-pointer in-place array manipulation technique.",
-        "bestReplyScript": "Yes, if the input is a mutable character array.\n\nThe idea is:\n1. Use one pointer to read characters.\n2. Use another pointer to write the compressed result.\n3. Count repeated characters.\n4. Write the character and its count directly into the same array.\n\nExample:\nInput Array: [a, a, a, b, b, c]\nOutput Array: [a, 3, b, 2, c]\n\nThis achieves O(1) extra space.\n\nNote that in Python, strings are immutable, so we usually build a new string instead.",
-        "keyPoints": [
-          "Requires mutable list/array input",
-          "Read pointer scans ahead, write pointer overwrites in-place",
-          "Achieves true O(1) auxiliary space",
-          "Python strings require new list/string building"
-        ]
+            "id": "q5",
+            "category": "Brute-Force Inefficiency",
+            "question": "5. Why isn't brute force feasible?",
+            "whatInterviewerChecks": "O(n^4) quadruple nested loop.",
+            "bestReplyScript": "Brute force checks every combination of four numbers.\n\nIt requires four nested loops.\n- Time Complexity: O(n^4)\n\nThis becomes very slow for large arrays. The sorting + two-pointer solution reduces the complexity to O(n^3), making it much more practical.",
+            "keyPoints": [
+                  "Brute force: 4 nested loops O(n^4) time",
+                  "Extremely slow for n=1000",
+                  "Sorting + two pointers reduces time to O(n^3)"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Decompression & Inversion",
-        "question": "6. How would you decompress the string?",
-        "whatInterviewerChecks": "Inverting RLE logic and parsing multi-digit numbers.",
-        "bestReplyScript": "To decompress:\n1. Read a character.\n2. Read the following number.\n3. Repeat the character that many times.\n4. Continue until the end.\n\nExample:\nInput: \"a3b2c4\"\nOutput: \"aaabbcccc\"\n\nIf counts contain multiple digits (like 12), I would read the complete number before expanding.",
-        "keyPoints": [
-          "Parse char followed by integer count",
-          "Accumulate consecutive digit characters for multi-digit counts",
-          "Repeat char count times into decompressed stream"
-        ]
+            "id": "q6",
+            "category": "Generalization to K-Sum Framework",
+            "question": "6. How would you generalize this to K-Sum?",
+            "whatInterviewerChecks": "Recursive reduction from K-Sum to 2-Sum.",
+            "bestReplyScript": "The general approach is recursive.\n1. Sort the array.\n2. Fix one element.\n3. Recursively solve the remaining (K - 1)-Sum problem.\n4. When K = 2, solve it using the two-pointer technique.\n\nThis recursive strategy works for 3Sum, 4Sum, 5Sum, and higher.",
+            "keyPoints": [
+                  "Recursive reduction: K-Sum -> (K-1)-Sum",
+                  "Base case K = 2 uses Two Pointers",
+                  "Scales to 3Sum, 4Sum, 5Sum, etc."
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases & Boundaries",
-        "question": "7. What edge cases exist?",
-        "whatInterviewerChecks": "Boundary test coverage across string variations.",
-        "bestReplyScript": "Some important edge cases include:\n\nEmpty string: \"\"\nOutput: \"\"\n\nSingle character: \"a\"\nOutput: \"a1\"\n\nAll same character: \"aaaaaa\"\nOutput: \"a6\"\n\nNo repetition: \"abcd\"\nOutput: \"a1b1c1d1\" (or \"abcd\" depending on requirements)\n\nMixed repetitions: \"aaabcc\"\nOutput: \"a3b1c2\"\n\nTesting these cases ensures the algorithm handles all possible inputs.",
-        "keyPoints": [
-          "Empty string returns empty",
-          "Single char returns 'a1'",
-          "All-identical string compresses to maximum ratio",
-          "All-unique string triggers expansion check"
-        ]
+            "id": "q7",
+            "category": "Edge Cases",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "n < 4, all duplicates, negative numbers, no quadruplets, integer overflow.",
+            "bestReplyScript": "Important edge cases include:\n1. Array has fewer than four elements ([1, 2, 3]) -> Return empty result.\n2. All duplicate values ([2, 2, 2, 2, 2]) -> Return single valid quadruplet [[2, 2, 2, 2]].\n3. Negative numbers ([-3, -2, -1, 0, 1, 2]) -> Handled correctly.\n4. No valid quadruplet ([1, 2, 3, 4], Target = 100) -> Return empty list.\n5. Very large numbers -> Use 64-bit integer sum (long in Java/C++) to prevent integer overflow.",
+            "keyPoints": [
+                  "n < 4 returns []",
+                  "All duplicates return 1 quadruplet",
+                  "Integer overflow prevention for 64-bit sum"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Ambiguous Input & Encoding",
-        "question": "8. How do repeated digits affect compression?",
-        "whatInterviewerChecks": "Handling numerical characters in RLE streams.",
-        "bestReplyScript": "If digits are part of the input, decompression can become ambiguous.\n\nExample:\nInput: \"111222\"\nCompressed: \"1323\"\n\nIt's unclear whether this means:\n• '1' repeated 3 times and '2' repeated 3 times, or\n• something else.\n\nTo avoid ambiguity, real compression formats often use separators or escape characters.\n\nExample: 1:3|2:3\n\nThis makes decompression reliable.",
-        "keyPoints": [
-          "Digit inputs create ambiguity between data and counts",
-          "Use delimiter/separator schemes (e.g. 1:3|2:3)",
-          "Escape characters prevent collision"
-        ]
+            "id": "q8",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, duplicate, empty, and negative inputs.",
+            "bestReplyScript": "I would test:\n- [1, 0, -1, 0, -2, 2], target 0 -> Multiple quadruplets\n- [2, 2, 2, 2, 2], target 8 -> [[2, 2, 2, 2]]\n- [1, 2, 3], target 6 -> Empty result\n- [-3, -1, 0, 2, 4, 5], target 2 -> Valid quadruplets\n- [0, 0, 0, 0], target 0 -> One quadruplet\n\nThese cover duplicates, negatives, insufficient elements, and normal cases.",
+            "keyPoints": [
+                  "LeetCode 18 standard test cases",
+                  "All equal numbers test case",
+                  "Insufficient elements n < 4 bounds"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Stream Processing",
-        "question": "9. How would you process a stream?",
-        "whatInterviewerChecks": "Streaming architecture and sliding state window.",
-        "bestReplyScript": "For a character stream, I only need to remember:\n• the current character\n• its count\n\nWhenever a different character arrives:\n1. Output the current character and its count.\n2. Start counting the new character.\n\nExample:\nIncoming: a, a, a, b, b, c\nOutput: a3, b2, c1\n\nThis allows compression without storing the entire input in memory.",
-        "keyPoints": [
-          "Maintain current_char and count state variables",
-          "Flush (current_char, count) on character transition",
-          "Process arbitrary stream size with O(1) RAM"
-        ]
+            "id": "q9",
+            "category": "Early Loop Pruning Optimization",
+            "question": "9. Can pruning improve the algorithm's performance?",
+            "whatInterviewerChecks": "Pruning bounds: `min_sum > target` (break) and `max_sum < target` (continue).",
+            "bestReplyScript": "Yes!\nSince the array is sorted, we can prune branches early:\n1. Min Sum Check: If `nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target`, break immediately (all remaining sums will be too large).\n2. Max Sum Check: If `nums[i] + nums[n-1] + nums[n-2] + nums[n-3] < target`, continue to next i (current element is too small to reach target).\n\nPruning eliminates massive search branches, though worst-case remains O(n^3).",
+            "keyPoints": [
+                  "Min sum check: break if `nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target`",
+                  "Max sum check: continue if `nums[i] + nums[n-1] + nums[n-2] + nums[n-3] < target`",
+                  "Massively speeds up average runtime"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Space Constraints",
-        "question": "10. Can you solve without extra space?",
-        "whatInterviewerChecks": "In-place list manipulation vs immutable string constraints.",
-        "bestReplyScript": "Yes, if the input is mutable.\n\nUsing two pointers:\n• One pointer reads the original characters.\n• The other writes the compressed output.\n\nThis modifies the input directly.\n\nSpace Complexity becomes O(1).\n\nIn Python, strings cannot be modified, so creating a new result string is usually the practical solution.",
-        "keyPoints": [
-          "Two-pointer in-place write for mutable data",
-          "O(1) auxiliary space requirement",
-          "Python immutable string workaround"
-        ]
+            "id": "q10",
+            "category": "Common Candidate Pitfalls",
+            "question": "10. What common mistakes occur?",
+            "whatInterviewerChecks": "Rookie traps in 4Sum (LeetCode 18).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to sort the array.\n- Not skipping duplicate values at `i` or `j` loops.\n- Incorrect pointer movement.\n- Returning duplicate quadruplets.\n- Incorrect loop boundaries.\n- Integer overflow when adding four very large values (e.g. 10^9).",
+            "keyPoints": [
+                  "Omitting duplicate skips at `i` or `j` loops",
+                  "Integer overflow on 32-bit addition",
+                  "Incorrect inner loop boundaries"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Multi-Digit Counts",
-        "question": "11. What if counts exceed 9?",
-        "whatInterviewerChecks": "Handling multi-digit counts (>9) during compression and parsing.",
-        "bestReplyScript": "The algorithm still works.\n\nInstead of assuming the count is one digit, I convert the entire number to a string.\n\nExample:\nInput: aaaaaaaaaaaa (12 'a's)\nOutput: a12\n\nDuring decompression, I read all consecutive digits to reconstruct the correct count.\n\nThis allows handling any repetition count.",
-        "keyPoints": [
-          "Convert integer count to string (str(count))",
-          "Multi-digit string concatenation ('a' + '12')",
-          "Parser reads all contiguous isdigit() characters"
-        ]
+            "id": "q11",
+            "category": "First Quadruplet Early Exit",
+            "question": "11. How would you solve this if only one valid quadruplet is required?",
+            "whatInterviewerChecks": "Early exit on first valid match.",
+            "bestReplyScript": "The algorithm remains the same.\n\nThe only difference is that once I find the first valid quadruplet, I return it immediately instead of continuing the search.\n\nThis can reduce the running time in many cases.",
+            "keyPoints": [
+                  "Return immediately on first valid match",
+                  "Avoids remaining outer and inner loop scans",
+                  "Faster average execution time"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Testing Strategy",
-        "question": "12. How would you test it?",
-        "whatInterviewerChecks": "Designing comprehensive test matrices.",
-        "bestReplyScript": "I would test various scenarios.\n\nInput | Expected Output\n\"aaabb\" | \"a3b2\"\n\"abcd\" | \"a1b1c1d1\" (or \"abcd\" if required)\n\"aaaa\" | \"a4\"\n\"\" | \"\"\n\"a\" | \"a1\"\n\"aaabcccc\" | \"a3b1c4\"\n\nThese tests cover normal cases, edge cases, and boundary conditions.",
-        "keyPoints": [
-          "Standard repeating runs",
-          "Single character & empty string",
-          "All-same character long runs",
-          "Uncompressed fallback tests"
-        ]
+            "id": "q12",
+            "category": "Hash Table Applicability Analysis",
+            "question": "12. Can hashing reduce the complexity?",
+            "whatInterviewerChecks": "Pair hashing trade-offs vs space complexity.",
+            "bestReplyScript": "Hashing can help find pair sums, but it introduces extra memory usage and duplicate-handling complexity.\n\nAlthough hash-based approaches exist (e.g. storing all pairs in a hash map), they generally do not improve the worst-case complexity significantly beyond O(n^3) or O(n^2) with complex collisions.\n\nThe sorting + two-pointer approach is simpler, uses less memory O(1), and is the standard interview solution.",
+            "keyPoints": [
+                  "Pair hashing requires extra memory",
+                  "Complex duplicate quadruplet filtering",
+                  "Sorting + Two Pointers O(1) space is preferred"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Real-World Applications",
-        "question": "13. Where is RLE used?",
-        "whatInterviewerChecks": "Practical software engineering use cases of RLE.",
-        "bestReplyScript": "Run-Length Encoding (RLE) is used in many real-world applications.\n\nExamples include:\n• Image compression for simple graphics and icons.\n• Fax machines to reduce transmitted black/white pixel data.\n• Bitmap image formats (BMP, TGA, TIFF).\n• Data compression pre-processing pipelines.\n• Document scanning where long sequences of white pixels occur.\n• Game development for compressing tile maps.\n\nAlthough RLE is simple, it works well when data contains many consecutive repeated values.",
-        "keyPoints": [
-          "Fax transmission & scan line white space",
-          "Lossless image formats (BMP, TGA, TIFF)",
-          "Pre-processing step for DEFLATE/LZ77",
-          "Game grid & tilemap serialization"
-        ]
+            "id": "q13",
+            "category": "Recursive K-Sum vs Iterative 4Sum Comparison",
+            "question": "13. Compare recursive K-Sum and iterative approaches.",
+            "whatInterviewerChecks": "Recursive flexibility vs Iterative performance.",
+            "bestReplyScript": "Comparison:\n- Recursive K-Sum: Works for any K (flexible, reusable code). Base case K=2. Slight recursion call stack overhead.\n- Iterative 4Sum: Explicit 2 nested loops + 2 pointers. Specific to 4Sum, simpler implementation, slightly faster with zero recursion stack.\n\nFor only 4Sum, I prefer the iterative solution. If I need to solve K-Sum in general, recursion is the better choice.",
+            "keyPoints": [
+                  "Iterative 4Sum: zero recursion overhead, simpler for 4Sum",
+                  "Recursive K-Sum: reusable for any K, slight recursion stack overhead",
+                  "Choice based on generalization requirements"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Algorithmic Trade-offs",
-        "question": "14. What's the trade-off?",
-        "whatInterviewerChecks": "Evaluating when RLE shines vs when it degrades performance.",
-        "bestReplyScript": "The main trade-off is that RLE is effective only when there are many consecutive repeated characters.\n\nExample where it helps:\nInput: aaaaaaaaaa\nCompressed: a10\nMuch smaller.\n\nExample where it doesn't help:\nInput: abcdef\nCompressed: a1b1c1d1e1f1\nThe compressed version is actually larger.\n\nSo RLE is efficient for repetitive data but ineffective for random or highly varied data.",
-        "keyPoints": [
-          "High repetition data = high compression ratio",
-          "High entropy/random data = size expansion penalty",
-          "Selective compression check avoids expansion"
-        ]
+            "id": "q14",
+            "category": "Real-World Applications",
+            "question": "14. Where is this pattern useful outside interviews?",
+            "whatInterviewerChecks": "Combinatorial optimization, budget analysis.",
+            "bestReplyScript": "This pattern is useful in:\n- Financial Portfolio Analysis (finding 4 asset combinations matching target risk/return balance).\n- Budget Optimization (selecting 4 items whose combined cost hits a target budget).\n- Recommendation Systems & Resource Allocation.\n- Constraint Satisfaction Problems & Combinatorial Search algorithms.",
+            "keyPoints": [
+                  "Financial 4-asset portfolio risk balancing",
+                  "Budget optimization item selection",
+                  "Combinatorial constraint satisfaction"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Memory Optimization",
-        "question": "15. How would you optimize memory usage?",
-        "whatInterviewerChecks": "Python string joining vs repeated concatenation optimization.",
-        "bestReplyScript": "To reduce memory usage, I would:\n• Avoid creating unnecessary intermediate strings.\n• Use a list buffer to collect parts and ''.join(parts) once at the end, since repeated string concatenation in a loop is O(N^2) in Python.\n• Compress in-place if the input is mutable.\n• Process streaming data incrementally instead of storing the entire input.\n\nThese optimizations improve both memory efficiency and performance, especially for large inputs.",
-        "keyPoints": [
-          "Use list buffer + ''.join() to avoid O(N^2) string copies",
-          "Stream process with O(1) buffer",
-          "In-place pointer overwrite for mutable arrays"
-        ]
+            "id": "q15",
+            "category": "Massive Dataset Scaling & Approximation",
+            "question": "15. How would your solution perform on very large datasets?",
+            "whatInterviewerChecks": "Scaling O(n^3) for massive inputs.",
+            "bestReplyScript": "The O(n^3) complexity becomes expensive for very large datasets (e.g. n = 10,000).\n\nTo improve practical performance:\n- Use early loop pruning (Min Sum / Max Sum checks) to skip >90% of iterations.\n- Stop early if only one solution is needed.\n- Process outer loops in parallel across threads.\n- Consider approximate algorithms if exact results are not required.",
+            "keyPoints": [
+                  "Min/Max loop pruning skips >90% iterations",
+                  "Parallel outer loop execution across CPU cores",
+                  "Approximation algorithms for massive inputs"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
