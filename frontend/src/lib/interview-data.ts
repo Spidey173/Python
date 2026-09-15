@@ -12052,197 +12052,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
             "id": "q1",
-            "category": "Deep-Dive Question 1",
+            "category": "Step-by-Step Approach",
             "question": "1. Explain how two stacks can simulate a queue.",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dual stack mechanics: inStack for push, outStack for pop/peek reversal.",
+            "bestReplyScript": "A queue follows First In, First Out (FIFO), while a stack follows Last In, First Out (LIFO).\n\nTo simulate a queue, I use two stacks:\n- Input stack (inStack): Stores newly pushed elements.\n- Output stack (outStack): Provides elements in reversed FIFO queue order.\n\nAlgorithm:\n- Push: Add element to inStack.\n- Pop: If outStack is non-empty, pop from outStack. Otherwise, move all elements from inStack to outStack (reversing order), then pop.\n- Peek: Same as pop, but return top element without popping.\n\nExample: Push 1, 2, 3 -> inStack: [3,2,1]. Pop -> Move to outStack: [1,2,3] -> Pop returns 1.\nThis reversal makes the oldest element come out first (FIFO).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "inStack for push, outStack for pop/peek",
+                  "Lazy transfer from inStack to outStack reverses LIFO into FIFO",
+                  "Transfer occurs ONLY when outStack is empty",
+                  "Amortized O(1) time"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Data Structure Rationale",
             "question": "2. Why are two stacks required?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Implement Queue using Two Stacks.",
-            "bestReplyScript": "I chose this approach for Implement Queue using Two Stacks over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Reversing LIFO twice yields FIFO behavior.",
+            "bestReplyScript": "One stack alone always removes the last inserted element (LIFO).\n\nA queue requires FIFO behavior, so we use:\n- One stack (inStack) to accept new incoming elements.\n- Another stack (outStack) to reverse their order when dequeuing.\n\nDouble LIFO inversion (reversing twice) mathematically yields FIFO order.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "One stack only provides LIFO",
+                  "Double LIFO reversal yields FIFO",
+                  "inStack collects, outStack dispenses"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Amortized Complexity Matrix",
             "question": "3. What is the amortized time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Implement Queue using Two Stacks.",
-            "bestReplyScript": "Here is the complexity analysis for Implement Queue using Two Stacks:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Amortized O(1) proof for Push, Pop, Peek, Empty.",
+            "bestReplyScript": "Amortized Time Complexity Matrix:\n- Push:  O(1)\n- Pop:   O(1) amortized\n- Peek:  O(1) amortized\n- Empty: O(1)\n\nAlthough transferring elements takes O(n) in a single worst-case call, each element is moved exactly ONCE from inStack to outStack over its lifetime. Thus, average cost per operation is strictly O(1).",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Push: O(1)",
+                  "Pop / Peek: O(1) amortized",
+                  "Each element pushed once, moved once, popped once"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Worst-Case vs Amortized Explanation",
             "question": "4. Why isn't every operation O(1)?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Implement Queue using Two Stacks.",
-            "bestReplyScript": "I chose this approach for Implement Queue using Two Stacks over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Single O(n) transfer call explanation.",
+            "bestReplyScript": "Most operations are O(1), but when outStack becomes empty, all n elements from inStack must be popped and pushed to outStack.\n\nExample: inStack: [5,4,3,2,1] -> Transfer to outStack: [1,2,3,4,5] (takes O(n) steps).\n\nHowever, this O(n) transfer happens only occasionally when outStack is empty. Amortized over all operations, the average cost remains O(1).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Worst-case single call takes O(n)",
+                  "Occurs only when outStack is empty",
+                  "Amortized average remains O(1)"
             ]
       },
       {
             "id": "q5",
-            "category": "Edge Case Analysis",
+            "category": "Lazy Transfer Strategy",
             "question": "5. What happens when the output stack becomes empty?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Implement Queue using Two Stacks.",
-            "bestReplyScript": "When handling Implement Queue using Two Stacks, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Lazy transfer mechanism when outStack is empty.",
+            "bestReplyScript": "When outStack becomes empty on a pop or peek call:\n1. Move every element from inStack to outStack until inStack is empty.\n2. This reverses the order so oldest element is at outStack top.\n3. Continue popping or peeking from outStack.\n\nLazy Transfer Rule: Never transfer elements if outStack already contains elements!",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Transfer ONLY when outStack is empty",
+                  "Reverses element order completely",
+                  "Protects outStack elements from being overwritten"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Single Stack Alternative",
             "question": "6. Can you implement this using only one stack?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Call stack recursion alternative for single stack simulation.",
+            "bestReplyScript": "Yes, using function call stack recursion.\n\nPush operation: Recursively pop elements, push new element to base, then push popped elements back.\nThis makes push take O(n) time and O(n) call stack memory.\n\nUsing two explicit stacks is cleaner, runs in amortized O(1) time, and is the standard interview solution.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive call stack acts as second implicit stack",
+                  "Push takes O(n) time and O(n) stack depth",
+                  "Two explicit stacks is much cleaner & faster"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Implement Queue using Two Stacks.",
-            "bestReplyScript": "When handling Implement Queue using Two Stacks, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty queue pop/peek, single element, interleaved operations.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty queue pop/peek -> Raise IndexError or return null.\n2. Single element (Push 10 -> Pop -> 10).\n3. Multiple pushes before pop (Push 1, 2, 3 -> Pop -> 1).\n4. Alternating operations (Push -> Pop -> Push -> Peek).\n\nTesting these ensures FIFO order remains intact under all sequences.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty queue pop/peek exception handling",
+                  "Single-element operations",
+                  "Alternating push/pop/peek sequences"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Implement Queue using Two Stacks.",
-            "bestReplyScript": "To thoroughly test Implement Queue using Two Stacks, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering operations sequence.",
+            "bestReplyScript": "I would test the following sequence:\n- Push(1), Pop() -> 1\n- Push(1), Push(2), Pop() -> 1\n- Push(1), Push(2), Peek() -> 1\n- Empty() -> True\n- Mixed Pushes & Pops -> Verifies FIFO order maintained throughout.\n\nThese tests verify correctness under different operational workloads.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Sequential Push & Pop tests",
+                  "Peek without removal test",
+                  "Empty state verification"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Implement Queue using Two Stacks.",
-            "bestReplyScript": "Common candidate pitfalls when solving Implement Queue using Two Stacks include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in MyQueue (LeetCode 232).",
+            "bestReplyScript": "Some common mistakes include:\n- Transferring elements on EVERY push/pop operation instead of lazily when outStack is empty (ruins O(1) time into O(n)).\n- Forgetting to check if outStack is empty before popping inStack.\n- Returning wrong end of stack.\n- Mishandling pop/peek on empty queue.\n\nThe most common mistake is eager transfer on every operation.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Eager transfer on every operation bug",
+                  "Transferring when outStack is not empty (corrupts FIFO)",
+                  "Popping from empty queue exception"
             ]
       },
       {
             "id": "q10",
-            "category": "Algorithmic Justification",
+            "category": "Queue using Stacks vs Stack using Queues",
             "question": "10. Compare this with implementing a stack using queues.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Implement Queue using Two Stacks.",
-            "bestReplyScript": "I chose this approach for Implement Queue using Two Stacks over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "LeetCode 232 (Queue using Stacks) vs LeetCode 225 (Stack using Queues).",
+            "bestReplyScript": "Comparison:\n- Queue using Stacks (LeetCode 232): Amortized O(1) push, pop, peek using 2 stacks with lazy transfer.\n- Stack using Queues (LeetCode 225): Push takes O(n) or Pop takes O(n) by rotating single queue elements.\n\nQueue using Stacks is more efficient due to amortized O(1) pop/peek performance.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Queue using Stacks: Amortized O(1) for all ops",
+                  "Stack using Queues: O(n) for Push or Pop",
+                  "Stack simulation requires element rotation"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where is this concept used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Buffer management, undo/redo, double-stack architectures.",
+            "bestReplyScript": "This concept is useful in:\n- Buffer management & streaming pipeline transformations.\n- Read/Write decoupled architectures (separate ingestion vs processing channels).\n- Teaching amortized analysis & data structure adaptation.\n- Functional programming immutability (Purely Functional Queues - Banker's Queue).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Banker's Queue in Purely Functional Languages",
+                  "Decoupled Ingestion vs Processing buffers",
+                  "Amortized complexity analysis"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Memory & Garbage Collection Optimization",
             "question": "12. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n) auxiliary memory efficiency proof.",
+            "bestReplyScript": "Memory usage is already optimal with O(n) space because each element exists in exactly ONE stack at any given time.\n\nOptimizations:\n- Transfer elements lazily only when outStack is empty.\n- Reuse pre-allocated array list objects.\n- Avoid creating temporary wrapper objects during pop/peek.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Each element resides in exactly 1 stack",
+                  "Strict O(n) total auxiliary space",
+                  "Zero element duplication"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Thread-Safety & Concurrency",
             "question": "13. Can this support concurrent operations?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Synchronization / Mutex locks for multi-threaded access.",
+            "bestReplyScript": "Not out of the box. If multiple threads call push() and pop() concurrently:\n- Race conditions occur during inStack to outStack transfer.\n- We must synchronize push and pop using ReentrantLock or Mutex locks (e.g. `with self.lock:`) to ensure thread-safety.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Requires thread synchronization (Mutex / Lock)",
+                  "Prevents race conditions during transfer",
+                  "Protects internal stack states"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Efficient Peek Implementation",
             "question": "14. How would you implement `peek()` efficiently?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Implement Queue using Two Stacks.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Reusing transfer logic for O(1) amortized peek.",
+            "bestReplyScript": "The peek() operation works identically to pop():\n1. If outStack is empty, transfer all elements from inStack to outStack.\n2. Return top element of outStack (`outStack[-1]`).\n3. Do NOT pop the element.\n\nSince the transfer occurs lazily, peek() achieves O(1) amortized time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Lazy transfer if outStack is empty",
+                  "Return top element without removal",
+                  "Amortized O(1) time complexity"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Amortized Analysis Proof",
             "question": "15. Why is amortized analysis important here?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Implement Queue using Two Stacks.",
-            "bestReplyScript": "I chose this approach for Implement Queue using Two Stacks over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Accounting method / Aggregate method proof for O(1) average.",
+            "bestReplyScript": "Amortized analysis evaluates average performance over a sequence of operations rather than single worst-case spikes.\n\nProof:\n- Each element is pushed to inStack ONCE (1 op).\n- Each element is moved from inStack to outStack ONCE (1 op).\n- Each element is popped from outStack ONCE (1 op).\n\nTotal operations for n elements = 3n. Average cost per element = 3n / n = 3 = O(1) amortized time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Aggregate method proof: 3 operations per element",
+                  "Push once + Move once + Pop once = 3n total ops",
+                  "3n / n = O(1) amortized time"
             ]
       }
 ],
