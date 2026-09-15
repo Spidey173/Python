@@ -7114,195 +7114,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Search Insert Position.",
-            "bestReplyScript": "My approach for Search Insert Position follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Binary Search halving, insertion pointer convergence at `left`.",
+            "bestReplyScript": "I use Binary Search because the array is already sorted.\n\nThe goal is to either:\n- Find the target if it exists, or\n- Return the index where it should be inserted while keeping the array sorted.\n\nSteps:\n1. Initialize: left = 0, right = len(nums) - 1.\n2. Find the middle element: mid = left + (right - left) // 2.\n3. Compare it with the target:\n   - If equal, return the middle index.\n   - If target > mid, search right half (left = mid + 1).\n   - If target < mid, search left half (right = mid - 1).\n4. If loop ends without finding target, `left` will point to the correct insertion position.\n\nExample: nums = [1,3,5,6], target = 5 -> Mid 5 -> Found index 2.\nTarget = 2 -> Loop ends -> left = 1 -> Insert at index 1.\n\nComplexity: Time: O(log n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Binary Search on sorted array",
+                  "Pointers: left, right, mid calculation",
+                  "`left` pointer naturally holds insertion index after loop",
+                  "Time: O(log n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Binary Search Justification",
             "question": "2. Why is binary search appropriate?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Search Insert Position.",
-            "bestReplyScript": "I chose this approach for Search Insert Position over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Halving search space on sorted inputs vs linear search.",
+            "bestReplyScript": "Binary Search is ideal because the array is sorted.\nInstead of checking every element linearly (O(n)), it repeatedly halves the search space.\n\nExample: 1000 elements -> 500 -> 250 -> 125 -> 63 -> 31 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nThis makes Binary Search exponentially faster than Linear Search.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Sorted array precondition enables binary halving",
+                  "O(log n) vs O(n) linear search",
+                  "Exponentially faster scaling"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Search Insert Position.",
-            "bestReplyScript": "Here is the complexity analysis for Search Insert Position:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Logarithmic time bound and constant iterative space.",
+            "bestReplyScript": "Each iteration cuts the search space in half.\n\nTherefore:\n- Time Complexity: O(log n)\n- Space Complexity: O(1) (Iterative)\n\nThis is the optimal solution for searching in a sorted array.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log n)",
+                  "Space Complexity: O(1) iterative",
+                  "Optimal search bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Insertion Point Derivation",
             "question": "4. How do you determine the insertion point?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Mathematical proof why `left` holds insertion index when loop terminates.",
+            "bestReplyScript": "If the target is not found, the loop ends when left > right.\nAt this point, `left` represents the correct insertion position.\n\nExample: Array [1,3,5,6], Target = 4 -> Loop ends with left = 2 -> Insert at index 2 -> [1,3,4,5,6].\n\nThis works because `left` always points to the first position where the target can be placed while maintaining sorted order.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Loop ends when left > right",
+                  "`left` represents candidate insertion index",
+                  "Maintains monotonic sorted order"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Target Exists Case",
             "question": "5. What if the target already exists?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Immediate return on exact match (`nums[mid] == target`).",
+            "bestReplyScript": "If the middle element equals the target, I immediately return its index.\n\nExample: Input [1,3,5,6], Target = 5 -> Returns 2.\nNo insertion is needed because the target is already present.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Immediate return on nums[mid] == target",
+                  "No pointer progression required",
+                  "O(1) best-case return"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Target Smaller Than All Elements",
             "question": "6. What if the target is smaller than every element?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Insertion at index 0 boundary condition.",
+            "bestReplyScript": "The target should be inserted at the beginning (index 0).\n\nExample: Input [2,4,6], Target = 1 -> Output 0.\n\nThe loop ends with left = 0, so index 0 is returned.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Target < nums[0] -> Insert at index 0",
+                  "`left` remains 0 at loop termination",
+                  "Index 0 boundary condition"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Target Larger Than All Elements",
             "question": "7. What if the target is larger than every element?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Insertion at index `n` boundary condition.",
+            "bestReplyScript": "The target should be inserted at the end of the array (index n).\n\nExample: Input [2,4,6], Target = 8 -> Output 3.\n\nSince the array has 3 elements, inserting at index 3 appends the target at the end.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Target > nums[n-1] -> Insert at index n",
+                  "`left` becomes len(nums) at loop termination",
+                  "Appends to end of array"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Search Insert Position.",
-            "bestReplyScript": "When handling Search Insert Position, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element matches/inserts, duplicates.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. One element, found ([5], target 5) -> 0\n3. One element, insert before ([5], target 2) -> 0\n4. One element, insert after ([5], target 8) -> 1\n5. Duplicate values ([1,2,2,2,3]) -> Returns first or valid match.\n\nTesting these cases ensures the algorithm handles all scenarios correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array returns 0",
+                  "Single element arrays (before/after/equal)",
+                  "Duplicate element handling"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Search Insert Position.",
-            "bestReplyScript": "To thoroughly test Search Insert Position, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix for target found, target missing, boundary inserts.",
+            "bestReplyScript": "I would test normal cases and edge cases:\n- [1,3,5,6], target 5 -> 2\n- [1,3,5,6], target 2 -> 1\n- [1,3,5,6], target 7 -> 4\n- [1,3,5,6], target 0 -> 0\n- [], target 4 -> 0\n\nThese tests verify that the algorithm handles all common scenarios.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Found vs missing target test cases",
+                  "Boundary index 0 and index n test cases",
+                  "Empty array verification"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Recursive Binary Search Trade-off",
             "question": "10. Can this be solved recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive call stack space overhead O(log n) vs O(1) iterative.",
+            "bestReplyScript": "Yes. Instead of using a loop, the function can recursively search either the left or right half.\n\nThe recursive version has Time O(log n), but uses O(log n) extra space due to the call stack, while the iterative version uses O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive time: O(log n)",
+                  "Recursive space: O(log n) call stack",
+                  "Iterative preferred for O(1) memory"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Search Insert Position.",
-            "bestReplyScript": "Common candidate pitfalls when solving Search Insert Position include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Returning `right` instead of `left`, linear search usage.",
+            "bestReplyScript": "Some common mistakes include:\n- Using Linear Search instead of Binary Search.\n- Incorrectly updating left or right.\n- Returning `right` instead of `left` after the loop ends.\n- Not handling empty arrays.\n- Calculating the middle index incorrectly.\n\nThe most common mistake is forgetting that `left` gives the correct insertion position after the loop ends.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Returning `right` instead of `left` (off-by-one)",
+                  "Linear search anti-pattern",
+                  "Pointer update errors"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is insertion position used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical applications in software engineering.",
+            "bestReplyScript": "Finding an insertion position is useful in many real-world applications:\n- Maintaining sorted dynamic arrays / lists.\n- Database B-Tree indexing (inserting records while preserving order).\n- Leaderboards and ranking systems.\n- Priority scheduling queues & autocomplete search suggestions.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Database B-Tree index insertions",
+                  "Leaderboards & priority queues",
+                  "Autocomplete search suggestions"
             ]
       },
       {
             "id": "q13",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Values Behavior",
             "question": "13. How would duplicate values affect the answer?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Search Insert Position.",
-            "bestReplyScript": "When handling Search Insert Position, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Lower bound vs upper bound behavior with duplicate elements.",
+            "bestReplyScript": "If duplicates exist, the answer depends on the requirement:\n- Return any matching index (standard BS).\n- Return first occurrence (continue searching left when match found).\n- Return last occurrence (continue searching right when match found).\n\nTo find the first occurrence, set right = mid - 1 on match. To find last occurrence, set left = mid + 1 on match.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Standard BS returns arbitrary duplicate index",
+                  "Lower bound: search left on match for first occurrence",
+                  "Upper bound: search right on match for last occurrence"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Linked List Binary Search Inefficiency",
             "question": "14. Can this work on linked lists?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n) node traversal vs O(1) array indexing.",
+            "bestReplyScript": "Not efficiently.\nBinary Search requires random access to the middle element, which arrays provide in O(1) time.\nIn a linked list, reaching the middle requires traversing nodes, taking O(n) time.\nAs a result, Binary Search on a linked list becomes O(n log n), so linear search (O(n)) is actually faster.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Linked lists lack O(1) random access",
+                  "Mid node traversal takes O(n) time",
+                  "BS on linked list takes O(n log n) vs Linear search O(n)"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Upper Bound Modification",
             "question": "15. How would you modify it to return the last valid position?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search Insert Position.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Modifying loop to find upper bound / last match.",
+            "bestReplyScript": "If the requirement is to return the last occurrence of the target:\n- When the target is found, store the current index as the answer.\n- Continue searching the right half (left = mid + 1) to check for later occurrences.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Returns index 3.\nThis still runs in O(log n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Record match index and set left = mid + 1",
+                  "Finds upper bound index",
+                  "Maintains O(log n) runtime"
             ]
       }
 ],
