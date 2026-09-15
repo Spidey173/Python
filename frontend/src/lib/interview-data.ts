@@ -10153,195 +10153,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "My approach for Trailing Zeroes in Factorial follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Counting factors of 5 via Legendre's formula n // 5 + n // 25 + n // 125...",
+            "bestReplyScript": "Instead of calculating the factorial, I count how many times 5 appears as a factor in the numbers from 1 to n.\n\nA trailing zero is formed by multiplying 2 * 5 = 10.\nSince factorials contain many more factors of 2 than 5, the number of 5s determines the number of trailing zeros.\n\nAlgorithm:\n1. Initialize count = 0.\n2. Divide n by 5 and add quotient to count.\n3. Divide n by 25, then 125, and so on.\n4. Stop when divisor becomes greater than n.\n\nExample: n = 25 -> 25/5 = 5, 25/25 = 1. Total = 6 trailing zeroes.\n\nComplexity: Time: O(log_5 n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Legendre's formula for prime factors of 5",
+                  "Repeated division: n // 5 + n // 25 + n // 125...",
+                  "Avoids calculating large factorial values",
+                  "Time: O(log_5 n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Factorization Rationale",
             "question": "2. Why do trailing zeroes depend on factors of 5?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "I chose this approach for Trailing Zeroes in Factorial over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "10 = 2 * 5 prime factorization proof.",
+            "bestReplyScript": "A trailing zero is created whenever we have a factor of 10 (10 = 2 * 5).\nIn a factorial, there are always more factors of 2 than factors of 5.\n\nExample: 5! = 5 * 4 * 3 * 2 * 1 = (5) * (2 * 2).\nThere is only one factor of 5, giving 1 trailing zero.\n\nSo, the number of factors of 5 is the limiting factor and determines the total trailing zeroes.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "10 = 2 * 5 prime factorization",
+                  "Factors of 2 > Factors of 5 in n!",
+                  "Factors of 5 is the limiting constraint"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "Here is the complexity analysis for Trailing Zeroes in Factorial:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(log_5 n) logarithmic growth bound.",
+            "bestReplyScript": "The divisor increases exponentially as 5 -> 25 -> 125 -> 625...\nSo the number of iterations grows logarithmically in base 5.\n\nTherefore:\n- Time Complexity: O(log_5 n)\n- Space Complexity: O(1)\n\nThis is exponentially faster than computing n! or checking every number.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log_5 n)",
+                  "Space Complexity: O(1)",
+                  "Logarithmic iteration growth"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Factors of 2 Abundance",
             "question": "4. Why don't we count factors of 2?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "I chose this approach for Trailing Zeroes in Factorial over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Abundance of even numbers in n!.",
+            "bestReplyScript": "Because every multiple of 2 contributes a factor of 2.\n\nExample for 10!: Even numbers (2, 4, 6, 8, 10) contribute 8 factors of 2!\nMultiples of 5 (5, 10) contribute only 2 factors of 5.\n\nThere are always plenty of 2s, so the number of 5s limits how many pairs (2, 5) can be formed. Therefore, we only count factors of 5.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Even numbers appear every 2 steps",
+                  "Multiples of 5 appear every 5 steps",
+                  "Factors of 2 are always in surplus"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Direct Computation vs Factorial Calculation",
             "question": "5. Can you compute this without calculating the factorial?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Avoiding big integer factorial overflow.",
+            "bestReplyScript": "Yes. In fact, calculating n! is unnecessary and inefficient because factorial values grow huge and overflow memory.\n\nInstead, I repeatedly divide n by 5 and sum quotients:\nExample: n = 100 -> 100/5 = 20 -> 20/5 = 4 -> 4/5 = 0. Answer = 24.\n\nThis gives the exact number of trailing zeroes directly in O(log_5 n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Repeated division sum: count += n // 5; n //= 5",
+                  "Eliminates BigInt / overflow issues",
+                  "Direct O(log_5 n) calculation"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "When handling Trailing Zeroes in Factorial, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "n = 0, n < 5, n = 5, n = 25.",
+            "bestReplyScript": "Important edge cases include:\n1. n = 0 (0! = 1) -> 0 trailing zeroes.\n2. n < 5 (4! = 24) -> 0 trailing zeroes.\n3. n = 5 (5! = 120) -> 1 trailing zero.\n4. n = 25 (25/5 = 5, 25/25 = 1) -> 6 trailing zeroes (extra factor of 5 from 25).\n\nTesting these ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 returns 0",
+                  "n < 5 returns 0",
+                  "n = 25 contributes 2 factors of 5 (25 = 5 * 5)"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "To thoroughly test Trailing Zeroes in Factorial, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix for n = 0, 4, 5, 10, 25, 100.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- 0 -> 0\n- 4 -> 0\n- 5 -> 1\n- 10 -> 2\n- 25 -> 6\n- 100 -> 24\n\nThese tests verify simple cases and numbers containing higher powers of 5.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "n < 5 zero zeroes test cases",
+                  "Powers of 5 test cases (25 -> 6)",
+                  "Large n (100 -> 24) test cases"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
-            "question": "8. What if `n` is extremely large?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Scalability & Extremely Large N",
+            "question": "8. What if n is extremely large?",
+            "whatInterviewerChecks": "Logarithmic scaling performance on n = 1,000,000.",
+            "bestReplyScript": "The algorithm still performs exceptionally well because it divides by 5 at each step.\n\nExample: n = 1,000,000 takes only about 9 iterations (5, 25, 125, 625, 3125, 15625, 78125, 390625, 1953125).\n\nEven for 64-bit integer limits, the loop runs in less than 30 steps. That's why O(log_5 n) scales effortlessly.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Takes ~9 iterations for n = 1,000,000",
+                  "Max ~28 iterations for 64-bit max integer",
+                  "Effortless logarithmic scaling"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "Common candidate pitfalls when solving Trailing Zeroes in Factorial include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Factorial Trailing Zeroes.",
+            "bestReplyScript": "Some common mistakes include:\n- Computing the entire n! first (causes stack overflow or slow execution).\n- Counting only n // 5 and forgetting multiples of 25, 125 (e.g. returning 5 for n = 25 instead of 6).\n- Assuming every multiple of 5 contributes only one factor of 5.\n- Incorrect integer division or mishandling 0!.\n\nThe most common mistake is forgetting that numbers like 25, 125 contribute extra factors of 5.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Calculating n! directly (overflow)",
+                  "Forgetting n // 25 and higher powers of 5",
+                  "Returning 5 instead of 6 for n = 25"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Intuitive Beginner Explanation",
             "question": "10. How would you explain this to a beginner?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Clear simplified 2 * 5 pair explanation.",
+            "bestReplyScript": "I would say:\nEvery trailing zero comes from multiplying 2 * 5.\nIn a factorial, there are lots of even numbers, so we never run out of 2s.\nThe limiting factor is the number of 5s.\nSo instead of multiplying out huge numbers, we just count how many 5s are hiding inside 1 to n.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Trailing zero = 2 * 5 pair",
+                  "2s are in surplus, 5s are scarce",
+                  "Count total 5s hiding in 1..n"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where is this mathematical concept useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Applications in number theory, combinatorics, cryptography.",
+            "bestReplyScript": "Counting prime factors is useful in:\n- Number Theory & Legendre's Formula.\n- Cryptography (RSA prime factorization checks).\n- Combinatorics (Pascal triangle trailing zeroes / binomial coefficients nCr).\n- Competitive programming & mathematical simulations.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Legendre's Formula in Number Theory",
+                  "Binomial coefficients (nCr) prime power analysis",
+                  "RSA Cryptography prime factors"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Recursive Formulation",
             "question": "12. Can you solve it recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recurrence `trailingZeroes(n) = n // 5 + trailingZeroes(n // 5)`.",
+            "bestReplyScript": "Yes. Recursive formula:\n\ndef trailingZeroes(n):\n    if n < 5:\n        return 0\n    return n // 5 + trailingZeroes(n // 5)\n\nExample for n = 25: 25 // 5 = 5 + trailingZeroes(5) [1 + 0] = 6.\nTime: O(log_5 n), Space: O(log_5 n) due to call stack. Iterative is preferred for O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recurrence: n // 5 + trailingZeroes(n // 5)",
+                  "Base case: if n < 5: return 0",
+                  "Time: O(log_5 n), Space: O(log_5 n)"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
-            "question": "13. What happens when `n = 0`?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Base Case n = 0 Analysis",
+            "question": "13. What happens when n = 0?",
+            "whatInterviewerChecks": "0! = 1 mathematical definition proof.",
+            "bestReplyScript": "By mathematical definition, 0! = 1.\nThe number 1 has zero trailing zeroes.\nTherefore, for n = 0, the algorithm returns 0.\nThis is an important mathematical base case.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "0! = 1 by definition",
+                  "The integer 1 has 0 trailing zeroes",
+                  "Returns 0 for n = 0"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Extension to Other Number Bases",
             "question": "14. How would you extend this to different number bases?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Base b prime factorization (e.g. Base 8 = 2^3).",
+            "bestReplyScript": "In base 10, trailing zeroes depend on 10 = 2 * 5 (limiting prime is 5).\nFor another base B, we find its prime factorization. Trailing zeroes in base B depend on the highest power of B's limiting prime factor.\n\nExample: Base 8 (8 = 2^3) -> Count factors of 2 in n! and divide by 3.\nExample: Base 12 (12 = 2^2 * 3) -> Count min(factors(2)/2, factors(3)).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base B prime factorization",
+                  "Limiting prime factor analysis",
+                  "Base 12: min(count(2)//2, count(3))"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Logarithmic Proof",
             "question": "15. Why is this algorithm logarithmic?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Trailing Zeroes in Factorial.",
-            "bestReplyScript": "My approach for Trailing Zeroes in Factorial follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Divisor 5^k exponential growth proof.",
+            "bestReplyScript": "At each step, we divide n by 5 (or multiply the divisor by 5: 5, 25, 125, 625...).\nSince the divisor grows exponentially in base 5, the total number of terms in k = log_5(n) is logarithmic.\n\nTherefore, the time complexity is strictly O(log_5 n), which is virtually instant for any 64-bit integer.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Divisor grows as 5^k",
+                  "Total iterations k = floor(log_5 n)",
+                  "Strictly O(log_5 n) logarithmic time"
             ]
       }
 ],
