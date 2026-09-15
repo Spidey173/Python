@@ -5972,197 +5972,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
             "id": "q1",
-            "category": "Deep-Dive Question 1",
+            "category": "Step-by-Step Approach",
             "question": "1. Explain how binary search works.",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Search space halving, pointer maintenance, mid calculation, logarithmic execution.",
+            "bestReplyScript": "Binary Search is an efficient algorithm used to find a target element in a sorted array. Instead of checking every element one by one, it repeatedly divides the search space into half.\n\nSteps:\n1. Start with two pointers: left = 0, right = n - 1.\n2. Find the middle index: mid = left + (right - left) // 2.\n3. Compare the middle element with the target:\n   - If equal, return the index.\n   - If the target is smaller, search the left half.\n   - If the target is larger, search the right half.\n4. Repeat until the target is found or the search space becomes empty.\n\nExample: Array [2,4,6,8,10,12,14], Target = 10 -> Step 1: Mid 8 (Target > 8, Search Right [10,12,14]) -> Step 2: Mid 12 (Target < 12, Search Left [10]) -> Found!\n\nEach comparison eliminates half of the remaining elements, making Binary Search much faster than Linear Search.\n\nComplexity: Time: O(log n), Space: O(1) (Iterative)",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Divide-and-conquer search space halving",
+                  "Pointers: left, right, mid = left + (right - left) // 2",
+                  "Eliminates half the search space per iteration",
+                  "Time: O(log n), Space: O(1) iterative"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Precondition Justification",
             "question": "2. Why must the array be sorted?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Binary Search (Sorted Array).",
-            "bestReplyScript": "I chose this approach for Binary Search (Sorted Array) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Understanding monotonicity and search space discard condition.",
+            "bestReplyScript": "Binary Search relies on the array being sorted because it decides which half to discard based on comparing the target with the middle element.\n\nExample: Sorted [2,4,6,8,10] vs Unsorted [8,2,10,4,6].\nIf the middle element in unsorted is 10, we cannot determine whether the target 6 is on the left or right because elements are unordered.\n\nWithout sorting, Binary Search loses its ability to eliminate half of the search space.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Monotonic order guarantees directional search",
+                  "Enables discarding half the search space",
+                  "Fails on unsorted data"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Binary Search (Sorted Array).",
-            "bestReplyScript": "Here is the complexity analysis for Binary Search (Sorted Array):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "log2(n) mathematical derivation and stack space overhead.",
+            "bestReplyScript": "Every comparison reduces the search space by half.\n1024 elements -> 512 -> 256 -> 128 -> 64 -> 32 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nThe number of times we divide by 2 is log\u2082(n).\n\nTherefore:\n- Time Complexity: O(log n)\n- Space Complexity: O(1) (Iterative)\n- Space Complexity: O(log n) (Recursive due to call stack)\n\nBinary Search is one of the fastest searching algorithms for sorted data.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log n)",
+                  "Space Complexity: O(1) iterative",
+                  "log2(n) division step derivation"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Mid Calculation & Overflow",
             "question": "4. Why calculate the middle index carefully?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Binary Search (Sorted Array).",
-            "bestReplyScript": "I chose this approach for Binary Search (Sorted Array) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Integer overflow prevention `left + (right - left) // 2` in typed languages.",
+            "bestReplyScript": "Instead of writing mid = (left + right) // 2, I prefer: mid = left + (right - left) // 2.\n\nThis avoids integer overflow in languages like Java and C++ when left + right exceeds the maximum integer value (2^31 - 1).\n\nExample: left = 2,000,000,000, right = 2,100,000,000. Adding them directly overflows 32-bit signed int.\n\nPython integers expand automatically, but using the safer formula is best practice and ensures code portability.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Prevents 32-bit integer overflow in C++/Java",
+                  "Safe formula: mid = left + (right - left) // 2",
+                  "Cross-language portability best practice"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "First Occurrence Bound",
             "question": "5. How would you find the first occurrence?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Lower bound search logic (continue searching left on match).",
+            "bestReplyScript": "When the target is found:\n- Store the current index as a possible answer.\n- Continue searching in the left half (right = mid - 1) to check if an earlier occurrence exists.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Found at index 2 -> Continue Left -> Found at index 1 -> Answer = 1.\n\nThis returns the first occurrence while maintaining O(log n) complexity.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Record match index and continue left (right = mid - 1)",
+                  "Finds lowest index (Lower Bound)",
+                  "Maintains O(log n) runtime"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Last Occurrence Bound",
             "question": "6. How would you find the last occurrence?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Upper bound search logic (continue searching right on match).",
+            "bestReplyScript": "The idea is similar to finding the first occurrence.\n\nWhen the target is found:\n- Store the index as a candidate answer.\n- Continue searching in the right half (left = mid + 1).\n\nExample: Array [1,2,2,2,3], Target = 2 -> Found at index 2 -> Continue Right -> Found at index 3 -> Answer = 3.\n\nThis returns the last occurrence while maintaining O(log n) complexity.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Record match index and continue right (left = mid + 1)",
+                  "Finds highest index (Upper Bound)",
+                  "Maintains O(log n) runtime"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Descending Order Binary Search",
             "question": "7. What if the array is sorted in descending order?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Reversing comparison direction for non-increasing arrays.",
+            "bestReplyScript": "The logic is almost the same, but comparisons are reversed.\n\nExample: Array [10,8,6,4,2], Target = 6, Mid = 6 -> Found!\nIf the target is larger than the middle element, we move left instead of right because larger values are on the left side in descending order.\n\nThe time complexity remains O(log n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Target > mid -> move left",
+                  "Target < mid -> move right",
+                  "Identical O(log n) performance"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Rotated Sorted Array Search",
             "question": "8. How would you search a rotated sorted array?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Identifying sorted half in rotated array.",
+            "bestReplyScript": "In a rotated sorted array, one half is always strictly sorted.\n\nExample: [4,5,6,7,0,1,2]\nSteps:\n1. Find the middle element.\n2. Determine which half (left or right) is sorted.\n3. Check if the target lies within the boundaries of the sorted half.\n4. Search that half; otherwise, search the opposite half.\n\nThis still runs in O(log n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "One half (nums[left] <= nums[mid]) is always sorted",
+                  "Check target bounds against sorted half",
+                  "Maintains O(log n) runtime (LeetCode 33)"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Binary Search (Sorted Array).",
-            "bestReplyScript": "When handling Binary Search (Sorted Array), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, target absent, target at index 0 or n-1.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> -1\n2. One element ([5], target 5) -> 0\n3. Target not present ([1,2,3], target 5) -> -1\n4. Target is first element ([1,2,3], target 1) -> 0\n5. Target is last element ([1,2,3], target 3) -> 2\n\nTesting these cases ensures the implementation is robust.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array return -1",
+                  "Single element arrays",
+                  "First (index 0) and Last (index n-1) boundary matches"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Recursive vs Iterative Implementation",
             "question": "10. Can binary search be implemented recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Binary Search (Sorted Array).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Call stack overhead (O(log n) space) vs iterative (O(1) space).",
+            "bestReplyScript": "Yes. Instead of using a loop, the function calls itself with a smaller search range.\n\nFlow: Search Left Half -> Recursive Call | Search Right Half -> Recursive Call.\n\nRecursive Binary Search is easier to understand conceptually, but iterative Binary Search is generally preferred in production because it avoids call stack overhead and uses O(1) extra space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive uses O(log n) call stack memory",
+                  "Iterative uses O(1) space",
+                  "Iterative preferred in production"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Binary Search (Sorted Array).",
-            "bestReplyScript": "Common candidate pitfalls when solving Binary Search (Sorted Array) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in binary search loops.",
+            "bestReplyScript": "Some common mistakes include:\n- Applying Binary Search to an unsorted array.\n- Using incorrect loop conditions (left < right vs left <= right).\n- Updating pointers incorrectly (left = mid vs left = mid + 1).\n- Calculating the middle index incorrectly.\n- Forgetting to handle duplicate values when first/last occurrence is required.\n\nThe most common mistake is incorrectly updating left or right, which can lead to infinite loops.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Infinite loop from mid vs mid + 1 updates",
+                  "Incorrect left <= right loop condition",
+                  "Unsorted array application"
             ]
       },
       {
             "id": "q12",
             "category": "Testing & Verification",
             "question": "12. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Binary Search (Sorted Array).",
-            "bestReplyScript": "To thoroughly test Binary Search (Sorted Array), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, absent, single, and boundary targets.",
+            "bestReplyScript": "I would test normal cases and edge cases:\n- [1,2,3,4,5], target 3 -> 2\n- [1,2,3,4,5], target 6 -> -1\n- [5], target 5 -> 0\n- [], target 1 -> -1\n- [2,4,6,8], target 2 -> 0\n\nThese tests verify correctness under different scenarios.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Target present vs target absent assertions",
+                  "Single-element array checks",
+                  "Boundary target index verification"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "13. Where is binary search used in real applications?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Binary Search (Sorted Array).",
-            "bestReplyScript": "The algorithmic core of Binary Search (Sorted Array) is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Software engineering use cases for binary search.",
+            "bestReplyScript": "Binary Search is widely used in:\n- Searching B-Tree / B+Tree indexes in databases (SQL, Postgres, B-Tree lookups).\n- Git bisect (finding the first bad commit).\n- Dictionary and contact lookups.\n- Standard library functions (Python bisect, C++ std::lower_bound).\n- Search engines & range queries.",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "Database B-Tree indexing",
+                  "Git bisect commit debugging",
+                  "Standard library bisect / lower_bound"
             ]
       },
       {
             "id": "q14",
-            "category": "Algorithmic Justification",
+            "category": "Binary vs Linear Search Comparison",
             "question": "14. Why is binary search faster than linear search?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Binary Search (Sorted Array).",
-            "bestReplyScript": "I chose this approach for Binary Search (Sorted Array) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "1000 comparisons vs 10 comparisons comparison proof.",
+            "bestReplyScript": "Linear Search checks each element one by one. For 1000 elements, worst case takes 1000 comparisons.\n\nBinary Search eliminates half of the remaining elements after every comparison: 1000 -> 500 -> 250 -> 125 -> 63 -> 31 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nFor 1000 elements, Binary Search needs only about 10 comparisons, while Linear Search may require up to 1000.\n\nThis is why Binary Search is exponentially faster for sorted arrays.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Linear: O(n) vs Binary: O(log n)",
+                  "1000 elements: 1000 checks vs ~10 checks",
+                  "Exponentially faster scaling"
             ]
       },
       {
             "id": "q15",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Values Behavior",
             "question": "15. What happens if duplicate values exist?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Binary Search (Sorted Array).",
-            "bestReplyScript": "When handling Binary Search (Sorted Array), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Non-deterministic match index vs explicit lower/upper bound modification.",
+            "bestReplyScript": "Standard Binary Search may return any one of the duplicate occurrences.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Output could be index 1, 2, or 3.\n\nIf the problem requires the first occurrence or last occurrence, I modify the algorithm to continue searching left (right = mid - 1) or right (left = mid + 1) after finding a match.\n\nThis still maintains O(log n) time complexity.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Standard BS returns arbitrary duplicate index",
+                  "Lower/Upper bound BS returns first/last match",
+                  "Maintains O(log n) time complexity"
             ]
       }
 ],
