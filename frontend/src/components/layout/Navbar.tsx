@@ -34,16 +34,20 @@ export default function Navbar() {
           api.getChapters().catch(() => [] as ChapterGroup[]),
         ]);
         const backendSolved = (chaps as ChapterGroup[]).flatMap((c: ChapterGroup) => c.levels).filter((l) => l.passed).map((l) => l.id);
-        const allSolved = Array.from(new Set([...backendSolved, ...localSolved]));
-        setSolvedCount(allSolved.length);
-        for (const id of backendSolved) {
-          if (!localSolved.includes(id)) {
-            await persistence.markSolved(id);
-          }
+        const solvedSet = new Set<number>();
+        for (const rawId of [...backendSolved, ...localSolved]) {
+          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
+          if (norm >= 1 && norm <= 70) solvedSet.add(norm);
         }
+        setSolvedCount(solvedSet.size);
       } catch {
         const solved = await persistence.getSolvedIds();
-        setSolvedCount(solved.length);
+        const fallbackSet = new Set<number>();
+        for (const rawId of solved) {
+          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
+          if (norm >= 1 && norm <= 70) fallbackSet.add(norm);
+        }
+        setSolvedCount(fallbackSet.size);
       }
     }
     loadSolved();

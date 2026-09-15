@@ -104,9 +104,13 @@ export default function ProgressPage() {
           persistence.getSubmissions(),
         ]);
         const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
-        const merged = Array.from(new Set([...backendSolved, ...localSolved]));
+        const solvedSet = new Set<number>();
+        for (const rawId of [...backendSolved, ...localSolved]) {
+          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
+          if (norm >= 1 && norm <= 70) solvedSet.add(norm);
+        }
         setChapters(chaps);
-        setSolvedIds(merged);
+        setSolvedIds(Array.from(solvedSet));
         setSubmissions(subs);
       } catch (err) {
         console.error('Failed to load progress analytics:', err);

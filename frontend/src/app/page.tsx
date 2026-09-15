@@ -100,10 +100,7 @@ export default function DashboardPage() {
           persistence.getLastActiveProblemId(),
           persistence.getSubmissions(),
         ]);
-        const backendSolved = chaps
-          .flatMap((c) => c.levels)
-          .filter((l) => l.passed)
-          .flatMap((l) => [l.id, l.level_number].filter(Boolean) as number[]);
+        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
         const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
         setChapters(chaps);
         setSolvedIds(mergedSolved);
@@ -133,7 +130,27 @@ export default function DashboardPage() {
 
   const allProblems = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
   const totalCount = allProblems.length || 0;
-  const solvedCount = user ? solvedIds.length : 0;
+
+  // Set of canonical unique solved problem numbers (1..70)
+  const canonicalSolvedSet = useMemo(() => {
+    const set = new Set<number>();
+    for (const rawId of solvedIds) {
+      if (typeof rawId !== 'number') continue;
+      const normalized = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
+      if (normalized >= 1 && normalized <= 70) {
+        set.add(normalized);
+      }
+    }
+    for (const p of allProblems) {
+      if (p.passed) {
+        const lvl = p.level_number || (p.id >= 151 && p.id <= 220 ? p.id - 150 : p.id);
+        if (lvl) set.add(lvl);
+      }
+    }
+    return set;
+  }, [solvedIds, allProblems]);
+
+  const solvedCount = user ? canonicalSolvedSet.size : 0;
   const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
 
   // Real calculated analytics
@@ -154,13 +171,11 @@ export default function DashboardPage() {
   const isProblemSolved = useCallback(
     (p: { id: number; level_number?: number; passed?: boolean } | null | undefined) => {
       if (!p) return false;
-      return (
-        Boolean(p.passed) ||
-        solvedIds.includes(p.id) ||
-        (typeof p.level_number === 'number' && solvedIds.includes(p.level_number))
-      );
+      if (p.passed) return true;
+      const lvl = p.level_number || (p.id >= 151 && p.id <= 220 ? p.id - 150 : p.id);
+      return canonicalSolvedSet.has(lvl) || canonicalSolvedSet.has(p.id);
     },
-    [solvedIds]
+    [canonicalSolvedSet]
   );
 
   // Find active problem to resume:
