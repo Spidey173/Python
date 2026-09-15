@@ -190,20 +190,19 @@ export default function Navbar() {
               <div className="flex items-center gap-2">
                 {isGuest ? (
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => openAuth('signup')}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#D29922]/50 bg-[#D29922]/15 text-xs sm:text-sm font-semibold text-[#F59E0B] hover:bg-[#D29922]/25 transition-all shadow-sm"
-                      title="Guest Session Active — Click to save progress to cloud account"
+                    <div
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#D29922]/40 bg-[#D29922]/10 text-xs sm:text-sm font-semibold text-[#F59E0B]"
+                      title="Guest Trial Mode"
                     >
                       <span className="h-2 w-2 rounded-full bg-[#F59E0B] animate-pulse" />
-                      <span>Guest Mode</span>
-                    </button>
+                      <span>Guest Trial</span>
+                    </div>
 
                     <button
                       onClick={logout}
                       className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
-                      title="Exit session / Log out"
-                      aria-label="Exit session"
+                      title="Exit trial session"
+                      aria-label="Exit trial session"
                     >
                       <LogOut className="h-4 w-4" />
                     </button>
@@ -326,18 +325,6 @@ export default function Navbar() {
                     <span>•</span>
                     <span className="text-[#F59E0B] font-semibold">{user?.streak || 0} Day Streak</span>
                   </div>
-
-                  {isGuest && (
-                    <button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        openAuth('signup');
-                      }}
-                      className="w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-[#238636] to-[#2EA043] text-white text-xs font-semibold shadow-sm hover:opacity-95 transition-opacity"
-                    >
-                      Save Progress to Cloud
-                    </button>
-                  )}
                 </div>
               ) : (
                 <div className="flex gap-2">
