@@ -9393,195 +9393,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain the Euclidean Algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "My approach for Greatest Common Divisor & LCM follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "GCD remainder reduction formula: GCD(a, b) = GCD(b, a % b).",
+            "bestReplyScript": "The Euclidean Algorithm is an efficient method to find the Greatest Common Divisor (GCD) of two numbers.\n\nThe key idea is:\nThe GCD of two numbers does not change if we replace the larger number with the remainder when divided by the smaller number.\n\nFormula: GCD(a, b) = GCD(b, a % b).\nRepeat this process until the remainder becomes 0. The last non-zero value is the GCD.\n\nExample: GCD(48,18) -> 48 % 18 = 12 -> 18 % 12 = 6 -> 12 % 6 = 0 -> Answer = 6.\n\nComplexity: Time: O(log(min(a, b))), Space: O(1) for iterative solution.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Euclidean formula: GCD(a, b) = GCD(b, a % b)",
+                  "Replaces larger number with remainder",
+                  "Stops when remainder becomes 0",
+                  "Time: O(log(min(a, b))), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Step-by-Step Approach",
+            "category": "Mathematical Proof",
             "question": "2. Why does the Euclidean Algorithm work?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "My approach for Greatest Common Divisor & LCM follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Proof that common divisors divide the remainder d | a and d | b => d | (a - k*b).",
+            "bestReplyScript": "The algorithm works because the common divisors of two numbers remain the same after replacing the larger number with the remainder.\n\nExample: 48 = 18 * 2 + 12. Any number that divides both 48 and 18 must also divide 12.\nSo GCD(48, 18) = GCD(18, 12).\n\nRepeating this eventually reaches a remainder of 0, where the current number is the greatest common divisor.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "d | a and d | b implies d | (a % b)",
+                  "Preserves exact set of common divisors",
+                  "Terminates at non-zero remainder before 0"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "Here is the complexity analysis for Greatest Common Divisor & LCM:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Logarithmic reduction time bound O(log(min(a, b))) and Space.",
+            "bestReplyScript": "Each iteration significantly reduces one of the numbers (at least by half every 2 steps - Lame's Theorem).\n\nTherefore:\n- Time Complexity: O(log(min(a, b)))\n- Space Complexity: O(1) (Iterative), O(log n) (Recursive call stack)\n\nThis is much faster than checking every possible divisor.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log(min(a, b)))",
+                  "Lame's Theorem bound",
+                  "Space Complexity: O(1) iterative vs O(log n) recursive"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "LCM Formula & Relation",
             "question": "4. How do you calculate the LCM using the GCD?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "LCM formula: LCM(a, b) = (a * b) / GCD(a, b).",
+            "bestReplyScript": "The relationship between GCD and LCM is:\nLCM(a, b) = (a * b) / GCD(a, b)\n\nExample: a = 12, b = 18, GCD = 6 -> LCM = (12 * 18) / 6 = 36.\n\nThis formula allows us to compute the LCM efficiently after finding the GCD.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "LCM(a, b) = (a * b) / GCD(a, b)",
+                  "Computes LCM in O(1) time after GCD is found",
+                  "Product relationship a * b = GCD * LCM"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Zero Boundary Special Cases",
             "question": "5. What if one number is zero?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "GCD(a, 0) = a and LCM(a, 0) = 0.",
+            "bestReplyScript": "Special cases:\n- GCD(a, 0) = a (because every number divides 0).\n  Examples: GCD(10, 0) = 10, GCD(0, 15) = 15.\n- LCM(a, 0) = 0 (because any multiple involving zero is zero).\n\nHandling zero prevents division-by-zero runtime exceptions.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "GCD(a, 0) = a",
+                  "LCM(a, 0) = 0",
+                  "Prevents division by zero exception"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Recursive Implementation",
             "question": "6. Can you solve this recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recurrence relation return b == 0 ? a : gcd(b, a % b).",
+            "bestReplyScript": "Yes. Recursive formula:\n\ndef gcd(a, b):\n    return a if b == 0 else gcd(b, a % b)\n\nExample: GCD(48,18) -> GCD(18,12) -> GCD(12,6) -> GCD(6,0) -> returns 6.\n\nThe recursive solution is elegant and follows the mathematical definition directly.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base case: if b == 0: return a",
+                  "Recursive call: return gcd(b, a % b)",
+                  "Uses O(log n) call stack memory"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "When handling Greatest Common Divisor & LCM, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Same numbers, zero inputs, co-primes, large numbers.",
+            "bestReplyScript": "Important edge cases include:\n1. Same numbers: GCD(5,5) = 5\n2. One number is zero: GCD(0,9) = 9\n3. Co-prime numbers: GCD(7,13) = 1\n4. Large numbers: GCD(1000000, 250000) = 250000\n\nTesting these ensures the implementation handles all scenarios correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Identical numbers (a == b)",
+                  "Co-primes yielding GCD = 1",
+                  "Zero input handling"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "To thoroughly test Greatest Common Divisor & LCM, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix for GCD and LCM output values.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- (12, 18) -> GCD: 6, LCM: 36\n- (5, 5)   -> GCD: 5, LCM: 5\n- (7, 13)  -> GCD: 1, LCM: 91\n- (0, 10)  -> GCD: 10, LCM: 0\n- (100, 25)-> GCD: 25, LCM: 100\n\nThese tests verify correctness across different numerical inputs.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "GCD and LCM test pairs",
+                  "Co-prime test cases (GCD=1)",
+                  "Zero and multiple test cases"
             ]
       },
       {
             "id": "q9",
-            "category": "Step-by-Step Approach",
+            "category": "Euclid vs Brute Force Comparison",
             "question": "9. Why is Euclid's algorithm faster than checking every divisor?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "My approach for Greatest Common Divisor & LCM follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "O(min(a, b)) brute force vs O(log n) Euclid comparison.",
+            "bestReplyScript": "A brute-force approach checks every possible divisor from 1 to min(a, b) taking O(min(a, b)) time.\nExample: GCD(1000000, 500000) brute force checks up to 500,000 values!\n\nEuclid's Algorithm reduces the numbers rapidly using remainder operations, taking only O(log n) time (a few steps).\n\nThis makes Euclid's Algorithm exponentially faster.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brute force: O(min(a, b))",
+                  "Euclid: O(log(min(a, b)))",
+                  "Exponentially faster scaling"
             ]
       },
       {
             "id": "q10",
-            "category": "Interview Pitfalls",
+            "category": "Overflow Prevention in LCM",
             "question": "10. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "Common candidate pitfalls when solving Greatest Common Divisor & LCM include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Integer overflow in `(a * b) / GCD` vs safe `(a / GCD) * b`.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to handle zero.\n- Computing LCM before finding GCD.\n- Multiplying (a * b) first before dividing by GCD, causing integer overflow!\n- Not considering negative numbers.\n\nThe most common mistake is calculating (a * b) first, which can overflow for very large numbers.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Overflow from (a * b) product",
+                  "Safe calculation: (a / GCD) * b",
+                  "Forgetting zero guards"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where are GCD and LCM used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Cryptography (RSA), fraction arithmetic, scheduling.",
+            "bestReplyScript": "GCD and LCM are widely used in:\n- Cryptography (RSA algorithm key generation using Extended Euclidean Algorithm).\n- Fraction simplification (reducing numerator and denominator by GCD).\n- Scheduling repeated events (finding common overlap times using LCM).\n- Computer graphics & aspect ratio reductions (1920:1080 -> 16:9).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "RSA Cryptography key generation",
+                  "Fraction simplification",
+                  "Aspect ratio reduction & event scheduling"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Multiple Numbers GCD",
             "question": "12. How would you find the GCD of multiple numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Associative property: `GCD(a, b, c) = GCD(GCD(a, b), c)`.",
+            "bestReplyScript": "The GCD operation is associative: GCD(a, b, c, d) = GCD(GCD(GCD(a, b), c), d).\n\nExample: GCD(24, 36, 60).\n1. GCD(24, 36) = 12.\n2. GCD(12, 60) = 12.\n\nIn Python, we can reduce an array using `functools.reduce(math.gcd, numbers)`. This works for any number of values.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Associative property: GCD(a, b, c) = GCD(GCD(a, b), c)",
+                  "Accumulative reduction over array",
+                  "functools.reduce(gcd, nums)"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Safe Division LCM Formula",
             "question": "13. Can overflow occur while computing LCM?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Safe ordering `LCM = (a // GCD) * b`.",
+            "bestReplyScript": "Yes. If we compute LCM = (a * b) // GCD, the multiplication (a * b) may overflow standard integer limits before division.\n\nA safer approach is:\nLCM = (a // GCD) * b\n\nExample: LCM = (12 // 6) * 18 = 2 * 18 = 36.\nDividing first reduces the intermediate value and completely eliminates overflow risk.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Divide before multiplying: (a // GCD) * b",
+                  "Prevents integer overflow on 32-bit/64-bit systems",
+                  "Mathematically identical result"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Arbitrary Precision Optimization",
             "question": "14. How would you optimize for very large integers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Python arbitrary precision ints / Binary GCD Algorithm (Stein's Algorithm).",
+            "bestReplyScript": "For very large integers (hundreds or thousands of digits):\n- Use the Euclidean Algorithm because it already runs in O(log n) time.\n- Alternatively, use Stein's Algorithm (Binary GCD), which replaces modulo operations with bit shifts and subtractions.\n- Use arbitrary-precision integer libraries (native in Python).\n\nThe logarithmic nature makes GCD calculation fast even for huge numbers.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stein's Binary GCD algorithm (bit shifts & subtractions)",
+                  "Python arbitrary precision integers",
+                  "O(log n) scales to thousands of digits"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Iterative vs Recursive Comparison",
             "question": "15. Compare iterative and recursive implementations.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Greatest Common Divisor & LCM.",
-            "bestReplyScript": "I chose this approach for Greatest Common Divisor & LCM over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) space iterative vs O(log n) call stack recursive comparison table.",
+            "bestReplyScript": "Comparison:\n- Iterative: Time O(log n), Space O(1) - Preferred in production to avoid stack overflow.\n- Recursive: Time O(log n), Space O(log n) - Concise and elegant.\n\nIn interviews, both are acceptable, but the iterative solution is generally preferred because it uses constant extra space.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Iterative: O(1) space, stack-safe",
+                  "Recursive: O(log n) call stack space",
+                  "Iterative preferred for production"
             ]
       }
 ],
