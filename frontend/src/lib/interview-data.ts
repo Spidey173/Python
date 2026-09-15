@@ -7050,182 +7050,184 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Binary Search halving, insertion pointer convergence at `left`.",
-            "bestReplyScript": "I use Binary Search because the array is already sorted.\n\nThe goal is to either:\n- Find the target if it exists, or\n- Return the index where it should be inserted while keeping the array sorted.\n\nSteps:\n1. Initialize: left = 0, right = len(nums) - 1.\n2. Find the middle element: mid = left + (right - left) // 2.\n3. Compare it with the target:\n   - If equal, return the middle index.\n   - If target > mid, search right half (left = mid + 1).\n   - If target < mid, search left half (right = mid - 1).\n4. If loop ends without finding target, `left` will point to the correct insertion position.\n\nExample: nums = [1,3,5,6], target = 5 -> Mid 5 -> Found index 2.\nTarget = 2 -> Loop ends -> left = 1 -> Insert at index 1.\n\nComplexity: Time: O(log n), Space: O(1)",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Phone mapping array/dict, backtracking DFS recursion, index pointer `idx`, path builder, base case `idx == len(digits)`.",
+            "bestReplyScript": "I use backtracking (Depth-First Search) to generate every possible letter combination.\n\nSteps:\n1. Create a mapping of digits to letters (e.g. 2 -> abc, 3 -> def, 4 -> ghi, 5 -> jkl, 6 -> mno, 7 -> pqrs, 8 -> tuv, 9 -> wxyz).\n2. If digits is empty `\"\"`, return `[]` immediately.\n3. Start backtracking function with index `idx = 0` and empty path.\n4. At index `idx`, retrieve corresponding letters for `digits[idx]`.\n5. Iterate through all letters: append letter to path, recursively call `backtrack(idx + 1, path + letter)`.\n6. When `idx == len(digits)`, the combination is complete: append to result list.\n\nExample for \"23\":\n- '2' (abc) x '3' (def) -> ad, ae, af, bd, be, bf, cd, ce, cf (9 total combinations).\n\nBacktracking systematically explores all valid combinations.",
             "keyPoints": [
-                  "Binary Search on sorted array",
-                  "Pointers: left, right, mid calculation",
-                  "`left` pointer naturally holds insertion index after loop",
-                  "Time: O(log n), Space: O(1)"
+                  "Phone keypad mapping table (2->abc...9->wxyz)",
+                  "Empty string `\"\"` returns `[]` immediately",
+                  "DFS Backtracking with `idx` and `path`",
+                  "Base case: `idx == len(digits)`",
+                  "Time: O(4^n * n), Space: O(n) recursion stack"
             ]
       },
       {
             "id": "q2",
-            "category": "Binary Search Justification",
-            "question": "2. Why is binary search appropriate?",
-            "whatInterviewerChecks": "Halving search space on sorted inputs vs linear search.",
-            "bestReplyScript": "Binary Search is ideal because the array is sorted.\nInstead of checking every element linearly (O(n)), it repeatedly halves the search space.\n\nExample: 1000 elements -> 500 -> 250 -> 125 -> 63 -> 31 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nThis makes Binary Search exponentially faster than Linear Search.",
+            "category": "Backtracking / DFS Choice Rationale",
+            "question": "2. Why did you choose backtracking (or DFS)?",
+            "whatInterviewerChecks": "Generating all combinations via depth-first decision tree traversal.",
+            "bestReplyScript": "Each digit represents multiple letter choices, and we need to generate ALL possible combinations.\n\nBacktracking is ideal because it:\n- Explores one combination path at a time.\n- Reuses the same partial path state.\n- Naturally models a multi-way decision tree.\n- Avoids unnecessary copying of intermediate strings.\n\nIt is the standard and most readable approach for combinatorial generation.",
             "keyPoints": [
-                  "Sorted array precondition enables binary halving",
-                  "O(log n) vs O(n) linear search",
-                  "Exponentially faster scaling"
+                  "Models multi-way decision tree",
+                  "Reuses path state across branches",
+                  "Generates all valid combinations cleanly"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Logarithmic time bound and constant iterative space.",
-            "bestReplyScript": "Each iteration cuts the search space in half.\n\nTherefore:\n- Time Complexity: O(log n)\n- Space Complexity: O(1) (Iterative)\n\nThis is the optimal solution for searching in a sorted array.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Max 4 letters per digit (7 and 9), O(4^n * n) time and O(n) call stack space.",
+            "bestReplyScript": "Let n be the number of digits in the input string.\nSince digits '7' and '9' map to 4 letters each, the worst-case number of combinations is 4^n.\n\nComplexity analysis:\n- Time Complexity: O(4^n * n). There are at most 4^n combinations, and constructing each combination string of length n takes O(n) time.\n- Space Complexity: O(n) for the recursion call stack (recursion depth equals n). Output list requires O(4^n * n) space.",
             "keyPoints": [
-                  "Time Complexity: O(log n)",
-                  "Space Complexity: O(1) iterative",
-                  "Optimal search bound"
+                  "Time Complexity: O(4^n * n)",
+                  "Space Complexity: O(n) recursion call stack",
+                  "Max 4 choices for digits 7 ('pqrs') and 9 ('wxyz')"
             ]
       },
       {
             "id": "q4",
-            "category": "Insertion Point Derivation",
-            "question": "4. How do you determine the insertion point?",
-            "whatInterviewerChecks": "Mathematical proof why `left` holds insertion index when loop terminates.",
-            "bestReplyScript": "If the target is not found, the loop ends when left > right.\nAt this point, `left` represents the correct insertion position.\n\nExample: Array [1,3,5,6], Target = 4 -> Loop ends with left = 2 -> Insert at index 2 -> [1,3,4,5,6].\n\nThis works because `left` always points to the first position where the target can be placed while maintaining sorted order.",
+            "category": "Digit-to-Letter Keypad Mapping Mechanics",
+            "question": "4. How does the digit-to-letter mapping work?",
+            "whatInterviewerChecks": "Mapping array/dict matching telephone keypad.",
+            "bestReplyScript": "I use a fixed array or dictionary that maps each digit character to its telephone keypad string:\n- '2': \"abc\"\n- '3': \"def\"\n- '4': \"ghi\"\n- '5': \"jkl\"\n- '6': \"mno\"\n- '7': \"pqrs\"\n- '8': \"tuv\"\n- '9': \"wxyz\"\n\nFor each digit in the input string, I look up its string and loop through every character in the mapping.",
             "keyPoints": [
-                  "Loop ends when left > right",
-                  "`left` represents candidate insertion index",
-                  "Maintains monotonic sorted order"
+                  "Keypad mapping table (2 to 9)",
+                  "0 and 1 have no letter mappings",
+                  "Loop through mapped string characters during DFS"
             ]
       },
       {
             "id": "q5",
-            "category": "Target Exists Case",
-            "question": "5. What if the target already exists?",
-            "whatInterviewerChecks": "Immediate return on exact match (`nums[mid] == target`).",
-            "bestReplyScript": "If the middle element equals the target, I immediately return its index.\n\nExample: Input [1,3,5,6], Target = 5 -> Returns 2.\nNo insertion is needed because the target is already present.",
+            "category": "Empty Input String Handling Guard",
+            "question": "5. What happens if the input string is empty?",
+            "whatInterviewerChecks": "Immediate return `[]` guard.",
+            "bestReplyScript": "If the input string is empty (`digits == \"\"`), there are no digits to process, so the answer is an empty list `[]`.\n\nWithout an explicit check (`if not digits: return []`), the backtracking function would execute once for `idx = 0` and return `[\"\"]` (a list containing an empty string), which is incorrect.\n\nHandling `digits == \"\"` early guarantees returning `[]` cleanly.",
             "keyPoints": [
-                  "Immediate return on nums[mid] == target",
-                  "No pointer progression required",
-                  "O(1) best-case return"
+                  "Empty `digits == \"\"` returns `[]`",
+                  "Prevents returning `[\"\"]` (list containing empty string)",
+                  "O(1) short-circuit guard"
             ]
       },
       {
             "id": "q6",
-            "category": "Target Smaller Than All Elements",
-            "question": "6. What if the target is smaller than every element?",
-            "whatInterviewerChecks": "Insertion at index 0 boundary condition.",
-            "bestReplyScript": "The target should be inserted at the beginning (index 0).\n\nExample: Input [2,4,6], Target = 1 -> Output 0.\n\nThe loop ends with left = 0, so index 0 is returned.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty string, single digit, 4-letter digits (7 & 9), all 9s (\"9999\").",
+            "bestReplyScript": "Important edge cases include:\n1. Empty input (\"\" -> [])\n2. Single digit (\"2\" -> [\"a\", \"b\", \"c\"])\n3. Digits mapping to 4 letters (\"7\" -> [\"p\", \"q\", \"r\", \"s\"], \"9\" -> [\"w\", \"x\", \"y\", \"z\"])\n4. Long inputs (\"79\" -> 16 combinations, \"9999\" -> 256 combinations)\n5. Repeated digits (\"22\" -> [\"aa\", \"ab\", \"ac\", \"ba\", \"bb\", \"bc\", \"ca\", \"cb\", \"cc\"]).",
             "keyPoints": [
-                  "Target < nums[0] -> Insert at index 0",
-                  "`left` remains 0 at loop termination",
-                  "Index 0 boundary condition"
+                  "Empty string returns `[]`",
+                  "Single digit returns letter list",
+                  "4-letter digits 7 & 9 scaling",
+                  "Repeated digits handling"
             ]
       },
       {
             "id": "q7",
-            "category": "Target Larger Than All Elements",
-            "question": "7. What if the target is larger than every element?",
-            "whatInterviewerChecks": "Insertion at index `n` boundary condition.",
-            "bestReplyScript": "The target should be inserted at the end of the array (index n).\n\nExample: Input [2,4,6], Target = 8 -> Output 3.\n\nSince the array has 3 elements, inserting at index 3 appends the target at the end.",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering empty, single digit, 3x3, 4x4 combinations.",
+            "bestReplyScript": "I would test:\n- \"\" -> []\n- \"2\" -> [\"a\", \"b\", \"c\"]\n- \"23\" -> 9 combinations ([ad, ae, af, bd, be, bf, cd, ce, cf])\n- \"7\" -> 4 combinations ([p, q, r, s])\n- \"79\" -> 16 combinations (4 x 4)\n\nI verify combination count (3^a * 4^b), string length n, and uniqueness.",
             "keyPoints": [
-                  "Target > nums[n-1] -> Insert at index n",
-                  "`left` becomes len(nums) at loop termination",
-                  "Appends to end of array"
+                  "LeetCode 17 standard test cases (\"23\", \"\")",
+                  "Empty string returning `[]`",
+                  "Combination count formula 3^a * 4^b"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Cases",
-            "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single element matches/inserts, duplicates.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. One element, found ([5], target 5) -> 0\n3. One element, insert before ([5], target 2) -> 0\n4. One element, insert after ([5], target 8) -> 1\n5. Duplicate values ([1,2,2,2,3]) -> Returns first or valid match.\n\nTesting these cases ensures the algorithm handles all scenarios correctly.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Letter Combinations of a Phone Number (LeetCode 17).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting the empty input check and returning `[\"\"]` instead of `[]`.\n- Missing letters for digits 7 ('pqrs') and 9 ('wxyz'), treating all digits as 3 letters.\n- Off-by-one errors in recursive index `idx`.\n- Hardcoding nested loops for 2 or 3 digits instead of writing general recursive backtracking.\n- Modifying path state incorrectly without proper backtracking.",
             "keyPoints": [
-                  "Empty array returns 0",
-                  "Single element arrays (before/after/equal)",
-                  "Duplicate element handling"
+                  "Returning `[\"\"]` instead of `[]` for empty input",
+                  "Forgetting digits 7 & 9 have 4 letters",
+                  "Hardcoding nested loops instead of recursion"
             ]
       },
       {
             "id": "q9",
-            "category": "Testing & Verification",
-            "question": "9. How would you test your solution?",
-            "whatInterviewerChecks": "Test matrix for target found, target missing, boundary inserts.",
-            "bestReplyScript": "I would test normal cases and edge cases:\n- [1,3,5,6], target 5 -> 2\n- [1,3,5,6], target 2 -> 1\n- [1,3,5,6], target 7 -> 4\n- [1,3,5,6], target 0 -> 0\n- [], target 4 -> 0\n\nThese tests verify that the algorithm handles all common scenarios.",
+            "category": "Iterative BFS Queue Variant",
+            "question": "9. Can this be solved iteratively using a queue?",
+            "whatInterviewerChecks": "BFS with queue growing combinations layer by layer.",
+            "bestReplyScript": "Yes!\nAn iterative BFS solution uses a Queue:\n1. Initialize queue with `[\"\"]`.\n2. For each digit in `digits`:\n   - Get matching letters (e.g. \"abc\").\n   - Pop all items currently in queue, append each letter, and push back into queue.\n3. After processing all digits, the queue contains all final combinations.\n\nWhile BFS works in the same O(4^n * n) time, DFS backtracking is generally preferred for low memory overhead.",
             "keyPoints": [
-                  "Found vs missing target test cases",
-                  "Boundary index 0 and index n test cases",
-                  "Empty array verification"
+                  "BFS Queue grows combinations layer by layer",
+                  "Pops partial paths and appends current digit letters",
+                  "Time: O(4^n * n), Queue memory O(4^n)"
             ]
       },
       {
             "id": "q10",
-            "category": "Recursive Binary Search Trade-off",
-            "question": "10. Can this be solved recursively?",
-            "whatInterviewerChecks": "Recursive call stack space overhead O(log n) vs O(1) iterative.",
-            "bestReplyScript": "Yes. Instead of using a loop, the function can recursively search either the left or right half.\n\nThe recursive version has Time O(log n), but uses O(log n) extra space due to the call stack, while the iterative version uses O(1) space.",
+            "category": "DFS vs BFS Comparison Matrix",
+            "question": "10. Compare DFS and BFS approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- DFS Backtracking: Time O(4^n * n), Aux Space O(n) call stack. Recursive, memory-light, intuitive, preferred in interviews.\n- BFS Iterative: Time O(4^n * n), Aux Space O(4^n) queue holding full layer combinations. Iterative, but consumes more memory at deeper layers.\n\nDFS Backtracking is preferred for low auxiliary space.",
             "keyPoints": [
-                  "Recursive time: O(log n)",
-                  "Recursive space: O(log n) call stack",
-                  "Iterative preferred for O(1) memory"
+                  "DFS: O(n) auxiliary call stack space (Preferred)",
+                  "BFS: O(4^n) queue memory allocations",
+                  "Both have O(4^n * n) time complexity"
             ]
       },
       {
             "id": "q11",
-            "category": "Common Candidate Pitfalls",
-            "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Returning `right` instead of `left`, linear search usage.",
-            "bestReplyScript": "Some common mistakes include:\n- Using Linear Search instead of Binary Search.\n- Incorrectly updating left or right.\n- Returning `right` instead of `left` after the loop ends.\n- Not handling empty arrays.\n- Calculating the middle index incorrectly.\n\nThe most common mistake is forgetting that `left` gives the correct insertion position after the loop ends.",
+            "category": "Custom Keypad Mapping Extensibility",
+            "question": "11. How would you support custom keypad mappings?",
+            "whatInterviewerChecks": "Decoupling mapping dictionary from backtracking algorithm.",
+            "bestReplyScript": "Instead of hardcoding the telephone mapping array, I would pass the mapping dictionary as a parameter:\n`mapping = {\"2\": \"abc\", \"3\": \"xyz\", \"4\": \"@#$\"}`.\n\nThe recursive backtracking algorithm remains 100% identical! Decoupling the data structure from the algorithm allows supporting non-English keypads, T9 text systems, or custom symbol mappings effortlessly.",
             "keyPoints": [
-                  "Returning `right` instead of `left` (off-by-one)",
-                  "Linear search anti-pattern",
-                  "Pointer update errors"
+                  "Pass mapping dict as function parameter",
+                  "Backtracking algorithm logic remains unchanged",
+                  "Supports T9, foreign keypads, custom symbol maps"
             ]
       },
       {
             "id": "q12",
-            "category": "Real-World Applications",
-            "question": "12. Where is insertion position used?",
-            "whatInterviewerChecks": "Practical applications in software engineering.",
-            "bestReplyScript": "Finding an insertion position is useful in many real-world applications:\n- Maintaining sorted dynamic arrays / lists.\n- Database B-Tree indexing (inserting records while preserving order).\n- Leaderboards and ranking systems.\n- Priority scheduling queues & autocomplete search suggestions.",
+            "category": "Real-World Applications of Combinatorial Search",
+            "question": "12. Where are combinatorial generation algorithms used?",
+            "whatInterviewerChecks": "T9 predictive text, password generation, test case generation.",
+            "bestReplyScript": "Combinatorial generation algorithms are used in:\n- T9 Predictive Text & Mobile Keyboard Autocomplete engines.\n- Password Cracking & Security Wordlist Generators.\n- Automated Test Case Generation & Fuzzing engines.\n- AI Game Search Trees & Decision Exploration.\n- Compiler Syntax Variant Generation.",
             "keyPoints": [
-                  "Database B-Tree index insertions",
-                  "Leaderboards & priority queues",
-                  "Autocomplete search suggestions"
+                  "T9 Predictive Text & mobile keyboard autocomplete",
+                  "Password wordlist generators & security fuzzing",
+                  "Automated test case variant generation"
             ]
       },
       {
             "id": "q13",
-            "category": "Duplicate Values Behavior",
-            "question": "13. How would duplicate values affect the answer?",
-            "whatInterviewerChecks": "Lower bound vs upper bound behavior with duplicate elements.",
-            "bestReplyScript": "If duplicates exist, the answer depends on the requirement:\n- Return any matching index (standard BS).\n- Return first occurrence (continue searching left when match found).\n- Return last occurrence (continue searching right when match found).\n\nTo find the first occurrence, set right = mid - 1 on match. To find last occurrence, set left = mid + 1 on match.",
+            "category": "Handling Digits 0 and 1",
+            "question": "13. How would your solution change if digits 0 and 1 mapped to characters?",
+            "whatInterviewerChecks": "Extending mapping table for '0' and '1'.",
+            "bestReplyScript": "The algorithm itself requires ZERO code changes!\n\nI would simply extend the keypad mapping array:\n- '0': \"+\"\n- '1': \"_\"\n\nThe backtracking loop automatically retrieves these mapped characters and generates all combinations seamlessly.",
             "keyPoints": [
-                  "Standard BS returns arbitrary duplicate index",
-                  "Lower bound: search left on match for first occurrence",
-                  "Upper bound: search right on match for last occurrence"
+                  "Add '0' and '1' entries to mapping table",
+                  "Backtracking loop handles new mappings automatically",
+                  "Zero changes to recursive function logic"
             ]
       },
       {
             "id": "q14",
-            "category": "Linked List Binary Search Inefficiency",
-            "question": "14. Can this work on linked lists?",
-            "whatInterviewerChecks": "O(n) node traversal vs O(1) array indexing.",
-            "bestReplyScript": "Not efficiently.\nBinary Search requires random access to the middle element, which arrays provide in O(1) time.\nIn a linked list, reaching the middle requires traversing nodes, taking O(n) time.\nAs a result, Binary Search on a linked list becomes O(n log n), so linear search (O(n)) is actually faster.",
+            "category": "Duplicate Mappings Handling Strategy",
+            "question": "14. Can duplicate mappings affect the output?",
+            "whatInterviewerChecks": "Handling duplicate output combinations using a Set.",
+            "bestReplyScript": "Yes!\nIf two digits mapped to overlapping or duplicate letters (or if input contains repeated digits), duplicate string combinations could be produced.\n\nTo ensure uniqueness when duplicate mappings exist:\n- Collect combinations into a `set` instead of a `list`.\n- Or deduplicate letters in the mapping array before running DFS.\n\nIn standard LeetCode 17, digits map to unique disjoint letter sets, so duplicate combinations never occur.",
             "keyPoints": [
-                  "Linked lists lack O(1) random access",
-                  "Mid node traversal takes O(n) time",
-                  "BS on linked list takes O(n log n) vs Linear search O(n)"
+                  "Duplicate letter mappings could produce duplicate strings",
+                  "Use `set()` to collect combinations if duplicates exist",
+                  "Standard phone keypad has disjoint mappings"
             ]
       },
       {
             "id": "q15",
-            "category": "Upper Bound Modification",
-            "question": "15. How would you modify it to return the last valid position?",
-            "whatInterviewerChecks": "Modifying loop to find upper bound / last match.",
-            "bestReplyScript": "If the requirement is to return the last occurrence of the target:\n- When the target is found, store the current index as the answer.\n- Continue searching the right half (left = mid + 1) to check for later occurrences.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Returns index 3.\nThis still runs in O(log n) time.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which implementation would you choose in a production system and why?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "I choose the **Backtracking (DFS)** approach for production because:\n- Optimal Auxiliary Space: Uses only O(n) call stack space vs O(4^n) BFS queue memory.\n- High Readability: Clean 10-line recursive pattern that is easy to audit and maintain.\n- Flexibility: Works seamlessly with any custom keypad mapping table passed at runtime.\n\nIt is simple, memory-efficient, and optimal.",
             "keyPoints": [
-                  "Record match index and set left = mid + 1",
-                  "Finds upper bound index",
-                  "Maintains O(log n) runtime"
+                  "O(n) auxiliary call stack space",
+                  "Clean, maintainable recursive structure",
+                  "Decoupled keypad mapping table"
             ]
       }
 ],
