@@ -10914,195 +10914,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Digital Root (Add Digits).",
-            "bestReplyScript": "My approach for Digital Root (Add Digits) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Iterative digit summation vs O(1) mathematical Digital Root formula `1 + (n - 1) % 9`.",
+            "bestReplyScript": "There are two common approaches:\n1. Iterative approach - Keep adding the digits until only one digit remains.\n2. Mathematical approach - Use the digital root formula for an O(1) solution.\n\nIn interviews, I first explain the iterative method because it's intuitive, then mention the mathematical optimization.\n\nExample: Input 9875 -> 9+8+7+5 = 29 -> 2+9 = 11 -> 1+1 = 2. Answer = 2.\n\nThe optimized formula is: if n == 0 return 0 else return 1 + (n - 1) % 9.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Iterative approach: repeatedly sum digits until single digit",
+                  "Mathematical approach: 1 + (n - 1) % 9",
+                  "Handles n = 0 base case",
+                  "O(1) time and O(1) space optimization"
             ]
       },
       {
             "id": "q2",
-            "category": "Deep-Dive Question 2",
+            "category": "O(1) Loopless Solution",
             "question": "2. Can you solve this without loops or recursion?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(1) formula `1 + (n - 1) % 9` without while loop.",
+            "bestReplyScript": "Yes. Using a mathematical property called the Digital Root Formula:\n\nIf n == 0:\n    return 0\nElse:\n    return 1 + (n - 1) % 9\n\nExample: n = 38 -> 1 + (38 - 1) % 9 = 1 + 37 % 9 = 1 + 1 = 2.\nThis solution runs in Time: O(1), Space: O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Digital Root Formula: 1 + (n - 1) % 9",
+                  "Eliminates loops and recursion",
+                  "Time: O(1), Space: O(1)"
             ]
       },
       {
             "id": "q3",
-            "category": "Deep-Dive Question 3",
+            "category": "Digital Root Formula Definition",
             "question": "3. What is the mathematical formula for the digital root?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Congruence formula mapping for multiples of 9.",
+            "bestReplyScript": "The formula is:\nIf n == 0 return 0 else return 1 + (n - 1) % 9.\n\nExamples:\n- 9  -> 9\n- 18 -> 9\n- 38 -> 2\n- 999 -> 9\n- 12345 -> 6\n\nThe formula directly computes the final single digit without repeated addition.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Formula: 1 + (n - 1) % 9",
+                  "Maps multiples of 9 to 9 instead of 0",
+                  "Single-step computation"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Modulo 9 Proof & Intuition",
             "question": "4. Why does the formula work?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Digital Root (Add Digits).",
-            "bestReplyScript": "I chose this approach for Digital Root (Add Digits) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Digital sum congruency mod 9: n == sum_digits(n) (mod 9).",
+            "bestReplyScript": "The formula works because a number and the sum of its digits have the same remainder when divided by 9 (digital congruence n === sum_digits(n) mod 9).\n\nExample: 38 -> 3+8 = 11 -> 1+1 = 2. Now check 38 % 9 = 2. Both give the same result.\n\nThe only exception is non-zero multiples of 9 (e.g. 18 % 9 = 0, but digital root is 9). That's why we use 1 + (n - 1) % 9 instead of simply n % 9.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Digit sum congruency: n % 9 == digit_sum % 9",
+                  "Multiples of 9 map to 9, not 0",
+                  "1 + (n - 1) % 9 handles 9s shift offset"
             ]
       },
       {
             "id": "q5",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "5. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Digital Root (Add Digits).",
-            "bestReplyScript": "Here is the complexity analysis for Digital Root (Add Digits):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Iterative O(log10 n) vs Mathematical O(1).",
+            "bestReplyScript": "Complexity analysis:\n- Iterative approach: Time O(log10 n) - processes each digit per iteration, Space O(1).\n- Mathematical formula: Time O(1) - single modulo arithmetic evaluation, Space O(1).\n\nThe mathematical solution is optimal.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Iterative: O(log10 n) digit reduction time",
+                  "Mathematical: O(1) constant time",
+                  "Space: O(1) for both"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Digital Root (Add Digits).",
-            "bestReplyScript": "When handling Digital Root (Add Digits), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "n = 0, single-digit, multiples of 9, large integers.",
+            "bestReplyScript": "Important edge cases include:\n1. Zero (0) -> Answer: 0.\n2. Single-digit number (7) -> Answer: 7.\n3. Multiple of 9 (18 -> 1+8 = 9) -> Answer: 9.\n4. Very large number (999999999) -> Answer: 9.\n\nTesting these cases ensures the formula handles boundary shifts correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 returns 0",
+                  "Single-digit inputs (1-9)",
+                  "Multiples of 9 returning 9"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Digital Root (Add Digits).",
-            "bestReplyScript": "To thoroughly test Digital Root (Add Digits), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix for 0, 5, 18, 38, 999.",
+            "bestReplyScript": "I would test normal and edge cases:\n- 0 -> 0\n- 5 -> 5\n- 18 -> 9\n- 38 -> 2\n- 999 -> 9\n\nThese tests verify both the iterative digit summation and mathematical modulo approaches.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Zero boundary assertion",
+                  "Multiples of 9 assertions",
+                  "Multi-digit reduction assertions"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Recursive Digit Summation",
             "question": "8. Can this be solved recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recurrence summing digits until n < 10.",
+            "bestReplyScript": "Yes. Recursive idea:\n1. Convert n to digit sum.\n2. If sum < 10, return sum.\n3. Otherwise, recursively compute addDigits(sum).\n\nExample: 9875 -> 29 -> 11 -> 2.\nComplexity: Time O(log n), Space O(log n) call stack. The mathematical formula remains faster.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base case: if n < 10 return n",
+                  "Sum digits of n recursively",
+                  "Time: O(log n), Space: O(log n)"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Negative Input Handling",
             "question": "9. What if the input is negative?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Digital Root (Add Digits).",
-            "bestReplyScript": "When handling Digital Root (Add Digits), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Absolute value handling for negative integers.",
+            "bestReplyScript": "The original problem (LeetCode 258) assumes a non-negative integer (n >= 0).\nIf negative numbers are allowed, I would take the absolute value first: n = abs(n) and then compute the digital root.\n\nExample: -38 -> 38 -> 2.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "LeetCode 258 assumes n >= 0",
+                  "Apply abs(n) for negative numbers",
+                  "Guarantees positive digital root"
             ]
       },
       {
             "id": "q10",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "10. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Digital Root (Add Digits).",
-            "bestReplyScript": "Common candidate pitfalls when solving Digital Root (Add Digits) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Add Digits.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting the special base case for n = 0.\n- Returning n % 9 directly, which incorrectly yields 0 for multiples of 9 (e.g. 18 % 9 = 0 instead of 9).\n- Stopping after only one digit sum pass (e.g. 9875 -> 29 stop instead of continuing to 2).\n- Mishandling negative inputs.\n\nThe most common mistake is using n % 9 directly instead of 1 + (n - 1) % 9.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Using n % 9 directly (fails on multiples of 9)",
+                  "Stopping after one pass (e.g. returning 29)",
+                  "Omitting n = 0 check"
             ]
       },
       {
             "id": "q11",
-            "category": "Algorithmic Justification",
+            "category": "Iterative vs Mathematical Comparison",
             "question": "11. Compare iterative and mathematical solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Digital Root (Add Digits).",
-            "bestReplyScript": "I chose this approach for Digital Root (Add Digits) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Intuitive starting point vs O(1) mathematical proof.",
+            "bestReplyScript": "Comparison:\n- Iterative: Time O(log10 n), Space O(1) - Easy to understand and explain intuitively.\n- Mathematical: Time O(1), Space O(1) - Requires mathematical congruence proof.\n\nIn interviews, I explain the iterative approach first, then present the O(1) formula as an optimization.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Iterative: O(log10 n) digit loop",
+                  "Mathematical: O(1) constant time formula",
+                  "Explain iterative first, then present O(1) formula"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is the digital root used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Casting out nines, checksums, error detection.",
+            "bestReplyScript": "Digital roots are used in:\n- 'Casting out nines' arithmetic validation (quick sanity checks for manual calculations).\n- Checksums & Error detection in data transmission.\n- Number Theory & divisibility rules.\n- Cryptographic hashing sanity checks.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Casting out nines mental arithmetic",
+                  "Data checksums & error checking",
+                  "Divisibility rule validations"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Modulo 9 Remainder Invariance",
             "question": "13. How would you explain modulo 9 intuition?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Base 10 positional notation breakdown: 10^k = 1 (mod 9).",
+            "bestReplyScript": "Positional breakdown: 572 = 5*100 + 7*10 + 2 = 5*(99+1) + 7*(9+1) + 2.\nSince 99 and 9 are divisible by 9, 572 mod 9 reduces to (5 + 7 + 2) mod 9 = 14 mod 9 = 5.\n\nBecause 10^k === 1 (mod 9), every power of 10 collapses to 1, leaving only the sum of digits modulo 9!",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "10^k === 1 (mod 9) positional collapse",
+                  "a*10^2 + b*10 + c === a + b + c (mod 9)",
+                  "Intuitive modulo 9 reduction proof"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Base Generalization",
             "question": "14. Can this be extended to different number bases?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Digital Root (Add Digits).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Base b digital root formula: `1 + (n - 1) % (b - 1)`.",
+            "bestReplyScript": "Yes! For a number in base b, the digital root formula is: 1 + (n - 1) % (b - 1).\n\nExamples:\n- Decimal (Base 10) -> modulo 9 (10 - 1)\n- Hexadecimal (Base 16) -> modulo 15 (16 - 1)\n- Octal (Base 8) -> modulo 7 (8 - 1)\n\nThe exact same mathematical congruence holds for any base b.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base b formula: 1 + (n - 1) % (b - 1)",
+                  "Base 16 (Hex) uses mod 15",
+                  "Universal base generalization"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Interview Communication Strategy",
             "question": "15. Which approach would you choose in an interview?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Digital Root (Add Digits).",
-            "bestReplyScript": "My approach for Digital Root (Add Digits) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Communicating iterative baseline then presenting O(1) mathematical formula.",
+            "bestReplyScript": "I would first explain the iterative digit summation because it demonstrates clean loop control and problem-solving fundamentals.\n\nThen, I would offer: 'We can optimize this to O(1) time using the Digital Root formula 1 + (n - 1) % 9.'\n\nThis shows both practical coding skill and deep mathematical problem-solving ability.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Start with iterative solution",
+                  "Proactively offer O(1) mathematical optimization",
+                  "Demonstrates complete software & math depth"
             ]
       }
 ],
