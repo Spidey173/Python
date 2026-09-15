@@ -17717,195 +17717,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Longest Consecutive Sequence.",
-            "bestReplyScript": "My approach for Longest Consecutive Sequence follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Hash set for O(1) lookup, sequence start guard `num - 1 not in set`, inner expansion loop `num + 1`.",
+            "bestReplyScript": "I use a hash set to store all the numbers for O(1) average lookup.\n\nThen, I only start counting a sequence if the current number is the BEGINNING of that sequence (i.e. `num - 1` is NOT in the set). From there, I keep checking `num + 1`, `num + 2`, and so on until the sequence ends.\n\nAlgorithm:\n1. Store all numbers in a hash set.\n2. Iterate through each number in the set.\n3. If `num - 1` exists, skip it because it's not the start of a sequence.\n4. Otherwise: start counting from `num`, checking `num + 1`, `num + 2`, ... while incrementing sequence length.\n5. Update `max_len = max(max_len, curr_len)`.\n6. Return max_len.\n\nExample: [100, 4, 200, 1, 3, 2] -> 100 (len 1), 200 (len 1), 1 -> 2 -> 3 -> 4 (len 4) -> Output: 4.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Store numbers in Hash Set for O(1) lookup",
+                  "Sequence start condition: `num - 1 not in set`",
+                  "Expand consecutive chain: `num + 1`, `num + 2`",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Hash Set Data Structure Rationale",
             "question": "2. Why did you use a hash set?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Longest Consecutive Sequence.",
-            "bestReplyScript": "I chose this approach for Longest Consecutive Sequence over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) average lookup for successor/predecessor verification.",
+            "bestReplyScript": "A hash set provides O(1) average-time membership lookup.\n\nWe frequently need to check whether `num - 1` or `num + 1` exists.\nWithout a hash set, each lookup on an unsorted array would take O(n) linear search, making sequence expansion O(n^2).\n\nThe hash set enables checking neighbors in O(1) time, allowing the entire solution to run in optimal O(n) linear time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "O(1) membership lookup",
+                  "Avoids O(n) linear scanning for neighbor numbers",
+                  "Enables linear O(n) total runtime"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Longest Consecutive Sequence.",
-            "bestReplyScript": "Here is the complexity analysis for Longest Consecutive Sequence:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear O(n) proof despite nested while loop (each number visited at most twice).",
+            "bestReplyScript": "Complexity analysis:\n- Building the Hash Set: O(n)\n- Outer loop iterates through n elements.\n- Inner while loop only executes for sequence starters (`num - 1 not in set`).\n\nEach number is visited at most twice across the entire execution (once in outer set check, once in inner while expansion loop).\n- Time Complexity: O(n)\n- Space Complexity: O(n) (Hash Set storage)\n\nThis is strictly linear O(n).",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Each element visited at most twice total"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "No-Sorting Requirement Rationale",
             "question": "4. Why don't you sort the array?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Longest Consecutive Sequence.",
-            "bestReplyScript": "I chose this approach for Longest Consecutive Sequence over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n log n) sorting constraint vs O(n) linear requirement.",
+            "bestReplyScript": "Sorting the array would require O(n log n) time.\n\nThe problem explicitly asks for an O(n) time complexity solution.\nBy using a Hash Set, we trade O(n) auxiliary space to achieve true O(n) linear time, which satisfies the optimal problem constraint.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Sorting takes O(n log n) time",
+                  "Problem constraint requires O(n) linear time",
+                  "Hash set trades O(n) space for O(n) time"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Sequence Starter Detection Mechanics",
             "question": "5. How do you detect the start of a sequence?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Consecutive Sequence.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Predecessor guard `num - 1 not in set` preventing duplicate chain counting.",
+            "bestReplyScript": "A number is the START of a sequence if and only if:\n`num - 1 not in set`\n\nExample for Set {1, 2, 3, 4}:\n- 1: `0 not in set` -> True! 1 is the sequence starter.\n- 2: `1 in set` -> False! Skip 2 (it will be counted as part of 1's chain).\n- 3 & 4: Skipped.\n\nThis single guard prevents re-traversing sub-chains, guaranteeing O(n) linear time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Guard: `num - 1 not in set`",
+                  "Only sequence starters initiate expansion loop",
+                  "Prevents redundant re-traversals of chains"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Longest Consecutive Sequence.",
-            "bestReplyScript": "When handling Longest Consecutive Sequence, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty input, single element, duplicates, negative numbers, pre-sorted consecutive.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. Single element ([5]) -> 1\n3. All duplicates ([2, 2, 2]) -> Set deduplicates to {2} -> 1\n4. Negative numbers ([-2, -1, 0, 1]) -> 4\n5. Already consecutive ([1, 2, 3, 4, 5]) -> 5\n\nTesting these guards ensures complete correctness under all inputs.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty input returns 0",
+                  "Single element & all-duplicates return 1",
+                  "Negative numbers handled seamlessly"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Longest Consecutive Sequence.",
-            "bestReplyScript": "To thoroughly test Longest Consecutive Sequence, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering duplicates, negatives, empty, and out-of-order arrays.",
+            "bestReplyScript": "I would test:\n- [] -> 0\n- [1] -> 1\n- [100, 4, 200, 1, 3, 2] -> 4\n- [1, 2, 0, 1] -> 3\n- [9, 1, 4, 7, 3, -1, 0, 5, 8, -1, 6] -> 7\n\nThese cover duplicates, negatives, empty arrays, and unsorted inputs.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 128 standard test cases",
+                  "Negative number range tests",
+                  "Duplicate number handling tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Interview Pitfalls",
-            "question": "8. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Longest Consecutive Sequence.",
-            "bestReplyScript": "Common candidate pitfalls when solving Longest Consecutive Sequence include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes occur?",
+            "whatInterviewerChecks": "Rookie traps in Longest Consecutive Sequence (LeetCode 128).",
+            "bestReplyScript": "Some common mistakes include:\n- Sorting the array instead of using a Hash Set (violates O(n) requirement).\n- Initiating the inner expansion loop for EVERY number instead of checking `num - 1 not in set` (causes O(n^2) TLE on long sequences!).\n- Forgetting to deduplicate by iterating over input array instead of set.\n\nThe most common critical bug is omitting `num - 1 not in set`.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Sorting array (violates O(n) requirement)",
+                  "Omitting `num - 1 not in set` (causes O(n^2) TLE)",
+                  "Iterating over array instead of set (redundant duplicate checks)"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Numbers Handling",
             "question": "9. Can duplicate numbers affect the result?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Longest Consecutive Sequence.",
-            "bestReplyScript": "When handling Longest Consecutive Sequence, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Set deduplication property.",
+            "bestReplyScript": "No.\nConstructing a Hash Set `num_set = set(nums)` automatically deduplicates all elements.\n\nExample: Input [1, 2, 2, 3] -> Hash Set becomes {1, 2, 3}.\nThe longest sequence 1 -> 2 -> 3 has length 3. Duplicates are handled seamlessly without extra code.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Hash Set automatically removes duplicate numbers",
+                  "[1, 2, 2, 3] deduplicates to {1, 2, 3}",
+                  "Zero extra logic required for duplicates"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Returning Sequence Elements List",
             "question": "10. How would you return the sequence itself?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Consecutive Sequence.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Tracking `best_start` and `max_len` to reconstruct array range.",
+            "bestReplyScript": "To return the actual sequence list instead of just its length:\n- Track `best_start` number alongside `max_len`.\n- Whenever `curr_len > max_len`: update `max_len = curr_len` and `best_start = num`.\n- At the end, return `list(range(best_start, best_start + max_len))`.\n\nExample: `best_start = 1`, `max_len = 4` -> Returns `[1, 2, 3, 4]`.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Track `best_start` when updating `max_len`",
+                  "Reconstruct sequence: `list(range(best_start, best_start + max_len))`",
+                  "Same O(n) time and O(n) space"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Streaming Data Architecture Limitations",
             "question": "11. Can this work on streaming data?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Consecutive Sequence.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Union-Find (Disjoint Set Union) for dynamic sequence merging.",
+            "bestReplyScript": "Not with a simple Hash Set.\nIn a continuous stream where numbers arrive dynamically:\n- An incoming number can bridge two previously separate sequences (e.g. 3 arrives to bridge {1,2} and {4,5}).\n- To support real-time dynamic sequence merging, we use Union-Find (Disjoint Set Union - DSU) where each set stores component size.\n\nWhen `num` arrives, union `num` with `num-1` and `num+1` if present in near O(1) amortized time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Simple Hash Set fails on dynamic stream bridging",
+                  "Union-Find (DSU) maintains dynamic component sizes",
+                  "Union `num` with `num-1` and `num+1`"
             ]
       },
       {
             "id": "q12",
-            "category": "Step-by-Step Approach",
+            "category": "Real-World Applications",
             "question": "12. Where are consecutive sequence algorithms used?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Longest Consecutive Sequence.",
-            "bestReplyScript": "My approach for Longest Consecutive Sequence follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "User login streaks, sensor telemetry, stock trends.",
+            "bestReplyScript": "Consecutive sequence algorithms are used in:\n- User Engagement Analytics (calculating consecutive daily login streaks for gamification).\n- Sensor Telemetry & IoT (detecting continuous uptime or signal transmission windows).\n- Financial Market Analysis (identifying consecutive day gain/loss streaks).\n- Genomic Sequencing (finding continuous un-fragmented DNA reads).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "User consecutive daily login streak tracking",
+                  "IoT sensor continuous uptime analysis",
+                  "Financial market gain/loss streak detection"
             ]
       },
       {
             "id": "q13",
-            "category": "Step-by-Step Approach",
+            "category": "Sorting vs Hashing Detailed Trade-offs",
             "question": "13. Compare sorting and hashing approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Longest Consecutive Sequence.",
-            "bestReplyScript": "My approach for Longest Consecutive Sequence follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Detailed comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Sorting Approach: Sort array O(n log n) + single pass scan. Time O(n log n), Space O(1) in-place. Slower, but uses zero extra memory.\n- Hash Set Approach: Build set O(n) + sequence starter scan. Time O(n), Space O(n). Strictly faster, but uses O(n) auxiliary memory.\n\nThe Hash Set approach is preferred in coding interviews because it satisfies the O(n) time constraint.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Sorting: O(n log n) time, O(1) space",
+                  "Hash Set: O(n) time, O(n) space",
+                  "Hash Set satisfies O(n) interview requirement"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Memory-Constrained Optimization (O(1) Space Trade-off)",
             "question": "14. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Consecutive Sequence.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(1) memory trade-off using sorting.",
+            "bestReplyScript": "If auxiliary memory is strictly limited (cannot use O(n) space for Hash Set):\n- Fall back to the Sorting approach.\n- Sort array in-place.\n- Traverse sorted array while skipping duplicates (`if nums[i] == nums[i-1]: continue`).\n\nTrade-off: Time increases from O(n) to O(n log n), but extra space drops from O(n) to O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Sort array in-place to achieve O(1) space",
+                  "Skip duplicates during linear scan",
+                  "Trade-off: Time O(n log n) vs Space O(1)"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Parallel Processing Strategy",
             "question": "15. Can this problem be parallelized?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Consecutive Sequence.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Parallel set construction & partition boundary merging.",
+            "bestReplyScript": "Yes!\n1. Concurrent Set Construction: Partition array chunks across multiple CPU threads to build a shared concurrent Hash Set in parallel.\n2. Parallel Starter Scan: Each thread scans a subset of numbers. If `num - 1 not in set`, compute sequence length.\n3. Reduce max length across threads.\n\nThis parallelizes both set construction and sequence starter expansion.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Concurrent Hash Set construction across threads",
+                  "Parallel sequence starter evaluation",
+                  "Thread reduction for global max length"
             ]
       }
 ],
