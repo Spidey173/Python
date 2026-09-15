@@ -6354,195 +6354,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your two-pointer approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "My approach for Remove Duplicates from Sorted Array follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Slow pointer (write index) and fast pointer (read index) coordination.",
+            "bestReplyScript": "I use the two-pointer technique because the array is already sorted, meaning duplicate elements are next to each other.\n- Pointer i (slow pointer): Tracks the position of the last unique element.\n- Pointer j (fast pointer): Scans through the array.\n\nSteps:\n1. Initialize i = 0.\n2. Traverse the array using j from index 1.\n3. If nums[j] is different from nums[i], it means we found a new unique element.\n4. Increment i and copy nums[j] to nums[i].\n5. After the loop, the number of unique elements is i + 1.\n\nExample: nums = [1,1,2,2,3]\ni=0, j=1 (duplicate, skip) -> j=2 (new 2: i=1, nums[1]=2) -> j=3 (duplicate) -> j=4 (new 3: i=2, nums[2]=3).\nUnique length = 3, modified array prefix: [1,2,3].\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two pointers: slow i (unique position) and fast j (scanner)",
+                  "Copy new unique element: nums[++i] = nums[j]",
+                  "In-place modification of array prefix",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Precondition Justification",
             "question": "2. Why must the array be sorted?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "I chose this approach for Remove Duplicates from Sorted Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Adjacency property of duplicates in sorted arrays.",
+            "bestReplyScript": "The array must be sorted because all duplicate elements appear together.\n\nExample: Sorted [1,1,2,2,3,3] vs Unsorted [2,1,2,3,1].\nIn sorted arrays, we only need to compare the current element with the previous unique element.\nIf the array is unsorted, duplicates are scattered throughout, so comparing adjacent elements is no longer enough.\n\nWithout sorting, this two-pointer approach won't work correctly.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Sorted array guarantees contiguous duplicates",
+                  "Only need to check previous unique element",
+                  "Unsorted arrays require Hash Set or O(n log n) sorting"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "Here is the complexity analysis for Remove Duplicates from Sorted Array:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear single-pass traversal and constant auxiliary space bounds.",
+            "bestReplyScript": "The array is traversed only once.\nEach element is visited exactly one time by the fast pointer j.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is the optimal solution because every element must be checked at least once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal single-pass lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "In-Place Modification",
             "question": "4. Can this be solved in-place?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "In-place array overwriting without allocating new memory.",
+            "bestReplyScript": "Yes. The main advantage of this approach is that it modifies the original array without creating another array.\n\nExample:\nBefore: [1,1,2,2,3]\nAfter:  [1,2,3,2,3]\n\nOnly the first 3 elements are considered valid. No extra array is required, so extra space remains strictly O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "In-place element overwriting",
+                  "First k elements contain unique values",
+                  "Auxiliary memory strictly O(1)"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Order Preservation & Stability",
             "question": "5. How do you maintain the order?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Stability of relative element order.",
+            "bestReplyScript": "The algorithm copies unique elements in the exact order they are first encountered.\n\nExample: Input [1,1,2,2,3] -> Output [1,2,3].\nSince we never swap or rearrange elements out of sequence, the original order of unique values is preserved.\n\nThis property is called stability.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Sequential overwrite preserves order",
+                  "Maintains relative position stability",
+                  "Input [1,1,2] remains [1,2]"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Allowing Up to 2 Duplicates Extension",
             "question": "6. What if duplicates can appear more than twice?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "When handling Remove Duplicates from Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Remove Duplicates II variation (`nums[j] != nums[i-1]`).",
+            "bestReplyScript": "This is a variation of the problem (Remove Duplicates from Sorted Array II).\nInstead of allowing only one occurrence, we allow up to two (or k) occurrences.\n\nExample: Input [1,1,1,2,2,3] -> Output [1,1,2,2,3].\n\nThe idea is similar, but we compare the fast pointer element with the element two positions behind (nums[j] != nums[i-1]) instead of one.\n\nThe time complexity remains O(n).",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Remove Duplicates II variation",
+                  "Compare with element 2 positions behind: nums[j] != nums[i-1]",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "When handling Remove Duplicates from Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, all duplicates, no duplicates, negative numbers.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. One element ([5]) -> 1\n3. All duplicates ([2,2,2,2]) -> 1\n4. No duplicates ([1,2,3,4]) -> 4\n5. Negative numbers ([-3,-3,-2,-1,-1]) -> 3\n\nTesting these cases ensures the algorithm handles different scenarios correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array safeguards",
+                  "Single element & all-duplicate boundaries",
+                  "Negative sorted integers"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "To thoroughly test Remove Duplicates from Sorted Array, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering input, returned length, and prefix values.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- [1,1,2] -> Length 2, Prefix [1,2]\n- [1,2,3] -> Length 3, Prefix [1,2,3]\n- [2,2,2] -> Length 1, Prefix [2]\n- [] -> Length 0, Prefix []\n- [5] -> Length 1, Prefix [5]\n\nThese tests verify correctness for different input types.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Test unique return length k",
+                  "Verify array prefix nums[0..k-1]",
+                  "Empty and single-element bounds"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Empty Array Guard",
             "question": "9. What if the array is empty?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "When handling Remove Duplicates from Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Early exit guard returning 0.",
+            "bestReplyScript": "If the array is empty, there are no elements to process.\n\nExample: nums = []\nThe algorithm immediately returns 0.\n\nThis avoids accessing invalid indices (like nums[0]) and prevents runtime errors.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Early exit check: if not nums: return 0",
+                  "Prevents IndexError on empty array",
+                  "O(1) immediate return"
             ]
       },
       {
             "id": "q10",
-            "category": "Algorithmic Justification",
+            "category": "Two-Pointer Necessity",
             "question": "10. Why is one pointer not enough?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "I chose this approach for Remove Duplicates from Sorted Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Dual responsibility: read scanner vs write target pointer.",
+            "bestReplyScript": "One pointer cannot simultaneously:\n1. Track the position of the last unique element where the next unique element should be written.\n2. Scan through the remaining elements of the array.\n\nUsing two pointers (slow write pointer and fast read pointer) keeps the algorithm clean, structured, and O(n) efficient.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Read pointer scans input",
+                  "Write pointer maintains unique prefix boundary",
+                  "Dual pointer coordination required"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "Common candidate pitfalls when solving Remove Duplicates from Sorted Array include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Remove Duplicates from Sorted Array.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting the array is sorted.\n- Using an extra array instead of modifying in-place.\n- Returning the modified array instead of the new length k.\n- Incorrectly updating the slow pointer.\n- Accessing invalid indices for empty arrays.\n\nThe most common mistake is forgetting that only the first k elements are considered valid after modification.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Allocating extra memory (violating in-place constraint)",
+                  "Returning array instead of length k",
+                  "Index out of bounds on empty array"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Out-of-Place Alternative",
             "question": "12. Can this be solved without modifying the array?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n) space allocation trade-off.",
+            "bestReplyScript": "Yes. We can create a new list and copy only unique elements into it.\n\nExample: Input [1,1,2,2,3] -> New list [1,2,3].\nComplexity: Time: O(n), Space: O(n).\n\nAlthough simpler and non-mutating, this does not satisfy the in-place requirement of the original problem.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Create new output list",
+                  "Time: O(n), Space: O(n)",
+                  "Violates in-place O(1) requirement"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where is this technique useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Software engineering applications for in-place deduplication.",
+            "bestReplyScript": "The two-pointer technique is widely used in:\n- Removing duplicates from sorted database records.\n- Data cleaning and ETL preprocessing.\n- Database query join & merge optimization.\n- In-place stream filtering & log compression.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "ETL data pipeline deduplication",
+                  "Database sorted index merging",
+                  "Log compaction & stream filtering"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Sorted Linked List Adaptation",
             "question": "14. How would you adapt it for linked lists?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adapting two pointers to LinkedList node references.",
+            "bestReplyScript": "The same idea works for a sorted linked list. Instead of copying values, we adjust node pointers.\n\nExample: 1 -> 1 -> 2 -> 2 -> 3 becomes 1 -> 2 -> 3.\n\nLogic:\n- Compare current.val with current.next.val.\n- If equal, skip duplicate node: current.next = current.next.next.\n- Otherwise, move forward: current = current.next.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Pointer adjustment: current.next = current.next.next",
+                  "In-place node unlinking",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q15",
-            "category": "Edge Case Analysis",
+            "category": "Frequency Statistics Trade-off",
             "question": "15. How would you preserve duplicate counts?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Remove Duplicates from Sorted Array.",
-            "bestReplyScript": "When handling Remove Duplicates from Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Frequency Map Counter vs in-place removal.",
+            "bestReplyScript": "If we need to preserve the number of occurrences of each element instead of removing duplicates, we can use a frequency dictionary (Counter).\n\nExample: Input [1,1,2,2,2,3] -> Frequency Map {1: 2, 2: 3, 3: 1}.\n\nThis is useful when we need analytical statistics rather than modifying the array. The trade-off is Time: O(n), Space: O(n).",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Frequency dictionary (Counter)",
+                  "Preserves count metadata",
+                  "Trade-off: O(n) auxiliary space"
             ]
       }
 ],
