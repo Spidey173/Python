@@ -3238,189 +3238,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain your approach.",
-        "whatInterviewerChecks": "Explaining XOR cancellation logic clearly step by step.",
-        "bestReplyScript": "There are multiple ways to solve this problem, but my preferred approach is using XOR because it is efficient and avoids overflow issues.\n\nThe steps are:\n1. XOR all numbers from 0 to n.\n2. XOR all elements in the given array.\n3. The duplicate XOR operations cancel each other out.\n4. The remaining value is the missing number.\n\nExample:\nInput: nums = [3, 0, 1]\nNumbers from 0 to 3: 0 ^ 1 ^ 2 ^ 3 = 0\nArray: 3 ^ 0 ^ 1 = 2\nFinal: 0 ^ 2 = 2\n\nOutput: 2\n\nThis works because every number appears twice except the missing one.\n\nComplexity\n• Time: O(n)\n• Space: O(1)",
-        "keyPoints": [
-          "XOR self-cancellation property (x ^ x = 0)",
-          "XOR identity property (x ^ 0 = x)",
-          "Single pass accumulating array elements & indices 0..n",
-          "O(n) time and O(1) space"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your parsing algorithm step by step.",
+            "whatInterviewerChecks": "Whitespace stripping, sign detection, digit processing loop `result = result * 10 + digit`, 32-bit overflow check.",
+            "bestReplyScript": "I parse the string from left to right while following the problem rules.\n\nSteps:\n1. Skip all leading whitespace.\n2. Check if the next character is '+' or '-' to determine the sign.\n3. Read consecutive digits one by one.\n4. Build the integer using `result = result * 10 + current_digit`.\n5. Before adding a new digit, check whether the number would overflow the 32-bit signed integer range.\n6. Stop parsing when the first non-digit character is encountered.\n7. Return the signed integer clamped within INT_MIN to INT_MAX.\n\nThis approach follows the exact rules specified in the problem.",
+            "keyPoints": [
+                  "Skip leading whitespace",
+                  "Sign determination: '+' or '-'",
+                  "Digit conversion: `result * 10 + digit`",
+                  "32-bit signed integer overflow clamping",
+                  "Time: O(n), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Algorithmic Intuition & Trade-offs",
-        "question": "2. Why use XOR instead of summation?",
-        "whatInterviewerChecks": "Explaining integer overflow risks in fixed-width languages.",
-        "bestReplyScript": "XOR is preferred because it avoids integer overflow and uses constant extra space.\n\nWith the summation method:\n• Calculate the expected sum using the formula: n × (n + 1) / 2\n• Subtract the actual array sum.\n\nWhile simple, this may overflow in some programming languages when n is very large (e.g. integer multiplication exceeding 32-bit/64-bit bounds in C++/Java).\n\nXOR doesn't involve large arithmetic, making it a safer and more robust solution.",
-        "keyPoints": [
-          "Gauss sum formula: n*(n+1)//2 risk of integer overflow",
-          "XOR bitwise ops stay within bit-width bounds",
-          "No risk of arithmetic overflow"
-        ]
+            "id": "q2",
+            "category": "Leading Whitespace Handling",
+            "question": "2. How do you handle leading whitespace?",
+            "whatInterviewerChecks": "Stripping/advancing pointer past leading spaces.",
+            "bestReplyScript": "Before processing the number, I skip all leading whitespace characters.\n\nFor example:\nInput: \"     -42\"\nAfter skipping spaces: pointer rests at '-42'.\n\nThis ensures parsing starts from the first meaningful character.",
+            "keyPoints": [
+                  "Advance pointer `i` while `s[i] == ' '`",
+                  "Ignores leading spaces cleanly",
+                  "Positions pointer at sign or first digit"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Method Comparison",
-        "question": "3. Compare both methods.",
-        "whatInterviewerChecks": "Evaluating Summation vs XOR pros and cons.",
-        "bestReplyScript": "Method | Time | Space | Pros | Cons\nSummation | O(n) | O(1) | Easy to understand | Can overflow in some languages\nXOR | O(n) | O(1) | No overflow, very efficient | Slightly less intuitive\n\nBoth methods are optimal in terms of time and space.\n\nIn interviews, mentioning both approaches and choosing XOR demonstrates deeper understanding.",
-        "keyPoints": [
-          "Summation: Math-intuitive, potential overflow risk",
-          "XOR: Bit-wise safe, robust in C++/Java/Go",
-          "Both run in O(n) time & O(1) space"
-        ]
+            "id": "q3",
+            "category": "Sign Determination Logic",
+            "question": "3. How do you detect the sign of the number?",
+            "whatInterviewerChecks": "Single sign character check (+ / -).",
+            "bestReplyScript": "After removing leading spaces:\n- If the next character is '+', set sign = +1 and advance pointer.\n- If it is '-', set sign = -1 and advance pointer.\n- Otherwise, assume the number is positive (sign = +1) and do not advance pointer.\n\nExamples:\n\"+123\" -> +123\n\"-123\" -> -123\n\"123\" -> +123",
+            "keyPoints": [
+                  "Check `s[i] == '+'` or `s[i] == '-'`",
+                  "Record sign multiplier (+1 / -1)",
+                  "Defaults to positive if omitted"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Time & Space Complexity Proof",
-        "question": "4. What's the complexity?",
-        "whatInterviewerChecks": "Proving linear time and zero memory bounds.",
-        "bestReplyScript": "The array is traversed only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nThis is optimal because every element must be checked at least once.",
-        "keyPoints": [
-          "Linear O(n) single pass",
-          "Strict O(1) space (accumulating scalar XOR state)",
-          "Optimal lower bound Ω(n) to examine all input elements"
-        ]
+            "id": "q4",
+            "category": "32-bit Overflow & Underflow Clamping",
+            "question": "4. How do you handle integer overflow and underflow?",
+            "whatInterviewerChecks": "Pre-overflow boundary check `result > (INT_MAX - digit) // 10` or post-clamping.",
+            "bestReplyScript": "Before appending each digit, I check whether the new value would exceed the 32-bit signed integer range.\n\nValid 32-bit range:\n- INT_MIN = -2147483648 (-2^31)\n- INT_MAX = 2147483647 (2^31 - 1)\n\nIf overflow occurs (`result > INT_MAX / 10` or `result == INT_MAX / 10 and digit > 7`):\n- Return 2147483647 (INT_MAX) if positive.\n- Return -2147483648 (INT_MIN) if negative.\n\nThis prevents integer overflow during computation.",
+            "keyPoints": [
+                  "32-bit range: -2^31 to 2^31 - 1",
+                  "Check pre-overflow or clamp output",
+                  "Clamps to INT_MAX (2147483647) or INT_MIN (-2147483648)"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Multiple Missing Numbers Extension",
-        "question": "5. What if multiple numbers are missing?",
-        "whatInterviewerChecks": "Extending algorithm to k missing numbers.",
-        "bestReplyScript": "The XOR approach works only when exactly one number is missing.\n\nIf multiple numbers are missing, I could use:\n• A hash set: Store elements in O(n) space and check range 0..n.\n• A boolean array / In-place cyclic sort: Place numbers at their matching indices.\n• Bitset / Boolean array.\n• System of equations (Sum & Sum of Squares) for 2 missing numbers.\n\nExample:\nExpected: 0 1 2 3 4 5\nGiven: 0 2 4\nMissing: 1 3 5\n\nIn this case, single XOR alone cannot identify all missing numbers without extra equations or data structures.",
-        "keyPoints": [
-          "Single XOR yields compound XOR (a ^ b) for 2 missing numbers",
-          "Use diff bit mask partitioning to separate 2 missing numbers",
-          "Use Hash Set or Cyclic Sort for K missing numbers"
-        ]
+            "id": "q5",
+            "category": "Complexity Analysis",
+            "question": "5. What is the time and space complexity?",
+            "whatInterviewerChecks": "Linear time O(n) and constant auxiliary space O(1).",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n) because each character in the string is processed at most once.\n- Space Complexity: O(1) auxiliary space, as only a few scalar variables (pointer, sign, result) are used.",
+            "keyPoints": [
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Single-pass character evaluation"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Immutability & Side Effects",
-        "question": "6. Can you solve without modifying the array?",
-        "whatInterviewerChecks": "Functional read-only state preservation.",
-        "bestReplyScript": "Yes.\n\nBoth the XOR and summation methods only read the array.\n\nThey never change any element.\n\nExample:\nOriginal: [3, 0, 1]\nAfter the algorithm: Still [3, 0, 1]\n\nThis is useful when the input array should remain unchanged in production.",
-        "keyPoints": [
-          "Read-only traversal",
-          "Preserves caller's input array",
-          "No side effects on shared data structures"
-        ]
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty string, spaces only, invalid first char, trailing words, overflow, leading zeros.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> 0\n2. String with only spaces (\"   \") -> 0\n3. Positive numbers (\"+42\") -> 42\n4. Negative numbers (\"-42\") -> -42\n5. Invalid first character (\"words and 987\") -> 0\n6. Numbers followed by letters (\"4193 with words\") -> 4193\n7. Overflow/Underflow (\"2147483648\", \"-2147483649\") -> Clamped\n8. Leading zeros (\"000123\") -> 123.",
+            "keyPoints": [
+                  "Empty string & spaces only return 0",
+                  "Invalid prefix returns 0",
+                  "Trailing non-digits ignored, overflow clamped"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases & Boundaries",
-        "question": "7. What edge cases exist?",
-        "whatInterviewerChecks": "Identifying key sequence boundary cases.",
-        "bestReplyScript": "Important edge cases include:\n\nMissing first number: Input [1, 2, 3] -> Output 0\n\nMissing last number: Input [0, 1, 2] -> Output 3\n\nSingle element: Input [0] -> Output 1\n\nEmpty array: Input [] -> Output 0\n\nTesting these cases ensures the solution works correctly in all scenarios.",
-        "keyPoints": [
-          "Missing boundary 0",
-          "Missing boundary N",
-          "Single-element array [0]",
-          "Empty input []"
-        ]
+            "id": "q7",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, invalid prefix, trailing words, and overflow.",
+            "bestReplyScript": "I would test:\n- \"42\" -> 42\n- \"   -42\" -> -42\n- \"4193 with words\" -> 4193\n- \"words and 987\" -> 0\n- \"+123\" -> 123\n- \"00012\" -> 12\n- \"2147483648\" -> 2147483647\n- \"-2147483649\" -> -2147483648\n\nThese cover normal cases, invalid input, and overflow bounds.",
+            "keyPoints": [
+                  "LeetCode 8 standard test cases",
+                  "Trailing text vs prefix text tests",
+                  "Overflow/underflow boundary tests"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Order Independence",
-        "question": "8. What if numbers aren't sorted?",
-        "whatInterviewerChecks": "Explaining commutative and associative algebraic properties.",
-        "bestReplyScript": "Sorting is not required.\n\nBoth XOR and summation work regardless of the order.\n\nExample:\nInput: [4, 2, 1, 0] -> Missing number: 3\n\nSince XOR (and addition) are commutative and associative (independent of order), the algorithm still works correctly.",
-        "keyPoints": [
-          "XOR is commutative: A ^ B = B ^ A",
-          "XOR is associative: (A ^ B) ^ C = A ^ (B ^ C)",
-          "Unsorted input produces identical XOR output"
-        ]
+            "id": "q8",
+            "category": "Invalid Trailing Characters Behavior",
+            "question": "8. What happens if invalid characters appear after the number?",
+            "whatInterviewerChecks": "Early termination on first non-digit char.",
+            "bestReplyScript": "Parsing stops immediately when the first non-digit character is found.\n\nExample:\nInput: \"123abc\"\nOutput: 123\n\nEverything after the first non-digit character is ignored cleanly.",
+            "keyPoints": [
+                  "Stop loop immediately when `not char.isdigit()`",
+                  "Return currently accumulated result",
+                  "Discards all subsequent characters"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Test Suite Design",
-        "question": "9. How would you test this?",
-        "whatInterviewerChecks": "Creating comprehensive test cases.",
-        "bestReplyScript": "I would create test cases covering normal and edge cases.\n\nInput | Expected Output\n[3, 0, 1] | 2\n[0, 1] | 2\n[1] | 0\n[0] | 1\n[] | 0\n[4, 2, 1, 0] | 3\n\nThese tests verify correctness under different input conditions.",
-        "keyPoints": [
-          "Random unsorted inputs",
-          "Sequential missing boundaries",
-          "Single-element sequences"
-        ]
+            "id": "q9",
+            "category": "Manual Digit Conversion (No Built-ins)",
+            "question": "9. Can you solve this without built-in conversion functions?",
+            "whatInterviewerChecks": "Character arithmetic `ord(c) - ord('0')`.",
+            "bestReplyScript": "Yes!\nInstead of using built-in functions like `int()` or `stoi()`, I manually process each digit using ASCII arithmetic:\n`digit = ord(char) - ord('0')`\n`result = result * 10 + digit`\n\nThis demonstrates a low-level understanding of string parsing and string-to-number representation.",
+            "keyPoints": [
+                  "Digit calculation: `ord(c) - ord('0')`",
+                  "Accumulate: `result * 10 + digit`",
+                  "Demonstrates low-level parsing mechanics"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Integer Overflow Deep Dive",
-        "question": "10. Can overflow occur?",
-        "whatInterviewerChecks": "Language-specific primitive type overflow constraints.",
-        "bestReplyScript": "It depends on the approach.\n\nUsing the summation method, overflow may occur in languages with fixed-size integers like C++ or Java if n is very large.\n\nExample: Expected Sum = n × (n + 1) / 2\nThis multiplication may exceed 32-bit signed integer limit (2,147,483,647).\n\nThe XOR approach avoids this issue because it performs bitwise operations instead of large arithmetic.\n\nIn Python, integers automatically grow in size (arbitrary-precision integers), so overflow is generally not a concern in Python specifically, but XOR remains best practice for cross-language compatibility.",
-        "keyPoints": [
-          "C++/Java 32-bit int overflow at N ~ 65,536 if multiplying N*(N+1)",
-          "Use 64-bit long long in C++ or XOR approach",
-          "Python automatically handles arbitrarily large integers"
-        ]
+            "id": "q10",
+            "category": "Common Candidate Pitfalls",
+            "question": "10. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in String to Integer (atoi) (LeetCode 8).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to skip leading whitespace.\n- Accepting multiple sign characters like \"--12\" or \"+-12\" (should return 0).\n- Missing 32-bit overflow checks.\n- Continuing parsing after invalid characters.\n- Using built-in conversion functions when forbidden by interviewer.\n- Forgetting to multiply by sign at the end.",
+            "keyPoints": [
+                  "Accepting multiple signs like \"--12\"",
+                  "Missing 32-bit overflow check",
+                  "Continuing after non-digit character"
+            ]
       },
       {
-        "id": "q11",
-        "category": "XOR Bit Manipulation Mechanics",
-        "question": "11. Why does XOR work?",
-        "whatInterviewerChecks": "Bitwise XOR algebraic identity rules.",
-        "bestReplyScript": "XOR has two important properties:\n1. A number XOR itself equals 0 (x ^ x = 0).\n2. A number XOR 0 equals the number itself (x ^ 0 = x).\n\nExample:\n5 ^ 5 = 0\n7 ^ 0 = 7\n\nSince every number in the range 0..n appears twice (once in range, once in array) except the missing one, all matching pairs cancel out to zero.\n\nThe only value left is the missing number.\n\nThis is why the XOR method works.",
-        "keyPoints": [
-          "Self-inverse property: x ^ x = 0",
-          "Identity element: x ^ 0 = x",
-          "Pairwise cancellation leaves only the single missing element"
-        ]
+            "id": "q11",
+            "category": "64-bit Integer Extension",
+            "question": "11. How would your solution support 64-bit integers?",
+            "whatInterviewerChecks": "Adapting overflow boundaries to `INT64_MIN` / `INT64_MAX`.",
+            "bestReplyScript": "The algorithm remains identical.\n\nThe only change is updating the overflow boundaries from 32-bit limits to 64-bit limits:\n- INT64_MIN (-9,223,372,036,854,775,808)\n- INT64_MAX (9,223,372,036,854,775,807)\n\nThe overflow check logic scales naturally.",
+            "keyPoints": [
+                  "Update limits to INT64_MIN and INT64_MAX",
+                  "Algorithm and loop logic remain unchanged",
+                  "Supports 64-bit integer range"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Binary Search Adaptation",
-        "question": "12. Can binary search solve this?",
-        "whatInterviewerChecks": "O(log n) Binary Search approach on sorted inputs.",
-        "bestReplyScript": "Yes, but only if the array is sorted.\n\nThe idea is:\n• Compare the index with the value.\n• Normally, nums[i] == i.\n• Once the missing number occurs, nums[i] becomes greater than i (nums[i] == i + 1).\n\nExample:\nIndex: 0 1 2 3\nValue: 0 1 3 4\n\nAt index 2, value is 3 (> 2), indicating the missing number is 2.\n\nComplexity:\n• Time: O(log n)\n• Space: O(1)\n\nThis approach only works on sorted arrays.",
-        "keyPoints": [
-          "Requires pre-sorted array input",
-          "Binary search condition: if nums[mid] > mid -> search left half, else search right half",
-          "Time: O(log n), Space: O(1)"
-        ]
+            "id": "q12",
+            "category": "Hexadecimal / Base Conversion Variant",
+            "question": "12. How would you modify it for hexadecimal numbers?",
+            "whatInterviewerChecks": "Base-16 conversion with prefix detection.",
+            "bestReplyScript": "To support hexadecimal:\n1. Detect prefixes like \"0x\" or \"0X\".\n2. Allow hex digits: '0'-'9', 'A'-'F', 'a'-'f'.\n3. Convert hex char to value: `val = ord(c) - ord('0')` if digit else `10 + ord(c.lower()) - ord('a')`.\n4. Accumulate: `result = result * 16 + val`.\n\nThe remaining whitespace and sign logic stays the same.",
+            "keyPoints": [
+                  "Detect \"0x\" / \"0X\" prefix",
+                  "Support '0'-'9', 'a'-'f', 'A'-'F'",
+                  "Accumulate: `result * 16 + digit_val`"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Optimal Trade-off Decision",
-        "question": "13. What's the optimal solution?",
-        "whatInterviewerChecks": "Selecting the best strategy based on input constraints.",
-        "bestReplyScript": "The optimal solution depends on the constraints.\n\nFor an unsorted array:\n• XOR\n• O(n) Time, O(1) Space\nThis is generally considered the best solution.\n\nThe summation method has the same complexity but may overflow in some languages.\n\nFor a pre-sorted array:\n• Binary Search\n• O(log n) Time, O(1) Space\n\nTherefore, XOR is usually preferred for general unsorted inputs.",
-        "keyPoints": [
-          "Unsorted: XOR -> O(n) time, O(1) space",
-          "Pre-sorted: Binary Search -> O(log n) time, O(1) space",
-          "XOR prevents overflow across all platforms"
-        ]
+            "id": "q13",
+            "category": "Real-World Applications",
+            "question": "13. Where are parsing algorithms used in real-world systems?",
+            "whatInterviewerChecks": "Compilers, JSON/CSV parsers, web servers.",
+            "bestReplyScript": "Parsing algorithms are used in:\n- Compilers & Interpreters (lexical scanning of numeric literals).\n- JSON / XML / CSV Parsers.\n- Web Servers & HTTP Header parsing (Content-Length, Status codes).\n- Database Engines & Query Parsers.\n- Command-Line CLI argument parsing.",
+            "keyPoints": [
+                  "Compiler Lexers for numeric literals",
+                  "JSON/CSV/XML data parsers",
+                  "HTTP web server header parsing"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Candidate Pitfalls & Mistakes",
-        "question": "14. What mistakes do candidates make?",
-        "whatInterviewerChecks": "Identifying common interview pitfalls.",
-        "bestReplyScript": "Some common mistakes include:\n• Using sorting unnecessarily, increasing time complexity to O(n log n).\n• Forgetting that the numbers range from 0 to n (missing range boundary n).\n• Incorrectly calculating the expected sum.\n• Not handling edge cases like an empty array or missing 0.\n• Misusing XOR operations.\n\nThe most common mistake is forgetting to include 0 or n when computing the expected range.",
-        "keyPoints": [
-          "Range includes N (size of array + 1 elements total)",
-          "Sorting unsorted array increases complexity to O(n log n)",
-          "Forgetting 0 index element"
-        ]
+            "id": "q14",
+            "category": "Compiler Lexer Architecture Integration",
+            "question": "14. How would you design this as part of a compiler or interpreter?",
+            "whatInterviewerChecks": "Lexical analyzer (Tokenizer) token creation.",
+            "bestReplyScript": "In a compiler architecture:\n1. The Lexical Analyzer (Lexer) reads raw characters.\n2. When encountering whitespace/signs/digits, it applies `atoi` parsing logic.\n3. It creates a `NUMBER` Token with value and source location.\n4. If overflow occurs, the lexer raises a compile-time numeric overflow error.\n\nThe `atoi` algorithm is essentially a simplified version of lexical number parsing.",
+            "keyPoints": [
+                  "Lexer tokenization of numeric literals",
+                  "Emits NUMBER token to AST parser",
+                  "Reports compile-time overflow errors"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Industrial Applications of XOR",
-        "question": "15. Where is XOR commonly used?",
-        "whatInterviewerChecks": "Real-world engineering applications of XOR.",
-        "bestReplyScript": "XOR is widely used in computer science.\n\nExamples include:\n• Finding a missing number or unique single number (Single Number I/II/III).\n• Bitwise toggling and flag manipulation.\n• Error detection and correction (RAID 5 parity, Hamming codes).\n• Cryptography (One-Time Pad, symmetric ciphers).\n• Data integrity checks (CRC checksums).\n• Low-level system programming & memory swaps (x ^ y ^ x).\n\nUnderstanding XOR is valuable because it appears frequently in coding interviews and system-level programming.",
-        "keyPoints": [
-          "RAID 5 disk parity calculation",
-          "Cryptography & symmetric key ciphers",
-          "Error detection (Checksums & Hamming codes)",
-          "Bitwise feature flag toggles"
-        ]
+            "id": "q15",
+            "category": "Manual vs Built-in Parsing Comparison Matrix",
+            "question": "15. Compare manual parsing with built-in parsing functions.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Manual Parsing: Full control over whitespace/signs/overflow clamping, zero dependencies, preferred in coding interviews to demonstrate low-level parsing logic.\n- Built-in Parsing (`int()`, `stoi()`): High-level wrapper, simpler code, raises exceptions on invalid formats rather than clamping. Preferred in production unless custom rules are required.\n\nIn interviews, manual parsing is expected.",
+            "keyPoints": [
+                  "Manual: Full control over clamping/whitespace, expected in interviews",
+                  "Built-in: High-level wrapper, throws exceptions on invalid formats",
+                  "Manual demonstrates understanding of low-level character parsing"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
