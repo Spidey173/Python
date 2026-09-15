@@ -85,6 +85,9 @@ async def login(user_in: UserLogin, db: AsyncSession = Depends(get_db)):
     return Token(access_token=token, token_type="bearer", user=UserResponse.model_validate(user))
 
 
+STATIC_GUEST_HASH = "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeg6Lruj3vjPGga31lW"
+
+
 @router.post("/guest", response_model=Token)
 async def guest_login(db: AsyncSession = Depends(get_db)):
     # Create or fetch a demo guest session
@@ -92,7 +95,7 @@ async def guest_login(db: AsyncSession = Depends(get_db)):
     guest_user = User(
         username=f"runner_{guest_uuid}",
         email=f"guest_{guest_uuid}@pythonquest.io",
-        hashed_password=hash_password("guest_pass_123"),
+        hashed_password=STATIC_GUEST_HASH,
         role="guest",
         xp=0,
         coins=100,

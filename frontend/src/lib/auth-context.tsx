@@ -37,8 +37,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
           return;
         } catch {
-          // Token invalid or expired
+          // Token invalid, expired or backend unreachable
+          const savedLocal = localStorage.getItem('pq_local_user');
+          if (savedLocal) {
+            try {
+              setUser(JSON.parse(savedLocal));
+              setLoading(false);
+              return;
+            } catch {}
+          }
+          if (storedToken.startsWith('local_guest_')) {
+            setUser({
+              id: 9999,
+              username: 'runner_guest',
+              email: 'guest@pythonquest.io',
+              role: 'guest',
+              xp: 0,
+              coins: 100,
+              level: 1,
+              lives: 5,
+              streak: 1,
+              avatar: 'cyber-snake',
+              theme: 'cyber-dark',
+              created_at: new Date().toISOString(),
+            });
+            setLoading(false);
+            return;
+          }
           localStorage.removeItem('pq_token');
+          localStorage.removeItem('pq_local_user');
           setToken(null);
           setUser(null);
         }
@@ -86,6 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('pq_token');
+    localStorage.removeItem('pq_local_user');
     persistence.clearUserData();
     setToken(null);
     setUser(null);

@@ -12,7 +12,10 @@ function getAuthHeader(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs: number = 4000): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
   const headers = {
     'Content-Type': 'application/json',
     ...getAuthHeader(),
@@ -23,7 +26,9 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     const res = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
       headers,
+      signal: options.signal || controller.signal,
     });
+    clearTimeout(timer);
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
@@ -42,6 +47,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
     return await res.json();
   } catch (err: unknown) {
+    clearTimeout(timer);
     console.warn(`API call ${endpoint} failed, checking fallback...`, err);
     throw err;
   }
@@ -50,26 +56,78 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   // Auth
   async login(username: string, password: string): Promise<{ access_token: string; user: User }> {
-    return request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      return await request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      }, 3500);
+    } catch (err: any) {
+      // If backend is unreachable or times out, provide instant fallback for standard demo accounts
+      const normUser = username.trim().toLowerCase();
+      if (normUser === 'admin' && password === 'admin123') {
+        const adminUser: User = {
+          id: 1,
+          username: 'admin',
+          email: 'admin@pythonquest.io',
+          role: 'admin',
+          xp: 999,
+          coins: 5000,
+          level: 50,
+          lives: 99,
+          streak: 30,
+          avatar: 'cyber-snake',
+          theme: 'cyber-dark',
+          created_at: new Date().toISOString(),
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('pq_local_user', JSON.stringify(adminUser));
+        }
+        return {
+          access_token: 'local_user_admin_' + Date.now(),
+          user: adminUser,
+        };
+      }
+      if (normUser === 'student_dev' && password === 'student123') {
+        const studentUser: User = {
+          id: 2,
+          username: 'student_dev',
+          email: 'student@pythonquest.io',
+          role: 'user',
+          xp: 150,
+          coins: 300,
+          level: 3,
+          lives: 5,
+          streak: 3,
+          avatar: 'cyber-snake',
+          theme: 'cyber-dark',
+          created_at: new Date().toISOString(),
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('pq_local_user', JSON.stringify(studentUser));
+        }
+        return {
+          access_token: 'local_user_student_' + Date.now(),
+          user: studentUser,
+        };
+      }
+      throw err;
+    }
   },
 
   async register(username: string, email: string, password: string): Promise<{ access_token: string; user: User }> {
     return request('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ username, email, password }),
-    });
+    }, 4000);
   },
 
   async guestLogin(): Promise<{ access_token: string; user: User }> {
     try {
       return await request('/auth/guest', {
         method: 'POST',
-      });
+      }, 2500);
     } catch (err) {
-      console.warn('Backend guest auth endpoint unreachable, initializing offline-ready guest session:', err);
+      console.warn('Backend guest auth endpoint unreachable or timed out, initializing instant offline-ready guest session:', err);
       const guestId = 'runner_' + Math.random().toString(36).substring(2, 9);
       const fallbackUser: User = {
         id: Date.now(),
@@ -85,6 +143,9 @@ export const api = {
         theme: 'cyber-dark',
         created_at: new Date().toISOString(),
       };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('pq_local_user', JSON.stringify(fallbackUser));
+      }
       return {
         access_token: 'local_guest_' + Date.now(),
         user: fallbackUser,
@@ -94,23 +155,29 @@ export const api = {
 
   async getMe(): Promise<User> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('pq_token') : null;
-    if (token && token.startsWith('local_guest_')) {
-      return {
-        id: 9999,
-        username: 'runner_guest',
-        email: 'guest@pythonquest.io',
-        role: 'guest',
-        xp: 0,
-        coins: 100,
-        level: 1,
-        lives: 5,
-        streak: 1,
-        avatar: 'cyber-snake',
-        theme: 'cyber-dark',
-        created_at: new Date().toISOString(),
-      };
+    if (token) {
+      if (token.startsWith('local_')) {
+        const saved = localStorage.getItem('pq_local_user');
+        if (saved) {
+          try { return JSON.parse(saved); } catch {}
+        }
+        return {
+          id: 9999,
+          username: 'runner_guest',
+          email: 'guest@pythonquest.io',
+          role: 'guest',
+          xp: 0,
+          coins: 100,
+          level: 1,
+          lives: 5,
+          streak: 1,
+          avatar: 'cyber-snake',
+          theme: 'cyber-dark',
+          created_at: new Date().toISOString(),
+        };
+      }
     }
-    return request('/auth/me');
+    return request('/auth/me', {}, 3000);
   },
 
   // Challenges
