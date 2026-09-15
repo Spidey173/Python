@@ -16957,195 +16957,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Merge Overlapping Intervals.",
-            "bestReplyScript": "My approach for Merge Overlapping Intervals follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Sorting by start time, single pass merging using `prev.end >= curr.start`.",
+            "bestReplyScript": "I first sort the intervals by their start time. Then I iterate through the sorted intervals and merge any intervals that overlap.\n\nAlgorithm:\n1. Sort intervals by their starting value: `intervals.sort(key=lambda x: x[0])`.\n2. Add the first interval to the result list.\n3. For each remaining interval:\n   - If `curr.start <= result[-1].end`, they overlap! Merge them by updating `result[-1].end = max(result[-1].end, curr.end)`.\n   - Otherwise, append `curr` as a new interval to `result`.\n4. Return the merged list.\n\nExample: [[1,3],[2,6],[8,10],[15,18]] -> Merge [1,3] and [2,6] into [1,6] -> Output: [[1,6],[8,10],[15,18]].\n\nComplexity: Time: O(n log n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Sort intervals by start time",
+                  "Overlap condition: `curr.start <= result[-1].end`",
+                  "Merge update: `result[-1].end = max(result[-1].end, curr.end)`",
+                  "Time: O(n log n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Sorting Requirement Rationale",
             "question": "2. Why is sorting necessary?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Merge Overlapping Intervals.",
-            "bestReplyScript": "I chose this approach for Merge Overlapping Intervals over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Sorting guarantees contiguous adjacent overlap checking.",
+            "bestReplyScript": "Sorting places intervals in ascending order of their start times.\n\nThis guarantees that any overlapping intervals become adjacent to each other in the array, so we only need to compare the current interval with the most recently merged interval in the result list (`result[-1]`).\n\nWithout sorting, overlapping intervals could be scattered anywhere in the input, requiring pairwise comparisons that degrade time complexity to O(n^2).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Order intervals by start time",
+                  "Guarantees overlapping intervals are adjacent",
+                  "Reduces checks from O(n^2) to single pass"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Merge Overlapping Intervals.",
-            "bestReplyScript": "Here is the complexity analysis for Merge Overlapping Intervals:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Sorting O(n log n) + Linear Merge scan O(n) -> O(n log n).",
+            "bestReplyScript": "There are two main steps:\n- Sorting the array of n intervals: O(n log n)\n- Merging in a single linear pass: O(n)\n\nTherefore:\n- Time Complexity: O(n log n) (dominated by sorting)\n- Space Complexity: O(n) (for the result list or sorting auxiliary space)\n\nSince sorting dominates, O(n log n) is the final complexity.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n log n)",
+                  "Space Complexity: O(n)",
+                  "Sorting step dominates complexity"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Overlap Condition Logic",
             "question": "4. How do you detect overlapping intervals?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Condition `curr.start <= prev.end` and `max(prev.end, curr.end)`.",
+            "bestReplyScript": "Two sorted intervals overlap if:\n`current.start <= previous.end`\n\nExample: [1, 5] and [3, 7]. Since 3 <= 5, they overlap!\nMerge them into: `[1, max(5, 7)]` = `[1, 7]`.\n\nIf `current.start > previous.end`, there is a gap between them and they do NOT overlap, so `current` is pushed as a separate interval.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Overlap check: `curr.start <= prev.end`",
+                  "Merged end: `max(prev.end, curr.end)`",
+                  "No overlap when `curr.start > prev.end`"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Pre-sorted Input Optimization",
             "question": "5. What if the intervals are already sorted?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Linear time scan O(n) when input is pre-sorted.",
+            "bestReplyScript": "If the input intervals are guaranteed to be pre-sorted by start time:\n- We can completely skip the O(n log n) sorting step.\n- Perform the single linear merge scan in O(n) time.\n- Overall Time Complexity improves to O(n), Space Complexity O(n).\n\nThis optimization is useful when receiving streamed or pre-indexed interval data.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Skip sorting step if pre-sorted",
+                  "Single-pass merge scan runs in O(n) time",
+                  "Space Complexity: O(n)"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "In-Place Merging Strategy",
             "question": "6. How would you merge intervals in-place?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Write-pointer index `write_idx` for O(1) extra space.",
+            "bestReplyScript": "Instead of building a new result list, we can mutate the original array using a `write_idx` pointer:\n\n1. Sort array in-place.\n2. Set `write_idx = 0`.\n3. Loop i from 1 to n-1:\n   - If `intervals[i][0] <= intervals[write_idx][1]`: merge `intervals[write_idx][1] = max(intervals[write_idx][1], intervals[i][1])`.\n   - Else: `write_idx += 1; intervals[write_idx] = intervals[i]`.\n4. Truncate array to length `write_idx + 1`.\n\nThis reduces auxiliary space to O(1) (excluding sorting memory).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Write pointer `write_idx` mutates array in-place",
+                  "Merge update: `intervals[write_idx][1] = max(...)`",
+                  "Reduces auxiliary space to O(1)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Merge Overlapping Intervals.",
-            "bestReplyScript": "When handling Merge Overlapping Intervals, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty input, single interval, nested intervals, touching intervals.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty input ([]) -> []\n2. Single interval ([[1,2]]) -> [[1,2]]\n3. Completely enclosed / nested ([[1,5],[2,3]]) -> [[1,5]] (handled by `max()` end check)\n4. Disjoint / No overlap ([[1,2],[4,5]]) -> [[1,2],[4,5]]\n5. Touching intervals ([[1,4],[4,5]]) -> Merges to [[1,5]] since `4 <= 4`.\n\nTesting these ensures correctness under all range configurations.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Nested interval [[1,5],[2,3]] -> [[1,5]]",
+                  "Touching boundaries [[1,4],[4,5]] -> [[1,5]]",
+                  "Empty & single-interval guards"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Merge Overlapping Intervals.",
-            "bestReplyScript": "To thoroughly test Merge Overlapping Intervals, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, single, and touching bounds.",
+            "bestReplyScript": "I would test:\n- [] -> []\n- [[1,2]] -> [[1,2]]\n- [[1,3],[2,6]] -> [[1,6]]\n- [[1,2],[3,4]] -> [[1,2],[3,4]]\n- [[1,4],[4,5]] -> [[1,5]]\n\nThese cover normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Standard LeetCode 56 test cases",
+                  "Touching boundaries check",
+                  "Disjoint intervals check"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Merge Overlapping Intervals.",
-            "bestReplyScript": "Common candidate pitfalls when solving Merge Overlapping Intervals include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Merge Intervals (LeetCode 56).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to sort the intervals first.\n- Overwriting `prev.end` with `curr.end` directly instead of `max(prev.end, curr.end)` (fails on nested intervals like [[1,5],[2,3]]).\n- Strict inequality bug: using `curr.start < prev.end` instead of `curr.start <= prev.end` (fails to merge touching intervals [[1,4],[4,5]]).\n- Sorting by end time instead of start time.\n\nThe most common mistake is forgetting `max()` on nested intervals.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting to sort intervals first",
+                  "Forgetting `max(prev.end, curr.end)` on nested intervals",
+                  "Using `<` instead of `<=` on touching boundaries"
             ]
       },
       {
             "id": "q10",
-            "category": "Step-by-Step Approach",
+            "category": "Real-World Applications",
             "question": "10. Where are interval-merging algorithms used?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Merge Overlapping Intervals.",
-            "bestReplyScript": "My approach for Merge Overlapping Intervals follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Calendar scheduling, OS CPU scheduling, memory allocation.",
+            "bestReplyScript": "Interval merging is widely used in:\n- Calendar Applications & Meeting Room Schedulers (finding busy time slots across users).\n- Operating System Memory Management & Garbage Collection (free list memory block merging).\n- Network Bandwidth Allocation & Streaming (merging reserved bandwidth time windows).\n- Database Systems (merging range queries in B-Trees / Spatial Indexes).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Google Calendar / Outlook meeting slot merging",
+                  "OS heap memory block allocation & coalescing",
+                  "Database range query optimization"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Calendar Meeting Schedule Integration",
             "question": "11. How would you merge meeting schedules?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Applying interval merge to calendar availability.",
+            "bestReplyScript": "Represent each meeting as `[start_time, end_time]`.\nCombine all meetings into a single list, sort by start time, and apply the merge algorithm.\n\nExample: User A meetings [[9,11], [13,15]], User B meetings [[10,12], [14,16]].\nMerged busy times: [[9,12], [13,16]].\nFree times are simply the gaps between merged busy intervals!",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Combine all calendar events into one list",
+                  "Sort and merge busy time windows",
+                  "Invert merged busy windows to find common free time"
             ]
       },
       {
             "id": "q12",
-            "category": "Time & Space Complexity",
+            "category": "Identical Start Times Behavior",
             "question": "12. Can intervals with the same start time cause issues?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Merge Overlapping Intervals.",
-            "bestReplyScript": "Here is the complexity analysis for Merge Overlapping Intervals:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Secondary sort key handling.",
+            "bestReplyScript": "No.\nSorting by start time puts intervals with identical start times adjacent to each other.\n\nExample: [[1,3], [1,5]].\nThe algorithm checks `1 <= 3`, merges them into `[1, max(3, 5)]` = `[1, 5]`.\nPython/Java stable sorts place shorter/longer ends adjacent, and `max()` handles them perfectly without any special logic.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Identical start times stay adjacent after sort",
+                  "`max(prev.end, curr.end)` handles them naturally",
+                  "Zero special edge case code needed"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Open vs Closed Interval Boundary Rules",
             "question": "13. How would you handle open and closed intervals?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Closed `[a,b]` vs Open `(a,b)` boundary overlap conditions.",
+            "bestReplyScript": "The overlap condition depends on interval math definitions:\n- Closed Intervals `[a, b]` (include endpoints): Overlap when `curr.start <= prev.end` (touching at 4 merges `[1,4]` and `[4,5]` into `[1,5]`).\n- Open Intervals `(a, b)` (exclude endpoints): Overlap when `curr.start < prev.end` (touching at 4 does NOT overlap `(1,4)` and `(4,5)`).\n- Half-Open `[a, b)` (standard in programming): Overlap when `curr.start < prev.end`.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Closed `[a,b]`: `curr.start <= prev.end`",
+                  "Open `(a,b)`: `curr.start < prev.end`",
+                  "Half-open `[a,b)`: `curr.start < prev.end`"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Unsorted No-Sort Alternative Complexity",
             "question": "14. Can this problem be solved without sorting?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n^2) unsorted pairwise merging vs O(n log n) sorting.",
+            "bestReplyScript": "In the general case, no.\nWithout sorting, an interval added at the end could potentially overlap with any previously processed interval in the history.\n\nTo merge without sorting, we would need pairwise comparisons or graph connected components (building an adjacency graph where edge = overlap, then finding connected components), taking O(n^2) time.\nSorting brings all overlapping intervals together in O(n log n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Unsorted merging requires O(n^2) pairwise graph checks",
+                  "Sorting guarantees adjacent overlap checks",
+                  "O(n log n) is optimal for general arrays"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Massive Dataset Scaling (External Sort / Parallel)",
             "question": "15. How would you optimize for large datasets?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Merge Overlapping Intervals.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "External Merge Sort & MapReduce interval chunking.",
+            "bestReplyScript": "For massive datasets (e.g. terabytes of log interval data):\n1. External Merge Sort: Sort disk chunks by start time when dataset exceeds RAM.\n2. MapReduce / Spark: Partition interval dataset by range keys, sort within partitions, and merge boundaries across partition boundaries.\n3. In-Place Merging: Reduces RAM memory allocations.\n\nThis scales interval merging across distributed clusters.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "External Merge Sort for disk-bound datasets",
+                  "Range partition chunking in Spark / MapReduce",
+                  "In-place memory optimization"
             ]
       }
 ],
