@@ -11,7 +11,8 @@ import { CommandPalette } from '@/components/ui/CommandPalette';
 import { AuthModal } from '@/components/ui/AuthModal';
 import {
   Code, BookOpen, BarChart2, LayoutDashboard,
-  Search, Flame, User as UserIcon, LogOut, CheckCircle2
+  Search, Flame, User as UserIcon, LogOut, CheckCircle2,
+  Menu, X
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signin');
   const [solvedCount, setSolvedCount] = useState<number>(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function loadSolved() {
@@ -113,8 +115,8 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Navigation Tabs */}
-            <nav className="flex items-center gap-1.5" aria-label="Main Navigation">
+            {/* Navigation Tabs (Desktop only) */}
+            <nav className="hidden md:flex items-center gap-1.5" aria-label="Main Navigation">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = link.exact
@@ -138,7 +140,7 @@ export default function Navbar() {
             </nav>
           </div>
 
-          {/* Center Search / Command Launcher — Sleek & Refined */}
+          {/* Center Search / Command Launcher — Sleek & Refined (Desktop only) */}
           <div className="hidden md:flex items-center">
             <button
               onClick={() => setPaletteOpen(true)}
@@ -158,8 +160,8 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Right Controls: Solved count, Streak, Auth */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Right Controls (Desktop) */}
+          <div className="hidden md:flex items-center gap-2.5 sm:gap-3">
             {/* Solved Counter Pill */}
             {user && (
               <Link
@@ -175,7 +177,7 @@ export default function Navbar() {
             {/* Streak Indicator */}
             {user && (
               <div
-                className="hidden sm:flex items-center gap-2 rounded-lg border border-[#D29922]/50 bg-[#D29922]/15 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#F59E0B] shadow-sm"
+                className="flex items-center gap-2 rounded-lg border border-[#D29922]/50 bg-[#D29922]/15 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#F59E0B] shadow-sm"
                 title="Daily Active Streak"
               >
                 <Flame className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
@@ -187,7 +189,6 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-2">
                 {isGuest ? (
-                  // Guest session: only show Guest Mode pill and logout (no duplicate signin/signup buttons)
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openAuth('signup')}
@@ -200,7 +201,7 @@ export default function Navbar() {
 
                     <button
                       onClick={logout}
-                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors"
+                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
                       title="Exit session / Log out"
                       aria-label="Exit session"
                     >
@@ -208,7 +209,6 @@ export default function Navbar() {
                     </button>
                   </div>
                 ) : (
-                  // Registered User
                   <div className="flex items-center gap-2">
                     <Link
                       href="/profile"
@@ -219,7 +219,7 @@ export default function Navbar() {
                     </Link>
                     <button
                       onClick={logout}
-                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors"
+                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
                       title="Sign out"
                       aria-label="Sign out"
                     >
@@ -229,25 +229,207 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              // Unauthenticated visitor
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openAuth('signin')}
-                  className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-[#9198A1] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-lg transition-colors"
+                  className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-[#9198A1] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-lg transition-colors cursor-pointer"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => openAuth('signup')}
-                  className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white bg-[#238636] hover:bg-[#2EA043] rounded-lg transition-colors shadow-sm"
+                  className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white bg-[#238636] hover:bg-[#2EA043] rounded-lg transition-colors shadow-sm cursor-pointer"
                 >
                   Sign Up
                 </button>
               </div>
             )}
           </div>
+
+          {/* Right Controls (Mobile Only) */}
+          <div className="flex md:hidden items-center gap-2">
+            {user && (
+              <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#238636]/15 text-[#3FB950] border border-[#238636]/30">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>{solvedCount}</span>
+              </div>
+            )}
+            {user && (
+              <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#D29922]/15 text-[#F59E0B] border border-[#D29922]/30">
+                <Flame className="h-3.5 w-3.5 fill-[#F59E0B]" />
+                <span>{user?.streak || 0}d</span>
+              </div>
+            )}
+
+            {/* 3-Line Hamburger Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-2 rounded-lg text-[#9198A1] hover:text-white hover:bg-[#21262D] transition-colors cursor-pointer"
+              aria-label="Open navigation menu"
+              title="Menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Drawer / Sheet */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex justify-end">
+          {/* Backdrop Blur */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            aria-hidden="true"
+          />
+
+          {/* Drawer Content */}
+          <div className="relative w-[85%] max-w-[320px] bg-[#161B22] border-l border-[#30363D] shadow-2xl flex flex-col justify-between p-5 z-10 animate-in slide-in-from-right duration-200">
+            <div className="space-y-5">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between border-b border-[#21262D] pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#1F6FEB] to-[#38BDF8] text-white shadow-md">
+                    <Code className="h-4 w-4 stroke-[2.5]" />
+                  </div>
+                  <span className="font-bold text-base text-white">Python</span>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg text-[#9198A1] hover:text-white hover:bg-[#21262D] transition-colors"
+                  aria-label="Close navigation menu"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* User Session Card (Mobile) */}
+              {user ? (
+                <div className="p-3.5 rounded-xl border border-[#30363D] bg-[#0D1117] space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <UserIcon className="h-4 w-4 text-[#58A6FF] shrink-0" />
+                      <span className="font-semibold text-sm text-[#E6EDF3] truncate">
+                        {isGuest ? 'Guest Runner' : user.username}
+                      </span>
+                    </div>
+                    {isGuest && (
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#D29922]/15 text-[#F59E0B] border border-[#D29922]/40 font-semibold">
+                        Guest
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#8B949E]">
+                    <span className="text-[#3FB950] font-semibold">{solvedCount} Solved</span>
+                    <span>•</span>
+                    <span className="text-[#F59E0B] font-semibold">{user?.streak || 0} Day Streak</span>
+                  </div>
+
+                  {isGuest && (
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        openAuth('signup');
+                      }}
+                      className="w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-[#238636] to-[#2EA043] text-white text-xs font-semibold shadow-sm hover:opacity-95 transition-opacity"
+                    >
+                      Save Progress to Cloud
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      openAuth('signin');
+                    }}
+                    className="flex-1 py-2 rounded-lg border border-[#30363D] bg-[#21262D] text-xs font-semibold text-[#E6EDF3] hover:border-[#8B949E]"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      openAuth('signup');
+                    }}
+                    className="flex-1 py-2 rounded-lg bg-[#238636] text-xs font-semibold text-white hover:bg-[#2EA043]"
+                  >
+                    Sign Up
+                  </button>
+                </div>
+              )}
+
+              {/* Quick Search Button */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setPaletteOpen(true);
+                }}
+                className="w-full flex items-center justify-between p-2.5 rounded-lg border border-[#30363D] bg-[#0D1117] text-xs text-[#9198A1] hover:text-[#E6EDF3] hover:border-[#58A6FF]/50 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Search className="h-4 w-4 text-[#58A6FF]" />
+                  <span>Search challenges...</span>
+                </div>
+                <kbd className="font-mono text-[10px] bg-[#161B22] px-1.5 py-0.5 rounded border border-[#30363D]">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {/* Mobile Navigation Links */}
+              <nav className="space-y-1">
+                {navLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = link.exact
+                    ? pathname === link.href
+                    : pathname.startsWith(link.href);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                        isActive
+                          ? 'bg-[#21262D] text-[#58A6FF] border border-[#30363D]'
+                          : 'text-[#9198A1] hover:bg-[#21262D]/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className={`h-4.5 w-4.5 ${isActive ? 'text-[#58A6FF]' : 'text-[#8B949E]'}`} />
+                        <span>{link.label}</span>
+                      </div>
+                      {link.href === '/quest' && (
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#238636]/15 text-[#3FB950] border border-[#238636]/30">
+                          {solvedCount}/70
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Drawer Footer / Logout */}
+            {user && (
+              <div className="pt-4 border-t border-[#21262D]">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logout();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs font-semibold transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>{isGuest ? 'Exit Guest Session' : 'Sign Out'}</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Global Command Palette */}
       <CommandPalette
