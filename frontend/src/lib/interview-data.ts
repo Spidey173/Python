@@ -16577,195 +16577,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Subarray Sum Equals K.",
-            "bestReplyScript": "My approach for Subarray Sum Equals K follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Prefix Sum + Hash Map frequency counting, {0:1} map initialization, prefixSum - K lookup.",
+            "bestReplyScript": "I use Prefix Sum + Hash Map to efficiently count the number of subarrays whose sum equals K.\n\nThe idea is:\n- Keep a running sum (prefixSum) while traversing the array.\n- If prefixSum - K has been seen before, then a subarray ending at the current index has sum K.\n- Store the frequency of each prefix sum in a hash map.\n\nAlgorithm:\n1. Initialize: prefixSum = 0, count = 0, Hash Map = {0: 1} (to handle subarrays starting from index 0).\n2. Traverse the array:\n   - Add current element to prefixSum.\n   - Check if (prefixSum - K) exists in the hash map. If so, add its frequency to count.\n   - Store/increment current prefixSum frequency in the hash map.\n3. Return count.\n\nExample: nums = [1,1,1], k = 2 -> Map {0:1} -> prefix=1 (need -1: 0) -> prefix=2 (need 0: +1) -> prefix=3 (need 1: +1) -> Output count = 2.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Prefix Sum + Hash Map pattern",
+                  "Initialize hash map with `{0: 1}`",
+                  "Lookup `prefixSum - K` frequency",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Prefix Sum Rationale",
             "question": "2. Why did you use prefix sums?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Subarray Sum Equals K.",
-            "bestReplyScript": "I chose this approach for Subarray Sum Equals K over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Range sum formula: Subarray Sum = Prefix[j] - Prefix[i-1] = K.",
+            "bestReplyScript": "Prefix sums allow me to calculate the sum of any contiguous subarray in O(1) constant time.\n\nMathematical identity:\nSubarray Sum from index i to j = PrefixSum[j] - PrefixSum[i - 1].\nTo find Subarray Sum = K:\nPrefixSum[j] - PrefixSum[i - 1] = K  =>  PrefixSum[i - 1] = PrefixSum[j] - K.\n\nInstead of recalculating the sum for every possible subarray in O(n^2) or O(n^3), I reuse previously computed prefix sums, reducing time complexity from O(n^2) to O(n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Subarray Sum = Prefix[j] - Prefix[i-1] = K",
+                  "Rearranged: Prefix[i-1] = Prefix[j] - K",
+                  "Calculates any range sum in O(1) time"
             ]
       },
       {
             "id": "q3",
-            "category": "Algorithmic Justification",
+            "category": "Hash Map Necessity",
             "question": "3. Why is a hash map required?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Subarray Sum Equals K.",
-            "bestReplyScript": "I chose this approach for Subarray Sum Equals K over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) average lookup for previous prefix sum frequencies.",
+            "bestReplyScript": "The hash map stores `PrefixSum -> Frequency`.\n\nThis lets me instantly query whether a previous prefix sum equal to `prefixSum - K` exists and how many times it appeared.\nHash map lookup takes O(1) average time, making the overall algorithm linear O(n).\nWithout a hash map, searching previous prefix sums iteratively would take O(n) per element, causing total time to degrade to O(n^2).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Hash Map stores `PrefixSum -> Frequency`",
+                  "O(1) average frequency lookup",
+                  "Reduces searching time from O(n^2) to O(n)"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "4. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Subarray Sum Equals K.",
-            "bestReplyScript": "Here is the complexity analysis for Subarray Sum Equals K:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear time O(n) and linear auxiliary space O(n).",
+            "bestReplyScript": "Each element in the array is processed exactly once in a single pass.\n- Time Complexity: O(n)\n- Space Complexity: O(n) (the hash map may store up to n distinct prefix sums in the worst case).\n\nThis is the optimal solution for handling arrays containing positive numbers, negative numbers, and zeros.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Optimal for positive, negative, and zero values"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Mathematical Mechanics of Prefix Difference",
             "question": "5. How does the prefix sum technique work?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Step-by-step mathematical proof of prefix subtraction.",
+            "bestReplyScript": "Let `prefixSum` be the current running sum up to index j.\nIf `prefixSum - K` exists in our hash map at some previous index i-1:\nThat means `PrefixSum[j] - PrefixSum[i-1] = K`.\n\nExample: nums = [3, 4, -2, 5], k = 5.\nAt index 3: prefixSum = 10. Need: 10 - 5 = 5.\nIf prefix sum 5 appeared earlier (at index 1, where [3,4] = 7? Wait, at index 0: 3, index 1: 7, index 2: 5!), since prefix sum 5 exists at index 2, the subarray from index 3 [5] sums to 5!\n\nEvery match in the map corresponds to a valid subarray ending at current index j.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "PrefixSum[j] - PrefixSum[i-1] = K",
+                  "Matches correspond to valid contiguous subarrays",
+                  "Handles negative numbers seamlessly"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Frequency Accumulation for Multiple Subarrays",
             "question": "6. What if there are multiple valid subarrays?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Frequency count addition (`count += map[prefixSum - K]`) handling multiple zero/negative prefix sums.",
+            "bestReplyScript": "The hash map stores the FREQUENCY of each prefix sum, not just a boolean flag!\n\nExample: nums = [1, -1, 1, -1], k = 0.\nPrefix sums: [1, 0, 1, 0].\nThe same prefix sum 0 appears multiple times.\nWhen we encounter `prefixSum - K`, multiple previous indices have the same target prefix sum. Each occurrence represents another distinct valid subarray ending at the current index.\n\nTherefore, we add `map[prefixSum - K]` to count instead of just 1.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hash Map stores frequency count",
+                  "Adds `map[prefixSum - K]` to total count",
+                  "Correctly counts multiple zero/negative sum subarrays"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Subarray Indices Retrieval Extension",
             "question": "7. How would you return the actual indices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Map value mapping: `PrefixSum -> List[Index]`.",
+            "bestReplyScript": "Instead of storing frequency integer in hash map, store a list of indices: `PrefixSum -> [indices]`.\n\nExample: Prefix sum 3 occurred at indices [0, 4, 8].\nWhen current `prefixSum - K` equals 3 at current index j:\nIterate through stored list `[0, 4, 8]` and return subarray bounds `(start_idx + 1, j)` for each matched index.\n\nThis returns the actual start and end positions of all valid subarrays.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Map stores `PrefixSum -> List[Index]`",
+                  "Returns subarray bounds `(start_idx + 1, j)`",
+                  "Retrieves exact subarray locations"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Subarray Sum Equals K.",
-            "bestReplyScript": "When handling Subarray Sum Equals K, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element K, negative numbers, all zeros, no match.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> 0\n2. Single element equal to K ([5], k=5) -> 1 (handled by `{0:1}` initialization)\n3. Negative numbers ([1, -1, 2], k=2) -> Handled correctly\n4. All zeros ([0, 0, 0], k=0) -> 6 valid subarrays\n5. No valid subarray ([1, 2, 3], k=10) -> 0\n\nTesting these ensures complete correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array returns 0",
+                  "Single element [5] k=5 requires {0:1} initialization",
+                  "All zeros array [0,0,0] k=0 returns 6"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Subarray Sum Equals K.",
-            "bestReplyScript": "To thoroughly test Subarray Sum Equals K, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering positive, negative, zero, and edge cases.",
+            "bestReplyScript": "I would test:\n- [1, 1, 1], k=2 -> 2\n- [1, 2, 3], k=3 -> 2 ([1,2] and [3])\n- [0, 0, 0], k=0 -> 6\n- [5], k=5       -> 1\n- [], k=0        -> 0\n\nThese tests cover positive, negative, zero, and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Standard LeetCode 560 test cases",
+                  "Zeros array permutation tests",
+                  "Empty and single element bounds"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "No-Memory Alternative Trade-offs",
             "question": "10. Can this be solved without extra memory?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(1) space trade-off degrading time to O(n^2).",
+            "bestReplyScript": "Yes, but not efficiently.\nWithout a hash map (O(1) space):\n- We must test all pairs (i, j) and compute subarray sums in O(n^2) nested loops.\n- Time Complexity: O(n^2), Space Complexity: O(1).\n\nUsing a Hash Map is worth the O(n) space trade-off to achieve optimal O(n) linear time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "O(1) space degrades time to O(n^2)",
+                  "Requires nested loop pair checking",
+                  "Hash map O(n) space is the optimal choice"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Subarray Sum Equals K.",
-            "bestReplyScript": "Common candidate pitfalls when solving Subarray Sum Equals K include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Subarray Sum Equals K (LeetCode 560).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to initialize hash map with `{0: 1}` (misses valid subarrays starting from index 0!).\n- Storing boolean existence in map instead of frequency count (fails on duplicate prefix sums).\n- Updating hash map with current prefix sum BEFORE checking `prefixSum - K` (causes self-matching bugs when K = 0).\n- Incorrectly attempting to use Two-Pointer Sliding Window on arrays containing negative numbers.\n\nThe most common mistake is omitting `{0: 1}` or using sliding window on negative numbers.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting `{0: 1}` hash map initialization",
+                  "Updating map before checking `prefixSum - K` bug (fails when K=0)",
+                  "Using Sliding Window when array has negative numbers"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Positive-Only Sliding Window Optimization",
             "question": "12. How would your solution change if the array contains only positive numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Sliding Window O(n) time and O(1) space optimization for strictly non-negative arrays.",
+            "bestReplyScript": "If all numbers are strictly positive (or non-negative):\n- We can use a Two-Pointer Sliding Window (`left`, `right`) in O(n) time and O(1) space!\n- Expanding `right` strictly INCREASES window sum.\n- Shrinking `left` strictly DECREASES window sum.\n\nWhy Prefix Sum + Hash Map is required here: When negative numbers exist, expanding window might decrease sum and shrinking window might increase sum, destroying sliding window monotonicity! Thus, Prefix Sum Hash Map is mandatory for general arrays.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Positive-only array: Sliding Window O(n) time, O(1) space",
+                  "Expanding right increases sum, shrinking left decreases sum",
+                  "Negative numbers destroy sliding window monotonicity"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where are prefix sums commonly used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "2D Integral Images, Range Sum Queries, Financial Transaction Auditing.",
+            "bestReplyScript": "Prefix sums are used in:\n- Computer Vision & Graphics: 2D Integral Images (Viola-Jones object detection for instant sub-image sum calculations).\n- Financial Transaction Auditing: Finding transaction windows matching target net balance changes.\n- Database Systems: Range Sum Queries (Prefix Sum / Fenwick Tree / Segment Tree indexing).\n- Audio & Signal Processing: Moving average calculations.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "2D Integral Images in Computer Vision",
+                  "Financial transaction net balance auditing",
+                  "Range Sum Query database indexing"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Streaming Data Architecture",
             "question": "14. Can this work on streaming data?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Subarray Sum Equals K.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Real-time prefix sum accumulation on unbounded streams.",
+            "bestReplyScript": "Yes! As new numbers arrive from a data stream:\n1. Update running `prefixSum += incoming_val`.\n2. Check if `(prefixSum - K)` exists in Hash Map, and add its frequency to total count.\n3. Increment `map[prefixSum] += 1`.\n\nEach incoming item is processed in O(1) time, allowing real-time continuous stream monitoring.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "O(1) time processing per incoming stream element",
+                  "Incremental prefix sum accumulation",
+                  "Real-time stream evaluation"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Brute Force vs Prefix Sum Comparison",
             "question": "15. Compare brute-force and prefix sum approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Subarray Sum Equals K.",
-            "bestReplyScript": "My approach for Subarray Sum Equals K follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Computes all O(n^2) subarray sums -> Time O(n^2), Space O(1).\n- Prefix Sum + Hash Map: Single pass frequency lookup -> Time O(n), Space O(n).\n\nThe Prefix Sum + Hash Map approach reduces quadratic time to linear time and correctly handles positive, negative, and zero elements.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brute force: O(n^2) time, O(1) space",
+                  "Prefix Sum + Hash Map: O(n) time, O(n) space",
+                  "Optimal linear solution for general arrays"
             ]
       }
 ],
