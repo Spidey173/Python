@@ -7874,195 +7874,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach step by step.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Single Number (Bitwise XOR).",
-            "bestReplyScript": "My approach for Single Number (Bitwise XOR) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Bitwise XOR operator application, accumulator initialization, cancelation mechanics.",
+            "bestReplyScript": "I solve this problem using the Bitwise XOR (^) operator because every number appears twice except one unique number.\n\nSteps:\n1. Initialize a variable result = 0.\n2. Traverse the array.\n3. XOR each element with result.\n4. Duplicate numbers cancel each other out.\n5. The remaining value is the unique number.\n\nExample: Input [4,1,2,1,2] -> 0^4=4 -> 4^1=5 -> 5^2=7 -> 7^1=6 -> 6^2=4. Answer = 4.\n\nThe final value stored in result is the single number.\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Initialize accumulator result = 0",
+                  "XOR each element: result ^= num",
+                  "Duplicate numbers cancel each other out (a ^ a = 0)",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "XOR Operation Mechanics",
             "question": "2. Why does the XOR operation solve this problem?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Single Number (Bitwise XOR).",
-            "bestReplyScript": "I chose this approach for Single Number (Bitwise XOR) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Mathematical identities a ^ a = 0 and a ^ 0 = a.",
+            "bestReplyScript": "XOR has a unique property:\na ^ a = 0 (Any number XORed with itself becomes 0).\na ^ 0 = a (Any number XORed with 0 remains unchanged).\n\nSo when every duplicate pair cancels out, only the unique element remains.\n\nExample: 2 ^ 3 ^ 2 = (2 ^ 2) ^ 3 = 0 ^ 3 = 3.\nThat's why XOR is the perfect solution for this problem.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "a ^ a = 0 identity",
+                  "a ^ 0 = a identity",
+                  "Commutative & Associative properties allow regrouping"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Single Number (Bitwise XOR).",
-            "bestReplyScript": "Here is the complexity analysis for Single Number (Bitwise XOR):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear time scan and constant auxiliary memory bounds.",
+            "bestReplyScript": "We traverse the array only once.\nEach XOR operation takes constant O(1) time.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is the optimal solution because every element must be processed at least once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal single-pass lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Zero Auxiliary Memory Proof",
             "question": "4. Can you solve it without using extra memory?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Single Number (Bitwise XOR).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Constant space bound without Hash Maps or Sets.",
+            "bestReplyScript": "Yes. The XOR solution only uses one variable: result = 0.\nNo hash map, set, or extra array is required.\n\nTherefore: Extra Space = O(1).\nThis is one of the biggest advantages of the XOR approach over hash-based lookup.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Uses a single scalar integer variable",
+                  "Avoids Hash Map/Set allocation memory churn",
+                  "Strict O(1) auxiliary space"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "XOR Mathematical Properties",
             "question": "5. What properties of XOR make this solution possible?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Single Number (Bitwise XOR).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Self-inverse, Identity, Commutative, Associative properties.",
+            "bestReplyScript": "The important XOR properties are:\n1. Self-Inverse: a ^ a = 0 (Same numbers cancel out).\n2. Identity: a ^ 0 = a (Zero doesn't change value).\n3. Commutative: a ^ b = b ^ a (Order of elements doesn't matter).\n4. Associative: (a ^ b) ^ c = a ^ (b ^ c) (Grouping doesn't matter).\n\nThese properties allow duplicate numbers to cancel regardless of their positions in the array.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Self-inverse: a ^ a = 0",
+                  "Identity: a ^ 0 = a",
+                  "Commutative & Associative reordering"
             ]
       },
       {
             "id": "q6",
-            "category": "Time & Space Complexity",
+            "category": "Extension: Triples (Single Number II)",
             "question": "6. What if every element appears three times except one?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Single Number (Bitwise XOR).",
-            "bestReplyScript": "Here is the complexity analysis for Single Number (Bitwise XOR):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Bit counting / Bitmasking state machine for Single Number II.",
+            "bestReplyScript": "The simple XOR approach will not work because a ^ a ^ a = a (duplicates no longer cancel out).\n\nFor this variation (Single Number II), we count the number of set bits at each 32-bit position modulo 3, or use bitmask state machines (ones, twos).\nAny bit count not divisible by 3 belongs to the unique number.\n\nExample: [2,2,2,5] -> Answer: 5.\nThis bit manipulation solution still runs in O(n) time with O(1) extra space.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "a ^ a ^ a = a invalidates simple XOR",
+                  "Bit-counting modulo 3 per position",
+                  "Bitmask state machine (ones, twos) for O(n) time & O(1) space"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Single Number (Bitwise XOR).",
-            "bestReplyScript": "When handling Single Number (Bitwise XOR), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Single element, negative numbers, zero, large integers.",
+            "bestReplyScript": "Important edge cases include:\n1. Single element ([7]) -> 7\n2. Negative numbers ([-1,2,2]) -> -1\n3. Zero as unique element ([0,5,5]) -> 0\n4. Large numbers ([1000000,3,3]) -> 1000000\n\nTesting these ensures the algorithm works for different numerical inputs.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Single element array n = 1",
+                  "Negative numbers (-1 ^ -1 = 0)",
+                  "Zero as the single unique value"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Single Number (Bitwise XOR).",
-            "bestReplyScript": "To thoroughly test Single Number (Bitwise XOR), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, negative, zero inputs.",
+            "bestReplyScript": "I would test normal and edge cases:\n- [2,2,1] -> 1\n- [4,1,2,1,2] -> 4\n- [7] -> 7\n- [0,1,1] -> 0\n- [-2,-2,-5] -> -5\n\nThese tests verify correctness under different conditions.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Normal duplicate pair tests",
+                  "Negative integer tests",
+                  "Single element & zero tests"
             ]
       },
       {
             "id": "q9",
-            "category": "Step-by-Step Approach",
+            "category": "Hash Map Comparison",
             "question": "9. Can you solve this using a hash map? Compare both approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Single Number (Bitwise XOR).",
-            "bestReplyScript": "My approach for Single Number (Bitwise XOR) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "O(n) time/space Hash Map vs O(n) time/O(1) space XOR.",
+            "bestReplyScript": "Yes. Using a hash map:\n- Count frequency of each number.\n- Return the number whose frequency is 1.\n\nComparison:\n- Hash Map: Time O(n), Space O(n)\n- XOR:      Time O(n), Space O(1)\n\nThe XOR approach is strictly preferred because it uses constant extra space without hash map memory overhead.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Hash Map: O(n) space allocation",
+                  "XOR: O(1) constant space",
+                  "XOR avoids garbage collection & hashing overhead"
             ]
       },
       {
             "id": "q10",
-            "category": "Edge Case Analysis",
+            "category": "Negative Numbers Compatibility",
             "question": "10. What happens if negative numbers are present?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Single Number (Bitwise XOR).",
-            "bestReplyScript": "When handling Single Number (Bitwise XOR), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Two's complement binary representation XOR compatibility.",
+            "bestReplyScript": "The XOR solution still works correctly with negative numbers because XOR operates directly on the binary representation (two's complement) of integers.\n\nExample: [-4,-4,-9] -> Output: -9.\nNo changes to the algorithm are required.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Operates on two's complement binary bits",
+                  "Negative values cancel out identically: (-4) ^ (-4) = 0",
+                  "No algorithmic modifications needed"
             ]
       },
       {
             "id": "q11",
-            "category": "Algorithmic Justification",
+            "category": "Sorting Comparison",
             "question": "11. Why is XOR preferred over sorting?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Single Number (Bitwise XOR).",
-            "bestReplyScript": "I chose this approach for Single Number (Bitwise XOR) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n log n) sorting vs O(n) XOR linear time.",
+            "bestReplyScript": "Sorting is another possible solution: sort the array and compare adjacent elements ([1,1,2,2,4]).\n\nComparison:\n- Sorting: Time O(n log n), Space O(1) or O(log n)\n- XOR:     Time O(n),       Space O(1)\n\nSince O(n) is linear and faster than O(n log n), XOR is the better choice.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Sorting takes O(n log n) time",
+                  "XOR takes O(n) linear time",
+                  "XOR avoids mutating input array"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Streaming Data Compatibility",
             "question": "12. Can this work on a stream of numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Single Number (Bitwise XOR).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Stateful incremental bitwise XOR accumulator.",
+            "bestReplyScript": "Yes! One advantage of XOR is that numbers can be processed one at a time on an incoming stream.\n\nKeep updating: result ^= current_number.\nAt the end of the stream, result contains the unique number.\n\nThis makes XOR ideal for real-time streaming data with zero buffering.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stateful scalar variable result ^= num",
+                  "Processes incoming stream in O(1) time per item",
+                  "Zero buffering memory footprint"
             ]
       },
       {
             "id": "q13",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "13. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Single Number (Bitwise XOR).",
-            "bestReplyScript": "Common candidate pitfalls when solving Single Number (Bitwise XOR) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Single Number.",
+            "bestReplyScript": "Some common mistakes include:\n- Using addition instead of XOR.\n- Forgetting that XOR only works when every other element appears exactly twice.\n- Using extra memory (Hash Map/Set) unnecessarily.\n- Assuming sorting is the optimal solution.\n- Confusing XOR (^) with exponentiation (**) in Python.\n\nThe most common mistake is applying simple XOR to problems where elements appear three or more times.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Confusing ^ (bitwise XOR) with ** (exponentiation)",
+                  "Applying simple XOR when elements appear 3+ times",
+                  "Using Hash Maps unnecessarily"
             ]
       },
       {
             "id": "q14",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "14. Where is XOR commonly used in real-world applications?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Single Number (Bitwise XOR).",
-            "bestReplyScript": "The algorithmic core of Single Number (Bitwise XOR) is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Practical software engineering applications of XOR.",
+            "bestReplyScript": "XOR is widely used in:\n- Data encryption and cryptography (Symmetric ciphers, One-Time Pad).\n- Error detection and correction (RAID 5 parity checks, Hamming codes).\n- Network communication & Checksums.\n- In-place variable swapping (a ^= b; b ^= a; a ^= b).\n- Finding missing or unique elements in data pipelines.",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "RAID 5 disk parity calculation",
+                  "Cryptography & One-Time Pad ciphers",
+                  "In-place variable swapping"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Extension: Two Single Numbers (Single Number III)",
             "question": "15. How would you extend this to find two unique numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Single Number (Bitwise XOR).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single Number III partitioning via rightmost set bit.",
+            "bestReplyScript": "If two numbers (a and b) appear once and every other number appears twice (e.g. [1,2,1,3,2,5]):\n\n1. XOR all numbers -> result = a ^ b.\n2. Find any set bit in result where a and b differ (e.g., diff = result & -result).\n3. Partition numbers into two groups based on whether that bit is set.\n4. XOR each group separately to isolate both unique numbers.\n\nComplexity: Time O(n), Space O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Full XOR yields a ^ b",
+                  "Isolate rightmost set bit: diff = result & -result",
+                  "Partition array into 2 groups and XOR each group separately"
             ]
       }
 ],
