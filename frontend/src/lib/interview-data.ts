@@ -17337,195 +17337,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "My approach for 3Sum (Three Elements Zero Sum) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Sorting + Two-Pointer strategy, fixing outer loop element `nums[i]`, handling 2Sum target `-nums[i]`, skipping duplicates.",
+            "bestReplyScript": "I first sort the array, then fix one element and use the two-pointer technique to find the other two elements whose sum makes the total equal to 0.\n\nAlgorithm:\n1. Sort the array in ascending order.\n2. Iterate through each element i from 0 to n-3:\n   - Skip duplicate fixed elements: `if i > 0 and nums[i] == nums[i-1]: continue`.\n   - Set left = i + 1, right = n - 1.\n   - While left < right:\n     * sum = nums[i] + nums[left] + nums[right]\n     * If sum == 0: record triplet `[nums[i], nums[left], nums[right]]`. Advance both pointers while skipping duplicate values (`nums[left] == nums[left+1]`, `nums[right] == nums[right-1]`).\n     * If sum < 0: move left pointer right.\n     * If sum > 0: move right pointer left.\n3. Return the result list of unique triplets.\n\nExample: [-1, 0, 1, 2, -1, -4] -> Sorted [-4, -1, -1, 0, 1, 2] -> Output: [[-1, -1, 2], [-1, 0, 1]].\n\nComplexity: Time: O(n^2), Space: O(1) (excluding output)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Sort array first",
+                  "Fix `nums[i]`, search remaining two numbers with two pointers",
+                  "Skip duplicate fixed elements and duplicate pointer values",
+                  "Time: O(n^2), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Sorting Requirement Rationale",
             "question": "2. Why is sorting required?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "I chose this approach for 3Sum (Three Elements Zero Sum) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Enables two-pointer directionality and seamless duplicate skipping.",
+            "bestReplyScript": "Sorting is essential because it:\n1. Enables the Two-Pointer technique: We can monotonically adjust sum (increasing sum by moving left rightward, decreasing sum by moving right leftward).\n2. Simplifies duplicate skipping: Equal numbers become adjacent, making duplicate skipping trivial (`nums[i] == nums[i-1]`).\n\nWithout sorting, we cannot use two pointers effectively and eliminating duplicate triplets becomes exponentially harder.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Enables Two-Pointer directional adjustment",
+                  "Places identical numbers adjacently for duplicate skipping",
+                  "Reduces 2Sum search space from O(n^2) to O(n)"
             ]
       },
       {
             "id": "q3",
-            "category": "Algorithmic Justification",
+            "category": "Two-Pointer 2Sum Subproblem Rationale",
             "question": "3. Why did you use the two-pointer technique?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "I chose this approach for 3Sum (Three Elements Zero Sum) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Reducing 2Sum subproblem from O(n^2) to O(n) linear search.",
+            "bestReplyScript": "After fixing the outer element `nums[i]`, the problem reduces to finding two numbers `nums[left] + nums[right]` whose sum equals target `-nums[i]`.\n\nInstead of checking all pairs in O(n^2), two pointers find all matching pairs in a single linear O(n) scan.\nSince this linear scan is performed for each of the n fixed elements, total time complexity becomes O(n * n) = O(n^2).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Reduces 2Sum subproblem to target `-nums[i]`",
+                  "Two pointers solve 2Sum in linear O(n) time",
+                  "Total runtime = O(n) outer * O(n) inner = O(n^2)"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "4. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "Here is the complexity analysis for 3Sum (Three Elements Zero Sum):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(n log n) sort + O(n^2) loop scan = O(n^2) total time, O(1) space.",
+            "bestReplyScript": "Complexity breakdown:\n- Sorting array: O(n log n)\n- Outer loop runs n times.\n- Inner two-pointer scan runs in O(n) time per iteration.\n\nOverall:\n- Time Complexity: O(n^2)\n- Space Complexity: O(1) auxiliary space (excluding result list storage).\n\nO(n^2) is the optimal lower bound for general 3Sum without specialized hardware.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n^2)",
+                  "Space Complexity: O(1) auxiliary space",
+                  "Optimal lower bound for general 3Sum"
             ]
       },
       {
             "id": "q5",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Triplets Elimination Strategy",
             "question": "5. How do you avoid duplicate triplets?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "When handling 3Sum (Three Elements Zero Sum), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Dual level duplicate skipping: outer loop `if i > 0 and nums[i] == nums[i-1]` and inner pointer loops.",
+            "bestReplyScript": "Duplicates are skipped at two distinct levels:\n1. Outer Loop Level: Skip duplicate fixed numbers: `if i > 0 and nums[i] == nums[i-1]: continue`.\n2. Inner Pointer Level: After finding a valid triplet (`sum == 0`), advance `left` and `right` while skipping identical numbers:\n   `while left < right and nums[left] == nums[left + 1]: left += 1`\n   `while left < right and nums[right] == nums[right - 1]: right -= 1`\n   Then increment `left += 1` and decrement `right -= 1`.\n\nThis guarantees strictly unique triplets without relying on an expensive Hash Set.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Outer loop skip: `if i > 0 and nums[i] == nums[i-1]`",
+                  "Inner pointer skip: `while nums[left] == nums[left+1]`",
+                  "Guarantees unique triplets without Hash Set overhead"
             ]
       },
       {
             "id": "q6",
-            "category": "Step-by-Step Approach",
+            "category": "Brute-Force Inefficiency",
             "question": "6. Why is the brute-force approach inefficient?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "My approach for 3Sum (Three Elements Zero Sum) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "O(n^3) triple nested loop + set deduplication.",
+            "bestReplyScript": "The brute-force approach checks every possible combination of 3 numbers using 3 nested loops.\n\nFor an array of size n:\n- Total triplet combinations = n * (n-1) * (n-2) / 6 = O(n^3).\n- Deduplicating triplets requires storing sorted tuples in a Hash Set.\n\nFor n = 3,000, O(n^3) requires 4.5 billion operations (TLE). Sorting + Two Pointers reduces this to O(n^2) (~9 million ops).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brute force: 3 nested loops O(n^3) time",
+                  "Requires Set deduplication",
+                  "4.5 billion ops (n=3000) vs 9 million ops in O(n^2)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "When handling 3Sum (Three Elements Zero Sum), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty input, n < 3, all zeros [0,0,0,0], no valid triplets, duplicates.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array or n < 3 ([]) -> Returns []\n2. All zeros ([0, 0, 0, 0]) -> Returns single unique triplet [[0, 0, 0]]\n3. No valid triplets ([1, 2, 3]) -> Returns []\n4. All positive or all negative ([1, 2, 3, 4] or [-5, -4, -3]) -> Returns [] immediately (early exit if `nums[i] > 0`)\n5. Multiple duplicate triplets ([-1, -1, 2, 2]) -> Returns [[-1, -1, 2]].\n\nTesting these ensures complete correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n < 3 returns []",
+                  "All zeros [0,0,0,0] -> [[0,0,0]]",
+                  "Early exit optimization: `if nums[i] > 0: break`"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "To thoroughly test 3Sum (Three Elements Zero Sum), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, duplicate, empty, and all-zeros inputs.",
+            "bestReplyScript": "I would test:\n- [] -> []\n- [0, 0, 0] -> [[0, 0, 0]]\n- [-1, 0, 1] -> [[-1, 0, 1]]\n- [-1, 0, 1, 2, -1, -4] -> [[-1, -1, 2], [-1, 0, 1]]\n- [1, 2, 3] -> []\n\nThese cover normal, duplicate, and boundary edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 15 standard test cases",
+                  "All zeros verification",
+                  "No triplet match verification"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "Common candidate pitfalls when solving 3Sum (Three Elements Zero Sum) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in 3Sum (LeetCode 15).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to sort the array first.\n- Missing duplicate skip in outer loop (`nums[i] == nums[i-1]`).\n- Missing duplicate skip in inner pointers after finding a match (`nums[left] == nums[left+1]`).\n- Moving only one pointer on `sum == 0` instead of moving both `left += 1` and `right -= 1`.\n- Forgetting early exit condition `if nums[i] > 0: break`.\n\nThe most common mistake is returning duplicate triplets.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Omitting duplicate skips on outer or inner loops",
+                  "Moving only 1 pointer on match instead of both",
+                  "Omitting `nums[i] > 0` early exit"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Generalization to K-Sum Framework",
             "question": "10. Can this be generalized to K-Sum?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive reduction from K-Sum to 2-Sum.",
+            "bestReplyScript": "Yes! The K-Sum problem (e.g. 4Sum LeetCode 18) is generalized recursively:\n1. Sort the array.\n2. For K > 2: Loop through elements, fix `nums[i]`, and recursively call `(K - 1)-Sum` with target `target - nums[i]`.\n3. Base case (K = 2): Use the standard two-pointer 2Sum algorithm.\n\nTime Complexity for K-Sum: O(n^(K-1)). For 4Sum it is O(n^3), for 3Sum it is O(n^2).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive reduction: K-Sum -> (K-1)-Sum -> ... -> 2Sum",
+                  "Base case K = 2 uses Two Pointers",
+                  "Time Complexity: O(n^(K-1))"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "First Triplet Early Exit",
             "question": "11. How would you return only one valid triplet?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Early exit `return [nums[i], nums[left], nums[right]]` on first match.",
+            "bestReplyScript": "If only a single valid triplet is needed:\n- Simply return `[nums[i], nums[left], nums[right]]` immediately upon finding the first match (`sum == 0`).\n- We can skip all duplicate skipping logic entirely!\n\nWhile worst-case time remains O(n^2), average execution time drops significantly.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Return immediately on first `sum == 0`",
+                  "Eliminates duplicate skipping boilerplate",
+                  "Significantly faster average runtime"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Hash Set Alternative Comparison",
             "question": "12. Can hashing solve this problem?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Hash Set 2Sum vs Two Pointers comparison.",
+            "bestReplyScript": "Yes. For each fixed element `nums[i]`, we can solve the 2Sum subproblem using a Hash Set to find numbers summing to `-nums[i]`.\n\nComparison:\n- Hash Set approach: Time O(n^2), Space O(n) (storing Hash Set per iteration + Set of sorted tuples for deduplication).\n- Sorted Two-Pointer approach: Time O(n^2), Space O(1) auxiliary.\n\nTwo Pointers is preferred in interviews because it uses O(1) space and handles duplicate elimination naturally without Set overhead.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hash Set approach requires O(n) space + tuple set deduplication",
+                  "Two Pointers uses O(1) space and in-place duplicate skipping",
+                  "Two Pointers is cleaner and memory-efficient"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where is this pattern useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Applications in financial transaction matching, data analytics.",
+            "bestReplyScript": "The Sorting + Two-Pointer pattern is useful in:\n- Financial Fraud Auditing (detecting 3 balancing transactions whose net sum equals zero).\n- Data Analytics & E-Commerce (finding 3 products whose combined price equals a budget limit).\n- Chemical Compound Synthesis (finding 3 component combinations with net zero charge/delta).\n- 4Sum & 3Sum Closest problem variations.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Financial 3-way transaction balancing",
+                  "E-commerce budget combination matching",
+                  "3Sum Closest & 4Sum variations"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Arbitrary Non-Zero Target Extension",
             "question": "14. How would your solution change if the target wasn't zero?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adapting 3Sum to `target` (LeetCode 15 variant / 3Sum Closest).",
+            "bestReplyScript": "The algorithm remains identical!\nInstead of checking `sum == 0`, we check `sum == target`.\n\nAdjustments:\n- 2Sum target becomes `target - nums[i]`.\n- Early exit condition becomes `if nums[i] > target and nums[i] >= 0: break`.\n- Pointer movements:\n  * `sum < target`: `left += 1`\n  * `sum > target`: `right -= 1`\n\nComplexity remains Time: O(n^2), Space: O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Target formula: `sum == target`",
+                  "Pointers adjust relative to `target`",
+                  "Time: O(n^2), Space: O(1)"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Brute Force vs Optimal Comparison",
             "question": "15. Compare brute-force and optimal solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for 3Sum (Three Elements Zero Sum).",
-            "bestReplyScript": "I chose this approach for 3Sum (Three Elements Zero Sum) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: 3 nested loops checking all O(n^3) triplets + Set deduplication -> Time O(n^3), Space O(n).\n- Sorting + Two Pointers: Fix outer loop + Two-Pointer 2Sum scan with in-place duplicate skipping -> Time O(n^2), Space O(1).\n\nSorting + Two Pointers reduces cubic time to quadratic time while using zero auxiliary memory, making it the optimal interview solution.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force: O(n^3) time, O(n) space",
+                  "Sorting + Two Pointers: O(n^2) time, O(1) space",
+                  "Optimal quadratic solution"
             ]
       }
 ],
