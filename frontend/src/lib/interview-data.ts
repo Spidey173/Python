@@ -18858,195 +18858,182 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Sliding Window Maximum.",
-            "bestReplyScript": "My approach for Sliding Window Maximum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Monotonic decreasing deque of indices, popping out-of-bounds indices from front, popping smaller values from back.",
+            "bestReplyScript": "I use a deque (double-ended queue) to store the INDICES of useful elements in the current window.\n\nThe deque always maintains elements in decreasing order of their values, so the front of the deque (`deque[0]`) always contains the index of the maximum element in the current window.\n\nAlgorithm:\n1. Initialize an empty deque and result array.\n2. Iterate through index i from 0 to n-1:\n   - Remove indices from the front that are outside the current window (`deque[0] <= i - k`).\n   - Remove indices from the back whose values are smaller than current element `nums[i]` (`nums[deque[-1]] < nums[i]`).\n   - Append current index `i` to back of deque.\n   - If `i >= k - 1` (window fully formed), append `nums[deque[0]]` to result.\n3. Return result.\n\nExample: nums = [1,3,-1,-3,5,3,6,7], k = 3 -> Output: [3,3,5,5,6,7].\n\nComplexity: Time: O(n), Space: O(k)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Monotonic decreasing deque of INDICES",
+                  "Front `deque[0]` holds max element index of current window",
+                  "Pop front if `deque[0] <= i - k` (out of bounds)",
+                  "Pop back while `nums[deque[-1]] < nums[i]`",
+                  "Time: O(n), Space: O(k)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Deque Data Structure Rationale",
             "question": "2. Why did you use a deque?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Sliding Window Maximum.",
-            "bestReplyScript": "I chose this approach for Sliding Window Maximum over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) double-ended operations: popleft for window expiry, pop for monotonicity.",
+            "bestReplyScript": "A deque (double-ended queue) allows O(1) constant time insertion and deletion from BOTH ends.\n\nIt enables:\n- Popping expired indices from the FRONT (`popleft()`) when they fall out of window bounds (`i - k`).\n- Popping smaller useless values from the BACK (`pop()`) to maintain monotonic decreasing order.\n- Accessing the current window maximum at the FRONT (`deque[0]`) in O(1) time.\n\nThis makes the deque the ideal data structure for sliding window maximum.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "O(1) double-ended operations (popleft and pop)",
+                  "Front popleft handles window boundary expiration",
+                  "Back pop maintains monotonic decreasing order"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Sliding Window Maximum.",
-            "bestReplyScript": "Here is the complexity analysis for Sliding Window Maximum:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Amortized linear time O(n) proof (each index pushed and popped at most once).",
+            "bestReplyScript": "Complexity analysis:\n- Each index i from 0 to n-1 is inserted into the deque exactly ONCE.\n- Each index is removed from the deque (either from front or back) at most ONCE.\n\nTherefore:\n- Time Complexity: O(n) (amortized 2n total operations)\n- Space Complexity: O(k) (the deque stores at most k indices for a window of size k).\n\nThis is optimal and significantly faster than heap O(n log k) or brute force O(n * k).",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(k)",
+                  "Amortized 2n total deque operations"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Max Heap Priority Queue Suboptimality",
             "question": "4. Why is a priority queue not the optimal solution?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Sliding Window Maximum.",
-            "bestReplyScript": "I chose this approach for Sliding Window Maximum over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n log k) heap overhead vs O(n) linear deque.",
+            "bestReplyScript": "A Max Heap (priority queue) can also find the maximum element, but:\n- Insertion and deletion take O(log k) time per element.\n- Lazy deletion of expired elements requires storing tuples `(val, idx)` and checking heap top, yielding O(n log k) time.\n- Overall Time Complexity: O(n log k) vs Deque O(n).\n\nThe deque approach is strictly faster because all double-ended pops take O(1) amortized time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Max Heap time: O(n log k)",
+                  "Deque time: O(n)",
+                  "Deque avoids log(k) tree rebalancing"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Monotonic Decreasing Deque Maintenance",
             "question": "5. How does the deque maintain the maximum element?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Sliding Window Maximum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Step-by-step example showing back pops.",
+            "bestReplyScript": "The deque stores indices in strictly decreasing order of their corresponding values.\n\nExample: Array [3, 1, 5], k = 3.\n- Index 0 (val 3): Deque = [0 (3)]\n- Index 1 (val 1): 1 < 3 -> Deque = [0 (3), 1 (1)]\n- Index 2 (val 5): 5 > 1 -> Pop back index 1; 5 > 3 -> Pop back index 0! Deque = [2 (5)].\n\nWhenever a larger value arrives, all smaller elements behind it are permanently discarded because they can NEVER become the window maximum while the larger element exists!",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Smaller elements behind a new larger element are useless",
+                  "Discarding smaller back elements preserves decreasing order",
+                  "Front element `deque[0]` is guaranteed to be current window max"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Sliding Window Maximum.",
-            "bestReplyScript": "When handling Sliding Window Maximum, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, k = 1, k = n, all equal values, strictly increasing/decreasing.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> []\n2. k = 1 ([2, 5, 3]) -> Returns original array [2, 5, 3]\n3. k = n ([1, 3, 2]) -> Single max value [3]\n4. All equal values ([4, 4, 4], k=2) -> [4, 4]\n5. Strictly increasing ([1, 2, 3, 4], k=2) -> [2, 3, 4]\n6. Strictly decreasing ([4, 3, 2, 1], k=2) -> [4, 3, 2]\n\nTesting these guards ensures complete correctness under all window configurations.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "k = 1 returns input array",
+                  "k = n returns single max value",
+                  "Equal values & monotonic trends handled correctly"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Sliding Window Maximum.",
-            "bestReplyScript": "To thoroughly test Sliding Window Maximum, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, k=1, k=n, duplicate, and monotonic inputs.",
+            "bestReplyScript": "I would test:\n- [] k=1 -> []\n- [1] k=1 -> [1]\n- [1,3,-1,-3,5,3,6,7] k=3 -> [3,3,5,5,6,7]\n- [4,4,4] k=2 -> [4,4]\n- [1,2,3,4] k=2 -> [2,3,4]\n- [4,3,2,1] k=2 -> [4,3,2]\n\nThese cover normal, increasing, decreasing, duplicate, and boundary edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 239 standard test cases",
+                  "k=1 and k=n boundary tests",
+                  "Duplicates and monotonic trend tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "8. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Sliding Window Maximum.",
-            "bestReplyScript": "Common candidate pitfalls when solving Sliding Window Maximum include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Sliding Window Maximum (LeetCode 239).",
+            "bestReplyScript": "Some common mistakes include:\n- Storing VALUES instead of INDICES in the deque (critical bug! Without indices, checking if the maximum element has expired outside the current window `i - k` is impossible!).\n- Forgetting `deque[0] <= i - k` front expiration check.\n- Recording maximum before `i >= k - 1` (records premature results for incomplete initial windows).\n- Using a standard list for deque where `pop(0)` takes O(k) time (ruins performance to O(n * k)).\n\nThe most common mistake is storing values instead of indices in the deque.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Storing values instead of INDICES in deque (critical bug)",
+                  "Forgetting front expiration check `deque[0] <= i - k`",
+                  "Using Python list `pop(0)` (O(k)) instead of `collections.deque` (`popleft()` O(1))"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Values Handling",
             "question": "9. Can duplicate values affect the deque?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Sliding Window Maximum.",
-            "bestReplyScript": "When handling Sliding Window Maximum, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Duplicate values equality check `<` vs `<=` in back pop.",
+            "bestReplyScript": "No.\nDuplicate values are handled correctly by using strict inequality `<` when popping back elements: `while deque and nums[deque[-1]] < nums[i]: deque.pop()`.\n\nExample: Array [5, 5, 5], k = 2.\n- Index 0: Deque = [0 (5)]\n- Index 1: 5 is not < 5, so index 1 is appended: Deque = [0 (5), 1 (5)]. Max at `i=1` is `nums[0]` = 5.\n- Index 2: Index 0 expires (`0 <= 2 - 2`), popped from front! Deque = [1 (5), 2 (5)]. Max is `nums[1]` = 5.\n\nDuplicates maintain correct expiry order.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Strict inequality `<` preserves duplicate indices",
+                  "Older duplicate expires first from front",
+                  "Maintains correct window max under duplicate values"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Heap-Based Solution Alternative",
             "question": "10. How would you solve this using a heap?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Sliding Window Maximum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Lazy deletion Max Heap implementation.",
+            "bestReplyScript": "Using a Max Heap:\n1. Push tuple `(-nums[i], i)` into heap.\n2. For each window step `i >= k - 1`:\n   - Lazy deletion: While `heap[0][1] <= i - k`: `heappop(heap)` (discard out-of-bounds heap top).\n   - Result append `-heap[0][0]`.\n\nComplexity: Time O(n log n) in worst case (or O(n log k)), Space O(n). This works but is slower than Deque O(n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Push `(-nums[i], i)` into Max Heap",
+                  "Lazy deletion of top out-of-bounds index: `heap[0][1] <= i - k`",
+                  "Time: O(n log k), Space: O(n)"
             ]
       },
       {
             "id": "q11",
-            "category": "Step-by-Step Approach",
+            "category": "Deque vs Heap Detailed Comparison Matrix",
             "question": "11. Compare the deque and heap approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Sliding Window Maximum.",
-            "bestReplyScript": "My approach for Sliding Window Maximum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Detailed comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Monotonic Deque: Time O(n), Space O(k). All operations amortized O(1). Optimal choice.\n- Max Heap: Time O(n log k), Space O(n). Tree rebalancing O(log k) on push/pop. Suboptimal.\n- Brute Force: Time O(n * k), Space O(1). Scans window max. TLE on large k.\n\nThe Monotonic Deque is preferred because it achieves optimal linear O(n) time.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Deque: O(n) time, O(k) space",
+                  "Max Heap: O(n log k) time, O(n) space",
+                  "Brute Force: O(n * k) time, O(1) space"
             ]
       },
       {
             "id": "q12",
-            "category": "Step-by-Step Approach",
+            "category": "Real-World Applications",
             "question": "12. Where are sliding window algorithms used?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Sliding Window Maximum.",
-            "bestReplyScript": "My approach for Sliding Window Maximum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Network traffic, stock market max spikes, CPU usage monitoring.",
+            "bestReplyScript": "Sliding window maximum algorithms are used in:\n- Financial Market Telemetry (tracking rolling peak stock price in 5-minute / 1-hour moving windows).\n- Network Telemetry & QoS (detecting peak packet bursts / bandwidth spikes over sliding time intervals).\n- CPU & Memory Monitoring (alerting on peak server load spikes in rolling 10-minute windows).\n- Computer Vision & Signal Processing (sliding max filter for edge detection & image dilation).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Financial rolling peak stock price tracking",
+                  "Network bandwidth spike detection",
+                  "Image processing sliding max filter"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Dynamically Changing Window Size",
             "question": "13. How would you handle a dynamically changing window size?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Sliding Window Maximum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dynamic boundary expiration `i - current_k` in deque.",
+            "bestReplyScript": "If the window size k changes dynamically per step (e.g. `k` varies per index):\n- Update the boundary check to use current `k_i`: `deque[0] <= i - k_i`.\n- The back pop condition `nums[deque[-1]] < nums[i]` remains identical.\n- Front element `deque[0]` still gives the maximum for the dynamically sized window in O(1) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Front check updates to dynamic boundary: `deque[0] <= i - k_i`",
+                  "Back pop condition remains unchanged",
+                  "Maintains O(1) maximum retrieval"
             ]
       },
       {
             "id": "q14",
-            "category": "Step-by-Step Approach",
+            "category": "Streaming Data Architecture Processing",
             "question": "14. Can this algorithm process streaming data?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Sliding Window Maximum.",
-            "bestReplyScript": "My approach for Sliding Window Maximum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Real-time stream processing without storing full array history.",
+            "bestReplyScript": "Yes! The deque algorithm is inherently a streaming algorithm.\n- We only need to store at most k indices in the deque in memory at any given time.\n- As each new element arrives from the stream, process it in O(1) time and output the current window max.\n- We do NOT need to store past array elements in memory.\n\nMemory footprint remains strictly bounded by O(k) for infinite data streams.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Processes incoming stream elements in O(1) real time",
+                  "Only stores at most k indices in memory",
+                  "Ideal for infinite streaming data architectures"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Amortized O(n) Proof Mechanics",
             "question": "15. Why is each element added and removed from the deque at most once?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Sliding Window Maximum.",
-            "bestReplyScript": "I chose this approach for Sliding Window Maximum over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Formal proof of 2n total operations bound.",
+            "bestReplyScript": "Proof of O(n) amortized time:\n1. Each index i (from 0 to n-1) is pushed onto the deque EXACTLY ONCE (`append(i)`).\n2. Each index i is removed from the deque AT MOST ONCE (either from front via `popleft()` on window expiry, or from back via `pop()` when a larger element arrives).\n\nTotal push operations = n. Total pop operations <= n.\nTotal operations across entire execution <= 2n = O(n) linear time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Total push operations = n",
+                  "Total pop operations <= n",
+                  "Total operations <= 2n = O(n) amortized time"
             ]
       }
 ],
