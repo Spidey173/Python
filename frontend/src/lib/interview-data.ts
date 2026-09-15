@@ -7492,197 +7492,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "questions": [
       {
             "id": "q1",
-            "category": "Deep-Dive Question 1",
+            "category": "Step-by-Step Approach",
             "question": "1. Explain the conditions for a valid mountain array.",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Three conditions: n >= 3, strictly increasing to peak, strictly decreasing after peak.",
+            "bestReplyScript": "A valid mountain array must satisfy three conditions:\n1. The array must have at least 3 elements.\n2. The values must strictly increase to a single peak.\n3. After the peak, the values must strictly decrease.\n\nAlso, the peak cannot be the first or last element.\n\nExample of a valid mountain: [1, 3, 5, 4, 2] -> Increasing: 1 -> 3 -> 5 | Peak: 5 | Decreasing: 5 -> 4 -> 2.\nExample of invalid: [1, 2, 3] (Never decreases).\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Minimum length n >= 3",
+                  "Strictly increasing then strictly decreasing",
+                  "Peak index 0 < peak < n-1",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Peak Position Constraint",
             "question": "2. Why can't the peak be the first or last element?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Valid Mountain Array.",
-            "bestReplyScript": "I chose this approach for Valid Mountain Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Requirement for both climb and descent phases.",
+            "bestReplyScript": "A mountain must have both:\n- An increasing part before the peak.\n- A decreasing part after the peak.\n\nIf the peak is the first element ([5,4,3,2]), there is no increasing sequence, so it's invalid.\nIf the peak is the last element ([1,2,3,4]), there is no decreasing sequence, so it's also invalid.\n\nTherefore, the peak must lie somewhere strictly between the first and last elements (0 < peak < n - 1).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Peak at index 0 lacks climb phase",
+                  "Peak at index n-1 lacks descent phase",
+                  "Must satisfy 0 < peak < n-1 boundary"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Valid Mountain Array.",
-            "bestReplyScript": "Here is the complexity analysis for Valid Mountain Array:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear single-pass traversal and constant auxiliary space bounds.",
+            "bestReplyScript": "The array is traversed only once.\nEach element is visited at most once while climbing up the mountain and walking down the mountain.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is the optimal solution because every element may need to be checked.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal linear pass lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Peak Identification Strategy",
             "question": "4. How do you identify the peak?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Two-phase pointer climbing logic.",
+            "bestReplyScript": "Start from the beginning and keep moving while the next element is strictly larger.\n\nExample: [1,2,4,7,5,3] -> Movement: 1 -> 2 -> 4 -> 7 (Peak Found at 7) -> 5 -> 3.\n\nThe first point where the sequence stops increasing is the peak candidate. Then verify that the remaining elements strictly decrease.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Climb while nums[i] < nums[i+1]",
+                  "Peak is first local maximum",
+                  "Validate remaining descent phase"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Single Pass Proof",
             "question": "5. Can this be solved in one pass?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single pass pointer traversal logic.",
+            "bestReplyScript": "Yes. The algorithm naturally works in one pass:\n1. Move upward while elements are strictly increasing.\n2. Check that the peak isn't the first or last element (0 < i < n - 1).\n3. Continue moving downward while elements are strictly decreasing.\n4. If we reach the end of the array (i == n - 1), the array is a valid mountain.\n\nThis processes every element only once.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Single pass traversal",
+                  "Two consecutive while loops",
+                  "Verify end index i == n - 1"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Valid Mountain Array.",
-            "bestReplyScript": "When handling Valid Mountain Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Length < 3, monotonic increasing, monotonic decreasing, flat peaks, valid mountain.",
+            "bestReplyScript": "Important edge cases include:\n1. Less than 3 elements ([1,2]) -> False\n2. Only increasing ([1,2,3]) -> False\n3. Only decreasing ([3,2,1]) -> False\n4. Flat peak ([1,2,2,1]) -> False\n5. Valid mountain ([1,3,5,2]) -> True\n\nTesting these cases ensures the algorithm handles different scenarios correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Length < 3 returns False",
+                  "Monotonic arrays return False",
+                  "Flat plateaus [1,2,2,1] return False"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Equal Adjacent Values (Plateaus)",
             "question": "7. What if there are equal adjacent values?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Strict inequality requirement (nums[i] != nums[i+1]).",
+            "bestReplyScript": "Equal adjacent values are not allowed because a valid mountain requires strictly increasing and strictly decreasing sequences.\n\nExample: [1,2,2,1]. Since 2 == 2, the increase is no longer strict.\n\nTherefore, the array is not a valid mountain.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Plateaus (nums[i] == nums[i+1]) violate strictness",
+                  "Strictly increasing means nums[i] < nums[i+1]",
+                  "Strictly decreasing means nums[i] > nums[i+1]"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Valid Mountain Array.",
-            "bestReplyScript": "To thoroughly test Valid Mountain Array, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering valid/invalid patterns.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- [1,3,2] -> True\n- [1,2,3] -> False\n- [3,2,1] -> False\n- [1,2,2,1] -> False\n- [1,4,7,5,2] -> True\n\nThese tests verify the correctness of the implementation.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Valid mountain test cases",
+                  "Monotonic and plateau test cases",
+                  "Minimal length n=3 test cases"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Valid Mountain Array.",
-            "bestReplyScript": "Common candidate pitfalls when solving Valid Mountain Array include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie errors in Valid Mountain Array.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting the array must contain at least 3 elements.\n- Allowing equal adjacent values (plateaus).\n- Not checking that the peak is in the middle (allowing peak at index 0 or n-1).\n- Stopping after finding the peak without validating the decreasing part.\n- Using extra arrays unnecessarily.\n\nThe most common mistake is accepting arrays that only increase or only decrease.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Accepting monotonic increasing/decreasing arrays",
+                  "Allowing flat plateaus",
+                  "Not validating full traversal to index n-1"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Peak Index Tracking",
             "question": "10. How would you return the peak index?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Returning peak index in Peak Index in a Mountain Array (LeetCode 852).",
+            "bestReplyScript": "While moving upward, keep track of the current index. When the increasing sequence stops, that index is the peak.\n\nExample: Array [1,3,5,4,2] -> Indices 0, 1, 2, 3, 4 -> Peak is at Index 2 (value 5).\n\nSimply return the peak index after validating the mountain.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Track index where climb loop stops",
+                  "Returns peak index for LeetCode 852",
+                  "O(n) or O(log n) binary search variant"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Multiple Peaks Validation",
             "question": "11. Can there be multiple peaks?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Unimodal constraint (exactly one peak allowed).",
+            "bestReplyScript": "No. A valid mountain array must have exactly one peak.\n\nExample: [1,3,5,4,2] has one peak (5) -> Valid.\nExample: [1,4,2,5,3] has two peaks (4 and 5) -> Invalid.\n\nThe algorithm fails multiple peaks because after descending from 4 to 2, the subsequent increase to 5 breaks the strictly decreasing condition.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Unimodal property: exactly one peak",
+                  "Multiple peaks fail descent loop",
+                  "Re-climbing returns False"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Recursive Approach Overhead",
             "question": "12. How would you solve this recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursion stack space overhead O(n) vs O(1) iterative.",
+            "bestReplyScript": "A recursive solution is possible but not recommended.\n\nOne approach:\n1. Recursively move upward until reaching the peak.\n2. Then recursively verify the decreasing sequence.\n\nHowever:\n- It is more complex.\n- It uses O(n) recursion stack space.\n- The iterative solution is simpler and uses O(1) space.\n\nFor interviews, the iterative approach is preferred.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive time: O(n), Space: O(n) call stack",
+                  "Iterative time: O(n), Space: O(1) constant",
+                  "Iterative preferred in production"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where are mountain patterns used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical peak detection applications in software engineering.",
+            "bestReplyScript": "Mountain-shaped patterns appear in many real-world applications:\n- Stock price trend analysis & spike detection.\n- Signal and waveform processing (QRS detection in ECG).\n- Sensor data analysis & performance monitoring spikes.\n- Image processing & peak detection in scientific spectroscopy.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "ECG heartbeat QRS wave detection",
+                  "Financial stock price spike analysis",
+                  "Sensor telemetry peak monitoring"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Linked List Adaptation",
             "question": "14. How would you adapt the solution for a linked list?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single pass traversal on linked nodes.",
+            "bestReplyScript": "The same idea works for a linked list. Instead of using array indices:\n- Traverse node by node.\n- First verify a strictly increasing sequence (curr.val < curr.next.val).\n- Check peak existence.\n- Then verify a strictly decreasing sequence (curr.val > curr.next.val).\n\nSince linked lists don't support random access, we simply move through nodes once in linear O(n) time and O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Single pass node pointer traversal",
+                  "Strictly increasing then strictly decreasing checks",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Streaming & Memory Optimization",
             "question": "15. What if the array is very large?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Mountain Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "State machine stream processing (Increasing state -> Decreasing state).",
+            "bestReplyScript": "The current algorithm already scales well because it processes each element only once using O(1) extra space.\n\nFor streaming data, we can implement a state machine:\n- State 0: Climbing (expecting >)\n- State 1: Descending (expecting <)\n- State 2: Invalid (flat or re-climbing)\n\nThis streams data in real-time with O(1) memory and O(n) processing time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Finite State Machine (State 0: Climb, State 1: Descent)",
+                  "Real-time stream evaluation",
+                  "Time: O(n), Space: O(1)"
             ]
       }
 ],
