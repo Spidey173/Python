@@ -4383,182 +4383,184 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Set conversion, linear scan, lookup efficiency, and uniqueness constraints.",
-            "bestReplyScript": "I use a set because it provides fast lookup and automatically removes duplicate values.\n\nSteps:\n1. Convert the first array into a set.\n2. Traverse the second array.\n3. If an element exists in the set, add it to the result set.\n4. Return the result as a list.\n\nExample:\nInput: nums1 = [1,2,2,1], nums2 = [2,2]\nSet1 = {1,2}\nTraverse nums2: 2 -> Found, 2 -> Already in result\nOutput: [2]\n\nThis approach is efficient because each lookup in a set takes O(1) average time.\n\nComplexity: Time: O(n + m), Space: O(n) where n and m are the sizes of the two arrays.",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Half-reversal math approach, early negative check, ending in 0 guard, loop `x > rev_half`, even/odd condition checks.",
+            "bestReplyScript": "I use a mathematical approach that reverses ONLY HALF of the digits instead of the entire number.\n\nSteps:\n1. If x < 0, return False (negative numbers cannot be palindromes due to minus sign).\n2. If x != 0 and x % 10 == 0, return False (numbers ending in 0 except 0 itself cannot be palindromes).\n3. Repeatedly extract the last digit and build the reversed second half: `rev_half = rev_half * 10 + x % 10`, `x //= 10`.\n4. Stop when `x <= rev_half`.\n5. Compare the two halves:\n   - Even length digits: `x == rev_half`\n   - Odd length digits: `x == rev_half // 10` (discards middle digit).\n\nIf they match, return True; otherwise False.",
             "keyPoints": [
-                  "Set for O(1) average lookup",
-                  "Automatic duplicate removal",
-                  "Single pass traversal over both arrays",
-                  "Time: O(n + m), Space: O(n)"
+                  "Early exit: negative `x < 0` or ends in zero `x % 10 == 0`",
+                  "Reverse half digits while `x > rev_half`",
+                  "Even check: `x == rev_half`",
+                  "Odd check: `x == rev_half // 10`",
+                  "Time: O(d), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
-            "question": "2. Why did you use a set?",
-            "whatInterviewerChecks": "Understanding set properties vs nested loops.",
-            "bestReplyScript": "A set has two major advantages:\n1. Fast lookup (average O(1)).\n2. Automatically removes duplicates.\n\nWithout a set, I would need nested loops to compare every element.\n\nExample: nums1 = [1,2,2] -> Set: {1,2}. The duplicate 2 is stored only once.\n\nThis makes the algorithm both simpler and faster.",
+            "category": "No-String Conversion Rationale",
+            "question": "2. Why did you avoid converting the integer to a string?",
+            "whatInterviewerChecks": "O(1) auxiliary space requirement vs string allocation.",
+            "bestReplyScript": "The problem explicitly encourages solving it without extra string conversion (`str(x)`).\n\nUsing arithmetic:\n- Uses constant O(1) extra space.\n- Demonstrates strong low-level digit manipulation fluency.\n- Avoids memory allocations and Garbage Collection overhead.\n\nAlthough string conversion `str(x) == str(x)[::-1]` is simpler to write, the mathematical half-reversal is expected in interviews.",
             "keyPoints": [
-                  "Average O(1) lookup speed",
-                  "Automatic deduplication",
-                  "Avoids O(n * m) nested comparison"
+                  "Follows problem follow-up prompt",
+                  "Uses O(1) space with zero memory allocations",
+                  "Demonstrates mathematical digit manipulation"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic bounds for hash table creation vs second array traversal.",
-            "bestReplyScript": "Let n = size of nums1 and m = size of nums2.\n\nOperations:\n- Build set -> O(n)\n- Traverse second array -> O(m)\n\nOverall:\n- Time Complexity: O(n + m)\n- Space Complexity: O(n)\n\nThis is much faster than comparing every pair of elements.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(d) digit count time (d/2 loop iterations) and O(1) constant space bounds.",
+            "bestReplyScript": "Let d be the number of decimal digits in x.\n\nComplexity analysis:\n- Time Complexity: O(d) or O(log10(x)). We only iterate through half of the digits (d/2 iterations).\n- Space Complexity: O(1) auxiliary space, as we only use a couple of scalar integer variables (`rev_half`, `x`).",
             "keyPoints": [
-                  "Time: O(n + m)",
-                  "Space: O(n) for set storage",
-                  "Optimal linear performance"
+                  "Time Complexity: O(d) = O(log10(x))",
+                  "Space Complexity: O(1)",
+                  "Reverses only half digits (d/2 iterations)"
             ]
       },
       {
             "id": "q4",
-            "category": "Preserving Duplicates (Intersection II)",
-            "question": "4. How would you preserve duplicate elements?",
-            "whatInterviewerChecks": "Switching from Set to Frequency Map / Counter.",
-            "bestReplyScript": "If duplicates should be preserved, a set is not enough because it stores only unique values.\n\nInstead, I would use a frequency dictionary (hash map).\n\nExample:\nnums1 = [1,2,2,3], nums2 = [2,2,2]\nFrequency Map: 2 -> 2\nTraverse nums2: First 2 -> Add, Second 2 -> Add, Third 2 -> Count becomes 0, ignore.\nOutput: [2,2]\n\nThis preserves duplicates correctly.",
+            "category": "Digit Comparison Strategy",
+            "question": "4. How do you compare the first and last digits?",
+            "whatInterviewerChecks": "Reversing second half vs extracting first/last digits.",
+            "bestReplyScript": "Instead of explicitly extracting first and last digits iteratively, I reverse the SECOND HALF of the number and compare it with the remaining FIRST HALF.\n\nExample: Input 1221.\n- First Half: 12\n- Reversed Second Half: 12\n- Equal -> Palindrome!\n\nThis avoids repeatedly computing `10^(d-1)` power math to extract the leading digit.",
             "keyPoints": [
-                  "Use frequency hash map (Counter)",
-                  "Decrement count on match",
-                  "Correctly handles Intersection of Two Arrays II"
+                  "Reverses 2nd half to compare with 1st half",
+                  "Example 1221 -> 12 == 12",
+                  "Avoids expensive power division `10^(d-1)`"
             ]
       },
       {
             "id": "q5",
-            "category": "Sorted Arrays (Two Pointers)",
-            "question": "5. What if both arrays are already sorted?",
-            "whatInterviewerChecks": "Two-pointer linear scan without hash map allocations.",
-            "bestReplyScript": "If both arrays are sorted, I would use the two-pointer technique.\n\nSteps:\n1. Place one pointer at the beginning of each array.\n2. Compare the elements.\n3. If equal, add to the result and move both pointers.\n4. If one value is smaller, move that pointer.\n5. Continue until one array ends.\n\nExample:\nnums1 = [1,2,3,5], nums2 = [2,3,4]\n1 < 2 -> Move pointer1\n2 = 2 -> Add\n3 = 3 -> Add\n5 > 4 -> Move pointer2\nOutput: [2,3]\n\nComplexity: Time: O(n + m), Space: O(1) (excluding output list).",
+            "category": "Half-Reversal Mathematical Proof",
+            "question": "5. Why does reversing only half of the number work?",
+            "whatInterviewerChecks": "Symmetry property & odd vs even middle digit discarding.",
+            "bestReplyScript": "A palindrome is symmetric around its center.\n\nOnce `rev_half >= x`, we have processed exactly half of the digits.\n- Even digits (e.g. 1221): Loop stops with `x = 12`, `rev_half = 12`. Exact match `x == rev_half`.\n- Odd digits (e.g. 12321): Loop stops with `x = 12`, `rev_half = 123`. Discarding the middle digit 3 via `rev_half // 10` gives `123 // 10 = 12`. Exact match `x == rev_half // 10`!\n\nOnly half of the digits need to be processed.",
             "keyPoints": [
-                  "Two-pointer approach on sorted arrays",
-                  "Time: O(n + m)",
-                  "Space: O(1) auxiliary space"
+                  "Loop stops when `rev_half >= x`",
+                  "Even length: `x == rev_half`",
+                  "Odd length: `x == rev_half // 10` (discards middle digit)"
             ]
       },
       {
             "id": "q6",
-            "category": "In-Place & Space Constraints",
-            "question": "6. Can you solve it without extra space?",
-            "whatInterviewerChecks": "In-place sorting trade-off analysis.",
-            "bestReplyScript": "Yes. If modifying the arrays is allowed:\n1. Sort both arrays in-place.\n2. Use the two-pointer approach.\n\nComplexity:\n- Sorting -> O(n log n + m log m)\n- Traversal -> O(n + m)\n- Extra Space -> O(1) (if sorting in-place)\n\nThis avoids using a hash set but takes more time due to sorting.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Negative numbers, zero, numbers ending in 0, single digit, even vs odd lengths.",
+            "bestReplyScript": "Important edge cases include:\n1. Negative numbers (-121) -> False\n2. Zero (0) -> True\n3. Numbers ending in zero (10, 100) -> False (except 0 itself)\n4. Single-digit numbers (7) -> True\n5. Even number of digits (1221) -> True\n6. Odd number of digits (12321) -> True\n7. Large 32-bit integers -> Handled safely without overflow.",
             "keyPoints": [
-                  "In-place sorting + two pointers",
-                  "Time: O(n log n + m log m)",
-                  "Space: O(1) memory bound"
+                  "Negative numbers return False",
+                  "Ending in 0 (e.g. 10) returns False",
+                  "Single digits return True",
+                  "Even vs odd lengths handled correctly"
             ]
       },
       {
             "id": "q7",
-            "category": "Scalability & Large Datasets",
-            "question": "7. How would you handle very large arrays?",
-            "whatInterviewerChecks": "External sorting, chunking, and distributed frameworks.",
-            "bestReplyScript": "For very large arrays that don't fit into memory, I would:\n- Process the arrays in chunks.\n- Use external sorting if needed.\n- Store intermediate results on disk.\n- For distributed systems, use frameworks like Hadoop or Spark.\n\nIf one array is much smaller, I would store only the smaller array in a set to reduce memory usage.",
+            "category": "Negative Numbers Rule",
+            "question": "7. How would you handle negative numbers?",
+            "whatInterviewerChecks": "Immediate return False due to minus sign.",
+            "bestReplyScript": "Negative numbers can never be palindromes because of the leading minus sign.\n\nExample:\nInput: -121\nReading backwards: 121-\n-121 != 121-\n\nTherefore, I immediately check `if x < 0: return False` as the first line of defense.",
             "keyPoints": [
-                  "Chunking & external merge sort",
-                  "Distribute over Spark / Hadoop",
-                  "Store only the smaller array in memory"
+                  "Minus sign makes reverse non-matching (-121 != 121-)",
+                  "Immediate `return False` if `x < 0`",
+                  "O(1) short-circuit guard"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Cases",
-            "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty arrays, disjoint arrays, duplicates, negative numbers.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty arrays ([]) -> []\n2. No common elements ([1,2] & [3,4]) -> []\n3. All common elements ([1,2,3] & [1,2,3]) -> [1,2,3]\n4. Duplicate elements ([2,2,2] & [2]) -> [2]\n5. Negative numbers ([-2,-1,0] & [-1,0]) -> [-1,0]\n\nTesting these cases ensures correctness.",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, negative, ending in 0, single digit, and odd/even lengths.",
+            "bestReplyScript": "I would test:\n- 121 -> True\n- -121 -> False\n- 10 -> False\n- 1221 -> True\n- 12321 -> True\n- 0 -> True\n- 7 -> True\n- 123 -> False\n\nThese cover normal, boundary, negative, ending-in-zero, and odd/even length cases.",
             "keyPoints": [
-                  "Empty array safeguards",
-                  "Disjoint set boundaries",
-                  "Identical & negative number handling"
+                  "LeetCode 9 standard test cases",
+                  "Ending in 0 test (10 -> False)",
+                  "Odd vs even length tests (121 vs 1221)"
             ]
       },
       {
             "id": "q9",
-            "category": "Sorted Output Guarantee",
-            "question": "9. How would you return the intersection in sorted order?",
-            "whatInterviewerChecks": "Post-sorting vs two-pointer sorted generation.",
-            "bestReplyScript": "There are two approaches:\n\nApproach 1: After finding the intersection set, simply sort the final output list (Time: O(k log k) where k is intersection size).\n\nApproach 2: If the input arrays are pre-sorted, the two-pointer approach naturally generates a sorted result in linear time without extra sorting.",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Palindrome Number (LeetCode 9).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting that negative numbers are not palindromes.\n- Forgetting that numbers ending in 0 (except 0) return False (e.g. 10 reverses half to `x=1, rev=0`, then `1 == 0//10` would match if 10 wasn't guarded!).\n- Reversing the ENTIRE number, which causes 32-bit integer overflow for values like 1534236469.\n- Mishandling odd-length middle digits.\n- Converting to string when forbidden by interview instructions.",
             "keyPoints": [
-                  "Sort result list (O(k log k))",
-                  "Two-pointer approach naturally yields sorted output"
+                  "Omitting ending in 0 guard (`x % 10 == 0`)",
+                  "Reversing ENTIRE number (causes 32-bit overflow)",
+                  "Forgetting negative numbers return False"
             ]
       },
       {
             "id": "q10",
-            "category": "Testing & Verification",
-            "question": "10. How would you test your solution?",
-            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, disjoint, negative inputs.",
-            "bestReplyScript": "I would test different scenarios:\n- [1,2,2,1] & [2,2] -> [2]\n- [1,2,3] & [4,5] -> []\n- [1,2,3] & [1,2,3] -> [1,2,3]\n- [] & [1] -> []\n- [-1,0,1] & [0,2] -> [0]\n\nTesting different inputs helps verify correctness and robustness.",
+            "category": "Recursive Solution Feasibility",
+            "question": "10. Can this be solved recursively?",
+            "whatInterviewerChecks": "Recursive outer-digit elimination vs iterative half-reversal.",
+            "bestReplyScript": "Yes.\nA recursive solution can extract outer digits `first = x // 10^(d-1)` and `last = x % 10`, verify `first == last`, and recurse on middle digits `(x % 10^(d-1)) // 10`.\n\nHowever:\n- It is complex, requiring power `10^(d-1)` math.\n- It uses O(d) recursion stack space.\n- The iterative half-reversal approach is simpler, faster, and uses O(1) stack space.",
             "keyPoints": [
-                  "Normal intersection verification",
-                  "Disjoint and empty array checks",
-                  "Negative number handling"
+                  "Recursive outer digit check requires `10^(d-1)` math",
+                  "Uses O(d) call stack space",
+                  "Iterative half-reversal is simpler and O(1) space"
             ]
       },
       {
             "id": "q11",
-            "category": "Hashing vs Brute-Force",
-            "question": "11. Why is hashing faster than nested loops?",
-            "whatInterviewerChecks": "O(n * m) vs O(n + m) performance proof.",
-            "bestReplyScript": "With nested loops: For every element in nums1, compare with every element in nums2 -> Time Complexity O(n * m).\n\nWith hashing: Build set O(n) + Look up each element O(1) average -> Time Complexity O(n + m).\n\nThis makes hashing exponentially faster for large arrays.",
+            "category": "String vs Math Solution Comparison Matrix",
+            "question": "11. Compare the string-based and mathematical solutions.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- String Solution (`str(x) == str(x)[::-1]`): Time O(d), Space O(d). Simple to write, but allocates string memory and violates follow-up constraint.\n- Half-Reversal Math Solution: Time O(d), Space O(1). Zero memory allocation, safe against 32-bit overflow, expected in coding interviews.\n\nThe mathematical solution is preferred in interviews.",
             "keyPoints": [
-                  "Nested loops: O(n * m)",
-                  "Hashing: O(n + m)",
-                  "Exponentially faster scaling"
+                  "String: O(d) time, O(d) space (Allocates string memory)",
+                  "Math: O(d) time, O(1) space (Zero allocations, interview choice)",
+                  "Math avoids 32-bit integer overflow"
             ]
       },
       {
             "id": "q12",
-            "category": "Binary Search Optimization",
-            "question": "12. Can this be solved using binary search?",
-            "whatInterviewerChecks": "Binary search on sorted array: O(m log n).",
-            "bestReplyScript": "Yes. If one array is sorted:\n1. Traverse the unsorted array.\n2. Use binary search to check whether each element exists in the sorted array.\n\nExample: nums1 = [1,3,5,7] (sorted), nums2 = [3,4]\nSearch 3 -> Found, Search 4 -> Not found.\n\nComplexity: O(m log n). This is useful when one array is pre-sorted and much larger than the other.",
+            "category": "Real-World Applications",
+            "question": "12. Where are palindrome checks useful in practice?",
+            "whatInterviewerChecks": "Genomic sequence symmetry, data validation, digital roots.",
+            "bestReplyScript": "Palindrome checks are used in:\n- Bioinformatics & Genomics (detecting palindromic DNA restriction enzyme recognition sequences).\n- Natural Language Processing & Text Symmetry analysis.\n- Cryptography & Checksum validation.\n- Network Telemetry (detecting symmetric packet routing sequences).\n- Data validation & Competitive programming.",
             "keyPoints": [
-                  "Binary search on sorted array",
-                  "Time: O(m log n)",
-                  "Ideal when m << n and nums1 is sorted"
+                  "Genomic DNA palindromic sequence detection",
+                  "NLP text symmetry analysis",
+                  "Network packet routing symmetry"
             ]
       },
       {
             "id": "q13",
-            "category": "Asymmetric Array Optimization",
-            "question": "13. What if one array is much smaller than the other?",
-            "whatInterviewerChecks": "Space optimization by placing only the smaller array into set.",
-            "bestReplyScript": "I would convert ONLY the smaller array into a set.\n\nExample: Small array = 100 elements, Large array = 1 million elements.\n\nStore only the small array in memory (100 elements). Then iterate through the 1-million element array.\n\nThis drastically reduces memory usage while maintaining O(n + m) time complexity.",
+            "category": "Arbitrary Precision BigInt Extension",
+            "question": "13. How would your solution change for arbitrary-length integers?",
+            "whatInterviewerChecks": "BigInt / string array two-pointer approach.",
+            "bestReplyScript": "If integers exceed native 64-bit integer limits (e.g. 10,000 digits):\n- Represent the number as a string or array of digit bytes.\n- Use two pointers (`left = 0`, `right = len - 1`) and compare digits inward while `left < right`.\n\nThe mathematical half-reversal relies on native CPU integer register division (% 10 and // 10), so BigInt string/array representation is preferred for arbitrarily huge numbers.",
             "keyPoints": [
-                  "Convert smaller array to set",
-                  "Drastically reduces auxiliary RAM space",
-                  "Maintains optimal O(n + m) runtime"
+                  "Arbitrary length -> String / digit byte array",
+                  "Two pointers `left` and `right` compare from ends inward",
+                  "Bypasses native CPU integer division limits"
             ]
       },
       {
             "id": "q14",
-            "category": "Real-World Applications",
-            "question": "14. Where is set intersection used in practice?",
-            "whatInterviewerChecks": "Software engineering use cases for set intersection.",
-            "bestReplyScript": "Set intersection has many real-world applications, including:\n- Finding mutual friends in social networks (Facebook, LinkedIn).\n- Search engine query keyword matching (Boolean AND queries).\n- Database INNER JOIN operations.\n- Recommendation engines & permission control lists.\n- Bioinformatics (finding common genes or DNA sequences).",
+            "category": "Overflow Prevention Advantage Proof",
+            "question": "14. Can integer overflow occur while reversing?",
+            "whatInterviewerChecks": "Full reversal overflow vs half reversal safety.",
+            "bestReplyScript": "If the ENTIRE 32-bit number is reversed (e.g. x = 1534236469 -> rev = 9646324351), integer overflow occurs in 32-bit languages!\n\nBy reversing ONLY HALF of the digits, `rev_half` never exceeds `x`. The max value `rev_half` can reach is approximately `sqrt(INT_MAX)` or half the digits (~5 digits <= 99,999).\n\nThus, half-reversal completely eliminates integer overflow risk without needing 64-bit types!",
             "keyPoints": [
-                  "Social media mutual friends",
-                  "Database INNER JOIN queries",
-                  "Search engine keyword matching",
-                  "Bioinformatics gene alignment"
+                  "Full reversal overflows 32-bit ints (1534236469 -> 9646324351)",
+                  "Half reversal `rev_half` never exceeds half digits (~5 digits)",
+                  "Completely eliminates integer overflow risk"
             ]
       },
       {
             "id": "q15",
-            "category": "Common Candidate Pitfalls",
-            "question": "15. What common mistakes occur?",
-            "whatInterviewerChecks": "Identifying rookie mistakes in array intersection.",
-            "bestReplyScript": "Some common mistakes include:\n- Using nested loops instead of hashing.\n- Forgetting that the result should contain unique elements.\n- Returning duplicates when only unique values are required.\n- Not handling empty arrays.\n- Confusing this problem with Intersection of Two Arrays II (where duplicates are preserved).\n- Using a list instead of a set for lookups, leading to O(n) lookups.\n\nThe most common mistake is not reading the problem carefully to determine whether duplicates should be included or removed.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which solution would you choose in an interview and why?",
+            "whatInterviewerChecks": "Interview rationale.",
+            "bestReplyScript": "I choose the Half-Reversal Mathematical solution because:\n- Satisfies Non-String Constraint: Directly answers the interview follow-up challenge.\n- Zero Memory Allocation: Uses strictly O(1) auxiliary space.\n- Overflow Proof: Reversing half digits prevents integer overflow natively.\n- Highly Efficient: Runs in O(d) time (only d/2 loop steps).\n\nIt demonstrates complete mastery of digit arithmetic and edge-case handling.",
             "keyPoints": [
-                  "Using list lookup instead of set",
-                  "Confusing unique vs duplicate requirements",
-                  "Nested loop O(n * m) anti-pattern"
+                  "Half-reversal math satisfies no-string constraint",
+                  "O(1) space with zero memory churn",
+                  "Overflow-proof by design"
             ]
       }
 ],
