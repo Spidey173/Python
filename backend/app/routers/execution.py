@@ -94,12 +94,7 @@ async def submit_code(
     already_passed = progress.passed if progress else False
     attempts = (progress.attempts + 1) if progress else 1
 
-    # Check lives: allow practicing on completed levels without lives restriction
-    if not already_passed and current_user.lives <= 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Out of lives! Wait for recharge or open a Mystery Box with coins to refill hearts."
-        )
+    # Unlimited attempts enabled: no lives restriction for studying & practice
 
     # Run against all test cases (both visible and hidden)
     passed_all, test_results, total_time = await evaluate_challenge_test_cases(req.code, ch.test_cases)
@@ -228,9 +223,8 @@ async def submit_code(
         )
 
     else:
-        # Failed execution - deduct 1 life only if challenge was not already completed
-        if not already_passed:
-            current_user.lives = max(0, current_user.lives - 1)
+        # Failed execution - keep lives unlimited so students can keep practicing
+        current_user.lives = max(current_user.lives, 5)
         if not progress:
             progress = UserProgress(
                 user_id=current_user.id,
@@ -258,12 +252,12 @@ async def submit_code(
             coins_earned=0,
             combo_bonus=0,
             speed_bonus=0,
-            lives_remaining=current_user.lives,
+            lives_remaining=max(current_user.lives, 5),
             level_up=False,
             new_level=current_user.level,
             test_results=[TestCaseResult(**tr) for tr in test_results],
             next_challenge_id=None,
             new_achievements=[],
-            message="Test Verification Failed! One life deducted.",
+            message="Some test cases failed. Keep refining your logic!",
             boss_defeated=False
         )
