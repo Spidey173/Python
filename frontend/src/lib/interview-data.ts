@@ -15057,195 +15057,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "My approach for Rotate Matrix 90 Degrees Clockwise follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Two-step matrix transformation: 1. Transpose matrix, 2. Reverse each row.",
+            "bestReplyScript": "I rotate the matrix 90\u00b0 clockwise in two steps:\n1. Transpose the matrix (swap rows and columns across the main diagonal).\n2. Reverse each row horizontally.\n\nThis transforms the matrix into its 90\u00b0 clockwise rotated version in-place without using extra space.\n\nExample: Original [[1,2,3],[4,5,6],[7,8,9]] -> Step 1 Transpose [[1,4,7],[2,5,8],[3,6,9]] -> Step 2 Reverse Rows [[7,4,1],[8,5,2],[9,6,3]].\n\nComplexity: Time: O(n^2), Space: O(1) in-place.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Step 1: Transpose (swap matrix[i][j] with matrix[j][i])",
+                  "Step 2: Reverse each row horizontally",
+                  "In-place transformation",
+                  "Time: O(n^2), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Mathematical & Geometric Intuition",
             "question": "2. Why do transpose and reverse operations work?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "I chose this approach for Rotate Matrix 90 Degrees Clockwise over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Geometric proof why Transpose + Row Reversal equals 90\u00b0 clockwise rotation.",
+            "bestReplyScript": "A transpose swaps rows and columns (mapping element at (r, c) to (c, r)).\nA row reversal then flips each row horizontally (mapping (c, r) to (c, n - 1 - r)).\n\nGeometrically, this composite transformation places element (r, c) at target index (c, n - 1 - r), which is mathematically identical to a 90\u00b0 clockwise rotation.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Transpose maps (r, c) -> (c, r)",
+                  "Row reversal maps (c, r) -> (c, n - 1 - r)",
+                  "Composite transformation equals 90\u00b0 clockwise rotation"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "Here is the complexity analysis for Rotate Matrix 90 Degrees Clockwise:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Two passes over n^2 elements -> O(n^2) time and O(1) auxiliary space.",
+            "bestReplyScript": "The algorithm performs two traversals:\n- One pass for transposition (swapping n^2 / 2 elements).\n- One pass for reversing each row (swapping n^2 / 2 elements).\n\nEach element is touched at most twice.\n- Time Complexity: O(n^2)\n- Space Complexity: O(1) in-place auxiliary memory.\n\nThis is optimal because every element must be moved to its new position.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n^2)",
+                  "Space Complexity: O(1) in-place",
+                  "Optimal single-buffer lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "In-Place Execution Proof",
             "question": "4. Can this be done in-place?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Constant memory allocation proof for N x N matrix.",
+            "bestReplyScript": "Yes. For a square N x N matrix, both operations can be performed directly on the original matrix without allocating extra arrays.\n\n- Transpose: Swap matrix[i][j] with matrix[j][i] for j > i.\n- Reverse Rows: Swap matrix[r][c] with matrix[r][n - 1 - c] for c < n / 2.\n\nThus, the solution uses strictly O(1) auxiliary space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Square N x N matrix allows in-place swapping",
+                  "Transpose swaps upper triangle (j > i)",
+                  "Reverse rows swaps left/right halves (c < n / 2)"
             ]
       },
       {
             "id": "q5",
-            "category": "Step-by-Step Approach",
+            "category": "Square vs Rectangular In-Place Restriction",
             "question": "5. Why does this approach only work for square matrices?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "My approach for Rotate Matrix 90 Degrees Clockwise follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Dimension invariance requirement for in-place memory swaps.",
+            "bestReplyScript": "A square matrix has the same number of rows and columns (N x N), so its dimensions remain N x N after rotation.\n\nA rectangular matrix changes dimensions after a 90\u00b0 rotation (e.g. 2 x 3 becomes 3 x 2).\nSince the memory buffer dimensions change, in-place swapping using this method is impossible. Rectangular matrices require allocating a new C x R matrix.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Square N x N matrix preserves memory dimensions",
+                  "Rectangular R x C becomes C x R (dimension mismatch)",
+                  "Rectangular matrices require new matrix allocation"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "When handling Rotate Matrix 90 Degrees Clockwise, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "1x1 matrix, 2x2 matrix, duplicates, negative numbers.",
+            "bestReplyScript": "Important edge cases include:\n1. Single element ([[5]]) -> Unchanged ([[5]]).\n2. 2x2 matrix ([[1,2],[3,4]]) -> Output [[3,1],[4,2]].\n3. Matrix with duplicate values -> Works correctly.\n4. Matrix with negative numbers -> Rotation logic is value-independent.\n\nTesting these ensures correctness across all valid square matrices.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "1x1 single-element matrix",
+                  "2x2 minimal even matrix",
+                  "Negative and duplicate matrix values"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "To thoroughly test Rotate Matrix 90 Degrees Clockwise, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix covering 1x1, 2x2, 3x3, duplicates, negatives.",
+            "bestReplyScript": "I would test:\n- [[5]] -> [[5]]\n- [[1,2],[3,4]] -> [[3,1],[4,2]]\n- 3x3 Matrix -> Correct rotation\n- Matrix with duplicates -> Correct rotation\n- Matrix with negatives -> Correct rotation\n\nThese tests cover different matrix sizes and value ranges.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "1x1 and 2x2 test cases",
+                  "Odd 3x3 matrix test case",
+                  "Negative & duplicate value verification"
             ]
       },
       {
             "id": "q8",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "8. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "Common candidate pitfalls when solving Rotate Matrix 90 Degrees Clockwise include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Rotate Image (LeetCode 48).",
+            "bestReplyScript": "Some common mistakes include:\n- Reversing columns instead of rows (results in 90\u00b0 counterclockwise rotation).\n- Reversing rows BEFORE transposing (results in 270\u00b0 clockwise rotation).\n- Double swapping during transpose (swapping full matrix instead of upper triangle j > i, which cancels out!).\n- Trying to rotate rectangular matrices in-place.\n\nThe correct order is strictly: Transpose FIRST, then Reverse Rows.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Reversing columns instead of rows (gives counterclockwise)",
+                  "Double swapping full matrix (cancels out transpose)",
+                  "Wrong order: Reverse then Transpose"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
+            "category": "Counterclockwise 90\u00b0 Variant",
             "question": "9. How would you rotate the matrix counterclockwise?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "90\u00b0 Counterclockwise: Transpose then Reverse COLUMNS (or Reverse Rows then Transpose).",
+            "bestReplyScript": "For a 90\u00b0 counterclockwise rotation:\n1. Transpose the matrix.\n2. Reverse each COLUMN vertically (or reverse rows first, then transpose).\n\nExample: [[1,2,3],[4,5,6],[7,8,9]] -> Transpose -> Reverse Columns -> [[3,6,9],[2,5,8],[1,4,7]].",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "90\u00b0 Counterclockwise: Transpose + Reverse Columns",
+                  "Alternative: Reverse Rows + Transpose",
+                  "In-place O(1) space complexity"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "180 Degrees Rotation Variant",
             "question": "10. How would you rotate it by 180 degrees?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "180\u00b0 Rotation: Reverse rows AND reverse columns (or double 90\u00b0 rotation).",
+            "bestReplyScript": "A 180\u00b0 rotation can be done by:\n1. Reversing every row horizontally.\n2. Reversing the order of rows vertically (reverse columns).\n\nOr simply applying 90\u00b0 clockwise rotation twice!\nExample: [[1,2],[3,4]] -> 180\u00b0 -> [[4,3],[2,1]].",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "180\u00b0 Rotation: Reverse Rows + Reverse Columns",
+                  "No transpose needed for 180\u00b0",
+                  "In-place O(1) space"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where is matrix rotation used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Image processing, Mobile photo editing, Computer Graphics, GIS.",
+            "bestReplyScript": "Matrix rotation is used in:\n- Smartphone Photo Editing (rotating camera photos 90\u00b0 / 270\u00b0).\n- Computer Graphics & 3D Rendering engines.\n- Computer Vision & Image Augmentation in Machine Learning (dataset rotation).\n- GIS Mapping & Game engines.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Mobile camera photo rotation",
+                  "Machine Learning image dataset augmentation",
+                  "Computer Graphics & Game rendering engines"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Rectangular Generalization",
             "question": "12. Can this be generalized to rectangular matrices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Rectangular matrix allocation for C x R output.",
+            "bestReplyScript": "Yes, but not in-place.\nFor a rectangular R x C matrix:\n- Create a new C x R matrix.\n- Copy `new_matrix[c][R - 1 - r] = old_matrix[r][c]`.\n\nAuxiliary memory is required because output dimensions change.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Rectangular R x C requires new C x R matrix",
+                  "Copy formula: `new_matrix[c][R - 1 - r] = old_matrix[r][c]`",
+                  "Requires O(R x C) space"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Huge Matrix Cache Optimization",
             "question": "13. How would you rotate a huge matrix efficiently?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Cache-friendly B x B block / tile rotation.",
+            "bestReplyScript": "For huge matrices that exceed CPU cache:\n- Divide matrix into B x B sub-blocks (tiling).\n- Perform transpose and row reversal block-by-block.\n- Parallelize block operations across CPU/GPU threads.\n\nThis optimizes L1/L2 CPU cache hits and prevents cache thrashing.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "B x B block / tile decomposition",
+                  "Maximizes L1/L2 CPU cache line hits",
+                  "Multi-threaded parallel block execution"
             ]
       },
       {
             "id": "q14",
-            "category": "Algorithmic Justification",
+            "category": "Layer-by-Layer 4-Way Swap vs Transpose+Reverse",
             "question": "14. Compare layer-by-layer rotation with transpose-and-reverse.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "I chose this approach for Rotate Matrix 90 Degrees Clockwise over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Direct 4-way corner element swap vs Transpose + Reverse.",
+            "bestReplyScript": "Comparison:\n- Layer-by-Layer (4-Way Swap): Rotates concentric square rings. Swaps 4 corners directly in 1 pass. Requires complex 4-pointer index math.\n- Transpose + Reverse: Two simple, clean passes. Easy to implement and debug.\n\nBoth take Time O(n^2) and Space O(1). Transpose + Reverse is preferred in interviews due to readability and low bug risk.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Layer-by-Layer: Direct 4-way corner swap in 1 pass",
+                  "Transpose + Reverse: Two clean passes",
+                  "Both O(n^2) time, O(1) space"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Intuitive Beginner Explanation",
             "question": "15. How would you explain this algorithm to a beginner?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Rotate Matrix 90 Degrees Clockwise.",
-            "bestReplyScript": "My approach for Rotate Matrix 90 Degrees Clockwise follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Diagonal flip followed by horizontal mirror explanation.",
+            "bestReplyScript": "Imagine flipping a square piece of paper:\n1. Flip the paper along its main diagonal (top-left to bottom-right) -> Transpose.\n2. Flip the paper horizontally like a book page (left to right) -> Reverse Rows.\n\nThese two simple flips combine to perfectly rotate the entire paper 90\u00b0 clockwise!",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Flip 1: Diagonal fold (Transpose)",
+                  "Flip 2: Horizontal mirror (Reverse Rows)",
+                  "Combines into 90\u00b0 clockwise rotation"
             ]
       }
 ],
