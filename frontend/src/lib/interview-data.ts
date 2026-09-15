@@ -13917,195 +13917,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Matrix Diagonal Sum.",
-            "bestReplyScript": "My approach for Matrix Diagonal Sum follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Primary diagonal matrix[i][i], secondary diagonal matrix[i][n-1-i], center deduction for odd n.",
+            "bestReplyScript": "I traverse the matrix once and add the elements from both diagonals.\n\nAlgorithm:\n1. Iterate through each row i from 0 to n-1.\n2. Add the primary diagonal element: matrix[i][i].\n3. Add the secondary diagonal element: matrix[i][n-1-i].\n4. If the matrix size n is odd (n % 2 != 0), the center element (matrix[n//2][n//2]) belongs to both diagonals, so subtract it once to avoid double counting.\n5. Return the final sum.\n\nExample: 3x3 matrix -> Primary (1+5+9=15), Secondary (3+5+7=15), Center 5 counted twice -> Answer = 15 + 15 - 5 = 25.\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Primary diagonal: matrix[i][i]",
+                  "Secondary diagonal: matrix[i][n-1-i]",
+                  "Center element deduction: n % 2 != 0 -> total -= matrix[n//2][n//2]",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Deep-Dive Question 2",
+            "category": "Center Element Double Counting",
             "question": "2. How do you avoid counting the center element twice?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Odd matrix n % 2 != 0 intersection correction.",
+            "bestReplyScript": "For an odd-sized matrix (e.g. 3x3, 5x5), both primary and secondary diagonals intersect at the exact center element (matrix[n//2][n//2]).\n\nAfter summing both diagonals in the loop, I check if n % 2 != 0. If so, I subtract matrix[n//2][n//2] once from the total sum.\n\nFor an even-sized matrix (e.g. 2x2, 4x4), the diagonals never intersect on a single element, so no subtraction is required.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Odd matrix diagonals intersect at matrix[n//2][n//2]",
+                  "Subtract center element once if n % 2 != 0",
+                  "Even matrix diagonals do not intersect"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Matrix Diagonal Sum.",
-            "bestReplyScript": "Here is the complexity analysis for Matrix Diagonal Sum:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear single-pass time O(n) based on matrix dimension n.",
+            "bestReplyScript": "I visit each row i exactly once in a single loop from 0 to n-1.\n\nIn each row:\n- Read one primary diagonal element: O(1)\n- Read one secondary diagonal element: O(1)\n\nTherefore:\n- Time Complexity: O(n) (where n is the number of rows/columns, accessing only 2n elements total)\n- Space Complexity: O(1)\n\nThis is optimal because we skip scanning the remaining n^2 - 2n non-diagonal elements.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n) where n = rows count",
+                  "Accesses only 2n elements out of n^2",
+                  "Space Complexity: O(1)"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Single Pass Optimization",
             "question": "4. Can this be solved in one pass?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single loop iteration for both diagonals.",
+            "bestReplyScript": "Yes. While iterating through each row i from 0 to n-1 in a single loop:\n  total += matrix[i][i] + matrix[i][n - 1 - i]\n\nBoth primary and secondary diagonal elements are accumulated together during one single pass. After the loop, subtract center if n is odd. No extra traversal or nested loops required.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Single loop from 0 to n-1",
+                  "Sum matrix[i][i] and matrix[i][n-1-i] together",
+                  "Zero nested loops"
             ]
       },
       {
             "id": "q5",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "5. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Matrix Diagonal Sum.",
-            "bestReplyScript": "When handling Matrix Diagonal Sum, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "1x1 single element, 2x2 even matrix, negative values, empty input.",
+            "bestReplyScript": "Important edge cases include:\n1. 1x1 Single element ([[5]]) -> Primary 5 + Secondary 5 - Center 5 = 5.\n2. 2x2 Even matrix ([[1,2],[3,4]]) -> All 4 elements on diagonals (1+2+3+4 = 10), no center deduction.\n3. Negative values ([[ -1, -2 ], [ -3, -4 ]]) -> Correctly sums negative values.\n4. Odd size 3x3, 5x5 -> Center element deducted correctly.\n\nTesting these ensures complete correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "1x1 single element matrix",
+                  "2x2 even matrix (no center overlap)",
+                  "Negative matrix values"
             ]
       },
       {
             "id": "q6",
             "category": "Testing & Verification",
             "question": "6. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Matrix Diagonal Sum.",
-            "bestReplyScript": "To thoroughly test Matrix Diagonal Sum, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix for odd, even, 1x1, negative values.",
+            "bestReplyScript": "I would test:\n- [[5]] -> 5\n- [[1,2],[3,4]] -> 10\n- [[1,2,3],[4,5,6],[7,8,9]] -> 25\n- [[-1,-2],[-3,-4]] -> -10\n- Empty matrix -> 0\n\nThese tests cover odd, even, single-element, and negative-value cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Odd 3x3 test case (25)",
+                  "Even 2x2 test case (10)",
+                  "Single-element 1x1 test case (5)"
             ]
       },
       {
             "id": "q7",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "7. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Matrix Diagonal Sum.",
-            "bestReplyScript": "Common candidate pitfalls when solving Matrix Diagonal Sum include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Matrix Diagonal Sum (LeetCode 1572).",
+            "bestReplyScript": "Some common mistakes include:\n- Double counting the center element in odd-sized matrices.\n- Using wrong index for secondary diagonal (using matrix[i][n-i] instead of matrix[i][n-1-i]).\n- Using nested O(n^2) loops to check `if i == j or i + j == n - 1`, which is slower than O(n) single loop.\n- Subtracting center element on even-sized matrices.\n\nThe most common mistake is indexing errors or using O(n^2) nested loops.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Nested O(n^2) loop anti-pattern instead of single O(n) loop",
+                  "Off-by-one error: matrix[i][n-i] instead of matrix[i][n-1-i]",
+                  "Forgetting center element subtraction on odd n"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Rectangular Matrix Extension",
             "question": "8. How would you extend this to rectangular matrices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adapting primary & secondary diagonals to R x C matrices.",
+            "bestReplyScript": "For rectangular matrices (R x C):\n- Primary diagonal: matrix[i][i] for i from 0 to min(R, C) - 1.\n- Secondary diagonal: matrix[i][C - 1 - i] for i from 0 to min(R, C) - 1.\n\nIntersection check: Check if primary cell (i, i) equals secondary cell (i, C - 1 - i) (i.e. i == C - 1 - i -> 2i == C - 1) and subtract if overlapping.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Bound loop to min(R, C)",
+                  "Secondary diagonal index matrix[i][C-1-i]",
+                  "Check coordinate intersection (i, i) == (i, C-1-i)"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
-            "question": "9. Can you compute secondary diagonal separately?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Separate Diagonals Loops Comparison",
+            "question": "9. Can you compute the secondary diagonal separately?",
+            "whatInterviewerChecks": "Two separate loops vs single loop combined iteration.",
+            "bestReplyScript": "Yes. We could do two loops:\n1. Loop 1: sum primary matrix[i][i].\n2. Loop 2: sum secondary matrix[i][n-1-i].\n3. Subtract center if odd.\n\nHowever, combining both in one loop is cleaner, reduces CPU instruction overhead, and accesses cache-friendly row elements together.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Two loops takes 2n iterations",
+                  "Single loop takes n iterations",
+                  "Single loop is more cache-friendly"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Real-World Applications",
             "question": "10. Where are diagonal operations used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Linear Algebra (Trace of a matrix), Game boards, Computer Graphics.",
+            "bestReplyScript": "Diagonal operations are used in:\n- Linear Algebra: Computing the Trace of a matrix (sum of main diagonal elements).\n- Game Board Algorithms: Tic-Tac-Toe or N-Queens win condition checks (checking diagonal lines).\n- Image Processing & Graphics: Diagonal image flips & transformations.\n- Machine Learning: Covariance matrix diagonal variance extraction.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Matrix Trace computation in Linear Algebra",
+                  "Tic-Tac-Toe & N-Queens diagonal win checks",
+                  "Covariance matrix variance extraction in ML"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Large Matrix Streaming & Disk I/O",
             "question": "11. What if the matrix is very large?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Accessing 2n elements out of n^2 for large matrices.",
+            "bestReplyScript": "The O(n) solution is already optimal because we only read 2n elements out of n^2 total cells!\n\nFor massive matrices stored on disk:\n- We do NOT need to load the whole n^2 matrix into RAM.\n- We only stream row i, extract matrix[i][i] and matrix[i][n-1-i], and discard row i.\n\nThis keeps RAM usage at O(1) regardless of matrix size.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Reads only 2n elements out of n^2",
+                  "Streams row-by-row with O(1) RAM",
+                  "Scales efficiently to massive disk matrices"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Parallel Processing Strategy",
             "question": "12. Can this be parallelized?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Row-level parallel reduction with thread independence.",
+            "bestReplyScript": "Yes! Each row i calculation `matrix[i][i] + matrix[i][n-1-i]` is completely independent.\n\nWe can partition rows across multiple CPU threads or GPU worker threads, sum partial diagonal results, and reduce the final sum in O(n / threads) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Row calculations are mutually independent",
+                  "Parallel thread chunking",
+                  "Parallel time reduction O(n / T)"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Cache Locality & Memory Layout",
             "question": "13. How would you optimize cache performance?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Row-major contiguous memory reads.",
+            "bestReplyScript": "In row-major languages (Python, C, Java), accessing `matrix[i]` loads the entire row i into the CPU L1/L2 cache line.\n\nAccessing both `matrix[i][i]` and `matrix[i][n-1-i]` within the same row loop iteration leverages spatial cache locality, minimizing cache misses.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Row-major spatial cache locality",
+                  "Both diagonal reads hit the same cached row line",
+                  "Minimizes CPU cache misses"
             ]
       },
       {
             "id": "q14",
-            "category": "Edge Case Analysis",
+            "category": "Negative Values Behavior",
             "question": "14. What if the matrix contains negative values?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Matrix Diagonal Sum.",
-            "bestReplyScript": "When handling Matrix Diagonal Sum, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Handling signed integer addition and center subtraction.",
+            "bestReplyScript": "The algorithm remains identical.\nSigned integer addition handles negative values naturally (e.g. -1 + -5 = -6).\nCenter subtraction also works correctly (e.g. subtracting -5 is equivalent to adding 5: total - (-5) = total + 5).\n\nNo code modifications are required for negative inputs.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Signed integer arithmetic",
+                  "Center subtraction total - (-val) works correctly",
+                  "Zero code changes required"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Sparse Matrix Optimization",
             "question": "15. Can this work on sparse matrices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Diagonal Sum.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dictionary / Hash Map lookup for sparse diagonal entries.",
+            "bestReplyScript": "Yes! If the matrix is stored in sparse format (e.g. Hash Map of `(row, col) -> val` or CSR format):\n- Loop i from 0 to n-1.\n- Lookup `(i, i)` and `(i, n-1-i)` in the hash map.\n- If a key exists, add its value; otherwise treat missing keys as 0.\n\nThis avoids storing or reading zero elements and runs in O(n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hash map lookup for (i, i) and (i, n-1-i)",
+                  "Missing keys default to 0",
+                  "O(n) time for sparse matrices"
             ]
       }
 ],
