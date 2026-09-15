@@ -575,203 +575,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Basic Solution & Steps",
-        "question": "1. Explain your solution.",
-        "whatInterviewerChecks": "Word extraction, list reversal, string join operations, and algorithmic flow.",
-        "bestReplyScript": "My approach is to extract each word from the sentence and then rebuild the sentence in reverse order.\n\nThe steps are:\n1. Identify all the words in the sentence.\n2. Store them in a list.\n3. Reverse the order of the list.\n4. Join the words back into a single string with spaces.\n\nFor example:\nInput: \"The sky is blue\"\nWords: [\"The\", \"sky\", \"is\", \"blue\"]\nReverse: [\"blue\", \"is\", \"sky\", \"The\"]\nOutput: \"blue is sky The\"\n\nThis approach is simple, easy to understand, and works efficiently for most cases.",
-        "keyPoints": [
-          "Extract words into list",
-          "Reverse word list order",
-          "Join words with space delimiter",
-          "O(n) time & O(n) space"
-        ],
-        "codeSnippet": "def reverseWords(s: str) -> str:\n    words = s.split()\n    words.reverse()\n    return ' '.join(words)"
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your two-pointer approach.",
+            "whatInterviewerChecks": "Two-pointer strategy (left, right), width * min(left, right), greedy shorter line movement.",
+            "bestReplyScript": "I use two pointers, one at the beginning and one at the end of the array.\n\n1. Calculate the area formed by the two lines:\n   - Width = right - left\n   - Height = min(height[left], height[right])\n   - Area = Width * Height\n2. Update the maximum area if the current area is larger.\n3. Move the pointer pointing to the shorter line.\n4. Repeat until the two pointers meet.\n\nThis checks all promising container widths without examining every pair.",
+            "keyPoints": [
+                  "Two pointers: left = 0, right = n - 1",
+                  "Area formula: (right - left) * min(height[left], height[right])",
+                  "Move pointer pointing to the shorter line",
+                  "Time: O(n), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Whitespace Handling",
-        "question": "2. How do you handle multiple consecutive spaces?",
-        "whatInterviewerChecks": "Behavior of Python's split() without arguments vs explicit space delimiters.",
-        "bestReplyScript": "If I use Python's split() without arguments, it automatically ignores extra spaces, tabs, and newlines.\n\nExample:\nInput: \"  hello    world   \"\nsplit() -> [\"hello\", \"world\"]\nAfter reversing and joining: \"world hello\"\n\nIf I need to preserve the exact spacing, I would use a manual traversal approach instead of split().",
-        "keyPoints": [
-          "split() automatically handles extra spaces",
-          "Strips leading and trailing spaces",
-          "Ignores internal consecutive spaces",
-          "Reverses sanitized tokens"
-        ],
-        "codeSnippet": "s = \"  hello    world   \"\nwords = s.split() # ['hello', 'world']\nresult = ' '.join(words[::-1]) # 'world hello'"
+            "id": "q2",
+            "category": "Greedy Pointer Movement Proof",
+            "question": "2. Why do you move the shorter pointer instead of the taller one?",
+            "whatInterviewerChecks": "Mathematical proof showing width decreases while min_height remains <= shorter line.",
+            "bestReplyScript": "The shorter line always limits the container's height.\n\nIf I move the taller pointer, the width decreases while the limiting height remains the same or becomes even smaller, so the area cannot improve.\n\nMoving the shorter pointer gives a chance to find a taller line that may increase the area despite the reduced width.\n\nThis greedy choice is what makes the algorithm work efficiently.",
+            "keyPoints": [
+                  "Shorter line limits container height",
+                  "Moving taller pointer decreases width while height stays <= shorter line",
+                  "Moving shorter pointer is the only way area can increase"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "3. Can you solve it without using split()?",
-        "whatInterviewerChecks": "Manual string traversal, state machines, and word boundary extraction.",
-        "bestReplyScript": "Yes. Instead of using split(), I can traverse the string character by character.\n\nThe process is:\n1. Skip leading spaces.\n2. Find the beginning of a word.\n3. Continue until reaching a space.\n4. Store the word.\n5. Repeat until the end of the string.\n6. Reverse the collected words.\n7. Join them.\n\nThis approach demonstrates understanding of how strings are processed internally without relying entirely on built-in functions.",
-        "keyPoints": [
-          "Manual character traversal",
-          "Track word boundaries",
-          "Collect words in a list",
-          "Reverse and join manually"
-        ],
-        "codeSnippet": "def reverse_words_manual(s: str) -> str:\n    words = []\n    n = len(s)\n    i = 0\n    while i < n:\n        while i < n and s[i] == ' ':\n            i += 1\n        if i >= n:\n            break\n        j = i\n        while j < n and s[j] != ' ':\n            j += 1\n        words.append(s[i:j])\n        i = j\n    return ' '.join(reversed(words))"
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "O(n) linear single pass and O(1) space bounds.",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n) because each pointer moves at most n times total.\n- Space Complexity: O(1) since only a few variables are used.",
+            "keyPoints": [
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal single-pass lower bound"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Complexity Analysis",
-        "question": "4. What's the complexity?",
-        "whatInterviewerChecks": "Asymptotic time and space complexity evaluation.",
-        "bestReplyScript": "Each character is visited only once while extracting words. Reversing the list and joining the words also takes linear time.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the string.",
-        "keyPoints": [
-          "Time Complexity: O(n)",
-          "Space Complexity: O(n)",
-          "Linear single pass extraction",
-          "Auxiliary list takes O(n) memory"
-        ]
+            "id": "q4",
+            "category": "Brute-Force Inefficiency",
+            "question": "4. Why is the brute-force solution inefficient?",
+            "whatInterviewerChecks": "O(n^2) nested pairs comparison.",
+            "bestReplyScript": "The brute-force approach checks every possible pair of lines.\n\nFor an array of size n, there are approximately n * (n - 1) / 2 possible pairs.\n\nTherefore:\n- Time Complexity: O(n^2)\n\nFor large arrays, this becomes very slow, while the two-pointer solution solves it in linear time.",
+            "keyPoints": [
+                  "Brute force checks n*(n-1)/2 pairs",
+                  "Time Complexity: O(n^2)",
+                  "Two pointers prunes search space to O(n)"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Whitespace Preservation Variant",
-        "question": "5. How would you preserve leading/trailing spaces?",
-        "whatInterviewerChecks": "Custom parsing logic when default string stripping cannot be used.",
-        "bestReplyScript": "Using default split() removes leading, trailing, and extra spaces automatically.\n\nIf the requirement is to preserve original spacing, I would avoid default split(). Instead, I would process the string manually by identifying both words and space blocks as tokens, then reconstruct the sentence while maintaining their relative placement.\n\nThis requires additional token tracking logic but preserves formatting exactly.",
-        "keyPoints": [
-          "Avoid default split()",
-          "Tokenize both words and space blocks",
-          "Reconstruct preserving layout",
-          "Requires custom parsing"
-        ]
+            "id": "q5",
+            "category": "Correctness & Completeness Proof",
+            "question": "5. How do you know your greedy choice is correct?",
+            "whatInterviewerChecks": "Exhaustive elimination proof.",
+            "bestReplyScript": "The container's height is determined by the shorter line.\n\nKeeping the shorter line while moving the taller one cannot produce a larger area because:\n- Width decreases.\n- Height cannot become larger than the shorter line.\n\nTherefore, the only possibility of finding a larger area is to move the shorter pointer and search for a taller line.\n\nThis guarantees we never miss the optimal solution.",
+            "keyPoints": [
+                  "Height is capped by shorter line",
+                  "Prunes all pairs containing shorter line with smaller width",
+                  "Guarantees optimal solution is never skipped"
+            ]
       },
       {
-        "id": "q6",
-        "category": "In-Place Processing Variant",
-        "question": "6. How would you reverse words in-place?",
-        "whatInterviewerChecks": "Two-step in-place reversal: reverse entire string, then reverse each word.",
-        "bestReplyScript": "Strings in Python are immutable, so they cannot be modified in-place.\n\nHowever, if the input were a mutable character array, I would:\n1. Reverse the entire array.\n2. Reverse each individual word in-place using two pointers.\n\nExample:\nOriginal: \"The sky\"\nReverse whole string: \"yks ehT\"\nReverse each word: \"sky The\"\n\nThis achieves the result using O(1) extra space.",
-        "keyPoints": [
-          "Mutable char array requirement",
-          "Step 1: Reverse whole array",
-          "Step 2: Reverse each word",
-          "Achieves O(1) auxiliary space"
-        ],
-        "codeSnippet": "def reverseWords_in_place(a: list) -> None:\n    # 1. Reverse entire list\n    a.reverse()\n    # 2. Reverse each word individually\n    n = len(a)\n    start = 0\n    for end in range(n + 1):\n        if end == n or a[end] == ' ':\n            # Reverse slice a[start:end] in-place\n            l, r = start, end - 1\n            while l < r:\n                a[l], a[r] = a[r], a[l]\n                l += 1; r -= 1\n            start = end + 1"
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Two elements, equal heights, monotonic trends, empty/single element.",
+            "bestReplyScript": "Important edge cases include:\n1. Two elements ([1, 2]) -> Only one container exists.\n2. All equal heights ([5, 5, 5, 5]) -> Area depends only on width.\n3. Increasing heights ([1, 2, 3, 4, 5]) -> Finds best container.\n4. Decreasing heights ([5, 4, 3, 2, 1]) -> Works correctly.\n5. Very large heights -> Integer overflow consideration.\n6. Empty or single-element array -> 0 (no container formed).",
+            "keyPoints": [
+                  "Two elements minimal case",
+                  "All equal heights handling",
+                  "Empty & single-element validation"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Punctuation Rules",
-        "question": "7. What if punctuation must remain attached?",
-        "whatInterviewerChecks": "Token boundary definition for non-alphanumeric trailing symbols.",
-        "bestReplyScript": "If punctuation belongs to the word, I treat it as part of the word token.\n\nExample:\nInput: \"Hello, world!\"\nOutput: \"world! Hello,\"\n\nThe comma remains attached to \"Hello\" and the exclamation mark remains attached to \"world\". Only the positions of the word tokens change.",
-        "keyPoints": [
-          "Punctuation included in word token",
-          "Word boundaries defined by whitespace",
-          "Relative word-internal order preserved",
-          "Token positions reversed"
-        ]
+            "id": "q7",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, edge, and minimum inputs.",
+            "bestReplyScript": "I would test:\n- [1,8,6,2,5,4,8,3,7] -> 49\n- [1,1] -> 1\n- [4,3,2,1,4] -> 16\n- [1,2,1] -> 2\n- [5,5,5] -> 10\n- [1] -> 0\n- [] -> 0\n\nThese cover normal cases, edge cases, increasing/decreasing arrays, and minimum inputs.",
+            "keyPoints": [
+                  "Standard LeetCode 11 test cases (49, 16)",
+                  "Minimal 2-element tests",
+                  "Empty and single element bounds"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Unicode & Internationalization",
-        "question": "8. How do you handle Unicode whitespace?",
-        "whatInterviewerChecks": "Understanding Python's Unicode-aware split() for tabs, newlines, and non-breaking spaces.",
-        "bestReplyScript": "Unicode includes different types of whitespace besides the normal ASCII space character.\n\nFortunately, Python's split() without arguments automatically handles Unicode whitespace such as tabs (\\t), newlines (\\n), carriage returns (\\r), and non-breaking spaces.\n\nIf implementing parsing manually, I would use char.isspace() instead of checking only for ' '.",
-        "keyPoints": [
-          "Python split() is Unicode-aware",
-          "Handles \\t, \\n, \\r, and Unicode spaces",
-          "Use char.isspace() for manual parsing",
-          "Ensures cross-language compatibility"
-        ]
+            "id": "q8",
+            "category": "Dynamic Programming Applicability",
+            "question": "8. Can this problem be solved using dynamic programming?",
+            "whatInterviewerChecks": "Lack of overlapping subproblems / optimal substructure for DP.",
+            "bestReplyScript": "Not efficiently.\n\nThe area depends on two moving boundaries rather than overlapping subproblems, so dynamic programming does not provide an advantage.\n\nThe greedy two-pointer solution is both simpler and optimal with O(n) time.",
+            "keyPoints": [
+                  "No overlapping subproblems",
+                  "No DP recurrence relation",
+                  "Greedy two-pointer approach is optimal"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Large-Scale & Memory Optimization",
-        "question": "9. How would you process a very large string?",
-        "whatInterviewerChecks": "Memory optimization, streaming, chunking, and line-by-line processing.",
-        "bestReplyScript": "For very large inputs, memory usage becomes important. Instead of storing the entire string multiple times, I would:\n- Scan the string once,\n- Extract words efficiently,\n- Avoid unnecessary string copies,\n- Process data in streaming chunks if reading from a file.\n\nThe goal is to minimize additional RAM allocations while maintaining linear O(n) time complexity.",
-        "keyPoints": [
-          "Single-pass scanning",
-          "Streaming / chunked processing",
-          "Minimize heap string copies",
-          "Maintain O(n) linear time"
-        ]
+            "id": "q9",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Container With Most Water.",
+            "bestReplyScript": "Common mistakes include:\n- Moving the taller pointer instead of the shorter one.\n- Using the larger height instead of the smaller height.\n- Forgetting that height is limited by the shorter line.\n- Not updating the maximum area before moving pointers.\n- Using a brute-force solution that exceeds time limits.",
+            "keyPoints": [
+                  "Moving taller pointer bug",
+                  "Using max() instead of min() for height",
+                  "Failing to update max area before moving"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Conceptual Distinction",
-        "question": "10. What's the difference between reversing words and reversing characters?",
-        "whatInterviewerChecks": "Understanding word token order vs character sequence inversion.",
-        "bestReplyScript": "Reversing words changes the order of the word tokens while keeping each word's characters unchanged.\nExample:\nInput: \"I love Python\"\nOutput: \"Python love I\"\n\nReversing characters reverses every individual character in the entire string.\nExample:\nInput: \"I love Python\"\nOutput: \"nohtyP evol I\"\n\nThese are two completely different operations.",
-        "keyPoints": [
-          "Reversing words: word order inverted, internal letters unchanged",
-          "Reversing characters: all letters inverted",
-          "Distinct algorithmic targets"
-        ]
+            "id": "q10",
+            "category": "Negative Heights Input Safety",
+            "question": "10. How would negative heights affect the problem?",
+            "whatInterviewerChecks": "Non-negative constraint in LeetCode 11.",
+            "bestReplyScript": "In the original problem, heights are guaranteed to be non-negative.\n\nIf negative heights were allowed, they would not represent valid container walls.\n\nI would either:\n- Reject invalid input, or\n- Treat negative heights as zero, depending on the system requirements.",
+            "keyPoints": [
+                  "Heights guaranteed non-negative",
+                  "Negative heights invalid physically",
+                  "Sanitize or clamp negative values to 0"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Edge Case Handling",
-        "question": "11. What edge cases did you consider?",
-        "whatInterviewerChecks": "Empty strings, single words, leading/trailing/multiple spaces, space-only strings.",
-        "bestReplyScript": "I considered the following edge cases:\n1. Empty string (\"\") -> \"\"\n2. Single word (\"Python\") -> \"Python\"\n3. Multiple spaces (\"hello     world\") -> \"world hello\"\n4. Leading spaces (\"   hello world\") -> \"world hello\"\n5. Trailing spaces (\"hello world    \") -> \"world hello\"\n6. Only spaces (\"      \") -> \"\"\n\nTesting these cases ensures the algorithm behaves correctly under all input conditions.",
-        "keyPoints": [
-          "Empty string & single word",
-          "Multiple consecutive spaces",
-          "Leading & trailing spaces",
-          "Spaces-only input -> empty output"
-        ]
+            "id": "q11",
+            "category": "Duplicate Heights Behavior",
+            "question": "11. Can duplicate heights change the algorithm?",
+            "whatInterviewerChecks": "Equal heights pointer movement.",
+            "bestReplyScript": "No.\n\nDuplicate heights do not affect the correctness of the algorithm.\n\nThe same rule still applies: move one of the pointers at the shorter height. If both heights are equal, moving either pointer is valid.",
+            "keyPoints": [
+                  "Equal heights do not break greedy choice",
+                  "Move either left or right pointer when equal",
+                  "Maintains correctness"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Testing & Quality Assurance",
-        "question": "12. How would you test your solution?",
-        "whatInterviewerChecks": "Structured unit testing covering typical and boundary scenarios.",
-        "bestReplyScript": "I would create test cases for different scenarios:\n- Normal sentence: \"The sky is blue\" -> \"blue is sky The\"\n- Single word: \"hello\" -> \"hello\"\n- Empty string: \"\" -> \"\"\n- Extra spaces: \" hello    world \" -> \"world hello\"\n- Punctuation: \"Hello, world!\" -> \"world! Hello,\"\n\nTesting across multiple categories improves confidence in the solution's correctness.",
-        "keyPoints": [
-          "Normal multi-word sentence",
-          "Single word & empty string",
-          "Extra whitespace stripping",
-          "Punctuation preservation"
-        ]
+            "id": "q12",
+            "category": "Two-Pointer Pattern Family",
+            "question": "12. Where is the two-pointer technique commonly used?",
+            "whatInterviewerChecks": "Canonical two-pointer problem family.",
+            "bestReplyScript": "Two pointers are useful whenever we process arrays or strings from both ends.\n\nExamples include:\n- Two Sum II (sorted array)\n- Valid Palindrome\n- Remove Duplicates from Sorted Array\n- Trapping Rain Water\n- Merge Sorted Arrays\n- Squaring a Sorted Array\n- Partitioning problems\n\nIt's one of the most common interview patterns because it often reduces O(n^2) solutions to O(n).",
+            "keyPoints": [
+                  "Two Sum II & Valid Palindrome",
+                  "Trapping Rain Water & Merge Sorted Arrays",
+                  "Reduces O(n^2) to O(n)"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Two-Pointer Method",
-        "question": "13. Can this be solved using two pointers?",
-        "whatInterviewerChecks": "Two-pointer index scanning on mutable arrays.",
-        "bestReplyScript": "Yes. If the string is represented as a mutable character array, I can use the two-pointer technique:\n1. Reverse the entire array using two pointers at the ends.\n2. Use two pointers to locate the start and end of each word.\n3. Reverse each word individually using two pointers.\n\nThis avoids using extra space and is commonly asked in interviews for in-place string manipulation.",
-        "keyPoints": [
-          "Two pointers for full array reversal",
-          "Two pointers for word boundaries",
-          "In-place word reversal",
-          "O(1) auxiliary space"
-        ]
+            "id": "q13",
+            "category": "Parallel Processing Feasibility",
+            "question": "13. Can this problem be parallelized?",
+            "whatInterviewerChecks": "Sequential dependency in pointer movement.",
+            "bestReplyScript": "Not easily.\n\nEach pointer movement depends on the current comparison of the left and right heights, making the algorithm sequential.\n\nAlthough brute-force comparisons could be parallelized, the optimal two-pointer approach is inherently dependent on previous steps.",
+            "keyPoints": [
+                  "Pointer decisions are sequentially dependent",
+                  "Parallelizing brute-force is slower than sequential O(n)",
+                  "Inherently sequential algorithm"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Tab & Whitespace Delimiters",
-        "question": "14. What if words are separated by tabs?",
-        "whatInterviewerChecks": "Handling \\t and general whitespace in Python.",
-        "bestReplyScript": "Python's split() without arguments automatically treats tabs (\\t) as whitespace delimiters.\nExample:\nInput: \"Hello\\tWorld\"\nOutput: \"World Hello\"\n\nIf implementing parsing manually, I must ensure that tabs (\\t), newlines (\\n), and other whitespace characters are treated as valid separators alongside spaces.",
-        "keyPoints": [
-          "split() treats \\t as whitespace",
-          "Handles mixed spaces and tabs",
-          "Manual parsing must check char.isspace()"
-        ]
+            "id": "q14",
+            "category": "Brute Force vs Optimal Comparison",
+            "question": "14. Compare brute-force and optimal solutions.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Checks all n*(n-1)/2 pairs -> Time O(n^2), Space O(1).\n- Two Pointers: Greedily moves shorter pointer -> Time O(n), Space O(1).\n\nThe two-pointer solution is much faster because it intelligently eliminates unnecessary comparisons while still guaranteeing the optimal answer.",
+            "keyPoints": [
+                  "Brute force: O(n^2) time, O(1) space",
+                  "Two Pointers: O(n) time, O(1) space",
+                  "Optimal linear solution"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-World Applications",
-        "question": "15. Where is this useful in real-world systems?",
-        "whatInterviewerChecks": "Practical engineering applications of text parsing and reversal algorithms.",
-        "bestReplyScript": "Reversing words and text tokenization techniques are widely used in:\n- Text editors for formatting and line restructuring.\n- Natural Language Processing (NLP) during text preprocessing.\n- Search engines when analyzing and reordering query terms.\n- Document formatting and text transformation tools.\n- Data cleaning pipelines where text needs to be normalized before ingestion.",
-        "keyPoints": [
-          "Text editor formatting",
-          "NLP text preprocessing",
-          "Search engine query analysis",
-          "Data cleaning pipelines"
-        ]
+            "id": "q15",
+            "category": "Asymptotic Lower Bound Optimality Proof",
+            "question": "15. Why is O(n) the best possible complexity?",
+            "whatInterviewerChecks": "Lower bound proof Omega(n).",
+            "bestReplyScript": "Every height may influence the maximum area, so we must examine each element at least once.\n\nThat means Omega(n) is the lower bound.\n\nThe two-pointer algorithm processes each element at most once, achieving O(n) time, which matches the lower bound.\n\nTherefore, it is asymptotically optimal.",
+            "keyPoints": [
+                  "Must examine all elements at least once -> Omega(n) lower bound",
+                  "Two-pointer achieves O(n)",
+                  "Asymptotically optimal solution"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
