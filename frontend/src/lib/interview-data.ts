@@ -13538,195 +13538,180 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Matrix Transposition.",
-            "bestReplyScript": "My approach for Matrix Transposition follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Index swap matrix[i][j] -> transpose[j][i], dimension reversal columns x rows.",
+            "bestReplyScript": "Matrix transposition means converting rows into columns and columns into rows.\nFor every element at position matrix[i][j], I place it at transpose[j][i].\n\nAlgorithm:\n1. Create a new matrix with dimensions columns x rows (C x R).\n2. Traverse every element of the original matrix.\n3. Store each element at its transposed position: transpose[j][i] = matrix[i][j].\n4. Return the new matrix.\n\nExample: Original [[1,2,3],[4,5,6]] (2x3) -> Transpose [[1,4],[2,5],[3,6]] (3x2).\n\nComplexity: Time: O(R x C), Space: O(R x C)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Index transformation: matrix[i][j] -> transpose[j][i]",
+                  "Dimension shift: R x C becomes C x R",
+                  "Time: O(R x C), Space: O(R x C)"
             ]
       },
       {
             "id": "q2",
-            "category": "Deep-Dive Question 2",
+            "category": "Mathematical Definition",
             "question": "2. What is matrix transposition?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Mathematical notation A^T definition.",
+            "bestReplyScript": "A matrix transpose (denoted as A^T) is an operation where:\n- Every row becomes a column.\n- Every column becomes a row.\n\nMathematically: Transpose[j][i] = Matrix[i][j].\n\nExample:\nOriginal 3x2: [[1,2],[3,4],[5,6]] -> Transpose 2x3: [[1,3,5],[2,4,6]].\n\nThis fundamental operation is widely used across linear algebra and matrix arithmetic.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Row -> Column, Column -> Row",
+                  "Notation: A^T (A transpose)",
+                  "Index identity: A^T[j][i] = A[i][j]"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Matrix Transposition.",
-            "bestReplyScript": "Here is the complexity analysis for Matrix Transposition:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Time O(R x C) and Space O(R x C) optimality proof.",
+            "bestReplyScript": "Every element is visited exactly once.\nFor a matrix with R rows and C columns:\n- Time Complexity: O(R x C)\n- Space Complexity: O(R x C) for allocating the new transposed matrix.\n\nThis is optimal because every element must be read and written once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(R x C)",
+                  "Space Complexity: O(R x C)",
+                  "Optimal single-pass lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Square Matrix In-Place Transposition",
             "question": "4. Can you transpose a square matrix in-place?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Swapping matrix[i][j] with matrix[j][i] across main diagonal for N x N matrix.",
+            "bestReplyScript": "Yes! For an N x N square matrix, we can transpose in-place in O(1) auxiliary space.\n\nAlgorithm:\n- Loop i from 0 to N-1, and j from i+1 to N-1 (upper triangle above main diagonal).\n- Swap matrix[i][j] with matrix[j][i].\n\nExample: [[1,2],[3,4]] -> Swap 2 and 3 -> [[1,3],[2,4]].\nTime: O(N^2), Space: O(1) in-place.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Square N x N matrix in-place transposition",
+                  "Swap matrix[i][j] with matrix[j][i] for j > i",
+                  "Time: O(N^2), Space: O(1)"
             ]
       },
       {
             "id": "q5",
-            "category": "Algorithmic Justification",
+            "category": "Rectangular In-Place Difficulty",
             "question": "5. Why can't rectangular matrices be transposed in-place easily?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Matrix Transposition.",
-            "bestReplyScript": "I chose this approach for Matrix Transposition over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Memory layout dimension changes R x C vs C x R.",
+            "bestReplyScript": "A rectangular matrix changes its dimensions after transposition.\nExample: 2 x 3 becomes 3 x 2.\n\nSince the number of rows and columns changes, the memory allocation layout no longer fits the original contiguous memory buffer without complex in-place cycle-following permutation algorithms.\n\nTherefore, we create a new C x R matrix for rectangular inputs.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Dimension mismatch: R x C vs C x R",
+                  "In-place buffer reallocation failure",
+                  "New matrix allocation is required"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Matrix Transposition.",
-            "bestReplyScript": "When handling Matrix Transposition, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty matrix, 1x1 single element, 1xN single row, Nx1 single column.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty matrix ([]) -> []\n2. 1x1 Single element ([[5]]) -> [[5]]\n3. Single row ([[1,2,3]]) -> Single column [[1],[2],[3]]\n4. Single column ([[1],[2],[3]]) -> Single row [[1,2,3]]\n5. Rectangular matrix 2x3 -> 3x2\n\nTesting these ensures the solution handles all valid matrix shapes.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty matrix returns []",
+                  "Single row 1xN becomes column Nx1",
+                  "Single column Nx1 becomes row 1xN"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Matrix Transposition.",
-            "bestReplyScript": "To thoroughly test Matrix Transposition, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix for square, rectangular, 1x1, empty inputs.",
+            "bestReplyScript": "I would test:\n- [[1]] -> [[1]]\n- [[1,2]] -> [[1],[2]]\n- [[1],[2]] -> [[1,2]]\n- [[1,2],[3,4]] -> [[1,3],[2,4]]\n- [] -> []\n\nThese cover square, rectangular, single-row, single-column, and empty matrices.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Square and rectangular test pairs",
+                  "Single-element 1x1 test",
+                  "Empty matrix boundary test"
             ]
       },
       {
             "id": "q8",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "8. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Matrix Transposition.",
-            "bestReplyScript": "Common candidate pitfalls when solving Matrix Transposition include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Matrix Transpose (LeetCode 867).",
+            "bestReplyScript": "Some common mistakes include:\n- Reusing original dimensions R x C for the result matrix instead of C x R (causes IndexError on non-square matrices).\n- Swapping elements across full matrix instead of upper triangle (j > i) for square in-place, which swaps twice and restores original matrix!\n- Indexing errors matrix[j][i] vs matrix[i][j].\n\nThe most common mistake is allocating R x C instead of C x R for result.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Allocating R x C instead of C x R for result matrix",
+                  "Double swapping square in-place (swapping full matrix cancels out)",
+                  "Index out of bounds on non-square matrices"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
+            "category": "Real-World Applications",
             "question": "9. Where is matrix transposition used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Machine Learning (backpropagation), Computer Graphics, Linear Algebra.",
+            "bestReplyScript": "Matrix transposition is widely used in:\n- Machine Learning & Deep Learning (weight matrix transposition W^T in backpropagation and dot product matrix multiplication).\n- Computer Graphics & 3D Rendering (coordinate transformations & camera matrices).\n- Image Processing (image rotation 90 degrees = transpose + reverse rows).\n- Relational Databases (pivoting rows to columns in SQL).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Machine Learning backpropagation W^T",
+                  "Image rotation 90 degrees = Transpose + Reverse",
+                  "Database pivoting rows to columns"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Memory Optimization Strategies",
             "question": "10. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "In-place N x N swap vs unavoidable C x R allocation.",
+            "bestReplyScript": "If the matrix is square (N x N), I transpose it in-place using O(1) auxiliary memory by swapping upper triangle elements.\n\nFor rectangular matrices (R x C), extra memory for the new C x R matrix is mathematically required because output dimensions differ from input.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Square N x N: O(1) in-place memory",
+                  "Rectangular R x C: O(R x C) new memory required",
+                  "Optimal memory bounds"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Cache Locality & Memory Layout",
             "question": "11. How do row-major and column-major storage affect performance?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Cache line misses in row-major matrix writes.",
+            "bestReplyScript": "Most languages (Python, C, Java) store 2D arrays in row-major order contiguous memory.\n\nWhen transposing:\n- Reading row-by-row `matrix[i][j]` is cache-friendly (sequential memory reads).\n- Writing column-by-column `transpose[j][i]` causes non-sequential stride writes, causing CPU cache misses on large matrices.\n\nIn HPC (High-Performance Computing), we use matrix blocking / tiling (e.g. 32x32 blocks) to maximize CPU L1/L2 cache locality.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Row-major memory layout contiguous reads vs non-stride writes",
+                  "CPU cache misses on large matrix writes",
+                  "Tiling / Blocking (32x32 blocks) for HPC cache locality"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Parallel & GPU Execution",
             "question": "12. Can this be parallelized?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Embarrassingly parallel problem property for CUDA / GPUs.",
+            "bestReplyScript": "Yes! Matrix transposition is an embarrassingly parallel operation.\nEach cell `transpose[j][i] = matrix[i][j]` is completely independent with zero data dependencies.\n\nDifferent rows or 2D sub-blocks can be computed simultaneously in parallel threads on multi-core CPUs or GPU CUDA kernels.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Zero data dependency between cell copies",
+                  "Embarrassingly parallel workload",
+                  "Ideal for GPU CUDA kernel acceleration"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Sparse Matrix Transposition",
             "question": "13. What if the matrix is sparse?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Coordinate Format (COO) / Compressed Sparse Row (CSR) transposition.",
+            "bestReplyScript": "A sparse matrix contains mostly zero values.\nInstead of storing full R x C 2D array, we use Coordinate Format (COO) storing tuples `(row, col, val)`.\n\nTo transpose:\n- Swap row and col indices: `(col, row, val)`.\n- Re-sort by new row index.\n\nThis takes O(Non-Zero elements) time and memory instead of O(R x C).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "COO format: store non-zero (row, col, val) tuples",
+                  "Transpose swaps tuple indices: (col, row, val)",
+                  "Time: O(Non-Zero count) vs O(R x C)"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Out-of-Core / Blocked Transposition",
             "question": "14. How would you transpose a very large matrix?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Out-of-core tile/block transposition for disk-bound matrices.",
+            "bestReplyScript": "For huge matrices that exceed RAM (Out-of-Core computation):\n- Divide matrix into B x B tiles/blocks.\n- Load one block from disk into RAM at a time.\n- Transpose block in memory.\n- Write block to transposed disk file position.\n\nThis minimizes disk I/O seek times and fits strictly within RAM limits.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Tile / Block decomposition (B x B sub-matrices)",
+                  "Out-of-core disk I/O management",
+                  "RAM-constrained execution"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Immutability & Pure Functions",
             "question": "15. What if the matrix is immutable?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Matrix Transposition.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Pure function returning a new matrix without side effects.",
+            "bestReplyScript": "If the original matrix is immutable (or passing functional programming guidelines):\n- Allocate a new C x R matrix.\n- Copy elements `transpose[j][i] = matrix[i][j]`.\n- Return new matrix.\n\nThis guarantees zero side-effects and leaves the input matrix unmodified.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Pure function with no side-effects",
+                  "Allocates new C x R result matrix",
+                  "Preserves original input matrix immutability"
             ]
       }
 ],
