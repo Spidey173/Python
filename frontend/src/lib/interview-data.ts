@@ -11674,195 +11674,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach step by step.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Valid Parentheses.",
-            "bestReplyScript": "My approach for Valid Parentheses follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Stack mechanics, LIFO tracking, mapping table, final stack empty check.",
+            "bestReplyScript": "I use a stack to keep track of opening brackets.\n\nAlgorithm:\n1. Traverse the string from left to right.\n2. If the character is an opening bracket (, {, or [, push it onto the stack.\n3. If it's a closing bracket ), }, or ]:\n   - If the stack is empty, return False.\n   - Otherwise, pop the top element and check if it matches the corresponding opening bracket.\n4. After processing all characters:\n   - If the stack is empty, all brackets were matched correctly.\n   - Otherwise, return False.\n\nExample: Input \"{[()]}\" -> Push {, [, ( -> Pop (, [, { -> Stack empty -> Output: True.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Stack LIFO data structure",
+                  "Push opening brackets, pop & verify closing brackets",
+                  "Empty stack check at end",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Data Structure Rationale",
             "question": "2. Why did you choose a stack for this problem?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Valid Parentheses.",
-            "bestReplyScript": "I chose this approach for Valid Parentheses over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "LIFO (Last In, First Out) nesting property.",
+            "bestReplyScript": "A stack follows the Last In, First Out (LIFO) principle.\n\nThe most recently opened bracket must be the first one to close.\nExample: ({[]}) -> Push (, {, [ -> Pop [, {, (.\n\nA stack naturally models this nested behavior, making it the ideal data structure for validating bracket sequences.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "LIFO (Last In, First Out) principle",
+                  "Most recently opened bracket must close first",
+                  "Models nested structures naturally"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Valid Parentheses.",
-            "bestReplyScript": "Here is the complexity analysis for Valid Parentheses:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear scan and worst-case call stack allocation.",
+            "bestReplyScript": "Each character is processed exactly once.\n- Time Complexity: O(n) (O(1) push and pop per char)\n- Space Complexity: O(n) (in worst case where all characters are opening brackets, e.g. '((((((')\n\nThis is optimal since every character must be examined at least once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Worst case: all opening brackets"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Counters Fallacy",
             "question": "4. Why can't this problem be solved using only counters?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Valid Parentheses.",
-            "bestReplyScript": "I chose this approach for Valid Parentheses over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Counters fail on ordering/nesting violations like `([)]`.",
+            "bestReplyScript": "Counters only track the number of brackets, not their nesting order.\n\nExample: \"([)]\"\nCounters would show 1 '(', 1 ')', 1 '[', 1 ']'. Counts match, but the order is invalid!\nCorrect matching depends on nesting order, which a stack preserves through LIFO operations.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Counters ignore bracket ordering",
+                  "Fails on interleaved brackets like ([)]",
+                  "Stack preserves nesting hierarchy"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
-            "question": "5. How would you handle additional bracket types like `< >`?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Extensibility to New Types",
+            "question": "5. How would you handle additional bracket types like < >?",
+            "whatInterviewerChecks": "HashMap lookup table extension.",
+            "bestReplyScript": "The algorithm remains identical.\nI simply extend the bracket lookup mapping dictionary:\nmapping = {')': '(', ']': '[', '}': '{', '>': '<'}\n\nNo code logic changes are required. The complexity remains Time: O(n), Space: O(n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Extend hash map dictionary",
+                  "No structural algorithm changes",
+                  "O(1) lookup scalability"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Valid Parentheses.",
-            "bestReplyScript": "When handling Valid Parentheses, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty string, single opening/closing bracket, proper nesting, improper order.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> True\n2. Single opening bracket (\"(\") -> False\n3. Single closing bracket (\")\") -> False\n4. Proper nesting (\"{[]}\") -> True\n5. Incorrect order (\"([)]\") -> False\n\nTesting these ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty string returns True",
+                  "Single bracket returns False",
+                  "Interleaved brackets return False"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Empty String Base Case",
             "question": "7. What happens if the input string is empty?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Valid Parentheses.",
-            "bestReplyScript": "When handling Valid Parentheses, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Vacuous truth definition for empty input.",
+            "bestReplyScript": "An empty string contains no unmatched brackets.\nTherefore, it is considered valid.\n\nExample: Input \"\" -> Stack remains empty -> Returns True.\nThis is an important base case guard.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Vacuous truth property",
+                  "Stack remains empty",
+                  "Returns True"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Recursive Alternative",
             "question": "8. Can you solve this recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive stack space overhead vs iterative stack.",
+            "bestReplyScript": "Yes, but recursion is not the best choice.\nA recursive solution processes nested structures by making recursive calls on inner brackets.\n\nHowever, it is harder to read, more complex, and uses call stack memory.\nThe iterative stack-based solution is simpler, faster, and standard in technical interviews.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive call stack overhead",
+                  "Complex string slice management",
+                  "Iterative stack is preferred"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Valid Parentheses.",
-            "bestReplyScript": "To thoroughly test Valid Parentheses, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix covering balanced, unbalanced, nested, empty inputs.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- \"()\" -> True\n- \"()[]{}\" -> True\n- \"(]\" -> False\n- \"([)]\" -> False\n- \"{[]}\" -> True\n- \"\" -> True\n- \"(\" -> False\n\nThese tests cover balanced, unbalanced, nested, and empty inputs.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Balanced and unbalanced strings",
+                  "Single and empty strings",
+                  "Interleaved bracket strings"
             ]
       },
       {
             "id": "q10",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "10. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Valid Parentheses.",
-            "bestReplyScript": "Common candidate pitfalls when solving Valid Parentheses include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Valid Parentheses.",
+            "bestReplyScript": "Some common mistakes include:\n- Calling pop() on an empty stack when encountering a closing bracket (causes IndexError).\n- Forgetting to check if the stack is empty at the end (e.g. string \"(\" leaves 1 item in stack).\n- Using counters instead of a stack.\n- Comparing brackets without a mapping dictionary.\n\nThe most common mistake is calling pop() on an empty stack without checking `if not stack` first.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Empty stack pop() IndexError bug",
+                  "Forgetting stack empty check at end",
+                  "Using counters instead of stack"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Scalability & Extremely Long Strings",
             "question": "11. How would your solution change for very long strings?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Linear scan O(n) streaming and memory management.",
+            "bestReplyScript": "The algorithm itself remains identical because it already runs in linear O(n) time.\n\nFor very long strings (e.g. 100MB file):\n- Stream characters line by line or char by char instead of loading full string.\n- Use a native array list as a stack (`append()` and `pop()` are amortized O(1)).\n\nThe solution scales linearly with input size.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stream character by character",
+                  "Amortized O(1) list stack operations",
+                  "Scales linearly O(n)"
             ]
       },
       {
             "id": "q12",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "12. Where is stack-based matching used in real applications?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Valid Parentheses.",
-            "bestReplyScript": "The algorithmic core of Valid Parentheses is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Compilers, IDE syntax highlighting, HTML/XML tag checkers.",
+            "bestReplyScript": "Stack-based matching is used in:\n- Code editors / IDEs for real-time bracket matching and linting.\n- Compilers and AST parsers (Python `ast`, Babel, GCC).\n- HTML / XML / JSON tag validators.\n- Mathematical expression evaluation (Reverse Polish Notation / Shunting Yard algorithm).",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "IDE bracket highlighting & linting",
+                  "Compiler AST parsers",
+                  "HTML/XML tag & RPN expression evaluation"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "IDE Real-Time Linting",
             "question": "13. Can you validate brackets in a code editor?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Real-time keypress bracket stack processing.",
+            "bestReplyScript": "Yes. Code editors use this exact algorithm.\nAs the developer types:\n1. Opening brackets are pushed onto an internal stack.\n2. Closing brackets pop and match the top.\n3. If a mismatch occurs or stack is non-empty at file end, the editor highlights the unmatched bracket in red immediately.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Real-time syntax highlighting",
+                  "Instant error underline on mismatch",
+                  "LIFO state maintenance"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Error Reporting with Indices",
             "question": "14. How would you report the position of the invalid bracket?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Storing tuples (char, index) in stack for precise diagnostic messages.",
+            "bestReplyScript": "Instead of storing only characters in the stack, I would store tuples: `(char, index)`.\n\nExample Stack: [('{', 0), ('[', 2), ('(', 5)].\n- If a mismatch occurs at index 7, I report error at current index 7.\n- If loop finishes and stack is non-empty, the top tuple `('(', 5)` gives the exact line/column index of the unclosed bracket!\n\nThis is standard in compiler diagnostics.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Push tuples (char, index) onto stack",
+                  "Identifies exact error location for IDEs",
+                  "Compiler diagnostic error reporting"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Micro-Optimizations",
             "question": "15. How would you optimize your implementation?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Valid Parentheses.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Early exit on odd length string, dictionary lookup, O(1) list operations.",
+            "bestReplyScript": "Optimizations include:\n1. Early Exit: If len(s) % 2 != 0, return False immediately (an odd length string can never be balanced!).\n2. Hash Map: Use a dict `{')': '(', ']': '[', '}': '{'}` for O(1) closing-to-opening lookup.\n3. Native List Stack: Use Python list `.append()` and `.pop()` which run in amortized O(1) time.\n\nThese keep runtime minimal while maintaining clean O(n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Early exit: len(s) % 2 != 0 returns False",
+                  "Dict lookup for closing-to-opening pairs",
+                  "O(1) amortized list operations"
             ]
       }
 ],
