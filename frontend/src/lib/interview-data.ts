@@ -5907,182 +5907,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain how binary search works.",
-            "whatInterviewerChecks": "Search space halving, pointer maintenance, mid calculation, logarithmic execution.",
-            "bestReplyScript": "Binary Search is an efficient algorithm used to find a target element in a sorted array. Instead of checking every element one by one, it repeatedly divides the search space into half.\n\nSteps:\n1. Start with two pointers: left = 0, right = n - 1.\n2. Find the middle index: mid = left + (right - left) // 2.\n3. Compare the middle element with the target:\n   - If equal, return the index.\n   - If the target is smaller, search the left half.\n   - If the target is larger, search the right half.\n4. Repeat until the target is found or the search space becomes empty.\n\nExample: Array [2,4,6,8,10,12,14], Target = 10 -> Step 1: Mid 8 (Target > 8, Search Right [10,12,14]) -> Step 2: Mid 12 (Target < 12, Search Left [10]) -> Found!\n\nEach comparison eliminates half of the remaining elements, making Binary Search much faster than Linear Search.\n\nComplexity: Time: O(log n), Space: O(1) (Iterative)",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Dummy node usage, simultaneous traversal while l1/l2 or carry exist, carry propagation `sum // 10`, returning `dummy.next`.",
+            "bestReplyScript": "I traverse both linked lists simultaneously while simulating the addition we perform by hand.\n\nSteps:\n1. Create a dummy node (`dummy = ListNode(0)`) and pointer `current = dummy` to simplify building the result list.\n2. Initialize a `carry` variable to 0.\n3. Loop while `l1`, `l2`, or `carry` is non-zero.\n4. At each step:\n   - Extract values: `val1 = l1.val if l1 else 0`, `val2 = l2.val if l2 else 0`.\n   - Compute `sum = val1 + val2 + carry`.\n   - Create a new node with `sum % 10` and append to `current.next`.\n   - Update `carry = sum // 10`.\n   - Advance `l1`, `l2`, and `current` pointers.\n5. If a carry remains after both lists end, create one final node.\n6. Return `dummy.next`.\n\nThis correctly handles numbers of different lengths and any final carry.",
             "keyPoints": [
-                  "Divide-and-conquer search space halving",
-                  "Pointers: left, right, mid = left + (right - left) // 2",
-                  "Eliminates half the search space per iteration",
-                  "Time: O(log n), Space: O(1) iterative"
+                  "Dummy node `ListNode(0)` simplifies list construction",
+                  "Loop while `l1`, `l2`, or `carry` exist",
+                  "Digit calculation: `sum % 10`, Carry update: `sum // 10`",
+                  "Returns `dummy.next`",
+                  "Time: O(max(m, n)), Space: O(max(m, n))"
             ]
       },
       {
             "id": "q2",
-            "category": "Precondition Justification",
-            "question": "2. Why must the array be sorted?",
-            "whatInterviewerChecks": "Understanding monotonicity and search space discard condition.",
-            "bestReplyScript": "Binary Search relies on the array being sorted because it decides which half to discard based on comparing the target with the middle element.\n\nExample: Sorted [2,4,6,8,10] vs Unsorted [8,2,10,4,6].\nIf the middle element in unsorted is 10, we cannot determine whether the target 6 is on the left or right because elements are unordered.\n\nWithout sorting, Binary Search loses its ability to eliminate half of the search space.",
+            "category": "Direct Traversal vs Integer Conversion",
+            "question": "2. Why did you use a linked list traversal instead of converting the numbers to integers?",
+            "whatInterviewerChecks": "Arbitrary precision requirement & integer overflow avoidance.",
+            "bestReplyScript": "Converting linked lists to integers is not practical because:\n- The represented numbers can exceed 64-bit integer limits (e.g. 100+ digits long).\n- Converting large linked lists creates unnecessary string/int allocations.\n- It defeats the core purpose of linked list arbitrary-precision arithmetic.\n\nTraversing the lists directly works for numbers of any length with zero integer overflow risk.",
             "keyPoints": [
-                  "Monotonic order guarantees directional search",
-                  "Enables discarding half the search space",
-                  "Fails on unsorted data"
+                  "Linked lists can represent 100+ digit numbers exceeding 64-bit limits",
+                  "Avoids integer overflow and string conversion overhead",
+                  "Direct traversal provides true arbitrary-precision addition"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "log2(n) mathematical derivation and stack space overhead.",
-            "bestReplyScript": "Every comparison reduces the search space by half.\n1024 elements -> 512 -> 256 -> 128 -> 64 -> 32 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nThe number of times we divide by 2 is log\u2082(n).\n\nTherefore:\n- Time Complexity: O(log n)\n- Space Complexity: O(1) (Iterative)\n- Space Complexity: O(log n) (Recursive due to call stack)\n\nBinary Search is one of the fastest searching algorithms for sorted data.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(max(m, n)) time and O(max(m, n)) output space bounds.",
+            "bestReplyScript": "Let m = length of list 1, n = length of list 2.\n\nComplexity analysis:\n- Time Complexity: O(max(m, n)). We traverse both lists in a single loop, performing constant work per node.\n- Space Complexity: O(max(m, n)) for creating the result linked list. Excluding the output list, auxiliary space is O(1).",
             "keyPoints": [
-                  "Time Complexity: O(log n)",
-                  "Space Complexity: O(1) iterative",
-                  "log2(n) division step derivation"
+                  "Time Complexity: O(max(m, n))",
+                  "Space Complexity: O(max(m, n)) for output list",
+                  "Auxiliary Space: O(1) constant pointers"
             ]
       },
       {
             "id": "q4",
-            "category": "Mid Calculation & Overflow",
-            "question": "4. Why calculate the middle index carefully?",
-            "whatInterviewerChecks": "Integer overflow prevention `left + (right - left) // 2` in typed languages.",
-            "bestReplyScript": "Instead of writing mid = (left + right) // 2, I prefer: mid = left + (right - left) // 2.\n\nThis avoids integer overflow in languages like Java and C++ when left + right exceeds the maximum integer value (2^31 - 1).\n\nExample: left = 2,000,000,000, right = 2,100,000,000. Adding them directly overflows 32-bit signed int.\n\nPython integers expand automatically, but using the safer formula is best practice and ensures code portability.",
+            "category": "Carry Propagation Mechanics",
+            "question": "4. How do you handle the carry between digits?",
+            "whatInterviewerChecks": "Modulo `% 10` and integer division `// 10` carry equations.",
+            "bestReplyScript": "At every step during iteration:\n`sum = val1 + val2 + carry`\n- New digit value: `digit = sum % 10`\n- Updated carry: `carry = sum // 10`\n\nExample:\n8 + 7 + carry(1) = 16\n- New node value = 16 % 10 = 6\n- New carry = 16 // 10 = 1\n\nThis exactly mimics manual paper-and-pencil column addition.",
             "keyPoints": [
-                  "Prevents 32-bit integer overflow in C++/Java",
-                  "Safe formula: mid = left + (right - left) // 2",
-                  "Cross-language portability best practice"
+                  "`sum = val1 + val2 + carry`",
+                  "New node value: `sum % 10`",
+                  "Updated carry: `sum // 10`"
             ]
       },
       {
             "id": "q5",
-            "category": "First Occurrence Bound",
-            "question": "5. How would you find the first occurrence?",
-            "whatInterviewerChecks": "Lower bound search logic (continue searching left on match).",
-            "bestReplyScript": "When the target is found:\n- Store the current index as a possible answer.\n- Continue searching in the left half (right = mid - 1) to check if an earlier occurrence exists.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Found at index 2 -> Continue Left -> Found at index 1 -> Answer = 1.\n\nThis returns the first occurrence while maintaining O(log n) complexity.",
+            "category": "Unequal List Lengths Handling",
+            "question": "5. What happens if the two linked lists have different lengths?",
+            "whatInterviewerChecks": "Fallback to value 0 for exhausted list.",
+            "bestReplyScript": "If one list ends earlier than the other, I treat its node value as 0 while continuing to process the remaining nodes of the longer list.\n\nExample: l1 = [2, 4, 3], l2 = [5, 6]\n- Node 1: 2 + 5 = 7\n- Node 2: 4 + 6 = 10 -> digit 0, carry 1\n- Node 3: 3 + 0 (fallback) + 1 (carry) = 4\nOutput: [7, 0, 4].",
             "keyPoints": [
-                  "Record match index and continue left (right = mid - 1)",
-                  "Finds lowest index (Lower Bound)",
-                  "Maintains O(log n) runtime"
+                  "Treat exhausted list value as 0 (`val1 = l1.val if l1 else 0`)",
+                  "Loop continues until both lists AND carry are cleared",
+                  "Seamlessly handles lists of different lengths"
             ]
       },
       {
             "id": "q6",
-            "category": "Last Occurrence Bound",
-            "question": "6. How would you find the last occurrence?",
-            "whatInterviewerChecks": "Upper bound search logic (continue searching right on match).",
-            "bestReplyScript": "The idea is similar to finding the first occurrence.\n\nWhen the target is found:\n- Store the index as a candidate answer.\n- Continue searching in the right half (left = mid + 1).\n\nExample: Array [1,2,2,2,3], Target = 2 -> Found at index 2 -> Continue Right -> Found at index 3 -> Answer = 3.\n\nThis returns the last occurrence while maintaining O(log n) complexity.",
+            "category": "Final Carry Extra Node Creation",
+            "question": "6. What if there is a carry remaining after processing all nodes?",
+            "whatInterviewerChecks": "Appending final carry node e.g. 99 + 1 = 100.",
+            "bestReplyScript": "After both input lists are exhausted, I check if `carry > 0` (or include `carry` in the while loop condition: `while l1 or l2 or carry:`).\n\nIf a carry remains, I append a final node `current.next = ListNode(carry)`.\n\nExample: [9, 9] + [1] = 99 + 1 = 100 -> Output: [0, 0, 1].\nWithout this final node, the answer would incorrectly truncate to 00 instead of 100.",
             "keyPoints": [
-                  "Record match index and continue right (left = mid + 1)",
-                  "Finds highest index (Upper Bound)",
-                  "Maintains O(log n) runtime"
+                  "Include `carry` in loop condition: `while l1 or l2 or carry:`",
+                  "Creates extra node for trailing carry (e.g. 99 + 1 -> 100)",
+                  "Prevents truncation of leading most-significant digit"
             ]
       },
       {
             "id": "q7",
-            "category": "Descending Order Binary Search",
-            "question": "7. What if the array is sorted in descending order?",
-            "whatInterviewerChecks": "Reversing comparison direction for non-increasing arrays.",
-            "bestReplyScript": "The logic is almost the same, but comparisons are reversed.\n\nExample: Array [10,8,6,4,2], Target = 6, Mid = 6 -> Found!\nIf the target is larger than the middle element, we move left instead of right because larger values are on the left side in descending order.\n\nThe time complexity remains O(log n).",
+            "category": "Edge Cases",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Different lengths, single node [0], final carry creation, all 9s [9,9,9] + [1].",
+            "bestReplyScript": "Important edge cases include:\n1. Lists of different lengths ([2, 4, 3] + [5, 6])\n2. Both lists containing a single zero ([0] + [0] -> [0])\n3. Final carry generating an extra node ([9, 9, 9] + [1] -> [0, 0, 0, 1])\n4. All 9s inputs ([9, 9] + [9, 9] -> [8, 9, 1])\n5. One list much longer than the other ([1] + [9, 9, 9, 9]).",
             "keyPoints": [
-                  "Target > mid -> move left",
-                  "Target < mid -> move right",
-                  "Identical O(log n) performance"
+                  "Zero inputs [0] + [0] -> [0]",
+                  "All 9s input triggering multiple carries",
+                  "Extra most-significant digit creation"
             ]
       },
       {
             "id": "q8",
-            "category": "Rotated Sorted Array Search",
-            "question": "8. How would you search a rotated sorted array?",
-            "whatInterviewerChecks": "Identifying sorted half in rotated array.",
-            "bestReplyScript": "In a rotated sorted array, one half is always strictly sorted.\n\nExample: [4,5,6,7,0,1,2]\nSteps:\n1. Find the middle element.\n2. Determine which half (left or right) is sorted.\n3. Check if the target lies within the boundaries of the sorted half.\n4. Search that half; otherwise, search the opposite half.\n\nThis still runs in O(log n) time.",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering standard, zero, carry propagation, and length mismatch.",
+            "bestReplyScript": "I would test:\n- [2,4,3] + [5,6,4] -> [7,0,8] (243 + 465 = 708)\n- [0] + [0] -> [0]\n- [9,9,9] + [1] -> [0,0,0,1]\n- [1] + [9,9] -> [0,0,1]\n- [5] + [5] -> [0,1]\n\nThese cover normal addition, zeros, carries, length mismatches, and extra node generation.",
             "keyPoints": [
-                  "One half (nums[left] <= nums[mid]) is always sorted",
-                  "Check target bounds against sorted half",
-                  "Maintains O(log n) runtime (LeetCode 33)"
+                  "LeetCode 2 standard test cases ([2,4,3] + [5,6,4] -> [7,0,8])",
+                  "All 9s test ([9,9,9] + [1] -> [0,0,0,1])",
+                  "Zero test ([0] + [0] -> [0])"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Cases",
-            "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single element, target absent, target at index 0 or n-1.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> -1\n2. One element ([5], target 5) -> 0\n3. Target not present ([1,2,3], target 5) -> -1\n4. Target is first element ([1,2,3], target 1) -> 0\n5. Target is last element ([1,2,3], target 3) -> 2\n\nTesting these cases ensures the implementation is robust.",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Add Two Numbers (LeetCode 2).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting the final carry node at the end of the loop.\n- Throwing AttributeError by accessing `.val` on `None` when lists have different lengths.\n- Returning `dummy` node instead of `dummy.next`.\n- Calculating carry as `sum % 10` instead of `sum // 10`.\n- Modifying input linked lists when immutable behavior is expected.",
             "keyPoints": [
-                  "Empty array return -1",
-                  "Single element arrays",
-                  "First (index 0) and Last (index n-1) boundary matches"
+                  "Forgetting final carry node",
+                  "AttributeError on `None.val` for unequal lists",
+                  "Returning `dummy` instead of `dummy.next`"
             ]
       },
       {
             "id": "q10",
-            "category": "Recursive vs Iterative Implementation",
-            "question": "10. Can binary search be implemented recursively?",
-            "whatInterviewerChecks": "Call stack overhead (O(log n) space) vs iterative (O(1) space).",
-            "bestReplyScript": "Yes. Instead of using a loop, the function calls itself with a smaller search range.\n\nFlow: Search Left Half -> Recursive Call | Search Right Half -> Recursive Call.\n\nRecursive Binary Search is easier to understand conceptually, but iterative Binary Search is generally preferred in production because it avoids call stack overhead and uses O(1) extra space.",
+            "category": "Recursive Solution Feasibility",
+            "question": "10. Can this problem be solved recursively?",
+            "whatInterviewerChecks": "Recursive node addition vs iterative loop.",
+            "bestReplyScript": "Yes.\nA recursive helper `add(l1, l2, carry)` can:\n1. Compute `val1 + val2 + carry`.\n2. Create a node with `sum % 10`.\n3. Recurse on `l1.next`, `l2.next`, `sum // 10` and link to `node.next`.\n\nHowever:\n- It uses O(max(m, n)) recursion call stack space.\n- Risks RecursionError on lists with thousands of nodes.\n- Iterative loop is preferred for O(1) auxiliary stack space.",
             "keyPoints": [
-                  "Recursive uses O(log n) call stack memory",
-                  "Iterative uses O(1) space",
-                  "Iterative preferred in production"
+                  "Recursive helper passes `carry` to next node call",
+                  "Uses O(max(m, n)) call stack space",
+                  "Iterative approach is preferred"
             ]
       },
       {
             "id": "q11",
-            "category": "Common Candidate Pitfalls",
-            "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Rookie traps in binary search loops.",
-            "bestReplyScript": "Some common mistakes include:\n- Applying Binary Search to an unsorted array.\n- Using incorrect loop conditions (left < right vs left <= right).\n- Updating pointers incorrectly (left = mid vs left = mid + 1).\n- Calculating the middle index incorrectly.\n- Forgetting to handle duplicate values when first/last occurrence is required.\n\nThe most common mistake is incorrectly updating left or right, which can lead to infinite loops.",
+            "category": "Forward Order Digits Variant (Add Two Numbers II)",
+            "question": "11. How would you modify your solution if digits were stored in forward order?",
+            "whatInterviewerChecks": "Add Two Numbers II (LeetCode 445) using Stack or List Reversal.",
+            "bestReplyScript": "If digits are stored in forward order (most significant digit first e.g. 7 -> 2 -> 4 -> 3 for 7243):\n- Solution 1 (Stack): Push digits of both lists onto two Stacks, then pop and add from least significant digit to most significant digit, building the result list backwards.\n- Solution 2 (List Reversal): Reverse both input lists in-place, apply standard Add Two Numbers, then reverse the result list.\n\nBoth approaches process digits from least significant to most significant in O(m + n) time.",
             "keyPoints": [
-                  "Infinite loop from mid vs mid + 1 updates",
-                  "Incorrect left <= right loop condition",
-                  "Unsorted array application"
+                  "Add Two Numbers II (LeetCode 445)",
+                  "Stack approach: push nodes, pop to add from LSD to MSD",
+                  "Reversal approach: reverse inputs, add, reverse output"
             ]
       },
       {
             "id": "q12",
-            "category": "Testing & Verification",
-            "question": "12. How would you test your solution?",
-            "whatInterviewerChecks": "Test cases table matrix covering normal, absent, single, and boundary targets.",
-            "bestReplyScript": "I would test normal cases and edge cases:\n- [1,2,3,4,5], target 3 -> 2\n- [1,2,3,4,5], target 6 -> -1\n- [5], target 5 -> 0\n- [], target 1 -> -1\n- [2,4,6,8], target 2 -> 0\n\nThese tests verify correctness under different scenarios.",
+            "category": "Iterative vs Recursive Comparison Matrix",
+            "question": "12. Compare iterative and recursive approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Iterative: Time O(max(m, n)), Aux Space O(1). Fast, zero stack overhead, scales to millions of nodes. Preferred in interviews.\n- Recursive: Time O(max(m, n)), Aux Space O(max(m, n)) call stack. Concise code, but risks stack overflow on large inputs.\n\nThe iterative approach is preferred in production and interviews.",
             "keyPoints": [
-                  "Target present vs target absent assertions",
-                  "Single-element array checks",
-                  "Boundary target index verification"
+                  "Iterative: O(1) aux space, zero call stack overhead",
+                  "Recursive: O(max(m, n)) call stack space",
+                  "Iterative is preferred"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Applications",
-            "question": "13. Where is binary search used in real applications?",
-            "whatInterviewerChecks": "Software engineering use cases for binary search.",
-            "bestReplyScript": "Binary Search is widely used in:\n- Searching B-Tree / B+Tree indexes in databases (SQL, Postgres, B-Tree lookups).\n- Git bisect (finding the first bad commit).\n- Dictionary and contact lookups.\n- Standard library functions (Python bisect, C++ std::lower_bound).\n- Search engines & range queries.",
+            "category": "Real-World Applications of Arbitrary-Precision Math",
+            "question": "13. Where are linked list addition techniques used in practice?",
+            "whatInterviewerChecks": "BigInteger libraries, financial systems, cryptography.",
+            "bestReplyScript": "This digit-by-digit addition technique is used in:\n- Arbitrary-Precision Arithmetic / BigInteger libraries (Java BigInteger, Python long ints).\n- Cryptography (RSA / Elliptic Curve 2048-bit / 4096-bit key math).\n- Financial Systems requiring exact multi-decimal precision beyond double-float limits.\n- Mathematical Compilers & Computer Algebra Systems (Mathematica / Maple).",
             "keyPoints": [
-                  "Database B-Tree indexing",
-                  "Git bisect commit debugging",
-                  "Standard library bisect / lower_bound"
+                  "BigInteger / Arbitrary-Precision Arithmetic libraries",
+                  "RSA / ECC Cryptographic key arithmetic",
+                  "Financial exact-precision billing systems"
             ]
       },
       {
             "id": "q14",
-            "category": "Binary vs Linear Search Comparison",
-            "question": "14. Why is binary search faster than linear search?",
-            "whatInterviewerChecks": "1000 comparisons vs 10 comparisons comparison proof.",
-            "bestReplyScript": "Linear Search checks each element one by one. For 1000 elements, worst case takes 1000 comparisons.\n\nBinary Search eliminates half of the remaining elements after every comparison: 1000 -> 500 -> 250 -> 125 -> 63 -> 31 -> 16 -> 8 -> 4 -> 2 -> 1.\n\nFor 1000 elements, Binary Search needs only about 10 comparisons, while Linear Search may require up to 1000.\n\nThis is why Binary Search is exponentially faster for sorted arrays.",
+            "category": "Large Numbers Scalability",
+            "question": "14. Can your solution handle extremely large numbers?",
+            "whatInterviewerChecks": "Scalability to millions of digits.",
+            "bestReplyScript": "Yes!\nBecause the algorithm operates on one node at a time in a single pass:\n- It is never constrained by CPU 32-bit or 64-bit integer overflow limits.\n- It can process numbers with millions or billions of digits continuously.\n- Memory footprint scales strictly linearly with input node count.",
             "keyPoints": [
-                  "Linear: O(n) vs Binary: O(log n)",
-                  "1000 elements: 1000 checks vs ~10 checks",
-                  "Exponentially faster scaling"
+                  "Not constrained by CPU 32-bit or 64-bit integer limits",
+                  "Processes arbitrary length numbers (millions of digits)",
+                  "Scales linearly with node count"
             ]
       },
       {
             "id": "q15",
-            "category": "Duplicate Values Behavior",
-            "question": "15. What happens if duplicate values exist?",
-            "whatInterviewerChecks": "Non-deterministic match index vs explicit lower/upper bound modification.",
-            "bestReplyScript": "Standard Binary Search may return any one of the duplicate occurrences.\n\nExample: Array [1,2,2,2,3], Target = 2 -> Output could be index 1, 2, or 3.\n\nIf the problem requires the first occurrence or last occurrence, I modify the algorithm to continue searching left (right = mid - 1) or right (left = mid + 1) after finding a match.\n\nThis still maintains O(log n) time complexity.",
+            "category": "Linked List Big-Number Utility Rationale",
+            "question": "15. Why is representing numbers as linked lists useful?",
+            "whatInterviewerChecks": "Dynamic growth, no fixed size constraints.",
+            "bestReplyScript": "Representing numbers as linked lists provides key engineering benefits:\n- Dynamic Memory Allocation: Digits can grow dynamically without pre-allocating fixed memory blocks.\n- Zero Overflow: Completely eliminates integer overflow exceptions.\n- Efficient Digit Insertion: Appending new digits is an O(1) pointer assignment.\n\nThis makes linked lists a foundational data structure for big-number representations.",
             "keyPoints": [
-                  "Standard BS returns arbitrary duplicate index",
-                  "Lower/Upper bound BS returns first/last match",
-                  "Maintains O(log n) time complexity"
+                  "Dynamic memory growth without pre-allocation",
+                  "Zero integer overflow risk",
+                  "O(1) digit append performance"
             ]
       }
 ],
