@@ -9014,195 +9014,180 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your solution.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for FizzBuzz Enterprise.",
-            "bestReplyScript": "My approach for FizzBuzz Enterprise follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Iteration 1 to n, divisibility rules evaluation order (15 vs 3 vs 5).",
+            "bestReplyScript": "The basic idea is to iterate from 1 to n and check divisibility.\n\nRules:\n- If a number is divisible by 3 and 5, print \"FizzBuzz\".\n- If divisible only by 3, print \"Fizz\".\n- If divisible only by 5, print \"Buzz\".\n- Otherwise, print the number.\n\nExample: n = 6 -> 1, 2, Fizz, 4, Buzz, Fizz.\n\nComplexity: Time: O(n), Space: O(1) (excluding output)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Iterate 1 to n",
+                  "Check 15 (both 3 & 5) before individual 3 or 5 checks",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "2. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for FizzBuzz Enterprise.",
-            "bestReplyScript": "Here is the complexity analysis for FizzBuzz Enterprise:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear time scan O(n) optimality proof.",
+            "bestReplyScript": "We process each number exactly once.\nFor every number, we perform a few constant-time O(1) modulo operations.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nSince every output from 1 to n must be generated, O(n) is optimal.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal linear time bound"
             ]
       },
       {
             "id": "q3",
-            "category": "Deep-Dive Question 3",
+            "category": "Configuration Driven Design",
             "question": "3. How would you make the solution configurable?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Rule-dictionary mapping (e.g. {3: 'Fizz', 5: 'Buzz', 7: 'Bazz'}).",
+            "bestReplyScript": "Instead of hardcoding 3 -> Fizz and 5 -> Buzz, I would store the rules in a configuration dictionary.\n\nExample:\nrules = {3: \"Fizz\", 5: \"Buzz\", 7: \"Bazz\"}\n\nNow the program can support any divisibility rule without changing the core loop logic. This makes the solution flexible, maintainable, and easy to extend.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Configurable rule dictionary mapping",
+                  "Decouples rules from core iteration loop",
+                  "Flexible and easy to extend"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Open/Closed Principle",
             "question": "4. What if divisibility rules change dynamically?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "SOLID principles: Open for extension, closed for modification.",
+            "bestReplyScript": "If rules change while the program is running, I would keep them in a dynamic data structure like a dictionary or list.\n\nExample: Changing today's rules {3: 'Fizz', 5: 'Buzz'} to tomorrow's rules {4: 'Foo', 6: 'Bar'}.\nThe core algorithm remains identical; only the configuration updates.\n\nThis follows the Open/Closed Principle\u2014code is open for extension but closed for modification.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "SOLID Open/Closed Principle",
+                  "Dynamic data structure rule engine",
+                  "Zero code mutation required for rule additions"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Modulo Elimination Optimization",
             "question": "5. Can you avoid multiple modulo operations?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Counter-based tracking to avoid CPU modulo division.",
+            "bestReplyScript": "Yes. Instead of calculating i % 3 and i % 5 for every number, we can maintain integer counters count3 and count5.\n\nIncrement them each iteration. When count3 == 3, print \"Fizz\" and reset count3 = 0. Similarly for count5.\n\nThis avoids repeated modulo operations and slightly improves CPU performance for very large inputs.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Counter variables count3 and count5",
+                  "Reset counter on match instead of i % 3",
+                  "Eliminates expensive CPU modulo division"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
-            "question": "6. How would you handle very large values of `n`?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Large N Memory Streaming",
+            "question": "6. How would you handle very large values of n?",
+            "whatInterviewerChecks": "Generators (`yield`) vs storing full output arrays.",
+            "bestReplyScript": "If n is very large:\n- Avoid storing all outputs in a list array in memory (O(n) space).\n- Generate each result one at a time.\n- Print or stream the output immediately.\n\nIn Python, instead of result.append(...), I would use `yield value` (Generator).\nThis reduces auxiliary memory usage from O(n) to O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Use Python generators (`yield`)",
+                  "Reduces memory footprint from O(n) to O(1)",
+                  "Enables streaming millions of records"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for FizzBuzz Enterprise.",
-            "bestReplyScript": "When handling FizzBuzz Enterprise, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "n = 0, n = 1, n = 15, negative inputs.",
+            "bestReplyScript": "Important edge cases include:\n1. n = 0 -> Returns empty / prints nothing.\n2. n = 1 -> Output: [\"1\"].\n3. n = 15 -> Output: \"FizzBuzz\".\n4. Negative numbers -> Invalid input (raise ValueError or return empty).\n\nTesting these cases ensures the implementation behaves correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 & n = 1 boundary checks",
+                  "n = 15 dual-divisibility test",
+                  "Negative number handling"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test this implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for FizzBuzz Enterprise.",
-            "bestReplyScript": "To thoroughly test FizzBuzz Enterprise, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering 1, 3, 5, 15, 16, and custom rules.",
+            "bestReplyScript": "I would test normal cases and edge cases:\n- 1 -> 1\n- 3 -> Fizz\n- 5 -> Buzz\n- 15 -> FizzBuzz\n- 16 -> 16\n\nI would also test n = 0, very large values of n, and custom rule configurations ({7: 'Bazz'}).",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Divisibility test matrix (3, 5, 15)",
+                  "Boundary inputs n = 0 and n = 16",
+                  "Custom rule dictionary test cases"
             ]
       },
       {
             "id": "q9",
-            "category": "Algorithmic Justification",
+            "category": "Interview Purpose Rationale",
             "question": "9. Why is FizzBuzz commonly asked in interviews?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for FizzBuzz Enterprise.",
-            "bestReplyScript": "I chose this approach for FizzBuzz Enterprise over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Communication, edge cases, clean code, and extensible software architecture.",
+            "bestReplyScript": "FizzBuzz is not about mathematical difficulty.\nInterviewers use it to evaluate whether a candidate can:\n- Understand requirements.\n- Write clean, readable code.\n- Handle conditions correctly without bugs.\n- Think about edge cases and extensibility.\n\nFor experienced candidates, interviewers extend it into enterprise architecture questions to test design patterns.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Evaluates clean code standards",
+                  "Tests control flow bug avoidance",
+                  "Gateway to enterprise design pattern discussions"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Enterprise Architecture Extensibility",
             "question": "10. How would you design this for extensibility?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Decoupling Business Rules, Output Generation, and Loop Controller.",
+            "bestReplyScript": "I would separate concerns into 3 distinct layers:\n1. Business Rules (Divisibility evaluation logic).\n2. Output Generator (Formatting and concatenation).\n3. Processing Controller (Loop execution & streaming).\n\nThis makes it easy to add new rules, remove existing rules, or change formatting without modifying core logic.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Separation of Concerns (SoC)",
+                  "Rule Engine -> Generator -> Controller",
+                  "Decoupled modular architecture"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "OOP & Design Patterns",
             "question": "11. Can you use object-oriented principles here?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Strategy Pattern / Chain of Responsibility pattern implementation.",
+            "bestReplyScript": "Yes. Using OOP and the Strategy Pattern:\n- Define a Base Rule interface.\n- Create concrete classes: FizzRule, BuzzRule, CustomRule.\n- The main program executes a Chain of Responsibility asking each rule if it applies.\n\nThis strictly follows Single Responsibility and Open/Closed Principles.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Strategy Pattern & Chain of Responsibility",
+                  "Concrete Rule classes (FizzRule, BuzzRule)",
+                  "Single Responsibility & Open/Closed Principles"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Custom Keywords & Formatting",
             "question": "12. How would you support custom keywords?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dynamic string concatenation based on matching rules.",
+            "bestReplyScript": "Instead of hardcoding \"Fizz\" and \"Buzz\":\nPass a list of tuples or dict mapping: [(3, \"Apple\"), (5, \"Orange\"), (7, \"Mango\")].\n\nFor number 15, it concatenates matching strings: \"Apple\" + \"Orange\" = \"AppleOrange\".\n\nThe algorithm remains unchanged because it dynamically builds strings from configuration.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Dynamic string concatenation",
+                  "Tuples mapping (divisor, keyword)",
+                  "Zero hardcoded string literals"
             ]
       },
       {
             "id": "q13",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "13. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for FizzBuzz Enterprise.",
-            "bestReplyScript": "Common candidate pitfalls when solving FizzBuzz Enterprise include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Control flow ordering bug (checking 3 before 15).",
+            "bestReplyScript": "Common mistakes include:\n- Checking divisibility by 3 before 15 (if divisible by 3 elif divisible by 5 elif divisible by 15). Since 15 is divisible by 3, \"FizzBuzz\" is never printed!\n- Using deeply nested if statements.\n- Hardcoding values.\n- Ignoring edge cases like n = 0.\n\nThe correct order is checking 15 (or string concatenation) first, then 3, then 5.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Control flow order: checking 3 before 15 bug",
+                  "Deeply nested if-else anti-pattern",
+                  "Hardcoding string literals"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Memory Optimization Strategies",
             "question": "14. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for FizzBuzz Enterprise.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Eliminating array storage via direct stdout printing or streaming.",
+            "bestReplyScript": "Instead of storing the entire result array [\"1\", \"2\", \"Fizz\", ...] in memory:\n- Print directly to stdout.\n- Use a Python generator (`yield`).\n- Stream the output over a socket or HTTP connection.\n\nThis reduces memory usage from O(n) down to O(1) constant auxiliary space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Direct stdout printing",
+                  "Generator `yield` streaming",
+                  "O(1) memory bound for large n"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Lazy Output Generation",
             "question": "15. How would you generate the output lazily instead of storing it?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for FizzBuzz Enterprise.",
-            "bestReplyScript": "I chose this approach for FizzBuzz Enterprise over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Lazy evaluation semantics via Python generators.",
+            "bestReplyScript": "A lazy approach produces one value at a time on-demand instead of prebuilding the entire result list.\n\nIn Python, this is implemented using the `yield` keyword inside a generator function.\n\nAdvantages:\n- Extremely low O(1) memory footprint.\n- Works seamlessly for billions of numbers.\n- Ideal for streaming pipeline architectures.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Lazy evaluation using Python `yield`",
+                  "On-demand value generation",
+                  "Scales to billions of items with low memory"
             ]
       }
 ],
