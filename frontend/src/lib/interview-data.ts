@@ -8254,195 +8254,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "My approach for Number of 1 Bits (Hamming Weight) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Brian Kernighan's Algorithm, n & (n - 1) bit clearing, count increment.",
+            "bestReplyScript": "I use bit manipulation to count the number of 1 bits in the binary representation of a number. The most efficient approach is Brian Kernighan's Algorithm.\n\nSteps:\n1. Initialize count = 0.\n2. While n is not zero:\n   - Perform n = n & (n - 1).\n   - Increment count.\n3. Return count.\n\nEach operation removes one set bit (1) from the number.\n\nExample: n = 13 (Binary 1101) -> 1101 & 1100 = 1100 (count=1) -> 1100 & 1011 = 1000 (count=2) -> 1000 & 0111 = 0000 (count=3). Output: 3.\n\nComplexity: Time: O(k) where k is the number of set bits, Space: O(1).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brian Kernighan's Algorithm: n & (n - 1)",
+                  "Clears rightmost set bit in O(1) per set bit",
+                  "Loop runs k times (k = number of 1 bits)",
+                  "Time: O(k), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Deep-Dive Question 2",
+            "category": "Bitwise AND Mechanics",
             "question": "2. How does the bitwise AND operator help?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "n & (n - 1) rightmost set bit clearing mathematical proof.",
+            "bestReplyScript": "The expression n = n & (n - 1) removes the rightmost set bit (1) from the number.\n\nExample: n = 12 (Binary 1100), n - 1 = 11 (Binary 1011).\nAND operation:\n  1100\n& 1011\n------\n  1000\n\nThe rightmost 1 is turned to 0. Repeating this operation until n becomes 0 tells us exactly how many 1s were present.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "n - 1 flips rightmost 1 to 0 and all trailing 0s to 1s",
+                  "n & (n - 1) clears the rightmost 1 bit",
+                  "Zeroes out lower bits cleanly"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "Here is the complexity analysis for Number of 1 Bits (Hamming Weight):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(k) set bits complexity vs O(32) shift-all-bits complexity.",
+            "bestReplyScript": "Each iteration removes one set bit.\n\nIf there are k set bits:\n- Time Complexity: O(k)\n- Space Complexity: O(1)\n\nWorst case: n = 255 (11111111) has 8 set bits, so 8 iterations.\nThis is faster than checking every bit individually when k < 32.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(k) where k <= 32",
+                  "Space Complexity: O(1)",
+                  "Skips 0 bits completely"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Optimization vs Bit Shift",
             "question": "4. Can you optimize the number of iterations?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Brian Kernighan O(k) vs Standard shift-and-check O(32).",
+            "bestReplyScript": "Yes. Instead of checking every bit using a loop with n >>= 1 and count += n & 1 (which always checks all 32 bits), I use Brian Kernighan's Algorithm.\n\nExample: n = 11110000 (240).\n- Standard Shift: Checks all 8 bit positions.\n- Brian Kernighan: Runs only 4 times because there are only 4 set bits.\n\nSo the number of iterations depends on the number of 1s, making it more efficient.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Standard shift checks fixed 32 bits",
+                  "Brian Kernighan runs k times (set bits count)",
+                  "Significant speedup for sparse binary numbers"
             ]
       },
       {
             "id": "q5",
-            "category": "Step-by-Step Approach",
+            "category": "Brian Kernighan Step-by-Step",
             "question": "5. Explain Brian Kernighan's Algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "My approach for Number of 1 Bits (Hamming Weight) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Trace example n = 26 (11010).",
+            "bestReplyScript": "Brian Kernighan's Algorithm removes one set bit in each iteration using n = n & (n - 1).\n\nExample: n = 26 (Binary 11010).\n- Step 1: 11010 & 11001 = 11000 (count = 1)\n- Step 2: 11000 & 10111 = 10000 (count = 2)\n- Step 3: 10000 & 01111 = 00000 (count = 3)\n\nTotal set bits = 3. The algorithm finishes immediately when n becomes 0.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Iterative clearing of rightmost set bit",
+                  "Stops as soon as n == 0",
+                  "Exact step-by-step bitwise reduction"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Negative & Unsigned Bit Representation",
             "question": "6. What if the input is negative?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "When handling Number of 1 Bits (Hamming Weight), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "32-bit unsigned integer treatment & two's complement in Python.",
+            "bestReplyScript": "This depends on the programming language.\nIn Python, integers have arbitrary precision, so negative numbers require masking with 0xFFFFFFFF (n & 0xFFFFFFFF) to simulate a 32-bit unsigned integer.\n\nIn interview problems (e.g. LeetCode 191), the input is treated as an unsigned 32-bit integer.\nExample: -1 in 32-bit binary is 11111111111111111111111111111111 (32 set bits).\n\nAlways clarify signed vs unsigned 32-bit representation with the interviewer.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Python 32-bit mask: n & 0xFFFFFFFF",
+                  "Two's complement for negative integers",
+                  "-1 in 32-bit unsigned yields 32 bits"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Manual Bit Shift Alternative",
             "question": "7. How would you solve this without built-in functions?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Manual bit shifting (`n & 1` and `n >>= 1`).",
+            "bestReplyScript": "Yes. One approach is to examine each bit manually using bit shifting.\n\nSteps:\n1. Check the last bit using n & 1.\n2. Add it to count: count += n & 1.\n3. Right shift: n >>= 1.\n4. Repeat until n becomes 0.\n\nComplexity: Time: O(number of bits) (up to 32), Space: O(1).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "LSB check: n & 1",
+                  "Right logical shift: n >>= 1",
+                  "Iterates through 32 bit positions"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "When handling Number of 1 Bits (Hamming Weight), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Zero, one, powers of 2, max 32-bit integer.",
+            "bestReplyScript": "Important edge cases include:\n1. Zero (0 -> Binary 0) -> Output: 0\n2. One (1 -> Binary 1) -> Output: 1\n3. Power of Two (8 -> Binary 1000) -> Output: 1\n4. All bits set (255 -> Binary 11111111) -> Output: 8\n5. Max 32-bit int (0xFFFFFFFF) -> Output: 32\n\nTesting these cases ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 returns 0",
+                  "Power of 2 (single set bit) returns 1",
+                  "Full bitmask 0xFFFFFFFF returns 32"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "To thoroughly test Number of 1 Bits (Hamming Weight), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix with binary representations.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- 0 (Binary 0) -> 0\n- 1 (Binary 1) -> 1\n- 13 (Binary 1101) -> 3\n- 8 (Binary 1000) -> 1\n- 255 (Binary 11111111) -> 8\n\nThese tests verify different binary patterns.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Zero & single-bit test cases",
+                  "Multi-bit integer test cases",
+                  "Powers of 2 test cases"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Recursive Bit Counting",
             "question": "10. Can this be solved recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive call stack O(k) vs iterative O(1).",
+            "bestReplyScript": "Yes. A recursive approach repeatedly removes one set bit:\n\ndef countBits(n):\n    if n == 0: return 0\n    return 1 + countBits(n & (n - 1))\n\nComplexity: Time: O(k), Space: O(k) due to recursion stack.\nThe iterative version is preferred because it avoids recursion call stack overhead.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Base case: if n == 0: return 0",
+                  "Recurrence: 1 + countBits(n & (n - 1))",
+                  "Uses O(k) recursion stack space"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What mistakes do candidates commonly make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "Common candidate pitfalls when solving Number of 1 Bits (Hamming Weight) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in bitwise operations.",
+            "bestReplyScript": "Some common mistakes include:\n- Confusing bitwise AND (&) with logical AND (and).\n- Forgetting to update n inside the loop.\n- Using built-in bin(n).count('1') when bit manipulation is expected.\n- Not handling zero or negative numbers correctly.\n- Not understanding why n & (n - 1) removes the rightmost set bit.\n\nThe most common mistake is confusing bitwise and logical operators.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Confusing & with logical 'and'",
+                  "Relying on bin(n).count('1') string conversion",
+                  "Infinite loop from forgetting to update n"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is Hamming Weight used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical applications of bit counting in computer science.",
+            "bestReplyScript": "Hamming Weight is used in many real-world applications:\n- Error detection and correction (Hamming Distance, Reed-Solomon codes).\n- Cryptography & Security (entropy calculation, bitmask validation).\n- Data compression & CPU POPCNT instruction optimizations.\n- Chess engines & Bitboard game state evaluations.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hardware POPCNT instruction",
+                  "Hamming Distance & Error-Correcting codes",
+                  "Chess engine bitboard evaluations"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Batch Processing (Counting Bits 0 to N)",
             "question": "13. How would you count bits in multiple numbers efficiently?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Dynamic Programming counting bits `dp[i] = dp[i >> 1] + (i & 1)` (LeetCode 338).",
+            "bestReplyScript": "If processing numbers from 0 to N (LeetCode 338), we use Dynamic Programming:\ndp[i] = dp[i >> 1] + (i & 1)\n\nThis reuses previously computed bit counts in O(1) time per number, solving all numbers up to N in O(N) total time without recomputing.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Dynamic Programming: dp[i] = dp[i >> 1] + (i & 1)",
+                  "Time: O(N) for array up to N",
+                  "Reuses right-shifted bit count state"
             ]
       },
       {
             "id": "q14",
-            "category": "Step-by-Step Approach",
+            "category": "Approach Comparison",
             "question": "14. Compare iterative and bit manipulation approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "My approach for Number of 1 Bits (Hamming Weight) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "O(32) vs O(k) set bits comparison table.",
+            "bestReplyScript": "Comparison:\n- Check every bit (Shift): Time O(32), Space O(1) - Always checks 32 positions.\n- Brian Kernighan (&):       Time O(k),  Space O(1) - Checks only set 1 bits.\n\nBrian Kernighan's method is faster because it skips 0 bits entirely.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Shift checks fixed 32 positions",
+                  "Brian Kernighan skips 0 bits entirely",
+                  "O(k) <= O(32) speedup"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Hardware Bitwise Acceleration",
             "question": "15. Why is bit manipulation faster than arithmetic operations?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Number of 1 Bits (Hamming Weight).",
-            "bestReplyScript": "I chose this approach for Number of 1 Bits (Hamming Weight) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "ALU single-cycle CPU execution vs division/modulo overhead.",
+            "bestReplyScript": "Bitwise operations are executed directly by the CPU ALU (Arithmetic Logic Unit) at the hardware level in a single clock cycle.\n\nThey require fewer clock cycles than arithmetic operations like division or modulo.\nExample: n & 1 replaces n % 2, and n >> 1 replaces n // 2.\n\nThese low-level operations are essential in high-performance computing, systems programming, and embedded devices.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Direct CPU ALU single-cycle execution",
+                  "Replaces expensive division/modulo clock cycles",
+                  "Hardware acceleration (POPCNT)"
             ]
       }
 ],
