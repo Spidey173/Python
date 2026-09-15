@@ -3,163 +3,222 @@ import {
   CodeSubmitResponse, ExplainResponse, LeaderboardEntry,
   Achievement, ProfileResponse, User
 } from './types';
+import { sessionManager } from './session-manager';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
-function getAuthHeader(): Record<string, string> {
-  if (typeof window === 'undefined') return {};
-  const token = localStorage.getItem('pq_token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
+export class ApiError extends Error {
+  code: string;
+  status: number;
+  requestId?: string;
+  retryAfter?: number;
+
+  constructor(message: string, code: string = 'ERROR', status: number = 500, requestId?: string, retryAfter?: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.code = code;
+    this.status = status;
+    this.requestId = requestId;
+    this.retryAfter = retryAfter;
+  }
 }
 
-async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const headers = {
+// Silent Refresh Coordinator
+let isRefreshing = false;
+let refreshSubscribers: Array<(error: Error | null) => void> = [];
+
+function subscribeTokenRefresh(cb: (error: Error | null) => void) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed(error: Error | null) {
+  refreshSubscribers.forEach((cb) => cb(error));
+  refreshSubscribers = [];
+}
+
+interface RequestOptions extends RequestInit {
+  skipAuthRefresh?: boolean;
+}
+
+async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  const requestId = `req_${Math.random().toString(36).substring(2, 10)}${Date.now().toString(36)}`;
+  const csrfToken = sessionManager.getCsrfToken();
+
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...getAuthHeader(),
-    ...(options.headers || {}),
+    'X-Request-ID': requestId,
+    ...(options.headers as Record<string, string> || {}),
   };
+
+  // Add CSRF token for state-changing operations
+  const method = (options.method || 'GET').toUpperCase();
+  if (csrfToken && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+    headers['X-CSRF-Token'] = csrfToken;
+  }
 
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
+      credentials: 'include', // HttpOnly cookies sent automatically
       headers,
     });
 
     if (!res.ok) {
+      // 401 Unauthorized handling: attempt silent refresh if not already an auth endpoint
+      if (res.status === 401 && !options.skipAuthRefresh && !endpoint.startsWith('/auth/refresh') && !endpoint.startsWith('/auth/login')) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          try {
+            await fetch(`${API_BASE}/auth/refresh`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json', 'X-Request-ID': `ref_${requestId}` },
+            });
+            isRefreshing = false;
+            onRefreshed(null);
+          } catch (refreshErr: any) {
+            isRefreshing = false;
+            onRefreshed(refreshErr);
+            sessionManager.clearSession();
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new Event('pyforge_auth_expired'));
+            }
+            throw new ApiError('Session expired. Please sign in again.', 'SESSION_EXPIRED', 401, requestId);
+          }
+        }
+
+        // Wait for active refresh to complete, then retry original request
+        return new Promise<T>((resolve, reject) => {
+          subscribeTokenRefresh((error) => {
+            if (error) {
+              reject(new ApiError('Session expired. Please sign in again.', 'SESSION_EXPIRED', 401, requestId));
+            } else {
+              resolve(request<T>(endpoint, { ...options, skipAuthRefresh: true }));
+            }
+          });
+        });
+      }
+
       const errorData = await res.json().catch(() => ({}));
-      let msg = `Request failed with status ${res.status}`;
-      if (typeof errorData.detail === 'string') {
-        msg = errorData.detail;
-      } else if (Array.isArray(errorData.detail)) {
+      const code = errorData.code || (res.status === 429 ? 'RATE_LIMITED' : res.status === 401 ? 'UNAUTHORIZED' : 'ERROR');
+      let msg = errorData.message || errorData.detail || `Request failed with status ${res.status}`;
+      
+      if (Array.isArray(errorData.detail)) {
         msg = errorData.detail
           .map((e: any) => e.msg || e.message || (typeof e === 'string' ? e : JSON.stringify(e)))
           .join('. ');
-      } else if (errorData.message) {
-        msg = errorData.message;
       }
-      throw new Error(msg);
+
+      const retryAfter = errorData.retry_after ? Number(errorData.retry_after) : undefined;
+      throw new ApiError(msg, code, res.status, errorData.request_id || requestId, retryAfter);
     }
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn(`API call ${endpoint} failed, checking fallback...`, err);
-    throw err;
+    if (err instanceof ApiError) {
+      throw err;
+    }
+    const message = err instanceof Error ? err.message : 'Network error occurred';
+    throw new ApiError(message, 'NETWORK_ERROR', 0, requestId);
   }
 }
 
 export const api = {
-  // Auth
-  async login(username: string, password: string): Promise<{ access_token: string; user: User }> {
+  // --- Auth Endpoints (Pure HttpOnly Cookies) ---
+  async login(username: string, password: string, signal?: AbortSignal): Promise<{ access_token?: string; user: User }> {
     return request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
+      signal,
+      skipAuthRefresh: true,
     });
   },
 
-  async register(username: string, email: string, password: string): Promise<{ access_token: string; user: User }> {
+  async register(username: string, email: string, password: string, signal?: AbortSignal): Promise<{ access_token?: string; user: User }> {
     return request('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ username, email, password }),
+      signal,
+      skipAuthRefresh: true,
     });
   },
 
-  async guestLogin(): Promise<{ access_token: string; user: User }> {
-    try {
-      return await request('/auth/guest', {
-        method: 'POST',
-      });
-    } catch (err) {
-      console.warn('Backend guest auth endpoint unreachable, initializing offline-ready guest session:', err);
-      const guestId = 'runner_' + Math.random().toString(36).substring(2, 9);
-      const fallbackUser: User = {
-        id: Date.now(),
-        username: guestId,
-        email: `${guestId}@pythonquest.io`,
-        role: 'guest',
-        xp: 0,
-        coins: 100,
-        level: 1,
-        lives: 5,
-        streak: 1,
-        avatar: 'cyber-snake',
-        theme: 'cyber-dark',
-        created_at: new Date().toISOString(),
-      };
-      return {
-        access_token: 'local_guest_' + Date.now(),
-        user: fallbackUser,
-      };
-    }
+  async guestLogin(signal?: AbortSignal): Promise<{ access_token?: string; user: User }> {
+    return request('/auth/guest', {
+      method: 'POST',
+      signal,
+      skipAuthRefresh: true,
+    });
   },
 
-  async getMe(): Promise<User> {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('pq_token') : null;
-    if (token && token.startsWith('local_guest_')) {
-      return {
-        id: 9999,
-        username: 'runner_guest',
-        email: 'guest@pythonquest.io',
-        role: 'guest',
-        xp: 0,
-        coins: 100,
-        level: 1,
-        lives: 5,
-        streak: 1,
-        avatar: 'cyber-snake',
-        theme: 'cyber-dark',
-        created_at: new Date().toISOString(),
-      };
-    }
-    return request('/auth/me');
+  async logout(signal?: AbortSignal): Promise<{ status: string; message: string }> {
+    return request('/auth/logout', {
+      method: 'POST',
+      signal,
+      skipAuthRefresh: true,
+    });
   },
 
-  // Challenges
-  async getChapters(): Promise<ChapterGroup[]> {
-    return request('/challenges/chapters');
+  async refreshToken(signal?: AbortSignal): Promise<{ status: string; user?: User }> {
+    return request('/auth/refresh', {
+      method: 'POST',
+      signal,
+      skipAuthRefresh: true,
+    });
   },
 
-  async getChallenge(id: number): Promise<ChallengeDetail> {
-    return request(`/challenges/${id}`);
+  async getMe(signal?: AbortSignal): Promise<User> {
+    return request('/auth/me', { signal });
   },
 
-  // Sandbox Execution
-  async runCode(challengeId: number, code: string, customInput?: string): Promise<CodeRunResponse> {
+  // --- Challenges ---
+  async getChapters(signal?: AbortSignal): Promise<ChapterGroup[]> {
+    return request('/challenges/chapters', { signal });
+  },
+
+  async getChallenge(id: number, signal?: AbortSignal): Promise<ChallengeDetail> {
+    return request(`/challenges/${id}`, { signal });
+  },
+
+  // --- Sandbox Execution ---
+  async runCode(challengeId: number, code: string, customInput?: string, signal?: AbortSignal): Promise<CodeRunResponse> {
     return request('/execution/run', {
       method: 'POST',
       body: JSON.stringify({ challenge_id: challengeId, code, custom_input: customInput }),
+      signal,
     });
   },
 
-  async submitCode(challengeId: number, code: string, hintsUsed: number = 0): Promise<CodeSubmitResponse> {
-    if (typeof window !== 'undefined' && !localStorage.getItem('pq_token')) {
-      try {
-        const guestData = await api.guestLogin();
-        localStorage.setItem('pq_token', guestData.access_token);
-      } catch (e) {
-        console.warn('Auto guest login failed:', e);
-      }
-    }
+  async submitCode(challengeId: number, code: string, hintsUsed: number = 0, signal?: AbortSignal): Promise<CodeSubmitResponse> {
     return request('/execution/submit', {
       method: 'POST',
       body: JSON.stringify({ challenge_id: challengeId, code, hints_used: hintsUsed }),
+      signal,
     });
   },
 
-  // AI Features
-  async explainCode(challengeId: number, code: string, userQuestion?: string): Promise<ExplainResponse> {
+  // --- AI Features ---
+  async explainCode(challengeId: number, code: string, userQuestion?: string, signal?: AbortSignal): Promise<ExplainResponse> {
     return request('/ai/explain', {
       method: 'POST',
       body: JSON.stringify({ challenge_id: challengeId, code, user_question: userQuestion }),
+      signal,
     });
   },
 
-  async chatWithTutor(message: string, code?: string, challengeId?: number, history: Array<{ role: string; content: string }> = []): Promise<{ reply: string; socratic_hint?: string }> {
-    // 1. Direct call to the Next.js Serverless AI Tutor route
+  async chatWithTutor(
+    message: string,
+    code?: string,
+    challengeId?: number,
+    history: Array<{ role: string; content: string }> = [],
+    signal?: AbortSignal
+  ): Promise<{ reply: string; socratic_hint?: string }> {
     try {
       const res = await fetch('/api/ai/tutor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),
+        signal,
       });
       if (res.ok) {
         const data = await res.json();
@@ -167,27 +226,28 @@ export const api = {
           return data;
         }
       }
-    } catch (e) {
+    } catch (e: any) {
+      if (e.name === 'AbortError') throw e;
       console.warn('Next.js /api/ai/tutor error, falling back to backend:', e);
     }
 
-    // 2. Fallback to external backend API if configured
     return request('/ai/tutor', {
       method: 'POST',
       body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),
+      signal,
     });
   },
 
-  // Gamification
-  async getLeaderboard(): Promise<LeaderboardEntry[]> {
-    return request('/gamification/leaderboard');
+  // --- Gamification ---
+  async getLeaderboard(signal?: AbortSignal): Promise<LeaderboardEntry[]> {
+    return request('/gamification/leaderboard', { signal });
   },
 
-  async getAchievements(): Promise<Achievement[]> {
-    return request('/gamification/achievements');
+  async getAchievements(signal?: AbortSignal): Promise<Achievement[]> {
+    return request('/gamification/achievements', { signal });
   },
 
-  async openMysteryBox(boxType: 'BRONZE' | 'SILVER' | 'CYBER_GOLD'): Promise<{
+  async openMysteryBox(boxType: 'BRONZE' | 'SILVER' | 'CYBER_GOLD', signal?: AbortSignal): Promise<{
     success: boolean;
     reward_type: string;
     reward_value: string;
@@ -197,39 +257,48 @@ export const api = {
     return request('/gamification/mystery-box/open', {
       method: 'POST',
       body: JSON.stringify({ box_type: boxType }),
+      signal,
     });
   },
 
-  async claimStreak(): Promise<{ success: boolean; new_streak: number; xp_awarded: number; coins_awarded: number; message: string }> {
+  async claimStreak(signal?: AbortSignal): Promise<{
+    success: boolean;
+    new_streak: number;
+    xp_awarded: number;
+    coins_awarded: number;
+    message: string;
+  }> {
     return request('/gamification/streak/claim', {
       method: 'POST',
+      signal,
     });
   },
 
-  // Profile
-  async getProfile(): Promise<ProfileResponse> {
-    return request('/profile/me');
+  // --- Profile ---
+  async getProfile(signal?: AbortSignal): Promise<ProfileResponse> {
+    return request('/profile/me', { signal });
   },
 
-  // Admin
-  async getAdminMetrics(): Promise<{
+  // --- Admin ---
+  async getAdminMetrics(signal?: AbortSignal): Promise<{
     total_users: number;
     total_challenges: number;
     total_submissions: number;
     overall_pass_rate: number;
     popular_challenges: Array<{ level: number; title: string; runs: number }>;
   }> {
-    return request('/admin/metrics');
+    return request('/admin/metrics', { signal });
   },
 
-  async getAdminUsers(): Promise<User[]> {
-    return request('/admin/users');
+  async getAdminUsers(signal?: AbortSignal): Promise<User[]> {
+    return request('/admin/users', { signal });
   },
 
-  async updateAdminUser(userId: number, updates: Partial<User>): Promise<{ success: boolean; user: User }> {
+  async updateAdminUser(userId: number, updates: Partial<User>, signal?: AbortSignal): Promise<{ success: boolean; user: User }> {
     return request(`/admin/users/${userId}`, {
       method: 'PATCH',
       body: JSON.stringify(updates),
+      signal,
     });
   },
 };

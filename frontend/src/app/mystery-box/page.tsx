@@ -6,6 +6,7 @@ import { sounds } from '@/lib/audio-engine';
 import { useAuth } from '@/lib/auth-context';
 import { Gift, Coins, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 interface RewardModalState {
   isOpen: boolean;
@@ -14,6 +15,14 @@ interface RewardModalState {
 }
 
 export default function MysteryBoxPage() {
+  return (
+    <ProtectedRoute allowGuest={false}>
+      <MysteryBoxContent />
+    </ProtectedRoute>
+  );
+}
+
+function MysteryBoxContent() {
   const { user, refreshUser, updateUserLocally } = useAuth();
   const [openingBox, setOpeningBox] = useState<string | null>(null);
   const [rewardModal, setRewardModal] = useState<RewardModalState>({

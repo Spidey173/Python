@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from './Button';
+import { ApiError } from '@/lib/api';
 import {
   X, Lock, User as UserIcon, Mail, ShieldCheck,
-  AlertCircle, ArrowRight, Zap, CheckCircle2, Eye, EyeOff
+  AlertCircle, ArrowRight, Zap, CheckCircle2, Eye, EyeOff, Timer
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -15,7 +16,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalProps) {
-  const { login, register, guestLogin, user } = useAuth();
+  const { login, register, guestLogin, user, isSubmitting } = useAuth();
   const [tab, setTab] = useState<'signin' | 'signup' | 'guest'>(initialTab);
 
   // Dedicated Form states
@@ -30,14 +31,26 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  const [lockoutTimer, setLockoutTimer] = useState<number>(0);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Security lockout countdown
+  useEffect(() => {
+    if (lockoutTimer <= 0) return;
+    const interval = setInterval(() => {
+      setLockoutTimer((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [lockoutTimer]);
 
   // Sync tab and reset errors when modal opens or initialTab changes
   useEffect(() => {
     if (isOpen) {
       setTab(initialTab);
       setError(null);
+      setRequestId(null);
       setSuccessMsg(null);
     }
   }, [isOpen, initialTab]);
@@ -46,7 +59,10 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (lockoutTimer > 0 || isSubmitting) return;
+
     setError(null);
+    setRequestId(null);
     setSuccessMsg(null);
 
     const ident = signInIdentifier.trim();
@@ -68,6 +84,14 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
         setSignInPassword('');
       }, 350);
     } catch (err: any) {
+      if (err instanceof ApiError) {
+        setRequestId(err.requestId || null);
+        if (err.code === 'RATE_LIMITED' && err.retryAfter) {
+          setLockoutTimer(err.retryAfter);
+          setError(`Too many failed attempts. Security lockout active: please wait ${err.retryAfter}s.`);
+          return;
+        }
+      }
       setError(err?.message || 'Invalid username/email or password.');
     } finally {
       setIsLoading(false);
@@ -210,9 +234,20 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
         {/* Form Body */}
         <div className="p-5 space-y-4">
           {error && (
-            <div className="rounded-lg border border-[#DA3633]/40 bg-[#DA3633]/15 p-3 flex items-start gap-2.5 text-xs text-[#F85149]">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="font-medium leading-relaxed">{error}</span>
+            <div className="rounded-lg border border-[#DA3633]/40 bg-[#DA3633]/15 p-3 text-xs text-[#F85149] space-y-1">
+              <div className="flex items-start gap-2.5">
+                {lockoutTimer > 0 ? (
+                  <Timer className="h-4 w-4 shrink-0 mt-0.5 text-amber-400 animate-pulse" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                )}
+                <span className="font-medium leading-relaxed">{error}</span>
+              </div>
+              {requestId && (
+                <div className="text-[10px] text-zinc-500 font-mono pl-6">
+                  Ref ID: {requestId}
+                </div>
+              )}
             </div>
           )}
 
@@ -295,10 +330,11 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                   type="submit"
                   variant="primary"
                   size="md"
-                  isLoading={isLoading}
+                  disabled={lockoutTimer > 0 || isSubmitting || isLoading}
+                  isLoading={isLoading || isSubmitting}
                   className="w-full justify-center font-semibold text-sm h-9"
                 >
-                  Sign In
+                  {lockoutTimer > 0 ? `Locked (${lockoutTimer}s)` : 'Sign In'}
                 </Button>
               </div>
 

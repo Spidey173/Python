@@ -11,14 +11,25 @@ class Settings(BaseSettings):
 
     # Security & Auth
     SECRET_KEY: str = "python-quest-super-secret-cyber-key-change-in-production-2025"
+    CSRF_SECRET_KEY: str = "python-quest-csrf-secret-key-production-2025"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30-minute short-lived access token
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7    # 7-day refresh token
+    COOKIE_SECURE: bool = False           # Set True in production (HTTPS)
+    COOKIE_SAMESITE: str = "lax"
+    COOKIE_DOMAIN: Optional[str] = None
+
+    # CORS Allowed Origins
+    BACKEND_CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
 
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./python_quest.db"
 
-    # Redis (Optional)
-    REDIS_URL: Optional[str] = None
+    # Redis (Optional shared rate limiter)
+    REDIS_URL: Optional[str] = os.getenv("REDIS_URL", None)
 
     # AI Integration (Groq / Gemini / OpenAI / GitHub Copilot compatible)
     GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")

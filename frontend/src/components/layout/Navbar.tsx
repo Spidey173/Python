@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth-context';
 import { persistence } from '@/lib/persistence';
 import { api } from '@/lib/api';
 import { ChapterGroup } from '@/lib/types';
+import { useQuery } from '@tanstack/react-query';
 import { CommandPalette } from '@/components/ui/CommandPalette';
 import { AuthModal } from '@/components/ui/AuthModal';
 import {
@@ -24,6 +25,12 @@ export default function Navbar() {
   const [solvedCount, setSolvedCount] = useState<number>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { data: chaptersData } = useQuery<ChapterGroup[]>({
+    queryKey: ['chapters'],
+    queryFn: () => api.getChapters(),
+    staleTime: 2 * 60 * 1000,
+  });
+
   useEffect(() => {
     async function loadSolved() {
       if (!user) {
@@ -31,11 +38,8 @@ export default function Navbar() {
         return;
       }
       try {
-        const [localSolved, chaps] = await Promise.all([
-          persistence.getSolvedIds(),
-          api.getChapters().catch(() => [] as ChapterGroup[]),
-        ]);
-        const backendSolved = (chaps as ChapterGroup[]).flatMap((c: ChapterGroup) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const localSolved = await persistence.getSolvedIds();
+        const backendSolved = (chaptersData || []).flatMap((c: ChapterGroup) => c.levels).filter((l) => l.passed).map((l) => l.id);
         const solvedSet = new Set<number>();
         for (const rawId of [...backendSolved, ...localSolved]) {
           const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
