@@ -9773,195 +9773,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "My approach for Fibonacci Number (Nth Term) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Iterative space-optimized approach, base cases (n=0, n=1), state variable updates.",
+            "bestReplyScript": "There are multiple ways to solve the Fibonacci problem, but the iterative approach is the best choice for most interviews because it is simple, efficient, and uses constant space.\n\nThe Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13...\nEach number is the sum of the previous two: F(n) = F(n-1) + F(n-2).\n\nSteps:\n1. Handle base cases (n = 0 and n = 1).\n2. Initialize two variables: prev = 0, curr = 1.\n3. Loop from 2 to n.\n4. Compute next = prev + curr.\n5. Update prev = curr and curr = next.\n6. Return curr.\n\nExample: n = 6 -> 0, 1, 1, 2, 3, 5, 8. Answer = 8.\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Base cases n=0 -> 0 and n=1 -> 1",
+                  "Two-variable state tracking (prev, curr)",
+                  "Loop from 2 to n: next = prev + curr",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Approach Comparison",
             "question": "2. Compare recursive, memoized, and iterative solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "I chose this approach for Fibonacci Number (Nth Term) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Recursive tree explosion vs Top-Down DP vs Bottom-Up DP.",
+            "bestReplyScript": "There are three common approaches:\n1. Naive Recursion: Calls itself repeatedly (fib(n-1) + fib(n-2)). Simple but recalculates identical subproblems exponentially.\n2. Memoization (Top-Down DP): Uses a hash map or array to cache previously computed results. Reduces time to O(n) but uses O(n) stack/cache memory.\n3. Iterative (Bottom-Up DP): Uses two variables and computes from 0 up to n. Runs in O(n) time and O(1) space, making it the preferred interview solution.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Naive recursion: O(2^n) exponential tree",
+                  "Top-Down DP (Memoization): O(n) time, O(n) space",
+                  "Bottom-Up DP (Iterative): O(n) time, O(1) space"
             ]
       },
       {
             "id": "q3",
-            "category": "Step-by-Step Approach",
+            "category": "Complexity Comparison Table",
             "question": "3. What is the time complexity of each approach?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "My approach for Fibonacci Number (Nth Term) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Time & Space complexity matrix across Recursive, Memoized, and Iterative.",
+            "bestReplyScript": "Comparison Matrix:\n- Recursive:   Time O(2^n), Space O(n) (recursion call stack)\n- Memoization: Time O(n),   Space O(n) (memo hash map + recursion stack)\n- Iterative:   Time O(n),   Space O(1) (two scalar variables)\n\nThe iterative solution is best because it achieves O(n) time with O(1) constant space.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Recursive: O(2^n) time, O(n) space",
+                  "Memoized: O(n) time, O(n) space",
+                  "Iterative: O(n) time, O(1) space"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Naive Recursion Inefficiency",
             "question": "4. Why is naive recursion inefficient?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "I chose this approach for Fibonacci Number (Nth Term) over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Overlapping subproblems in recursion tree (e.g. fib(3) recalculated multiple times).",
+            "bestReplyScript": "Naive recursion repeatedly solves identical overlapping subproblems.\n\nExample: fib(5) calls fib(4) and fib(3). fib(4) calls fib(3) and fib(2).\nNotice fib(3) is calculated multiple times independently across different branches of the call tree!\n\nThis redundant work causes exponential O(2^n) call tree expansion. Memoization or iteration eliminates this repeated work.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Overlapping subproblems property",
+                  "Redundant computation of identical nodes",
+                  "Exponential O(2^n) recursion tree growth"
             ]
       },
       {
             "id": "q5",
-            "category": "Time & Space Complexity",
+            "category": "Space Optimization Strategy",
             "question": "5. How would you optimize space usage?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "Here is the complexity analysis for Fibonacci Number (Nth Term):\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Sliding window of 2 variables reducing O(n) array to O(1).",
+            "bestReplyScript": "Instead of storing the entire Fibonacci sequence in an array of size n (O(n) space), we notice that F(n) only depends on the last two values.\n\nWe maintain just two variables: prev and curr.\nAfter computing next = prev + curr, we slide the window: prev = curr, curr = next.\n\nThis reduces space complexity from O(n) down to O(1).",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Only last 2 values required",
+                  "Sliding window of 2 variables",
+                  "Reduces space from O(n) array to O(1) scalars"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Matrix Exponentiation O(log n)",
             "question": "6. Can you solve this using matrix exponentiation?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Fast matrix exponentiation `[[1, 1], [1, 0]]^(n-1)` in O(log n) time.",
+            "bestReplyScript": "Yes. Matrix exponentiation computes the nth Fibonacci number in O(log n) time.\n\nUsing the transformation matrix [[1, 1], [1, 0]]^(n-1), we can compute matrix power in O(log n) using divide-and-conquer binary exponentiation.\n\nThis approach is ideal when n is extremely large (e.g. n = 10^18). For typical interviews, iterative O(n) is preferred for code simplicity.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Transformation matrix [[1, 1], [1, 0]]",
+                  "Binary exponentiation computes matrix power in O(log n)",
+                  "Optimal for huge inputs (n = 10^18)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "When handling Fibonacci Number (Nth Term), I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "n = 0, n = 1, n = 2, large n.",
+            "bestReplyScript": "Important edge cases include:\n1. n = 0 -> Returns 0 (base case F(0)).\n2. n = 1 -> Returns 1 (base case F(1)).\n3. n = 2 -> Returns 1 (F(2) = 0 + 1).\n4. Large n (e.g. n = 50) -> Must return correct value without integer overflow.\n\nTesting these cases ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Base case n = 0 returns 0",
+                  "Base case n = 1 returns 1",
+                  "Large n integer overflow checks"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "To thoroughly test Fibonacci Number (Nth Term), I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases matrix across n = 0, 1, 2, 5, 10.",
+            "bestReplyScript": "I would test normal and edge cases:\n- n = 0 -> 0\n- n = 1 -> 1\n- n = 2 -> 1\n- n = 5 -> 5\n- n = 10 -> 55\n\nThese tests verify base cases and the general recurrence relation.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Base case assertions (0, 1, 2)",
+                  "General recurrence assertions (5, 10)",
+                  "Verifies base case exit and loop state"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
-            "question": "9. What if `n` is very large?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Large N & Overflow Handling",
+            "question": "9. What if n is very large?",
+            "whatInterviewerChecks": "64-bit / Arbitrary-precision int vs Matrix Exponentiation.",
+            "bestReplyScript": "If n is very large:\n- For moderate n (n <= 90), use 64-bit unsigned integers (in C++/Java) or native arbitrary-precision integers in Python.\n- For massive n (n >= 10^9), use Matrix Exponentiation (O(log n) time).\n- In competitive programming, return F(n) modulo 10^9 + 7 to prevent overflow.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Arbitrary-precision integers (Python `int`)",
+                  "O(log n) Matrix Exponentiation for massive n",
+                  "Modulo 10^9 + 7 in competitive programming"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Real-World Applications",
             "question": "10. Where is Fibonacci used in computer science?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical applications of Fibonacci sequence in CS.",
+            "bestReplyScript": "Fibonacci numbers appear in:\n- Data Structures: Fibonacci Heap (amortized O(1) decrease-key operation).\n- Dynamic Programming teaching fundamentals.\n- Financial Technical Analysis (Fibonacci Retracement levels).\n- Computer Graphics & procedural spiral patterns (Golden Ratio / Fibonacci Spiral).\n- Search Algorithms (Fibonacci Search on sorted arrays).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Fibonacci Heap data structure",
+                  "Fibonacci Search algorithm",
+                  "Financial technical analysis & procedural graphics"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "Common candidate pitfalls when solving Fibonacci Number (Nth Term) include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Fibonacci problems.",
+            "bestReplyScript": "Some common mistakes include:\n- Using naive recursion without memoization (causes TLE / Stack Overflow).\n- Forgetting base cases n = 0 and n = 1.\n- Off-by-one errors in loop bounds (e.g. range(2, n + 1)).\n- Updating variables in wrong sequence (e.g. updating prev before using it to calculate next).\n- Ignoring integer overflow in typed languages.\n\nThe most common mistake is using un-memoized recursion.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Un-memoized recursion Time Limit Exceeded (TLE)",
+                  "Updating prev/curr state in wrong sequence",
+                  "Off-by-one loop bound bugs"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Dynamic Programming Framework",
             "question": "12. Can this be solved using dynamic programming?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Identifying DP properties: Optimal Substructure & Overlapping Subproblems.",
+            "bestReplyScript": "Yes. Fibonacci is the classic canonical Dynamic Programming problem because it has:\n1. Optimal Substructure: F(n) is constructed directly from optimal subproblems F(n-1) and F(n-2).\n2. Overlapping Subproblems: Multiple branches compute identical values.\n\nBoth Top-Down (Memoization) and Bottom-Up (Iterative DP) solve it in O(n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Optimal Substructure property",
+                  "Overlapping Subproblems property",
+                  "Bottom-Up DP is space-optimized to O(1)"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
-            "question": "13. How would you generate the first `n` Fibonacci numbers?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Generating Sequence of N Terms",
+            "question": "13. How would you generate the first n Fibonacci numbers?",
+            "whatInterviewerChecks": "Returning full list array [0, 1, 1, 2, 3, 5...].",
+            "bestReplyScript": "Instead of returning only the nth number:\n1. Start result list with base cases: result = [0, 1].\n2. Loop from 2 to n - 1.\n3. Append next = result[-1] + result[-2] to result.\n4. Return result list.\n\nComplexity: Time: O(n), Space: O(n) to store the sequence.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Initialize list with [0, 1]",
+                  "Append next = result[-1] + result[-2]",
+                  "Time: O(n), Space: O(n) sequence output"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Integer Overflow Limits",
             "question": "14. Can Fibonacci numbers overflow standard integer types?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "32-bit vs 64-bit integer limits (F(47) overflows 32-bit signed int).",
+            "bestReplyScript": "Yes. Fibonacci numbers grow exponentially (golden ratio phi^n / sqrt(5)).\n- F(47) = 2,971,215,073 overflows a signed 32-bit integer (max 2.14 * 10^9).\n- F(93) overflows a signed 64-bit integer.\n\nIn C++/Java, use `long long` or `BigInteger`. Python automatically handles arbitrarily large integers.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "F(47) overflows 32-bit signed integer",
+                  "F(93) overflows 64-bit signed integer",
+                  "Python handles arbitrary precision automatically"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Production Approach Selection",
             "question": "15. Which approach would you use in production?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Fibonacci Number (Nth Term).",
-            "bestReplyScript": "My approach for Fibonacci Number (Nth Term) follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Trade-offs between Iterative, Memoization, and Matrix Exponentiation.",
+            "bestReplyScript": "It depends on the production scenario:\n- Iterative O(n) time, O(1) space: Best for single-call queries with n <= 10^6 (highest readability and low RAM footprint).\n- Pre-computed Array / Memoization: Best if the system receives frequent repeated queries for various Fibonacci terms.\n- Matrix Exponentiation O(log n): Best for ultra-large n (n >= 10^9) in scientific or financial simulations.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Iterative O(1) space for standard single queries",
+                  "Memoized lookup cache for high-frequency queries",
+                  "Matrix Exponentiation for ultra-large n"
             ]
       }
 ],
