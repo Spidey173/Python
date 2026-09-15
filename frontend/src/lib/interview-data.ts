@@ -15817,195 +15817,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Group Anagrams.",
-            "bestReplyScript": "My approach for Group Anagrams follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Hash map grouping by canonical signature key (sorted string or frequency tuple).",
+            "bestReplyScript": "I use a hash map to group words that are anagrams.\n\nThe idea is that all anagrams share the same 'signature' (key). I generate a key for each word and store all words with the same key in the same list.\n\nAlgorithm:\n1. Create an empty hash map.\n2. For each word:\n   - Generate a key (sorted word or character frequency tuple).\n   - If the key doesn't exist, create a new list.\n   - Add the word to the corresponding list.\n3. Return all the grouped lists.\n\nExample: [\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"] -> Keys: \"aet\" -> [\"eat\",\"tea\",\"ate\"], \"ant\" -> [\"tan\",\"nat\"], \"abt\" -> [\"bat\"].\n\nComplexity (Sorting): Time: O(n * k log k), Space: O(n * k)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Hash Map key = canonical anagram signature",
+                  "Sorted string key or 26-char frequency tuple key",
+                  "Values = lists of original anagram strings",
+                  "Time: O(n * k log k), Space: O(n * k)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Data Structure Rationale",
             "question": "2. Why did you use a hash map?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Group Anagrams.",
-            "bestReplyScript": "I chose this approach for Group Anagrams over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) hash table lookup vs O(n^2) pairwise string comparison.",
+            "bestReplyScript": "A hash map allows me to group words efficiently in near O(1) time per word.\n\nThe key represents the shared anagram signature, and the value is the list of words belonging to that group.\nWithout a hash map, I would need to compare every word with every other word using pairwise anagram checks, taking O(n^2 * k) time.\nUsing a hash map reduces total grouping time to linear scans.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "O(1) average hash map lookup/insertion",
+                  "Avoids O(n^2) pairwise comparisons",
+                  "Reduces grouping to linear pass"
             ]
       },
       {
             "id": "q3",
-            "category": "Algorithmic Justification",
+            "category": "Anagram Signature Key Design",
             "question": "3. Why is the sorted string (or frequency count) a good key?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Group Anagrams.",
-            "bestReplyScript": "I chose this approach for Group Anagrams over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Canonical representation identity proof.",
+            "bestReplyScript": "Anagrams contain the exact same characters with identical frequencies.\n\nWhen we sort the letters:\n- \"eat\" -> \"aet\"\n- \"tea\" -> \"aet\"\n- \"ate\" -> \"aet\"\nAll produce the exact same sorted key!\n\nAlternatively, a 26-element character frequency tuple (e.g. `(1,0,0,0,1,...,1)`) is also identical for all anagrams.\nTherefore, both methods produce a unique, deterministic key for each anagram equivalence class.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Anagram equivalence class identity",
+                  "Sorted string produces identical key",
+                  "26-char frequency tuple produces identical key"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "4. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Group Anagrams.",
-            "bestReplyScript": "Here is the complexity analysis for Group Anagrams:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Sorting bounds O(n * k log k) time and O(n * k) space.",
+            "bestReplyScript": "Using the sorting approach:\nFor each of the n words of average length k:\n- Sorting takes O(k log k).\n- For n words: Time Complexity: O(n * k log k).\n\nSpace Complexity:\n- The hash map stores all n words of length k: O(n * k) space.\n\nWhere n is the number of words and k is the maximum word length.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n * k log k)",
+                  "Space Complexity: O(n * k)",
+                  "n = word count, k = max word length"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "O(n * k) Linear Character Frequency Optimization",
             "question": "5. Can you solve this without sorting each word?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "26-element tuple character counting for O(n * k) linear time.",
+            "bestReplyScript": "Yes! Instead of sorting, I can create a 26-element character frequency array/tuple for each word.\n\nFor lowercase English letters:\n- Count occurrences of each letter ('a' through 'z').\n- Convert the array into a tuple: e.g. `(1, 0, 0, 0, 1, ..., 1)` and use it as the dictionary key.\n\nComplexity:\n- Building frequency: O(k)\n- Overall Time Complexity: O(n * k)\nThis eliminates log(k) sorting overhead and runs in strictly linear time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "26-element tuple key: `tuple(count)`",
+                  "Eliminates log(k) sorting factor",
+                  "Time: O(n * k), Space: O(n * k)"
             ]
       },
       {
             "id": "q6",
-            "category": "Step-by-Step Approach",
+            "category": "Sorting vs Frequency Count Trade-offs",
             "question": "6. Which approach is faster: sorting or character frequency?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Group Anagrams.",
-            "bestReplyScript": "My approach for Group Anagrams follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Trade-offs between Implementation simplicity vs Execution speed.",
+            "bestReplyScript": "Trade-off analysis:\n- Sorting: O(n * k log k) time. Very clean and concise implementation (`''.join(sorted(w))`). Fast for short words (k < 10).\n- Character Frequency: O(n * k) time. Strictly faster for long words (k > 100) because it avoids sorting.\n\nFor standard lowercase English words, frequency counting is theoretically optimal O(n * k), while sorting is simpler and handles arbitrary Unicode/symbols naturally.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Sorting: simple code, optimal for short words (k < 10)",
+                  "Frequency count: O(n * k), optimal for long words (k > 100)",
+                  "Sorting handles arbitrary character sets easily"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Group Anagrams.",
-            "bestReplyScript": "When handling Group Anagrams, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty input, single word, duplicates, no anagrams, empty strings.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty input ([]) -> []\n2. Single word ([\"abc\"]) -> [[\"abc\"]]\n3. Duplicate words ([\"eat\",\"eat\",\"tea\"]) -> All duplicates grouped together [[\"eat\",\"eat\",\"tea\"]]\n4. No anagrams ([\"cat\",\"dog\",\"bird\"]) -> [[\"cat\"],[\"dog\"],[\"bird\"]]\n5. Empty strings ([\"\",\"\"]) -> [[\"\",\"\"]]\n\nTesting these ensures the grouping logic handles all boundaries.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty string [\"\", \"\"] group handling",
+                  "Duplicate words grouped together",
+                  "No anagrams separate group creation"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Unicode Character Support",
             "question": "8. How would you handle Unicode characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adapting frequency counts or sorted string keys for Unicode.",
+            "bestReplyScript": "Sorting works naturally for any Unicode characters (`''.join(sorted(word))`).\n\nIf using frequency counting:\n- A fixed 26-size array is no longer sufficient.\n- We would use a Hash Map of character counts converted to a sorted tuple of `(char, count)` pairs as the key.\n- Or simply use the sorted Unicode string key.\n\nTime complexity remains O(n * k log k) for sorting.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Sorted Unicode string key works seamlessly",
+                  "Frequency map requires `tuple(sorted(count.items()))` key",
+                  "Handles UTF-8 and Emojis naturally"
             ]
       },
       {
             "id": "q9",
             "category": "Testing & Verification",
             "question": "9. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Group Anagrams.",
-            "bestReplyScript": "To thoroughly test Group Anagrams, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, single, and duplicate inputs.",
+            "bestReplyScript": "I would test:\n- [] -> []\n- [\"a\"] -> [[\"a\"]]\n- [\"eat\",\"tea\",\"ate\"] -> 1 group\n- [\"abc\",\"def\"] -> 2 groups\n- [\"\",\"\"] -> 1 group [[\"\",\"\"]]\n- Duplicate words -> Grouped in same list\n\nThese cover normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Standard LeetCode 49 test cases",
+                  "Empty string and single char tests",
+                  "Duplicate strings in same group"
             ]
       },
       {
             "id": "q10",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "10. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Group Anagrams.",
-            "bestReplyScript": "Common candidate pitfalls when solving Group Anagrams include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Group Anagrams (LeetCode 49).",
+            "bestReplyScript": "Some common mistakes include:\n- Trying to use a mutable Python `list` as a hash map key (lists are unhashable! Must convert frequency list to `tuple(count)` or sorted string).\n- Forgetting to join sorted characters into a string key (`sorted(w)` returns a list, not string).\n- Missing empty string `\"\"` handling.\n- Creating a new group for every word without checking existing keys.\n\nThe most common critical bug is attempting to use a mutable list as a dictionary key.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Unhashable type error: using list as dict key instead of tuple/str",
+                  "Forgetting `''.join(sorted(w))` string conversion",
+                  "Mishandling empty string `\"\"` keys"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Distributed Big Data Processing (MapReduce/Spark)",
             "question": "11. How would you process millions of words efficiently?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "MapReduce / PySpark `groupByKey()` distributed processing.",
+            "bestReplyScript": "For millions or billions of words exceeding single-node RAM:\n- Use MapReduce / Apache Spark.\n- Map Phase: Emit `(key, word)` pairs where key is the 26-char frequency tuple or sorted string.\n- Reduce Phase: `groupByKey()` aggregates all words sharing the same key.\n\nThis distributes the workload across a cluster in parallel O(n * k / nodes) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Map Phase: emit `(key, word)`",
+                  "Reduce Phase: `groupByKey()`",
+                  "Distributed Spark / MapReduce execution"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is grouping by keys used in practice?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "SQL GROUP BY, log aggregation, deduplication.",
+            "bestReplyScript": "Grouping by keys is used in:\n- Database SQL `GROUP BY` clause implementations.\n- Log Aggregation (grouping log messages by stack trace or error signature).\n- Search Engine Query Clustering & Spell Checkers.\n- Near-Duplicate Document Detection (Locality Sensitive Hashing - LSH).\n- Plagiarism detection & Bioinformatics.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "SQL GROUP BY query processing",
+                  "Log aggregation by error signature",
+                  "LSH near-duplicate document clustering"
             ]
       },
       {
             "id": "q13",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Input Preservation",
             "question": "13. Can duplicate strings appear in the same group?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Group Anagrams.",
-            "bestReplyScript": "When handling Group Anagrams, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Preserving duplicates in output lists.",
+            "bestReplyScript": "Yes!\nExample: [\"eat\", \"eat\", \"tea\"] -> Output: [[\"eat\", \"eat\", \"tea\"]].\n\nDuplicate input words share the exact same signature key and are appended into the list value without deduplication. Duplicates are valid and must be preserved.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Duplicate words share identical key",
+                  "Appended to list value without deduplication",
+                  "Input duplicates preserved in output"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Insertion Order Preservation",
             "question": "14. How would you preserve the original input order?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Python 3.7+ dict insertion order preservation.",
+            "bestReplyScript": "In Python 3.7+, standard `dict` natively preserves key insertion order!\n\nAs we iterate through the input array left-to-right, new anagram signature keys are inserted in the exact order they first appear. Iterating over `map.values()` returns groups ordered by their first occurrence in the input array.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Python 3.7+ dict preserves insertion order",
+                  "Groups ordered by first occurrence",
+                  "Zero extra code required"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Memory Optimization Strategies",
             "question": "15. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Group Anagrams.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Garbage collection & string view memory optimizations.",
+            "bestReplyScript": "To optimize memory:\n- Use 26-element tuples `tuple(count)` as keys instead of allocating new sorted string objects for long words.\n- Use `collections.defaultdict(list)` to avoid redundant key checks.\n- Stream batch inputs when processing massive files to keep RAM memory bounded.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Use `collections.defaultdict(list)`",
+                  "Tuple keys avoid string copy allocations",
+                  "Batch streaming for large files"
             ]
       }
 ],
