@@ -4765,182 +4765,182 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Hash map tracking of recent indices, index distance validation, single-pass logic.",
-            "bestReplyScript": "I use a hash map (dictionary) to store each number and the most recent index where it appeared.\n\nSteps:\n1. Traverse the array from left to right.\n2. For each element, check if it already exists in the hash map.\n3. If it exists, calculate the distance between the current index and the previous index.\n4. If the distance is less than or equal to k, return True.\n5. Otherwise, update the index of the current element in the hash map.\n6. If no valid duplicate is found, return False.\n\nExample:\nnums = [1,2,3,1], k = 3\nIndex 0 -> Store {1:0}\nIndex 1 -> Store {2:1}\nIndex 2 -> Store {3:2}\nIndex 3 -> 1 exists. Distance = 3 - 0 = 3 <= k. Output: True\n\nThis approach checks duplicates in a single pass.\n\nComplexity: Time: O(n), Space: O(n)",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Greedy algorithm with 13 symbol-value mapping pairs, while loop subtraction `num -= val`.",
+            "bestReplyScript": "I use a greedy algorithm because Roman numerals are built by repeatedly choosing the largest possible symbol that does not exceed the remaining number.\n\nSteps:\n1. Create a list of Roman numeral values and their symbols in descending order (including subtractive pairs like CM, CD, XC, XL, IX, IV).\n2. Start with the input number `num`.\n3. Iterate through the list from largest to smallest.\n4. While the current value is less than or equal to `num`:\n   - Append its Roman symbol to the result.\n   - Subtract its value from `num`.\n5. Continue until `num` becomes 0.\n6. Return the constructed Roman numeral string.",
             "keyPoints": [
-                  "Hash map for O(1) recent index lookups",
-                  "Single-pass left-to-right traversal",
-                  "Check distance <= k",
-                  "Time: O(n), Space: O(n)"
+                  "13 symbol-value mapping pairs in descending order",
+                  "Includes subtractive pairs (CM, CD, XC, XL, IX, IV)",
+                  "Greedy subtraction loop `while num >= val`",
+                  "Time: O(1), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
-            "question": "2. Why did you choose a hash map?",
-            "whatInterviewerChecks": "O(1) average lookup vs O(n^2) repeated linear search.",
-            "bestReplyScript": "A hash map allows me to:\n- Store the latest index of each number.\n- Check if a number has appeared before in O(1) average time.\n\nWithout a hash map, I would have to search previous elements repeatedly, resulting in O(n\u00b2) time.\n\nUsing a hash map makes the solution much more efficient.",
+            "category": "Greedy Algorithm Choice Rationale",
+            "question": "2. Why did you use a greedy algorithm?",
+            "whatInterviewerChecks": "Canonical property of Roman numeral system guarantees local greedy choices are globally optimal.",
+            "bestReplyScript": "A greedy algorithm works because the Roman numeral system is canonical: taking the largest valid symbol first always leads to the correct representation.\n\nExample for 58:\n- Largest <= 58: 50 (L), remaining = 8\n- Largest <= 8: 5 (V), remaining = 3\n- Largest <= 3: 1 (I) x 3\nResult: LVIII.\n\nEach greedy choice is optimal and directly produces the standard Roman numeral.",
             "keyPoints": [
-                  "O(1) average lookup for previous indices",
-                  "Avoids O(n\u00b2) repeated linear search",
-                  "Optimal single-pass execution"
+                  "Roman numeral system is canonical",
+                  "Taking largest valid symbol first is always optimal",
+                  "Guarantees standard correct output"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic time and space complexity bounds.",
-            "bestReplyScript": "The array is traversed only once.\n\nFor every element:\n- Hash map lookup -> O(1) average.\n- Hash map update -> O(1) average.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThis is the optimal solution.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Constant time O(1) and constant space O(1) proof (bounded by 15 symbols max).",
+            "bestReplyScript": "Since the input is bounded (1 to 3999) and there are only 13 fixed Roman numeral symbols:\n- Time Complexity: O(1) (at most 15 character appends for 3888 = MMMDCCCLXXXVIII).\n- Space Complexity: O(1) auxiliary space to store the mapping array and result string.\n\nThe algorithm performs a constant amount of work regardless of input magnitude within the valid range.",
             "keyPoints": [
-                  "Time Complexity: O(n)",
-                  "Space Complexity: O(n)",
-                  "Optimal linear performance"
+                  "Time Complexity: O(1)",
+                  "Space Complexity: O(1)",
+                  "At most 15 iterations for max length 3888 (MMMDCCCLXXXVIII)"
             ]
       },
       {
             "id": "q4",
-            "category": "Index Storage Strategy",
-            "question": "4. How do you store previously seen indices?",
-            "whatInterviewerChecks": "Updating hash map with the LATEST index to minimize index distance.",
-            "bestReplyScript": "I store the latest index of every value in the hash map.\n\nExample:\nnums = [1,2,1,1]\nProcessing:\nIndex 0 -> Store {1:0}\nIndex 2 -> Update {1:2} (distance = 2)\nIndex 3 -> Update {1:3} (distance = 3-2 = 1)\n\nUpdating to the latest index ensures future distance calculations are accurate.",
+            "category": "Subtractive Notation Integration",
+            "question": "4. How do you handle subtractive notation like IV and IX?",
+            "whatInterviewerChecks": "Embedding 6 subtractive pairs directly into mapping table.",
+            "bestReplyScript": "Subtractive cases are included directly in the value-symbol mapping table in descending order:\n- 900: CM\n- 400: CD\n- 90: XC\n- 40: XL\n- 9: IX\n- 4: IV\n\nBy checking these 6 subtractive pairs before their smaller single-symbol counterparts (e.g. 9 before 5 and 1), the greedy algorithm naturally picks IV or IX without special IF-statement logic.",
             "keyPoints": [
-                  "Store & overwrite with latest index",
-                  "Ensures minimal distance calculations",
-                  "Prevents stale index distance evaluation"
+                  "6 subtractive pairs (CM, CD, XC, XL, IX, IV) in mapping table",
+                  "Checked before smaller single symbols (e.g. 9 before 5)",
+                  "No complex special-case IF conditions required"
             ]
       },
       {
             "id": "q5",
-            "category": "Zero Distance Boundary (k = 0)",
-            "question": "5. What if k = 0?",
-            "whatInterviewerChecks": "Strict inequality bounds |i - j| <= k where i != j.",
-            "bestReplyScript": "If k = 0, two different indices cannot satisfy the condition |i - j| <= 0.\n\nThe only way the difference can be zero is if both indices are the same, but the problem requires different indices.\n\nTherefore:\nnums = [1,1], k = 0 -> Output: False.\n\nNo valid pair exists.",
+            "category": "Descending Order Traversal Rationale",
+            "question": "5. Why are Roman numeral values processed in descending order?",
+            "whatInterviewerChecks": "Descending order guarantees largest valid symbol precedence.",
+            "bestReplyScript": "Processing values in descending order ensures that the largest valid symbol is always selected first.\n\nExample for 1994:\n- 1000 -> M\n- 900 -> CM\n- 90 -> XC\n- 4 -> IV\nResult: MCMXCIV.\n\nIf values were processed in ascending order, we would produce invalid repetitions like IIII instead of IV.",
             "keyPoints": [
-                  "i != j constraint",
-                  "|i - j| <= 0 impossible for distinct indices",
-                  "Returns False for k = 0"
+                  "Descending order selects largest valid symbol first",
+                  "Example 1994 -> MCMXCIV",
+                  "Prevents invalid ascending repetitions"
             ]
       },
       {
             "id": "q6",
-            "category": "Multiple Duplicate Frequency",
-            "question": "6. What if duplicate values appear multiple times?",
-            "whatInterviewerChecks": "Correctness when encountering 3+ duplicate numbers.",
-            "bestReplyScript": "The algorithm still works correctly.\n\nExample:\nnums = [1,2,1,1], k = 1\nIndex 0: 1 stored\nIndex 2: 1 at index 2 (distance = 2 > k) -> Update index to 2\nIndex 3: 1 at index 3 (distance = 3 - 2 = 1 <= k) -> Return True!\n\nSince we always keep the latest index, we correctly detect nearby duplicates.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Min value 1, max value 3999, subtractive cases, repeated symbols.",
+            "bestReplyScript": "Important edge cases include:\n1. Smallest valid number (1) -> \"I\"\n2. Largest valid number (3999) -> \"MMMCMXCIX\"\n3. Numbers requiring subtractive notation (4 -> \"IV\", 9 -> \"IX\", 40 -> \"XL\", 90 -> \"XC\", 400 -> \"CD\", 900 -> \"CM\")\n4. Numbers using repeated symbols (3 -> \"III\", 300 -> \"CCC\", 3000 -> \"MMM\")\n5. Combination subtractive numbers (1994 -> \"MCMXCIV\").",
             "keyPoints": [
-                  "Updates to latest index on mismatch",
-                  "Detects closest pair among 3+ duplicates",
-                  "Guarantees optimal sliding window boundary"
+                  "Min input 1 & Max input 3999 bounds",
+                  "6 subtractive notation cases",
+                  "Multi-symbol combination cases (e.g. 1994)"
             ]
       },
       {
             "id": "q7",
-            "category": "Sliding Window Set Approach",
-            "question": "7. Can this be solved using a sliding window?",
-            "whatInterviewerChecks": "Sliding window of size k using Set data structure.",
-            "bestReplyScript": "Yes. Instead of storing all previous indices, we maintain a sliding window of size k using a set.\n\nSteps:\n1. Traverse the array.\n2. Keep only the last k elements in the set.\n3. If the current element already exists in the set, return True.\n4. Otherwise, add it and remove the oldest element if the window exceeds size k.\n\nExample:\nnums = [1,2,3,1], k = 3\nWindow: {1} -> {1,2} -> {1,2,3} -> Current 1 already exists -> Return True.\n\nComplexity: Time: O(n), Space: O(min(n, k)).",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, subtractive, and boundary cases.",
+            "bestReplyScript": "I would test:\n- 1 -> \"I\"\n- 3 -> \"III\"\n- 4 -> \"IV\"\n- 9 -> \"IX\"\n- 58 -> \"LVIII\"\n- 1994 -> \"MCMXCIV\"\n- 3999 -> \"MMMCMXCIX\"\n\nThese cover normal, subtractive, repeated, and boundary limits.",
             "keyPoints": [
-                  "Sliding window using Hash Set",
-                  "Maintain size k by removing oldest element",
-                  "Space: O(min(n, k)) optimization"
+                  "LeetCode 12 standard test cases (3, 58, 1994)",
+                  "Boundaries 1 and 3999",
+                  "Subtractive tests (4, 9)"
             ]
       },
       {
             "id": "q8",
-            "category": "Memory Optimization",
-            "question": "8. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Reducing space complexity from O(n) to O(k).",
-            "bestReplyScript": "Instead of storing indices for every element forever, I would use the sliding window approach.\n\nThe window contains at most k elements, so memory usage becomes O(k) instead of O(n).\n\nThis is especially useful when k is much smaller than the array size.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Integer to Roman (LeetCode 12).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting subtractive cases like IV, IX, XL, XC, CD, CM in mapping table.\n- Processing symbols in ascending order instead of descending.\n- Generating invalid repetitions like IIII instead of IV or VIIII instead of IX.\n- Using repeated subtraction loops inefficiently without pre-computed table.\n- Not validating input range bounds (1 to 3999).",
             "keyPoints": [
-                  "Switch to sliding window set",
-                  "Reduces RAM space from O(n) to O(k)",
-                  "Optimal when k << n"
+                  "Omitting 6 subtractive pairs from table",
+                  "Ascending order traversal bug",
+                  "Generating IIII instead of IV"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Cases",
-            "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single element, k=0, distance > k, distance <= k.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> False\n2. One element ([5]) -> False\n3. k = 0 ([1,1], k=0) -> False\n4. Duplicate outside range ([1,2,3,1], k=2) -> False (Distance 3 > 2)\n5. Duplicate inside range ([1,2,3,1], k=3) -> True (Distance 3 <= 3)\n\nTesting these scenarios ensures correctness.",
+            "category": "Recursive Implementation Feasibility",
+            "question": "9. Can this be solved recursively?",
+            "whatInterviewerChecks": "Recursive reduction vs iterative greedy loop.",
+            "bestReplyScript": "Yes.\nA recursive function can:\n1. Find the largest Roman value <= num.\n2. Append its symbol.\n3. Recurse on `num - val`.\n\nHowever, recursion offers no practical advantage here, adds call stack overhead, and the simple iterative while loop is cleaner and faster.",
             "keyPoints": [
-                  "Empty & single element checks",
-                  "k = 0 boundary condition",
-                  "Distance > k vs Distance <= k validation"
+                  "Recursive reduction: `val + solve(num - val)`",
+                  "Call stack overhead",
+                  "Iterative while loop is preferred"
             ]
       },
       {
             "id": "q10",
-            "category": "Testing & Verification",
-            "question": "10. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite matrix across diverse inputs and k values.",
-            "bestReplyScript": "I would test different cases:\n- [1,2,3,1], k=3 -> True\n- [1,0,1,1], k=1 -> True\n- [1,2,3,1,2,3], k=2 -> False\n- [1], k=1 -> False\n- [], k=2 -> False\n- [1,1], k=0 -> False\n\nThese tests cover normal cases, edge cases, and boundary conditions.",
+            "category": "Beyond 3999 Large Value Extensions",
+            "question": "10. How would you extend your solution for larger values?",
+            "whatInterviewerChecks": "Vinculum (overline) notation for values > 3999.",
+            "bestReplyScript": "Classical Roman numerals support values up to 3999 (MMMCMXCIX).\n\nFor numbers >= 4000:\n- Use Overline (Vinculum) Notation: A bar over a symbol multiplies its value by 1000 (e.g. V\u0305 = 5,000, X\u0305 = 10,000, M\u0305 = 1,000,000).\n- Add corresponding overline symbol pairs (4000 -> IV\u0305, 5000 -> V\u0305, 9000 -> IX\u0305) to the greedy mapping table.\n\nThe core greedy algorithm remains completely unchanged.",
             "keyPoints": [
-                  "Positive & negative duplicate distance assertions",
-                  "Zero/single element boundary tests",
-                  "k = 0 assertion"
+                  "Vinculum (overline) notation multiplies value by 1000",
+                  "Add overline pairs to mapping table",
+                  "Greedy algorithm logic stays identical"
             ]
       },
       {
             "id": "q11",
-            "category": "Streaming Data Systems",
-            "question": "11. What if the array is streamed?",
-            "whatInterviewerChecks": "Real-time sliding window set on un-bounded streams.",
-            "bestReplyScript": "If numbers arrive continuously, I cannot store the entire array.\n\nInstead, I would use a sliding window of the last k elements.\n\nExample:\nIncoming 1 -> Window {1}\nIncoming 2 -> Window {1,2}\nIncoming 1 -> Already exists in window -> Return True!\n\nThis allows real-time processing while using only O(k) memory.",
+            "category": "Real-World Applications of Greedy Algorithms",
+            "question": "11. Where are greedy algorithms commonly used?",
+            "whatInterviewerChecks": "Canonical greedy problem family.",
+            "bestReplyScript": "Greedy algorithms are widely used in:\n- Huffman Coding & Data Compression (building optimal prefix trees).\n- Dijkstra's Shortest Path Algorithm.\n- Kruskal's & Prim's Minimum Spanning Tree (MST).\n- Canonical Coin Change Systems (US currency change making).\n- Network Packet Routing & Job Scheduling.",
             "keyPoints": [
-                  "Stateful O(k) memory sliding window",
-                  "Real-time event processing without array storage",
-                  "Removes elements past k steps"
+                  "Huffman Data Compression",
+                  "Dijkstra's Shortest Path & Kruskal's MST",
+                  "Canonical Coin Change systems"
             ]
       },
       {
             "id": "q12",
-            "category": "No Hashing Alternative",
-            "question": "12. Can you solve it without hashing?",
-            "whatInterviewerChecks": "O(n * k) nested loop trade-offs.",
-            "bestReplyScript": "Yes, but it is less efficient.\n\nOne approach is: For every element, compare the next k elements.\n\nComplexity: Time: O(n * k), Space: O(1).\n\nAlthough this avoids hashing, it becomes much slower when k or the array size is large. Therefore, the hash map or sliding window approach is preferred.",
+            "category": "Iterative vs Recursive Comparison Matrix",
+            "question": "12. Compare iterative and recursive implementations.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Iterative Greedy: Time O(1), Space O(1). Simple, zero recursion overhead, easy to debug, preferred in coding interviews.\n- Recursive Greedy: Time O(1), Space O(1) stack frames. Elegant concise code, but adds function call stack overhead.\n\nThe iterative approach is preferred for interviews.",
             "keyPoints": [
-                  "Nested comparison of next k elements",
-                  "Time: O(n * k)",
-                  "Space: O(1) memory bound trade-off"
+                  "Iterative: O(1) time, O(1) space (Zero stack overhead, interview choice)",
+                  "Recursive: O(1) time, O(1) stack space (Call stack overhead)",
+                  "Iterative is preferred"
             ]
       },
       {
             "id": "q13",
-            "category": "Common Candidate Pitfalls",
-            "question": "13. What common mistakes occur?",
-            "whatInterviewerChecks": "Rookie traps in Contains Duplicate II.",
-            "bestReplyScript": "Some common mistakes include:\n- Comparing values instead of indices.\n- Forgetting that the condition is <= k, not < k.\n- Not updating the latest index after processing a duplicate.\n- Mishandling the case where k = 0.\n- Using nested loops instead of hashing.\n\nThe most common mistake is forgetting to update the stored index, which can lead to incorrect distance calculations.",
+            "category": "Output Validation via Round-Trip Conversion",
+            "question": "13. How would you validate the generated Roman numeral?",
+            "whatInterviewerChecks": "Round-trip conversion validation (Roman to Integer).",
+            "bestReplyScript": "To validate the generated Roman numeral string:\n1. Perform Round-Trip Conversion: Pass the generated string into `romanToInt()`.\n2. Assert `romanToInt(intToRoman(x)) == x`.\n3. Validate regex pattern `^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$` to ensure no illegal repetitions (e.g. IIII) occur.\n\nRound-trip testing provides 100% verification.",
             "keyPoints": [
-                  "Comparing values instead of indices",
-                  "Using < k instead of <= k",
-                  "Forgetting to update index on duplicate match"
+                  "Round-trip assertion: `romanToInt(intToRoman(x)) == x`",
+                  "Regex structural validation",
+                  "Guarantees 100% correctness"
             ]
       },
       {
             "id": "q14",
-            "category": "Real-World Applications",
-            "question": "14. Where is this pattern used?",
-            "whatInterviewerChecks": "Practical applications in security, fraud, and logging.",
-            "bestReplyScript": "This pattern is useful in many real-world applications, including:\n- Fraud detection (detect repeated transactions within a short time window).\n- Network packet monitoring & duplicate log detection.\n- Cache management & event processing.\n- Real-time analytics & sensor data monitoring.\n\nThe idea of tracking recently seen items appears frequently in real-time systems.",
+            "category": "Input Range Bounds Enforcement",
+            "question": "14. What happens if the input is outside the valid range?",
+            "whatInterviewerChecks": "Constraint validation for range 1 to 3999.",
+            "bestReplyScript": "Classical Roman numerals only support integers from 1 to 3999.\n\nIf input is outside this range (`num < 1` or `num > 3999`):\n- Throw `ValueError` / `IllegalArgumentException` in production APIs.\n- In LeetCode/interviews, constraints guarantee `1 <= num <= 3999`.\n\nAdding an explicit boundary guard `if not (1 <= num <= 3999): raise ValueError()` is best practice.",
             "keyPoints": [
-                  "Fraud transaction time-window detection",
-                  "Network packet duplication detection",
-                  "Log deduplication & event streaming"
+                  "Classical range: 1 <= num <= 3999",
+                  "Throw ValueError / Exception if out of bounds",
+                  "Interview constraints guarantee valid input"
             ]
       },
       {
             "id": "q15",
-            "category": "Extension: Contains Duplicate III",
-            "question": "15. How would you extend this problem to check value differences as well?",
-            "whatInterviewerChecks": "Contains Duplicate III (|i - j| <= k AND |nums[i] - nums[j]| <= t).",
-            "bestReplyScript": "This extension is similar to Contains Duplicate III, where we check:\n- Index difference <= k\n- Value difference <= t\n\nA common solution uses:\n- Bucketing (hash map buckets of size t + 1)\n- Or a balanced binary search tree (Red-Black Tree / SortedList)\n\nThese data structures allow us to efficiently find nearby values while also maintaining the index constraint.",
+            "category": "Greedy Optimality Mathematical Proof",
+            "question": "15. Why is the greedy approach guaranteed to produce the correct result?",
+            "whatInterviewerChecks": "Matroid / Canonical representation proof.",
+            "bestReplyScript": "The Roman numeral system is canonical: every integer from 1 to 3999 has a unique standard representation.\n\nBecause all subtractive pairs (4, 9, 40, 90, 400, 900) are explicitly defined in the symbol mapping, the system possesses the Matroid / Greedy-Choice Property.\n\nSelecting the largest available symbol value at each step never blocks reaching the exact target, guaranteeing the unique correct Roman string in O(1) time.",
             "keyPoints": [
-                  "Bucket sort hashing (bucket size t + 1)",
-                  "Balanced Binary Search Tree (SortedList)",
-                  "Maintains dual constraints |i-j|<=k and |val1-val2|<=t"
+                  "Roman numeral system has Matroid / Greedy-Choice property",
+                  "Explicit subtractive pairs eliminate local sub-optima",
+                  "Guarantees unique standard representation"
             ]
       }
 ],
