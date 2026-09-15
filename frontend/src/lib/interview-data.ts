@@ -7432,182 +7432,184 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain the conditions for a valid mountain array.",
-            "whatInterviewerChecks": "Three conditions: n >= 3, strictly increasing to peak, strictly decreasing after peak.",
-            "bestReplyScript": "A valid mountain array must satisfy three conditions:\n1. The array must have at least 3 elements.\n2. The values must strictly increase to a single peak.\n3. After the peak, the values must strictly decrease.\n\nAlso, the peak cannot be the first or last element.\n\nExample of a valid mountain: [1, 3, 5, 4, 2] -> Increasing: 1 -> 3 -> 5 | Peak: 5 | Decreasing: 5 -> 4 -> 2.\nExample of invalid: [1, 2, 3] (Never decreases).\n\nComplexity: Time: O(n), Space: O(1)",
+            "question": "1. Explain your dynamic programming approach.",
+            "whatInterviewerChecks": "DP table definition `dp[i][j]`, top-down memoization or bottom-up tabulation, `firstMatch` logic, wildcard `.` and `*` transitions.",
+            "bestReplyScript": "I solve this problem using Dynamic Programming (DP) because the same (text_index, pattern_index) states are evaluated repeatedly.\n\nLet `dp[i][j]` = whether text `s[i:]` matches pattern `p[j:]`.\n\nSteps:\n1. Base case: `dp[len(s)][len(p)] = True` (empty string matches empty pattern).\n2. Evaluate `firstMatch`: `i < len(s) and (s[i] == p[j] or p[j] == '.')`.\n3. If `j + 1 < len(p)` and `p[j+1] == '*'`, there are two choices:\n   - Choice 1 (Skip '*'): `dp[i][j+2]` (treat wildcard as 0 occurrences).\n   - Choice 2 (Use '*'): `firstMatch and dp[i+1][j]` (consume 1 text character and keep pattern at j).\n   - Result: `dp[i][j] = dp[i][j+2] or (firstMatch and dp[i+1][j])`.\n4. Else: `dp[i][j] = firstMatch and dp[i+1][j+1]`.\n\nThe final answer is `dp[0][0]`.",
             "keyPoints": [
-                  "Minimum length n >= 3",
-                  "Strictly increasing then strictly decreasing",
-                  "Peak index 0 < peak < n-1",
-                  "Time: O(n), Space: O(1)"
+                  "`dp[i][j]` = whether `s[i:]` matches `p[j:]`",
+                  "`firstMatch = i < len(s) and (s[i] == p[j] or p[j] == '.')`",
+                  "If `p[j+1] == '*'`: `dp[i][j+2] or (firstMatch and dp[i+1][j])`",
+                  "Else: `firstMatch and dp[i+1][j+1]`",
+                  "Time: O(m * n), Space: O(m * n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Peak Position Constraint",
-            "question": "2. Why can't the peak be the first or last element?",
-            "whatInterviewerChecks": "Requirement for both climb and descent phases.",
-            "bestReplyScript": "A mountain must have both:\n- An increasing part before the peak.\n- A decreasing part after the peak.\n\nIf the peak is the first element ([5,4,3,2]), there is no increasing sequence, so it's invalid.\nIf the peak is the last element ([1,2,3,4]), there is no decreasing sequence, so it's also invalid.\n\nTherefore, the peak must lie somewhere strictly between the first and last elements (0 < peak < n - 1).",
+            "category": "Recursion with Memoization Rationale",
+            "question": "2. Why is recursion with memoization also a good solution?",
+            "whatInterviewerChecks": "Top-down DP advantages and state caching.",
+            "bestReplyScript": "Recursive memoization solves the exact same DP state space but computes states on-demand.\n\nWithout memoization, plain recursion recomputes identical subproblems exponentially O(2^(m+n)).\n\nBy memoizing `(textIndex, patternIndex)` in a cache/hash table:\n- Each `(i, j)` state is solved exactly once.\n- Code structure directly mirrors the mathematical regex recurrence relation.\n\nBoth memoization (top-down) and tabulation (bottom-up) achieve optimal O(m * n) time complexity.",
             "keyPoints": [
-                  "Peak at index 0 lacks climb phase",
-                  "Peak at index n-1 lacks descent phase",
-                  "Must satisfy 0 < peak < n-1 boundary"
+                  "Top-down memoization computes states on-demand",
+                  "Prevents O(2^(m+n)) exponential recomputation",
+                  "Caches state tuples `(i, j)`"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Linear single-pass traversal and constant auxiliary space bounds.",
-            "bestReplyScript": "The array is traversed only once.\nEach element is visited at most once while climbing up the mountain and walking down the mountain.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is the optimal solution because every element may need to be checked.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(m * n) time and O(m * n) space bounds.",
+            "bestReplyScript": "Let m = length of text s, n = length of pattern p.\n\nComplexity analysis:\n- Time Complexity: O(m * n). There are (m + 1) * (n + 1) distinct states, and computing each state takes O(1) constant time.\n- Space Complexity: O(m * n) to store the DP table or recursion memoization cache (plus O(m + n) call stack space for top-down).",
             "keyPoints": [
-                  "Time Complexity: O(n)",
-                  "Space Complexity: O(1)",
-                  "Optimal linear pass lower bound"
+                  "Time Complexity: O(m * n)",
+                  "Space Complexity: O(m * n)",
+                  "m = text length, n = pattern length"
             ]
       },
       {
             "id": "q4",
-            "category": "Peak Identification Strategy",
-            "question": "4. How do you identify the peak?",
-            "whatInterviewerChecks": "Two-phase pointer climbing logic.",
-            "bestReplyScript": "Start from the beginning and keep moving while the next element is strictly larger.\n\nExample: [1,2,4,7,5,3] -> Movement: 1 -> 2 -> 4 -> 7 (Peak Found at 7) -> 5 -> 3.\n\nThe first point where the sequence stops increasing is the peak candidate. Then verify that the remaining elements strictly decrease.",
+            "category": "Dot (.) Wildcard Mechanics",
+            "question": "4. How do you handle the . wildcard?",
+            "whatInterviewerChecks": "Single character match logic.",
+            "bestReplyScript": "The '.' wildcard matches EXACTLY ONE arbitrary character.\n\nTherefore:\n`firstMatch = (i < len(s)) and (s[i] == p[j] or p[j] == '.')`\n\nWhenever `p[j] == '.'`, it satisfies the character match for whatever character `s[i]` happens to be.\n\nExample: \"a\" matches \".\" -> True.",
             "keyPoints": [
-                  "Climb while nums[i] < nums[i+1]",
-                  "Peak is first local maximum",
-                  "Validate remaining descent phase"
+                  "'.' matches any single character",
+                  "Evaluated inside `firstMatch` logic",
+                  "`s[i] == p[j] or p[j] == '.'`"
             ]
       },
       {
             "id": "q5",
-            "category": "Single Pass Proof",
-            "question": "5. Can this be solved in one pass?",
-            "whatInterviewerChecks": "Single pass pointer traversal logic.",
-            "bestReplyScript": "Yes. The algorithm naturally works in one pass:\n1. Move upward while elements are strictly increasing.\n2. Check that the peak isn't the first or last element (0 < i < n - 1).\n3. Continue moving downward while elements are strictly decreasing.\n4. If we reach the end of the array (i == n - 1), the array is a valid mountain.\n\nThis processes every element only once.",
+            "category": "Asterisk (*) Wildcard Transition Logic",
+            "question": "5. How do you process the * operator?",
+            "whatInterviewerChecks": "Zero occurrence skip vs one-or-more match consumption.",
+            "bestReplyScript": "The '*' operator means: ZERO OR MORE OCCURRENCES of the preceding character `p[j]`.\n\nWhen `j + 1 < len(p)` and `p[j+1] == '*'`, we evaluate two distinct branches:\n1. Skip '*' completely (0 occurrences): Jump pattern forward by 2 positions -> `dp[i][j+2]`.\n2. Use '*' (1+ occurrences): If `firstMatch` is true, consume 1 text character and keep pattern at j -> `firstMatch and dp[i+1][j]`.\n\nCombined recurrence:\n`dp[i][j] = dp[i][j+2] or (firstMatch and dp[i+1][j])`.",
             "keyPoints": [
-                  "Single pass traversal",
-                  "Two consecutive while loops",
-                  "Verify end index i == n - 1"
+                  "'*' repeats PRECEDING character 0 or more times",
+                  "Branch 1 (0 occurrences): `dp[i][j+2]`",
+                  "Branch 2 (1+ occurrences): `firstMatch and dp[i+1][j]`",
+                  "Recurrence: `dp[i][j+2] or (firstMatch and dp[i+1][j])`"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Cases",
-            "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Length < 3, monotonic increasing, monotonic decreasing, flat peaks, valid mountain.",
-            "bestReplyScript": "Important edge cases include:\n1. Less than 3 elements ([1,2]) -> False\n2. Only increasing ([1,2,3]) -> False\n3. Only decreasing ([3,2,1]) -> False\n4. Flat peak ([1,2,2,1]) -> False\n5. Valid mountain ([1,3,5,2]) -> True\n\nTesting these cases ensures the algorithm handles different scenarios correctly.",
+            "category": "Regex Matching Complexity vs Simple Matching",
+            "question": "6. Why is this problem difficult compared to simple string matching?",
+            "whatInterviewerChecks": "Branching states created by wildcard combination.",
+            "bestReplyScript": "Simple string matching compares characters 1-to-1 linearly.\n\nRegex matching introduces non-deterministic branching because:\n- '.' matches any character.\n- '*' can match 0, 1, or many occurrences of the preceding character.\n- Combination '.*' can match any arbitrary substring of any length!\n\nGreedy matching fails (e.g. consuming too many characters with '*' prevents matching subsequent pattern text). Dynamic Programming efficiently evaluates all valid branching choices without exponential redundant work.",
             "keyPoints": [
-                  "Length < 3 returns False",
-                  "Monotonic arrays return False",
-                  "Flat plateaus [1,2,2,1] return False"
+                  "Non-deterministic branching created by '*'",
+                  "'.*' matches any substring of any length",
+                  "Greedy matching fails; DP evaluates all branching choices"
             ]
       },
       {
             "id": "q7",
-            "category": "Equal Adjacent Values (Plateaus)",
-            "question": "7. What if there are equal adjacent values?",
-            "whatInterviewerChecks": "Strict inequality requirement (nums[i] != nums[i+1]).",
-            "bestReplyScript": "Equal adjacent values are not allowed because a valid mountain requires strictly increasing and strictly decreasing sequences.\n\nExample: [1,2,2,1]. Since 2 == 2, the increase is no longer strict.\n\nTherefore, the array is not a valid mountain.",
+            "category": "Edge Cases",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty text/pattern, \"a*\" matching \"\", \".*\" matching \"ab\", false matches.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty text & empty pattern (\"\" vs \"\") -> True\n2. Empty text vs non-empty pattern (\"\" vs \"a*\") -> True (0 occurrences of 'a')\n3. Single character wildcard (\"a\" vs \".\") -> True\n4. Wildcard matching multiple chars (\"aaa\" vs \"a*\") -> True\n5. Universal wildcard (\"ab\" vs \".*\") -> True\n6. Complex pattern mismatch (\"mississippi\" vs \"mis*is*p*.\") -> False.",
             "keyPoints": [
-                  "Plateaus (nums[i] == nums[i+1]) violate strictness",
-                  "Strictly increasing means nums[i] < nums[i+1]",
-                  "Strictly decreasing means nums[i] > nums[i+1]"
+                  "\"\" vs \"a*\" returns True (0 occurrences)",
+                  "\".*\" matches any text string",
+                  "Mismatch tests (e.g. \"mississippi\" vs \"mis*is*p*.\")"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test cases table matrix covering valid/invalid patterns.",
-            "bestReplyScript": "I would test both normal and edge cases:\n- [1,3,2] -> True\n- [1,2,3] -> False\n- [3,2,1] -> False\n- [1,2,2,1] -> False\n- [1,4,7,5,2] -> True\n\nThese tests verify the correctness of the implementation.",
+            "whatInterviewerChecks": "Test cases table matrix covering match, mismatch, \".*\", and empty strings.",
+            "bestReplyScript": "I would test:\n- \"aa\", \"a\" -> False\n- \"aa\", \"a*\" -> True\n- \"ab\", \".*\" -> True\n- \"aab\", \"c*a*b\" -> True (c* matched 0 times, a* matched 2 times, b matched b)\n- \"mississippi\", \"mis*is*p*.\" -> False\n- \"\", \"\" -> True\n\nThese cover basic matching, zero-occurrence skipping, universal wildcards, and complex backtracks.",
             "keyPoints": [
-                  "Valid mountain test cases",
-                  "Monotonic and plateau test cases",
-                  "Minimal length n=3 test cases"
+                  "LeetCode 10 standard test cases",
+                  "\"aab\" vs \"c*a*b\" -> True",
+                  "\"mississippi\" vs \"mis*is*p*.\" -> False"
             ]
       },
       {
             "id": "q9",
             "category": "Common Candidate Pitfalls",
-            "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Rookie errors in Valid Mountain Array.",
-            "bestReplyScript": "Some common mistakes include:\n- Forgetting the array must contain at least 3 elements.\n- Allowing equal adjacent values (plateaus).\n- Not checking that the peak is in the middle (allowing peak at index 0 or n-1).\n- Stopping after finding the peak without validating the decreasing part.\n- Using extra arrays unnecessarily.\n\nThe most common mistake is accepting arrays that only increase or only decrease.",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Regular Expression Matching (LeetCode 10).",
+            "bestReplyScript": "Common mistakes include:\n- Misunderstanding '*': treating '*' as matching ANY character independently (like '.' or Unix wildcard) instead of repeating the PRECEDING character.\n- Forgetting the zero-occurrence case (failing to jump `j + 2`).\n- Incorrect DP initialization for patterns with zero-occurrence wildcards (e.g. \"a*b*c*\").\n- Index out of range errors on `p[j+1]` lookahead.\n- Using greedy logic that fails on complex backtracks.",
             "keyPoints": [
-                  "Accepting monotonic increasing/decreasing arrays",
-                  "Allowing flat plateaus",
-                  "Not validating full traversal to index n-1"
+                  "Treating '*' as independent wildcard instead of preceding char repeater",
+                  "Omitting zero-occurrence jump `j + 2`",
+                  "Greedy matching failure on pattern backtracks"
             ]
       },
       {
             "id": "q10",
-            "category": "Peak Index Tracking",
-            "question": "10. How would you return the peak index?",
-            "whatInterviewerChecks": "Returning peak index in Peak Index in a Mountain Array (LeetCode 852).",
-            "bestReplyScript": "While moving upward, keep track of the current index. When the increasing sequence stops, that index is the peak.\n\nExample: Array [1,3,5,4,2] -> Indices 0, 1, 2, 3, 4 -> Peak is at Index 2 (value 5).\n\nSimply return the peak index after validating the mountain.",
+            "category": "Recursion Without DP Analysis",
+            "question": "10. Can this be solved without dynamic programming?",
+            "whatInterviewerChecks": "Exponential time complexity of plain un-memoized recursion.",
+            "bestReplyScript": "Yes, but it is extremely inefficient.\n\nPlain un-memoized recursion explores the decision tree directly.\nWithout state caching:\n- Time Complexity: O(2^(m+n)) exponential in the worst case (e.g. s = \"aaaaaaaa\", p = \"a*a*a*a*a*\").\n\nAdding memoization or bottom-up DP reduces time complexity from exponential O(2^(m+n)) to polynomial O(m * n).",
             "keyPoints": [
-                  "Track index where climb loop stops",
-                  "Returns peak index for LeetCode 852",
-                  "O(n) or O(log n) binary search variant"
+                  "Plain recursion runs in O(2^(m+n)) exponential time",
+                  "DP / Memoization reduces time to O(m * n)",
+                  "Un-memoized solution TLEs on LeetCode"
             ]
       },
       {
             "id": "q11",
-            "category": "Multiple Peaks Validation",
-            "question": "11. Can there be multiple peaks?",
-            "whatInterviewerChecks": "Unimodal constraint (exactly one peak allowed).",
-            "bestReplyScript": "No. A valid mountain array must have exactly one peak.\n\nExample: [1,3,5,4,2] has one peak (5) -> Valid.\nExample: [1,4,2,5,3] has two peaks (4 and 5) -> Invalid.\n\nThe algorithm fails multiple peaks because after descending from 4 to 2, the subsequent increase to 5 breaks the strictly decreasing condition.",
+            "category": "Recursion, Memoization, and Tabulation Comparison Matrix",
+            "question": "11. Compare recursion, memoization, and tabulation approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Plain Recursion: Time O(2^(m+n)), Space O(m+n). TLEs on long patterns.\n- Top-Down Memoization: Time O(m * n), Space O(m * n) + call stack. Easy to code, computes reachable states on-demand.\n- Bottom-Up DP Tabulation: Time O(m * n), Space O(m * n). Iterative 2D table fill, zero call stack overhead, highly optimal.\n\nMemoization or Tabulation are both acceptable in coding interviews.",
             "keyPoints": [
-                  "Unimodal property: exactly one peak",
-                  "Multiple peaks fail descent loop",
-                  "Re-climbing returns False"
+                  "Plain Recursion: O(2^(m+n)) time (Exponential, TLE)",
+                  "Memoization: O(m * n) time, O(m * n) space (Top-Down, readable)",
+                  "Tabulation: O(m * n) time, O(m * n) space (Bottom-Up, zero stack overhead)"
             ]
       },
       {
             "id": "q12",
-            "category": "Recursive Approach Overhead",
-            "question": "12. How would you solve this recursively?",
-            "whatInterviewerChecks": "Recursion stack space overhead O(n) vs O(1) iterative.",
-            "bestReplyScript": "A recursive solution is possible but not recommended.\n\nOne approach:\n1. Recursively move upward until reaching the peak.\n2. Then recursively verify the decreasing sequence.\n\nHowever:\n- It is more complex.\n- It uses O(n) recursion stack space.\n- The iterative solution is simpler and uses O(1) space.\n\nFor interviews, the iterative approach is preferred.",
+            "category": "Real-World Applications of Regex Engines",
+            "question": "12. Where are regular expression engines used in practice?",
+            "whatInterviewerChecks": "Compilers, log analyzers, grep/sed, input validation.",
+            "bestReplyScript": "Regular expression engines are used in:\n- Lexical Analyzers & Compilers (converting code text into lexer tokens).\n- Command-Line Search Tools (`grep`, `sed`, `awk`, `ripgrep`).\n- Data Validation Pipelines (email/phone/URL regex validation).\n- Web Scraping & Log Parsing engines.\n- Text Editors & IDE Search/Replace functions.",
             "keyPoints": [
-                  "Recursive time: O(n), Space: O(n) call stack",
-                  "Iterative time: O(n), Space: O(1) constant",
-                  "Iterative preferred in production"
+                  "Compiler Lexical Analyzers",
+                  "CLI tools (`grep`, `sed`, `ripgrep`)",
+                  "Input validation & log parsing pipelines"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Applications",
-            "question": "13. Where are mountain patterns used?",
-            "whatInterviewerChecks": "Practical peak detection applications in software engineering.",
-            "bestReplyScript": "Mountain-shaped patterns appear in many real-world applications:\n- Stock price trend analysis & spike detection.\n- Signal and waveform processing (QRS detection in ECG).\n- Sensor data analysis & performance monitoring spikes.\n- Image processing & peak detection in scientific spectroscopy.",
+            "category": "Extending to + and ? Operators",
+            "question": "13. How would you extend your solution to support additional regex operators like + or ?",
+            "whatInterviewerChecks": "Adding state transition rules for '+' (1+) and '?' (0 or 1).",
+            "bestReplyScript": "The DP state table `dp[i][j]` remains completely unchanged!\n\nOnly the state transition rules for new operators are added:\n- Plus '+' (1 or more occurrences of preceding char): `dp[i][j] = firstMatch and (dp[i+1][j+2] or dp[i+1][j])` (requires at least 1 match, then allows 0 or more).\n- Question Mark '?' (0 or 1 occurrence of preceding char): `dp[i][j] = dp[i][j+2] or (firstMatch and dp[i+1][j+2])` (allows 0 or exactly 1 match).\n\nThe overall DP framework extends modularly.",
             "keyPoints": [
-                  "ECG heartbeat QRS wave detection",
-                  "Financial stock price spike analysis",
-                  "Sensor telemetry peak monitoring"
+                  "DP table framework stays unchanged",
+                  "'+' (1+ occurrences): requires `firstMatch`, then transitions to 0 or 1+",
+                  "'?' (0 or 1 occurrence): transitions to `j+2` after 0 or 1 match"
             ]
       },
       {
             "id": "q14",
-            "category": "Linked List Adaptation",
-            "question": "14. How would you adapt the solution for a linked list?",
-            "whatInterviewerChecks": "Single pass traversal on linked nodes.",
-            "bestReplyScript": "The same idea works for a linked list. Instead of using array indices:\n- Traverse node by node.\n- First verify a strictly increasing sequence (curr.val < curr.next.val).\n- Check peak existence.\n- Then verify a strictly decreasing sequence (curr.val > curr.next.val).\n\nSince linked lists don't support random access, we simply move through nodes once in linear O(n) time and O(1) space.",
+            "category": "Large Input String Optimizations",
+            "question": "14. How would your algorithm behave with very long input strings?",
+            "whatInterviewerChecks": "Space optimization to 2 rows O(n) space.",
+            "bestReplyScript": "For very long strings:\n- Time Complexity: Remains predictable O(m * n).\n- Space Complexity: Can be optimized from O(m * n) to O(n) space!\n\nBecause computing row `i` only depends on row `i+1` (next row), we can compress the 2D DP matrix into two 1D rows (`dp_current` and `dp_next`), reducing auxiliary memory to O(n).",
             "keyPoints": [
-                  "Single pass node pointer traversal",
-                  "Strictly increasing then strictly decreasing checks",
-                  "Time: O(n), Space: O(1)"
+                  "Time remains polynomial O(m * n)",
+                  "Space can be compressed from O(m * n) to O(n) using 2 rows",
+                  "Row `i` only depends on row `i+1`"
             ]
       },
       {
             "id": "q15",
-            "category": "Streaming & Memory Optimization",
-            "question": "15. What if the array is very large?",
-            "whatInterviewerChecks": "State machine stream processing (Increasing state -> Decreasing state).",
-            "bestReplyScript": "The current algorithm already scales well because it processes each element only once using O(1) extra space.\n\nFor streaming data, we can implement a state machine:\n- State 0: Climbing (expecting >)\n- State 1: Descending (expecting <)\n- State 2: Invalid (flat or re-climbing)\n\nThis streams data in real-time with O(1) memory and O(n) processing time.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which implementation would you choose for an interview and why?",
+            "whatInterviewerChecks": "Interview implementation trade-offs.",
+            "bestReplyScript": "In a coding interview:\n- I choose Top-Down Memoization because it is faster to write, directly maps to the recursive mathematical regex definition, and avoids complex 2D table boundary initialization bugs.\n- If the interviewer requests zero call stack overhead, I convert it to 2D Bottom-Up DP Tabulation.\n\nBoth achieve the optimal O(m * n) time and space complexity.",
             "keyPoints": [
-                  "Finite State Machine (State 0: Climb, State 1: Descent)",
-                  "Real-time stream evaluation",
-                  "Time: O(n), Space: O(1)"
+                  "Top-Down Memoization preferred for speed and readability",
+                  "Directly maps to recursive math definition",
+                  "Convert to 2D Bottom-Up DP if stack-free implementation is requested"
             ]
       }
 ],
