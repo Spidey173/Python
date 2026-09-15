@@ -6734,195 +6734,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Squares of a Sorted Array.",
-            "bestReplyScript": "My approach for Squares of a Sorted Array follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Two pointers at opposite ends, absolute value comparison, filling result from end.",
+            "bestReplyScript": "I use the two-pointer technique because the array is already sorted, but squaring negative numbers can change their order.\n\nSteps:\n1. The left pointer starts at the beginning (index 0).\n2. The right pointer starts at the end (index n - 1).\n3. Compare the absolute values at both ends.\n4. The larger absolute value produces the larger square.\n5. Place that square at the end of the result array (index k--) and move the corresponding pointer.\n6. Repeat until all elements are processed.\n\nExample: Input [-4, -1, 0, 3, 10]\n- Compare |-4|=4 vs |10|=10 -> 100 at end -> Right moves to 3\n- Compare |-4|=4 vs |3|=3   -> 16 at index 3 -> Left moves to -1\nContinue -> Final Result: [0, 1, 9, 16, 100]\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two pointers at left (0) and right (n-1)",
+                  "Compare absolute values |nums[left]| vs |nums[right]|",
+                  "Fill result array backwards from index n-1",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Two-Pointer Justification",
             "question": "2. Why use two pointers?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Squares of a Sorted Array.",
-            "bestReplyScript": "I chose this approach for Squares of a Sorted Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Extreme absolute values location at array boundaries.",
+            "bestReplyScript": "The largest square always comes from either:\n- The largest positive number (at the right end), or\n- The smallest (most negative) number (at the left end).\n\nExample: [-7, -2, 3, 5] -> Squares: 49, 4, 9, 25. Notice 49 comes from -7 at the left boundary.\n\nBy comparing both ends, we can always choose the next largest square without sorting again.\nThis allows us to solve the problem in linear O(n) time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Largest squares lie at left or right boundaries",
+                  "Avoids re-sorting array",
+                  "Enables O(n) linear time execution"
             ]
       },
       {
             "id": "q3",
-            "category": "Algorithmic Justification",
+            "category": "Naive Squaring Fallacy",
             "question": "3. Why can't you simply square and return?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Squares of a Sorted Array.",
-            "bestReplyScript": "I chose this approach for Squares of a Sorted Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Demonstrating non-monotonic behavior after squaring negative numbers.",
+            "bestReplyScript": "Because squaring negative numbers changes their order.\n\nExample: Input [-4, -1, 0, 3].\nAfter squaring directly in-place: [16, 1, 0, 9].\nThe array is not sorted anymore! The expected output is [0, 1, 9, 16].\n\nSo simply squaring each element in forward order is not enough.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Squaring destroys sorted property for negative numbers",
+                  "Direct squaring yields unsorted result [16, 1, 0, 9]",
+                  "Requires sorting or two-pointer merge"
             ]
       },
       {
             "id": "q4",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "4. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Squares of a Sorted Array.",
-            "bestReplyScript": "Here is the complexity analysis for Squares of a Sorted Array:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic bounds for linear two-pointer scan.",
+            "bestReplyScript": "Each pointer moves only once across the array.\n- Left pointer moves right at most n times.\n- Right pointer moves left at most n times.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n) for the output array.\n\nThis is the optimal solution.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Optimal single-pass lower bound"
             ]
       },
       {
             "id": "q5",
-            "category": "Edge Case Analysis",
+            "category": "Negative Number Effect",
             "question": "5. How do negative numbers affect the solution?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Squares of a Sorted Array.",
-            "bestReplyScript": "When handling Squares of a Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Squaring magnitude vs sign comparison.",
+            "bestReplyScript": "Negative numbers become positive after squaring, and their squares can be larger than those of positive numbers.\n\nExample: Input [-9, -2, 5] -> Squares: 81, 4, 25. The largest square comes from -9.\n\nThat's why we compare absolute values (|nums[left]| vs |nums[right]|) instead of the raw signed numbers.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Magnitude determines square size",
+                  "Compare |nums[left]| vs |nums[right]|",
+                  "-9^2 (81) > 5^2 (25)"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "In-Place Execution Trade-off",
             "question": "6. Can this be solved in-place?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Squares of a Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Explaining why overwrite destroys un-processed values.",
+            "bestReplyScript": "Not easily. When we overwrite elements while computing squares, we lose values that are still needed for future comparisons.\n\nExample: [-4, -1, 3]. If we replace -4 with 16 immediately in-place, we lose -4 for later comparisons.\n\nTherefore, the standard interview solution uses a separate result array:\n- Time: O(n), Space: O(n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "In-place overwrite destroys unread boundary values",
+                  "Requires auxiliary result array",
+                  "Standard O(n) space allocation"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Squares of a Sorted Array.",
-            "bestReplyScript": "When handling Squares of a Sorted Array, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, all positive, all negative, zeros.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> []\n2. One element ([-3]) -> [9]\n3. All positive ([1,2,3]) -> [1,4,9]\n4. All negative ([-5,-3,-1]) -> [1,9,25]\n5. Contains zero ([-2,0,3]) -> [0,4,9]\n\nTesting these cases ensures the algorithm works correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty & single element checks",
+                  "All-positive & all-negative arrays",
+                  "Arrays containing zero"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Squares of a Sorted Array.",
-            "bestReplyScript": "To thoroughly test Squares of a Sorted Array, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering positive, negative, and zero inputs.",
+            "bestReplyScript": "I would create test cases covering different scenarios:\n- [-4,-1,0,3,10] -> [0,1,9,16,100]\n- [-5,-3,-2] -> [4,9,25]\n- [1,2,3] -> [1,4,9]\n- [0] -> [0]\n- [] -> []\n\nThese tests verify correctness for both normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Mixed positive/negative array test",
+                  "All negative array test",
+                  "Empty and single-element bounds"
             ]
       },
       {
             "id": "q9",
-            "category": "Algorithmic Justification",
+            "category": "Absolute Value Comparison Rationale",
             "question": "9. Why compare absolute values?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Squares of a Sorted Array.",
-            "bestReplyScript": "I chose this approach for Squares of a Sorted Array over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Magnitude independence of square function f(x) = x^2.",
+            "bestReplyScript": "The square depends on the magnitude of a number, not its sign.\nExample: (-8)\u00b2 = 64, 8\u00b2 = 64.\n\nInstead of comparing raw signed values (-8 vs 5), we compare their magnitudes (|-8|=8 vs |5|=5).\nThe larger absolute value produces the larger square.\nThis is the key insight behind the two-pointer solution.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "f(x) = x^2 is symmetric around 0",
+                  "Magnitude |-8| > |5| implies (-8)^2 > 5^2",
+                  "Key two-pointer comparison rule"
             ]
       },
       {
             "id": "q10",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "10. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Squares of a Sorted Array.",
-            "bestReplyScript": "Common candidate pitfalls when solving Squares of a Sorted Array include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Squares of a Sorted Array.",
+            "bestReplyScript": "Some common mistakes include:\n- Simply squaring every element in-place without sorting.\n- Comparing actual signed values instead of absolute values.\n- Filling the result array from the beginning (index 0) instead of the end (index n-1).\n- Forgetting to move the corresponding pointer.\n- Not handling empty arrays.\n\nThe most common mistake is forgetting that negative numbers can produce the largest squares.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Filling result array forward (0 to n-1) instead of backward",
+                  "Comparing signed values instead of abs()",
+                  "Omitting pointer decrements/increments"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Square + Sort Alternative",
             "question": "11. Can you solve it using sorting afterward?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Squares of a Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n log n) naive approach comparison.",
+            "bestReplyScript": "Yes.\nOne approach is:\n1. Square every element in O(n).\n2. Sort the resulting array in O(n log n).\n\nExample: [-4,-1,3] -> Squares [16,1,9] -> Sort [1,9,16].\nComplexity: Time O(n log n), Space O(n).\n\nAlthough correct and simple, it is slower than the O(n) two-pointer approach.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Square all elements then sort",
+                  "Time: O(n log n)",
+                  "Space: O(n) - inferior to two pointers"
             ]
       },
       {
             "id": "q12",
-            "category": "Step-by-Step Approach",
+            "category": "Efficiency Comparison",
             "question": "12. Which approach is more efficient?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Squares of a Sorted Array.",
-            "bestReplyScript": "My approach for Squares of a Sorted Array follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "O(n) vs O(n log n) comparison table.",
+            "bestReplyScript": "The two-pointer approach is more efficient.\n\nComparison:\n- Square + Sort: Time O(n log n), Space O(n)\n- Two Pointers:  Time O(n), Space O(n)\n\nSince O(n) linear time is strictly faster than O(n log n) comparison sorting, the two-pointer solution is preferred in interviews.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two Pointers: O(n) linear time",
+                  "Square + Sort: O(n log n) logarithmic time",
+                  "Linear O(n) is optimal"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where is this pattern useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Squares of a Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Two-pointer application scenarios.",
+            "bestReplyScript": "The two-pointer pattern is widely used in:\n- Merging sorted arrays and lists (Merge Sort merge step).\n- Two Sum in sorted arrays.\n- Image processing (contrast adjustment & magnitude normalization).\n- Signal processing (computing energy/power of discrete signals).\n- Partitioning & sliding window algorithms.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Signal power/energy calculation (x^2)",
+                  "Image contrast normalization",
+                  "Merge Sort merge step pattern"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Extension to Cubes",
             "question": "14. How would you extend it for cubes?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Squares of a Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Monotonicity of odd powers f(x) = x^3.",
+            "bestReplyScript": "For cubes, the approach changes because cubing preserves the sign!\n\nExample: [-3,-2,1] -> Cubes [-27,-8,1].\nThe values remain ordered because f(x) = x^3 is strictly monotonic (always increasing).\n\nSo we can simply cube each element in-place in O(n) time without any two-pointer logic!",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "f(x) = x^3 is strictly monotonic (preserves order)",
+                  "Direct in-place cubing O(n) time, O(1) space",
+                  "No two-pointer logic needed"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Unsorted Input Handling",
             "question": "15. What if the array isn't sorted?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Squares of a Sorted Array.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Fall-back to O(n log n) sorting on unsorted inputs.",
+            "bestReplyScript": "If the array is not sorted, the two-pointer approach no longer works.\n\nExample: [3,-4,1].\nWe would have to:\n1. Square every element: [9,16,1].\n2. Sort the result: [1,9,16].\n\nComplexity: Time O(n log n).\nAlternatively, sort original array first (O(n log n)) and then apply two pointers, but that still takes O(n log n) overall.\n\nSo the O(n) solution is strictly dependent on the input array being pre-sorted.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Two pointers fail on unsorted data",
+                  "Requires O(n log n) sorting",
+                  "O(n) runtime relies on pre-sorted invariant"
             ]
       }
 ],
