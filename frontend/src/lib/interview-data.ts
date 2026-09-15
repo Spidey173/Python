@@ -11294,195 +11294,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Monotonic Array Verification.",
-            "bestReplyScript": "My approach for Monotonic Array Verification follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Single-pass traversal with dual boolean flags (isIncreasing & isDecreasing).",
+            "bestReplyScript": "A monotonic array is an array that is entirely non-decreasing or entirely non-increasing.\n\nMy approach is to check both possibilities in one pass:\n1. Assume the array could be increasing (isIncreasing = True) and decreasing (isDecreasing = True).\n2. Traverse the array once.\n3. If I find nums[i] > nums[i+1], it cannot be increasing (isIncreasing = False).\n4. If I find nums[i] < nums[i+1], it cannot be decreasing (isDecreasing = False).\n5. At the end, if either possibility is still valid (isIncreasing or isDecreasing), the array is monotonic.\n\nExample: Input [1,2,2,4] -> Increasing: True, Decreasing: False -> Answer = True.\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Monotonic definition: non-decreasing or non-increasing",
+                  "Single pass tracking with 2 boolean flags",
+                  "isIncreasing = True, isDecreasing = True",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Deep-Dive Question 2",
+            "category": "Monotonicity Definitions",
             "question": "2. What is a monotonic array?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Non-decreasing vs Non-increasing mathematical definition.",
+            "bestReplyScript": "A monotonic array always moves in one direction.\n\nThere are two types:\n1. Monotonically Increasing (Non-decreasing): Each element is greater than or equal to the previous one (e.g. [1,2,2,4,6]).\n2. Monotonically Decreasing (Non-increasing): Each element is smaller than or equal to the previous one (e.g. [9,7,7,5,2]).\n\nArrays with equal adjacent values (plateaus) are still considered monotonic.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Non-decreasing: nums[i] <= nums[i+1]",
+                  "Non-increasing: nums[i] >= nums[i+1]",
+                  "Equal adjacent values allowed"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Monotonic Array Verification.",
-            "bestReplyScript": "Here is the complexity analysis for Monotonic Array Verification:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear single-pass time and constant space bounds.",
+            "bestReplyScript": "The array is scanned only once.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(1)\n\nThis is optimal because every element must be checked at least once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal linear time lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Single Pass Optimization",
             "question": "4. Can you determine monotonicity in a single pass?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single pass dual flag tracking vs two separate loops.",
+            "bestReplyScript": "Yes. While traversing the array once:\n- If I see an increase (nums[i] < nums[i+1]), I know it cannot be decreasing.\n- If I see a decrease (nums[i] > nums[i+1]), I know it cannot be increasing.\n\nBy updating two boolean flags during one traversal, I can determine monotonicity without making multiple passes.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Single pass traversal",
+                  "Avoids two separate array loops",
+                  "Maintains early exit potential if both flags become False"
             ]
       },
       {
             "id": "q5",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Values Handling",
             "question": "5. How do you handle duplicate values?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Monotonic Array Verification.",
-            "bestReplyScript": "When handling Monotonic Array Verification, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Handling plateaus (equal values do not invalidate flags).",
+            "bestReplyScript": "Duplicate values do not violate monotonicity.\n\nExample: [1,2,2,3] is still increasing. [5,5,4,4,2] is still decreasing.\n\nEqual adjacent values (nums[i] == nums[i+1]) leave both isIncreasing and isDecreasing flags unchanged. Only a strict change in direction breaks monotonicity.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Equal values preserve monotonicity",
+                  "Flag updates require strict inequality",
+                  "Non-decreasing & non-increasing definition"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Monotonic Array Verification.",
-            "bestReplyScript": "When handling Monotonic Array Verification, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, all equal, increasing, non-monotonic.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> True\n2. Single element ([5]) -> True\n3. All elements equal ([4,4,4,4]) -> True\n4. Strictly increasing ([1,2,3,4]) -> True\n5. Not monotonic ([1,3,2]) -> False\n\nTesting these ensures the solution handles all scenarios.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty array n=0 returns True",
+                  "Single element n=1 returns True",
+                  "All equal array returns True"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Monotonic Array Verification.",
-            "bestReplyScript": "To thoroughly test Monotonic Array Verification, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix covering increasing, decreasing, plateaus, direction changes.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- [1,2,3] -> True\n- [3,2,1] -> True\n- [1,2,2,3] -> True\n- [4,4,4] -> True\n- [1,3,2] -> False\n- [] -> True\n\nThese cases verify increasing, decreasing, equal values, and direction changes.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Monotonic increasing & decreasing tests",
+                  "Plateau test cases",
+                  "Non-monotonic direction change tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Recursion Trade-off",
             "question": "8. Can this be solved recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive call stack space overhead O(n) vs O(1) iterative.",
+            "bestReplyScript": "Yes, but recursion is not ideal.\nA recursive solution compares current pair nums[i] vs nums[i+1] and passes the rest to a recursive helper.\n\nAlthough possible, recursion uses O(n) stack space, is harder to read, and offers no performance advantage.\nTherefore, the iterative one-pass solution is preferred.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive time O(n), space O(n)",
+                  "Uses O(n) recursion call stack",
+                  "Iterative O(1) space is preferred"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Monotonic Array Verification.",
-            "bestReplyScript": "Common candidate pitfalls when solving Monotonic Array Verification include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Monotonic Array.",
+            "bestReplyScript": "Some common mistakes include:\n- Treating duplicate values as invalid.\n- Forgetting empty or single-element arrays.\n- Checking only increasing order and ignoring decreasing order.\n- Stopping after the first comparison.\n- Using unnecessary extra arrays.\n\nThe most common mistake is rejecting arrays with equal adjacent values.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Rejecting equal values (plateaus)",
+                  "Only checking increasing direction",
+                  "Failing on n <= 1 boundary cases"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Dynamic Array Optimization",
             "question": "10. What if the array changes dynamically?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Segmented rechecking on insertions/deletions.",
+            "bestReplyScript": "If elements are frequently inserted or updated, checking the entire array after every change in O(n) would be inefficient.\n\nOptimizations:\n- Recheck only the local modified region (index i-1, i, i+1) after an update.\n- Maintain a count of directional violations in a dynamic data structure.\n\nFor a static array, a single linear scan is still optimal.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Local neighborhood check: nums[i-1..i+1]",
+                  "Maintain count of direction violations",
+                  "O(1) local update validation"
             ]
       },
       {
             "id": "q11",
-            "category": "Algorithmic Justification",
+            "category": "Increasing vs Decreasing Symmetric Checks",
             "question": "11. Compare increasing and decreasing checks.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Monotonic Array Verification.",
-            "bestReplyScript": "I chose this approach for Monotonic Array Verification over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Symmetric conditions nums[i] <= nums[i+1] vs nums[i] >= nums[i+1].",
+            "bestReplyScript": "Both checks are symmetric.\n- For non-decreasing: nums[i] <= nums[i+1] must hold.\n- For non-increasing: nums[i] >= nums[i+1] must hold.\n\nDuring one traversal, I update two flags (isIncreasing, isDecreasing). If either remains true at the end, the array is monotonic.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Non-decreasing condition: <= ",
+                  "Non-increasing condition: >= ",
+                  "Symmetric boolean flag reduction"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where are monotonic sequences used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Applications in trend analysis, monotonic stack/queue, stock prices.",
+            "bestReplyScript": "Monotonic sequences are useful in:\n- Time-series trend analysis & Stock market price movements.\n- Sensor data monitoring & anomaly detection.\n- Monotonic Stack and Monotonic Queue data structures (LeetCode Next Greater Element).\n- Binary Search preconditions (verifying data is sorted).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Time-series stock market trend analysis",
+                  "Monotonic Stack & Queue algorithms",
+                  "Binary Search precondition validation"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Monotonicity Type Reporting",
             "question": "13. Can you return the type of monotonicity (increasing/decreasing)?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Extending output to return string type status.",
+            "bestReplyScript": "Yes. Instead of returning only True or False, I can return a string status:\n- 'Increasing' (if only isIncreasing is True)\n- 'Decreasing' (if only isDecreasing is True)\n- 'Constant' (if both are True, meaning all elements are equal)\n- 'Not Monotonic' (if both are False)\n\nThis provides richer information using the exact same one-pass algorithm.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Returns 'Increasing', 'Decreasing', 'Constant', or 'Not Monotonic'",
+                  "Both flags True -> Constant array",
+                  "Zero extra runtime overhead"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Streaming Data Architecture",
             "question": "14. How would you optimize for streaming data?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "State machine for continuous streams without array buffering.",
+            "bestReplyScript": "For streaming data:\n1. Keep track of the previous element.\n2. Determine the direction (increasing or decreasing) when the first unequal pair appears.\n3. Compare each new incoming value with the previous one.\n4. If the new value breaks the established direction, immediately report that the stream is no longer monotonic.\n\nThis processes incoming data in real time with O(1) memory without storing the stream.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Track previous element & established direction",
+                  "Early termination on first violation",
+                  "O(1) memory for streaming architectures"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Extension: Allow 1 Violation",
             "question": "15. What if only one violation is allowed?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Monotonic Array Verification.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Non-decreasing array with 1 violation allowed (LeetCode 665).",
+            "bestReplyScript": "If one violation is allowed (similar to LeetCode 665 Non-Decreasing Array):\n- Traverse the array and detect any index where nums[i] > nums[i+1].\n- Count violations. If count > 1, return False.\n- When a violation occurs at index i, check if modifying nums[i] or nums[i+1] can fix it: set nums[i] = nums[i+1] (if i == 0 or nums[i-1] <= nums[i+1]), else set nums[i+1] = nums[i].\n\nThis modification still runs in linear O(n) time and O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "LeetCode 665 Non-Decreasing Array with 1 modification",
+                  "Track violation count <= 1",
+                  "Greedy local modification in O(n) time"
             ]
       }
 ],
