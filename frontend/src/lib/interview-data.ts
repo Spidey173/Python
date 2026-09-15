@@ -5145,182 +5145,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Two hash maps logic, one-to-one bijection check, linear traversal.",
-            "bestReplyScript": "I use two dictionaries (hash maps) to maintain a one-to-one mapping between the characters of the two strings.\n- The first dictionary maps characters from string s to string t.\n- The second dictionary maps characters from string t to string s.\n\nSteps:\n1. If the strings have different lengths, return False.\n2. Traverse both strings together.\n3. For each pair of characters:\n   - Check if an existing mapping is consistent.\n   - If no mapping exists, create it in both dictionaries.\n4. If any mapping is inconsistent, return False.\n5. If all characters satisfy the mapping, return True.\n\nExample:\ns = \"egg\", t = \"add\"\nMappings: e -> a, g -> d | Reverse: a -> e, d -> g\nOutput: True\n\nThis ensures that every character maps uniquely in both directions.\n\nComplexity: Time: O(n), Space: O(n)",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Left-to-right traversal, character map lookup, look-ahead comparison `curr < next` subtract vs add logic.",
+            "bestReplyScript": "I traverse the Roman numeral string from left to right while converting each symbol to its integer value.\n\nSteps:\n1. Create a hash map that stores the value of each Roman symbol (I:1, V:5, X:10, L:50, C:100, D:500, M:1000).\n2. Initialize `result = 0`.\n3. Traverse the string one character at a time.\n4. Compare the current symbol's value with the next symbol's value:\n   - If `current_val < next_val`, subtract current_val (`result -= current_val`).\n   - Otherwise, add current_val (`result += current_val`).\n5. Continue until the last character, which is always added.\n6. Return the final integer.\n\nThis correctly handles both normal addition and subtractive notation.",
             "keyPoints": [
-                  "Two hash maps for bi-directional mapping",
-                  "One-to-one character bijection check",
-                  "Early exit on length mismatch or inconsistent map",
-                  "Time: O(n), Space: O(n)"
+                  "Hash map lookup for 7 symbols",
+                  "Look-ahead comparison: `curr < next` -> subtract `curr`",
+                  "Else -> add `curr`",
+                  "Last character is always added",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Bi-Directional Mapping Justification",
-            "question": "2. Why are two mappings required?",
-            "whatInterviewerChecks": "Preventing multiple-to-one mapping bugs.",
-            "bestReplyScript": "Two mappings ensure a one-to-one relationship between the characters.\n\nExample: s = \"ab\", t = \"aa\"\nIf we only check s -> t: a -> a, b -> a.\nThe mapping from s to t seems valid, but two different characters (a and b) map to the same character (a), which is invalid.\n\nUsing the reverse mapping (t -> s) immediately detects this conflict (a -> a, then a -> b conflict!).",
+            "category": "Subtractive Notation Handling Mechanics",
+            "question": "2. How do you handle subtractive notation?",
+            "whatInterviewerChecks": "Subtractive cases (IV, IX, XL, XC, CD, CM) subtract rule.",
+            "bestReplyScript": "Subtractive notation occurs when a smaller numeral appears before a larger numeral.\n\n6 Subtractive Cases: IV (4), IX (9), XL (40), XC (90), CD (400), CM (900).\n\nWhile traversing:\n- If `current < next`, subtract the current value.\n- Otherwise, add it.\n\nExample for \"MCMXCIV\":\n- M = 1000 -> +1000\n- C < M (100 < 1000) -> -100\n- M = 1000 -> +1000\n- X < C (10 < 100) -> -10\n- C = 100 -> +100\n- I < V (1 < 5) -> -1\n- V = 5 -> +5\nTotal = 1994.",
             "keyPoints": [
-                  "Ensures bi-directional bijection",
-                  "Prevents multiple characters mapping to one",
-                  "Detects conflicts immediately"
+                  "`current < next` condition triggers subtraction",
+                  "Applies naturally to all 6 subtractive pairs",
+                  "Example MCMXCIV -> 1994 step-by-step evaluation"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
-            "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic bounds for linear traversal and O(1) hash table lookups.",
-            "bestReplyScript": "Each character is processed rendering O(1) average lookup and insertion.\n\nFor every character pair:\n- Dictionary lookup -> O(1) average.\n- Dictionary insertion -> O(1) average.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the strings.",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Linear single-pass time O(n) and constant space O(1) proof.",
+            "bestReplyScript": "Let n be the length of the Roman numeral string.\n\nComplexity analysis:\n- Time Complexity: O(n). Each character in the string is visited exactly once.\n- Space Complexity: O(1) auxiliary space. The hash map contains only 7 fixed Roman symbols.",
             "keyPoints": [
                   "Time Complexity: O(n)",
-                  "Space Complexity: O(n)",
-                  "Single-pass character validation"
+                  "Space Complexity: O(1)",
+                  "Single-pass traversal over n characters"
             ]
       },
       {
             "id": "q4",
-            "category": "Single Character Constraint",
-            "question": "4. Can one character map to multiple characters?",
-            "whatInterviewerChecks": "Definition of functional mapping in isomorphic strings.",
-            "bestReplyScript": "No. In an isomorphic mapping, one character must always map to exactly one character.\n\nExample: s = \"aa\", t = \"ab\"\nThe first 'a' maps to 'a'. The second 'a' would need to map to 'b', creating two different mappings for the same character.\n\nThis violates the definition of isomorphic strings and returns False.",
+            "category": "Adjacent Character Comparison Rationale",
+            "question": "4. Why do you compare adjacent characters?",
+            "whatInterviewerChecks": "Distinguishing subtractive IV (4) from additive VI (6).",
+            "bestReplyScript": "Subtractive notation depends on the relative ordering between two consecutive symbols.\n\nExample:\n- \"IV\": I = 1, V = 5. Since 1 < 5, subtract 1 and add 5 -> Result = 4.\n- \"VI\": V = 5, I = 1. Since 5 > 1, add 5 and add 1 -> Result = 6.\n\nWithout comparing adjacent characters (look-ahead), we cannot distinguish \"IV\" from \"VI\".",
             "keyPoints": [
-                  "One-to-exact-one constraint",
-                  "Character cannot map to multiple targets",
-                  "Violates isomorphic mapping"
+                  "Relative ordering determines operation (add vs subtract)",
+                  "Distinguishes \"IV\" (4) from \"VI\" (6)",
+                  "Look-ahead or right-to-left comparison required"
             ]
       },
       {
             "id": "q5",
-            "category": "One-Way Mapping Trap",
-            "question": "5. Why is a one-way mapping insufficient?",
-            "whatInterviewerChecks": "Failure modes of single hash map approaches.",
-            "bestReplyScript": "A one-way mapping cannot detect when multiple characters map to the same character.\n\nExample: s = \"ab\", t = \"cc\"\nOne-way mapping: a -> c, b -> c (appears valid in one direction!).\nHowever, 'c' cannot represent both 'a' and 'b'.\n\nThe reverse mapping catches this immediately: c -> a, then later c -> b -> Conflict!\n\nTherefore, two-way mapping is necessary.",
+            "category": "Validation of Invalid Roman Numerals",
+            "question": "5. Can invalid Roman numerals be detected?",
+            "whatInterviewerChecks": "Rules: max 3 consecutive I/X/C/M, non-repeating V/L/D, legal subtractive pairs.",
+            "bestReplyScript": "Yes!\nAdditional validation rules include:\n1. No more than 3 consecutive repetitions of 'I', 'X', 'C', or 'M' (e.g. \"IIII\" is invalid).\n2. 'V', 'L', and 'D' can NEVER repeat (e.g. \"VV\" is invalid).\n3. Only valid subtractive pairs are allowed: 'I' before 'V'/'X', 'X' before 'L'/'C', 'C' before 'D'/'M' (e.g. \"IC\" or \"IL\" are invalid).\n\nIf any rule is violated, the input can be rejected as invalid.",
             "keyPoints": [
-                  "Single map fails on 'ab' vs 'cc'",
-                  "Reverse map catches duplicate target collisions",
-                  "Guarantees bijective equivalence"
+                  "Max 3 repetitions for I, X, C, M",
+                  "V, L, D cannot repeat",
+                  "Only legal subtractive pairs (I before V/X, X before L/C, C before D/M)"
             ]
       },
       {
             "id": "q6",
-            "category": "Unicode Compatibility",
-            "question": "6. How would you handle Unicode characters?",
-            "whatInterviewerChecks": "Python dict hashability for Unicode codepoints.",
-            "bestReplyScript": "Python dictionaries support Unicode characters natively, so the exact same algorithm works without modification.\n\nExample:\ns = \"\u4f60\u597d\u4f60\", t = \"\u4e16\u754c\u4e16\"\nMappings: \u4f60 -> \u4e16, \u597d -> \u754c.\n\nThe algorithm treats Unicode characters just like normal ASCII characters. No special changes are required.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Single char, subtractive pairs, max string MMMCMXCIX, repeated symbols.",
+            "bestReplyScript": "Important edge cases include:\n1. Single-character numerals (\"I\" -> 1, \"M\" -> 1000)\n2. All subtractive pairs (\"IV\" -> 4, \"IX\" -> 9, \"XL\" -> 40, \"XC\" -> 90, \"CD\" -> 400, \"CM\" -> 900)\n3. Max valid Roman numeral (\"MMMCMXCIX\" -> 3999)\n4. Repeated symbols (\"III\" -> 3, \"CCC\" -> 300)\n5. Invalid Roman numerals (if validation is enabled e.g. \"IIII\", \"IC\").",
             "keyPoints": [
-                  "Native Python Unicode dict key support",
-                  "Works seamlessly across CJK & Emojis",
-                  "No algorithmic modifications needed"
+                  "Single char bounds",
+                  "All 6 subtractive pairs",
+                  "Max valid input \"MMMCMXCIX\" (3999)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Cases",
-            "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty strings, length mismatch, single character, invalid & valid patterns.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty strings (s=\"\", t=\"\") -> True\n2. Different lengths (s=\"abc\", t=\"ab\") -> False\n3. Single character (\"a\", \"b\") -> True\n4. Invalid mapping (\"foo\", \"bar\") -> False\n5. Valid mapping (\"paper\", \"title\") -> True\n\nTesting these cases ensures correctness.",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, subtractive, max bound, and invalid inputs.",
+            "bestReplyScript": "I would test:\n- \"I\" -> 1\n- \"III\" -> 3\n- \"IV\" -> 4\n- \"IX\" -> 9\n- \"LVIII\" -> 58\n- \"MCMXCIV\" -> 1994\n- \"MMMCMXCIX\" -> 3999\n\nIf validation is enabled:\n- \"IIII\" -> Invalid\n- \"VV\" -> Invalid\n- \"IC\" -> Invalid",
             "keyPoints": [
-                  "Empty & single character cases",
-                  "Early exit length mismatch",
-                  "Valid ('paper'/'title') & Invalid ('foo'/'bar') cases"
+                  "LeetCode 13 standard test cases (3, 58, 1994)",
+                  "Single character and max bound 3999 tests",
+                  "Invalid string validation tests"
             ]
       },
       {
             "id": "q8",
-            "category": "Testing & Verification",
-            "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test cases table matrix covering valid and invalid patterns.",
-            "bestReplyScript": "I would create test cases covering different scenarios:\n- \"egg\" & \"add\" -> True\n- \"foo\" & \"bar\" -> False\n- \"paper\" & \"title\" -> True\n- \"ab\" & \"aa\" -> False\n- \"\" & \"\" -> True\n\nThese tests cover valid mappings, invalid mappings, and edge cases.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Roman to Integer (LeetCode 13).",
+            "bestReplyScript": "Common mistakes include:\n- Always adding character values without checking for subtractive notation.\n- Comparing the wrong indices (causing IndexError at string end `i + 1`).\n- Forgetting to process or add the final character `s[-1]`.\n- Mishandling repeated numerals.\n- Ignoring invalid Roman numeral rules when validation is expected.",
             "keyPoints": [
-                  "Comprehensive test matrix",
-                  "Covers bi-directional collisions",
-                  "Empty and single-character assertions"
+                  "Index out of bounds on look-ahead `s[i+1]`",
+                  "Forgetting to handle final character `s[-1]`",
+                  "Always adding without checking subtractive condition"
             ]
       },
       {
             "id": "q9",
-            "category": "Array-Based Lookup (ASCII)",
-            "question": "9. Can you solve this using arrays instead of dictionaries?",
-            "whatInterviewerChecks": "Fixed-size 256-array optimization for ASCII.",
-            "bestReplyScript": "Yes, if the input is limited to ASCII or lowercase English letters.\n\nFor example:\n- Create two arrays of size 256 for ASCII characters.\n- Store the mapping using character ASCII values as indices (mapS[ord(c1)] = c2).\n\nThis avoids hashing overhead and can be slightly faster. However, dictionaries are more flexible because they also support Unicode characters.",
+            "category": "Recursive Implementation Feasibility",
+            "question": "9. Can this be implemented recursively?",
+            "whatInterviewerChecks": "Recursive reduction vs simple iterative loop.",
+            "bestReplyScript": "Yes.\nA recursive solution processes 1 or 2 symbols at a time:\n- If `curr < next`, add `next - curr` and recurse on `s[2:]`.\n- Else, add `curr` and recurse on `s[1:]`.\n\nHowever, recursion adds O(n) call-stack overhead and offers no performance benefit over the simple O(1) stack space iterative loop.",
             "keyPoints": [
-                  "Fixed size 256 array for ASCII",
-                  "Direct indexing via ord(char)",
-                  "Slightly faster CPU execution, less flexible than dict"
+                  "Recursive reduction on string slices `s[1:]` or `s[2:]`",
+                  "Call stack overhead O(n)",
+                  "Iterative loop is preferred for O(1) space"
             ]
       },
       {
             "id": "q10",
-            "category": "Length Mismatch Guard",
-            "question": "10. What if strings have different lengths?",
-            "whatInterviewerChecks": "Early exit guard before loop execution.",
-            "bestReplyScript": "If the lengths are different, they cannot be isomorphic.\n\nExample: s = \"abc\", t = \"ab\"\nSince there isn't a one-to-one correspondence between all characters, I immediately return False.\n\nChecking the lengths first avoids unnecessary computation.",
+            "category": "Input Validation & Sanitization",
+            "question": "10. How would you validate user input?",
+            "whatInterviewerChecks": "Regex validation & round-trip verification.",
+            "bestReplyScript": "I would validate input by:\n1. Character set check: Ensure all characters are in {'I', 'V', 'X', 'L', 'C', 'D', 'M'}.\n2. Regex Pattern Match: Use regex `^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$` to enforce classical Roman structure.\n3. Round-trip verification: Assert `intToRoman(romanToInt(s)) == s`.\n\nThis guarantees strict Roman numeral correctness.",
             "keyPoints": [
-                  "O(1) early exit length check",
-                  "Guarantees equal pairing in loop",
-                  "Saves CPU cycles"
+                  "Regex validation for canonical structure",
+                  "Character set set membership check",
+                  "Round-trip verification"
             ]
       },
       {
             "id": "q11",
-            "category": "Common Candidate Pitfalls",
-            "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Rookie errors in Isomorphic Strings.",
-            "bestReplyScript": "Some common mistakes include:\n- Using only one dictionary.\n- Forgetting to check reverse mappings.\n- Not checking string lengths first.\n- Overwriting existing mappings incorrectly.\n- Assuming repeated characters always make strings isomorphic.\n\nThe most common mistake is using only one mapping, which fails to detect many invalid cases.",
+            "category": "Left-to-Right vs Right-to-Left Traversal Comparison Matrix",
+            "question": "11. Compare left-to-right and right-to-left traversal.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Left-to-Right: Compare `curr < next`. If true, subtract `curr`; else add `curr`. Look-ahead index guard required. Very intuitive.\n- Right-to-Left: Track `max_seen`. If `curr < max_seen`, subtract `curr`; else add `curr` and update `max_seen`. No look-ahead needed! Slightly simpler loop.\n\nBoth run in O(n) time and O(1) space.",
             "keyPoints": [
-                  "Using single dict (fails on 'ab'/'aa')",
-                  "Forgetting length check",
-                  "Overwriting existing mappings"
+                  "Left-to-Right: compares `curr < next` (look-ahead index)",
+                  "Right-to-Left: compares `curr < max_seen` (no look-ahead needed)",
+                  "Both run in O(n) time and O(1) space"
             ]
       },
       {
             "id": "q12",
-            "category": "Isomorphic vs Anagram Comparison",
-            "question": "12. How is this different from checking anagrams?",
-            "whatInterviewerChecks": "Character counts vs structural pattern relationship.",
-            "bestReplyScript": "The two problems are different:\n- Anagram: Checks whether two strings contain the same characters with the same frequencies, regardless of order (e.g., 'listen' and 'silent' -> True).\n- Isomorphic: Checks whether characters follow the same structural mapping pattern, regardless of the actual letters (e.g., 'paper' and 'title' -> True).\n\nAnagrams focus on character counts, while isomorphic strings focus on structural relationships.",
+            "category": "Real-World Applications of Parsing",
+            "question": "12. Where are parsing algorithms commonly used?",
+            "whatInterviewerChecks": "Compilers, JSON/XML parsers, SQL engines.",
+            "bestReplyScript": "Parsing algorithms are used in:\n- Compilers & Interpreters (lexing tokens into ASTs).\n- JSON / XML / CSV Data Serialization Parsers.\n- Database Query Engines (SQL statement parsing).\n- Web Server Config readers & HTTP header processing.\n- Custom DSLs and Command-Line Interface (CLI) parsers.",
             "keyPoints": [
-                  "Anagram = identical letter frequency distribution",
-                  "Isomorphic = identical positional pattern structure",
-                  "Distinct algorithmic constraints"
+                  "Compiler Lexing & AST parsing",
+                  "JSON / XML data deserializers",
+                  "SQL database query parsers"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Applications",
-            "question": "13. Where is character mapping used?",
-            "whatInterviewerChecks": "Software engineering use cases for symbol mapping.",
-            "bestReplyScript": "Character mapping is used in many real-world applications, including:\n- Data encoding and decoding.\n- Compiler design (symbol table mapping).\n- Cryptography (substitution ciphers).\n- Language translation systems & NLP.\n- Data format conversion (JSON/XML transformations).",
+            "category": "Lowercase Input Normalization",
+            "question": "13. How would you support lowercase Roman numerals?",
+            "whatInterviewerChecks": "Input string upper-casing `s.upper()`.",
+            "bestReplyScript": "Before starting traversal, normalize the input string:\n`s = s.upper()`\n\nThe rest of the algorithm remains identical. This seamlessly supports lowercase (\"mcmxciv\") and mixed-case (\"McmXciv\") inputs.",
             "keyPoints": [
-                  "Compiler symbol tables",
-                  "Substitution ciphers & cryptography",
-                  "Encoding/decoding data translation"
+                  "Normalize using `s = s.upper()`",
+                  "Rest of algorithm stays identical",
+                  "Supports lowercase & mixed-case inputs"
             ]
       },
       {
             "id": "q14",
-            "category": "Generalizing to Arbitrary Objects",
-            "question": "14. Can you generalize this for arbitrary objects?",
-            "whatInterviewerChecks": "Extending pattern mapping to lists of arbitrary hashable objects.",
-            "bestReplyScript": "Yes. The same idea works for any hashable objects, not just characters.\n\nFor example:\nPattern [1,2,1] and Objects [\"cat\", \"dog\", \"cat\"]\nMappings: 1 -> \"cat\", 2 -> \"dog\".\n\nAs long as each object has a unique mapping in both directions, the algorithm works correctly.",
+            "category": "Extended Roman Numeral Support (> 3999)",
+            "question": "14. How would your solution change for extended Roman numeral systems?",
+            "whatInterviewerChecks": "Updating symbol mapping table for Vinculum overline symbols.",
+            "bestReplyScript": "The traversal and subtraction logic remain identical!\n\nOnly the symbol-value lookup map is expanded to include extended or overline characters (e.g. V\u0305 = 5000, X\u0305 = 10000, L\u0305 = 50000, C\u0305 = 100000, D\u0305 = 500000, M\u0305 = 1000000).\n\nSince subtraction rules (`curr < next`) apply universally, the loop code requires zero changes.",
             "keyPoints": [
-                  "Works for any hashable Python objects",
-                  "Pattern matching on word arrays / AST nodes",
-                  "Generic bi-directional mapping"
+                  "Add overline symbols to lookup map",
+                  "Traversal and subtraction logic remain identical",
+                  "Universal `curr < next` rule handles extended symbols"
             ]
       },
       {
             "id": "q15",
-            "category": "Optimization for Lowercase Letters",
-            "question": "15. How would you optimize for lowercase letters only?",
-            "whatInterviewerChecks": "Array size 26 indexing via `ord(c) - ord('a')` for O(1) space.",
-            "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can replace dictionaries with two arrays of size 26.\n\nEach character's index is calculated as: index = ord(character) - ord('a').\n\nThis reduces the overhead of hashing while keeping:\n- Time Complexity: O(n)\n- Space Complexity: O(1) (fixed array size 26)\n\nFor general-purpose code, however, dictionaries are preferred because they support Unicode.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which implementation would you choose in production and why?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "I choose the Iterative Right-to-Left or Left-to-Right solution with Regex Validation because:\n- High Performance: Runs in O(n) single pass with zero memory allocation.\n- Strict Safety: Regex validation catches malicious or malformed inputs before parsing.\n- Clean Maintainability: Simple 10-line loop that is trivial to test and audit.\n\nAdding regex validation before conversion provides total production reliability.",
             "keyPoints": [
-                  "Array size 26 optimization",
-                  "ord(c) - ord('a') index arithmetic",
-                  "O(1) fixed space complexity"
+                  "Iterative traversal with Regex validation",
+                  "Single-pass O(n) time, O(1) space",
+                  "Catches malformed input cleanly"
             ]
       }
 ],
