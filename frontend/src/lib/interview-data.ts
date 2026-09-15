@@ -12434,195 +12434,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Next Greater Element I.",
-            "bestReplyScript": "My approach for Next Greater Element I follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Monotonic decreasing stack, pop & map resolution, hash map lookup for nums1.",
+            "bestReplyScript": "I solve this problem using a monotonic decreasing stack.\n\nAlgorithm:\n1. Traverse nums2 from left to right.\n2. Maintain a stack whose elements are in decreasing order.\n3. When the current number is greater than the top of the stack:\n   - Pop the stack.\n   - The current number is the next greater element for the popped value.\n   - Store this mapping in a hash map.\n4. Push the current number onto the stack.\n5. After processing nums2, any elements left in the stack have no greater element, so their answer is -1.\n6. Finally, use the hash map to answer queries for nums1.\n\nExample: nums1 = [4,1,2], nums2 = [1,3,4,2] -> Mappings: 1->3, 3->4, 4->-1, 2->-1. Output: [-1,3,-1].\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Monotonic decreasing stack for unresolved elements",
+                  "Pop smaller top elements and map to current num",
+                  "Hash Map lookup for nums1 queries",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Monotonic Stack Rationale",
             "question": "2. Why did you use a monotonic stack?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Next Greater Element I.",
-            "bestReplyScript": "I chose this approach for Next Greater Element I over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Efficient resolution of waiting smaller elements.",
+            "bestReplyScript": "A monotonic decreasing stack helps us quickly find the next greater element.\n\nWhenever we encounter a larger number:\n- It becomes the next greater element for all smaller numbers waiting on top of the stack.\n\nExample: [2, 1, 5] -> Stack: [2, 1] -> Current 5 > 1 & 5 > 2 -> Pops both and maps 1->5, 2->5.\nWithout the stack, we'd repeatedly scan ahead in O(n^2), making the solution slower.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Stack holds elements waiting for next greater target",
+                  "Current larger num resolves all smaller stack tops in O(1)",
+                  "Avoids O(n^2) repeated forward scanning"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Next Greater Element I.",
-            "bestReplyScript": "Here is the complexity analysis for Next Greater Element I:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Amortized linear time O(n) proof (1 push & 1 pop per item).",
+            "bestReplyScript": "Each element in nums2 is:\n- Pushed once onto the stack.\n- Popped once from the stack.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nAlthough there is a nested while loop for stack popping, every element is removed at most once, so total work remains strictly linear O(n).",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Push once, Pop once per element",
+                  "Amortized Time Complexity: O(n)",
+                  "Space Complexity: O(n) for stack and map"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Brute-Force Inefficiency",
             "question": "4. Why is a brute-force solution inefficient?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Next Greater Element I.",
-            "bestReplyScript": "I chose this approach for Next Greater Element I over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n^2) nested loop comparison.",
+            "bestReplyScript": "The brute-force approach checks every element against all elements to its right using nested loops.\n\nExample: [2, 5, 3, 8] -> For every number, search forward until finding a larger value.\n\nWorst-case complexity: Time O(n^2), Space O(1).\nFor large arrays (n = 100,000), O(n^2) results in Time Limit Exceeded. The monotonic stack reduces this to O(n).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force takes O(n^2) time",
+                  "Repeated redundant right-scans",
+                  "Causes TLE on large arrays"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Stack Order Maintenance",
             "question": "5. How does the stack maintain order?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Popping smaller elements before pushing current num.",
+            "bestReplyScript": "The stack is maintained in strictly decreasing order.\n\nBefore pushing a new element:\n1. Pop all elements that are smaller than current element.\n2. Record the current element as their next greater value in the hash map.\n3. Push the current element onto the stack.\n\nExample: Input [4, 2, 6] -> Stack [4, 2] -> Current 6 > 2 & 6 > 4 -> Pop both, then push 6.\nThis guarantees the stack always remains sorted in decreasing order.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Maintains strictly decreasing order",
+                  "Pop elements < current num",
+                  "Push current num"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Next Greater Element I.",
-            "bestReplyScript": "When handling Next Greater Element I, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, strictly increasing, strictly decreasing.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> []\n2. Single element ([5]) -> [-1]\n3. Strictly increasing ([1, 2, 3, 4]) -> [2, 3, 4, -1]\n4. Strictly decreasing ([4, 3, 2, 1]) -> [-1, -1, -1, -1]\n\nTesting these ensures correctness under all array configurations.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty & single element checks",
+                  "Strictly increasing (all find next greater)",
+                  "Strictly decreasing (all yield -1)"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Next Greater Element I.",
-            "bestReplyScript": "To thoroughly test Next Greater Element I, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix for increasing, decreasing, single, and empty arrays.",
+            "bestReplyScript": "I would test:\n- [1] -> [-1]\n- [1, 2] -> [2, -1]\n- [2, 1] -> [-1, -1]\n- [2, 1, 3] -> [3, 3, -1]\n- [] -> []\n\nThese cover increasing, decreasing, and empty inputs.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Single element test",
+                  "Decreasing and increasing tests",
+                  "Empty input validation"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Case Analysis",
+            "category": "Duplicate Values Handling",
             "question": "8. What if duplicate values exist?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Next Greater Element I.",
-            "bestReplyScript": "When handling Next Greater Element I, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Handling non-unique elements using index stack (LeetCode 503).",
+            "bestReplyScript": "The original problem (LeetCode 496) assumes all values in nums2 are unique.\n\nIf duplicates are allowed:\n- A simple value-to-answer map is no longer valid because duplicate values have different next greater elements.\n- We must store array INDICES in the stack instead of values.\n- Map index -> next greater value: answer[index] = num.\n\nStoring indices handles duplicates seamlessly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Store INDICES instead of values in stack",
+                  "answer[index] = next_greater_val",
+                  "Handles duplicate values cleanly"
             ]
       },
       {
             "id": "q9",
-            "category": "Deep-Dive Question 9",
+            "category": "No-Stack Alternative Trade-off",
             "question": "9. Can this be solved without a stack?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n^2) time vs O(1) space trade-off.",
+            "bestReplyScript": "Yes, using the brute-force approach with nested loops.\nFor each element, scan to the right until a larger value is found.\n\nComplexity: Time O(n^2), Space O(1).\nAlthough it avoids extra memory, it is much less efficient than the O(n) monotonic stack solution.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Nested loop brute force",
+                  "Time: O(n^2), Space: O(1)",
+                  "Significantly slower for large n"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Monotonic Stack Family Problems",
             "question": "10. Where is the monotonic stack pattern used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Canonical Monotonic Stack problem family.",
+            "bestReplyScript": "Monotonic stacks are used in many classic problems:\n- Next / Previous Greater Element (LeetCode 496, 503).\n- Daily Temperatures (LeetCode 739).\n- Stock Span Problem (LeetCode 901).\n- Largest Rectangle in Histogram (LeetCode 84).\n- Trapping Rain Water (LeetCode 42).\n\nIt is a fundamental pattern for finding nearest smaller/greater elements.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Daily Temperatures (LeetCode 739)",
+                  "Stock Span Problem (LeetCode 901)",
+                  "Largest Rectangle in Histogram (LeetCode 84)"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Next Greater Element I.",
-            "bestReplyScript": "Common candidate pitfalls when solving Next Greater Element I include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Next Greater Element.",
+            "bestReplyScript": "Some common mistakes include:\n- Using an increasing stack instead of a decreasing stack.\n- Forgetting to assign -1 to remaining elements in the stack.\n- Storing values instead of indices when duplicates exist.\n- Using nested loops unnecessarily.\n\nThe most common mistake is forgetting that un-popped stack elements have no greater element and default to -1.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Using increasing instead of decreasing stack",
+                  "Forgetting -1 default for un-popped elements",
+                  "Value mapping bug when duplicates exist"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Circular Array Variant (Next Greater Element II)",
             "question": "12. How would you solve the circular version?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Looping 2*n times with `i % n` index modulo (LeetCode 503).",
+            "bestReplyScript": "For a circular array (LeetCode 503), I simulate traversing the array TWICE.\n\nAlgorithm:\n1. Iterate loop from 0 to 2*n - 1.\n2. Access element using curr = nums[i % n].\n3. Store INDICES on the monotonic stack.\n4. Perform standard monotonic stack popping.\n\nThe second pass allows elements near the end to search wrapping elements at the beginning in O(n) time.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Loop 2*n times with i % n indexing",
+                  "Store indices on monotonic stack",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q13",
-            "category": "Algorithmic Justification",
+            "category": "Previous Greater Element Variation",
             "question": "13. What if we need the previous greater element instead?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Next Greater Element I.",
-            "bestReplyScript": "I chose this approach for Next Greater Element I over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Traversing left-to-right and querying top of stack.",
+            "bestReplyScript": "The approach is symmetric:\n- Traverse array left to right.\n- While stack is non-empty and top <= current, pop stack.\n- The top of the stack (if non-empty) is the Previous Greater Element.\n- Push current element onto stack.\n\nOnly the query direction changes; the monotonic stack logic remains identical.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Pop stack while top <= current",
+                  "Top of stack is Previous Greater Element",
+                  "Push current element"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Streaming Data Limitations",
             "question": "14. Can this work on streaming data?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Incremental stack resolution on unbounded streams.",
+            "bestReplyScript": "Yes, but with pending state limitations.\n\nAs new numbers arrive:\n- Push onto monotonic stack.\n- Immediately resolve and output Next Greater Element for all smaller waiting items on stack.\n\nHowever, items remaining on stack must wait until a larger element arrives or stream closes. Outputs are produced incrementally.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Immediate resolution of smaller stack items",
+                  "Un-popped items remain pending in memory",
+                  "Incremental stream evaluation"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Stack Intuition Explanation",
             "question": "15. How would you explain the intuition behind the stack?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Next Greater Element I.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Waiting room metaphor for unresolved elements.",
+            "bestReplyScript": "Think of the stack as a 'waiting room' for numbers looking for their next larger number.\n\nNumbers enter the waiting room in decreasing order.\nWhen a big number arrives, it goes to the waiting room and resolves everyone smaller than itself before sitting down.\n\nExample: [3, 1, 4] -> 3 & 1 wait -> 4 arrives and resolves both 1 and 3 -> Clear and intuitive!",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Waiting room metaphor for unresolved items",
+                  "Decreasing order in waiting room",
+                  "Larger arrival resolves all smaller waiting items"
             ]
       }
 ],
