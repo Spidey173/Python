@@ -15437,195 +15437,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your sliding window approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "My approach for Longest Substring Without Repeating Characters follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Sliding window technique, two pointers (left, right), character index hash map, max length tracking.",
+            "bestReplyScript": "I use the sliding window technique to maintain a window that always contains unique characters.\n\nAlgorithm:\n1. Initialize two pointers: left = 0, right = 0.\n2. Use a hash map to store the last seen index of each character.\n3. Expand the window by moving right pointer.\n4. If the current character is already inside the current window (last_index >= left):\n   - Move left pointer to last_index + 1.\n5. Update max length: max_len = max(max_len, right - left + 1).\n6. Store/update last seen index of current character.\n\nExample: \"abcabcbb\" -> Window expands to \"abc\" (len 3) -> 'a' duplicate moves left to 1 -> Window \"bca\" (len 3) -> Output max length = 3.\n\nComplexity: Time: O(n), Space: O(min(n, charset))",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two pointers: left and right",
+                  "Hash Map stores last seen index of each character",
+                  "Jump left pointer: left = max(left, last_index + 1)",
+                  "Time: O(n), Space: O(min(n, charset))"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Sliding Window vs Brute Force",
             "question": "2. Why did you choose a sliding window instead of brute force?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "I chose this approach for Longest Substring Without Repeating Characters over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n) linear sliding window vs O(n^3) cubic brute force.",
+            "bestReplyScript": "The brute-force approach checks every possible substring (O(n^2)) and then verifies uniqueness of characters (O(n)), taking O(n^3) time.\n\nThe sliding window avoids rechecking characters because both left and right pointers only move forward monotonically.\nEach character enters and leaves the window at most once.\n\nComparison: Sliding Window O(n) vs Brute Force O(n^3). Sliding window is exponentially faster.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force takes O(n^3) time",
+                  "Sliding window pointers move monotonically rightward",
+                  "Achieves linear O(n) runtime"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "Here is the complexity analysis for Longest Substring Without Repeating Characters:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(n) time bound and O(min(n, charset)) space bound.",
+            "bestReplyScript": "Each character is processed at most twice:\n- Once when right pointer expands the window.\n- Once when left pointer shrinks/jumps the window.\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(min(n, charset)) (for ASCII, at most 128 or 256 keys in hash map; for general strings, bounded by unique characters in input).\n\nThis is optimal.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(min(n, charset))",
+                  "At most 128/256 ASCII keys in Hash Map"
             ]
       },
       {
             "id": "q4",
-            "category": "Edge Case Analysis",
+            "category": "Efficient Duplicate Detection",
             "question": "4. How do you detect duplicate characters efficiently?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "When handling Longest Substring Without Repeating Characters, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "O(1) Hash Map lookup of last seen index.",
+            "bestReplyScript": "I use a hash map that stores the last index where each character appeared.\n\nWhen processing char s[right]:\n- Check if char exists in hash map AND char_index >= left.\n- If true, a duplicate exists within current window! Move `left = char_index + 1`.\n- Update `hash_map[char] = right`.\n\nThis detects duplicates and updates window boundaries in O(1) time.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Hash Map stores char -> last_seen_index",
+                  "O(1) duplicate detection check",
+                  "Validates char_index >= left"
             ]
       },
       {
             "id": "q5",
-            "category": "Algorithmic Justification",
+            "category": "Hash Map vs Hash Set Rationale",
             "question": "5. Why use a hash map instead of a set?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "I chose this approach for Longest Substring Without Repeating Characters over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Hash Map enables O(1) index jump vs Hash Set element-by-element shrink loop.",
+            "bestReplyScript": "A Hash Set only tells whether a character exists in the window, requiring a `while` loop to shrink `left` pointer one-by-one until duplicate is removed.\n\nA Hash Map stores the EXACT last index of each character, allowing `left` pointer to instantly jump to `last_index + 1` in O(1) without step-by-step deletion!\n\nExample: \"abba\" -> At second 'b', Hash Map jumps `left` directly past first 'b', skipping redundant deletions.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Hash Set requires step-by-step while loop deletion",
+                  "Hash Map enables instant index jump: left = max(left, last_idx + 1)",
+                  "Avoids redundant set deletion operations"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "When handling Longest Substring Without Repeating Characters, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty string, single char, all unique, all identical, duplicates at end.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> 0\n2. Single character (\"a\") -> 1\n3. All unique characters (\"abcdef\") -> 6\n4. All identical characters (\"aaaaa\") -> 1\n5. Duplicate at end (\"abcdea\") -> 5\n\nTesting these ensures the sliding window logic handles all boundaries correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty string returns 0",
+                  "Single character returns 1",
+                  "All identical chars return 1"
             ]
       },
       {
             "id": "q7",
-            "category": "Algorithmic Justification",
+            "category": "Returning Substring Content",
             "question": "7. How would you return the substring instead of its length?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "I chose this approach for Longest Substring Without Repeating Characters over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Tracking start_index and max_len for slice output.",
+            "bestReplyScript": "In addition to tracking `max_len`, I maintain a `start_index` variable.\n\nWhenever a new maximum length is found (`right - left + 1 > max_len`):\n- Update `max_len = right - left + 1`\n- Update `start_index = left`\n\nFinally, return the slice `s[start_index : start_index + max_len]`.\nExample: \"abcabcbb\" -> Returns \"abc\".",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Track start_index when updating max_len",
+                  "Return slice s[start_index : start_index + max_len]",
+                  "Same O(n) time and O(min(n, charset)) space"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Unicode & Multi-byte Characters",
             "question": "8. How would you handle Unicode characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Hash Map universality across UTF-8 / Unicode codepoints.",
+            "bestReplyScript": "The algorithm remains identical.\nInstead of assuming fixed ASCII size arrays, using a native Hash Map/Dict supports arbitrary Unicode code points (e.g. Chinese characters, Emojis \"\u4f60\u597d\u4e16\u754c\u4f60\") naturally.\n\nKey = Unicode character, Value = Last seen index. Time complexity remains linear O(n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hash Map supports native Unicode code points",
+                  "Works for UTF-8, Chinese characters, Emojis",
+                  "Preserves linear O(n) time"
             ]
       },
       {
             "id": "q9",
-            "category": "Time & Space Complexity",
+            "category": "Zero Memory Alternative Trade-off",
             "question": "9. Can this problem be solved without extra space?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "Here is the complexity analysis for Longest Substring Without Repeating Characters:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(1) space requiring O(n^2) inner window scan.",
+            "bestReplyScript": "Not efficiently.\nWithout a Hash Map or Set (O(1) auxiliary space):\n- For each char at `right`, we would need to manually scan the window `s[left:right]` for duplicates, taking O(n) per character.\n- Total Time: O(n^2).\n\nUsing a Hash Map is worth the small space trade-off to achieve optimal O(n) time.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "O(1) space requires O(n) inner window scan per char",
+                  "Total time degrades from O(n) to O(n^2)",
+                  "Hash Map space trade-off is optimal"
             ]
       },
       {
             "id": "q10",
             "category": "Testing & Verification",
             "question": "10. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "To thoroughly test Longest Substring Without Repeating Characters, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, single, and repeated patterns.",
+            "bestReplyScript": "I would test:\n- \"\" -> 0\n- \"a\" -> 1\n- \"abcabcbb\" -> 3\n- \"bbbbb\" -> 1\n- \"pwwkew\" -> 3 (\"wke\")\n- \"abcdef\" -> 6\n\nThese cover normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 3 standard examples (abcabcbb, bbbbb, pwwkew)",
+                  "Empty and single char boundary cases",
+                  "All unique string validation"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "Common candidate pitfalls when solving Longest Substring Without Repeating Characters include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Longest Substring Without Repeating Characters (LeetCode 3).",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting `left = max(left, last_index + 1)` and letting `left` pointer move BACKWARDS! (e.g. on string \"abba\", at second 'a', last_index of 'a' is 0, which is < left=2. Moving left to 1 moves it backward!).\n- Using a fixed size 26 array when string contains numbers, symbols, or spaces.\n- Returning `right - left` instead of `right - left + 1`.\n\nThe most common critical bug is letting `left` move backward.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Left pointer moving backward bug: `left = max(left, last_idx + 1)`",
+                  "Assuming lowercase 26 letters when input contains symbols/spaces",
+                  "Off-by-one window size calculation"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Streaming Data Architecture",
             "question": "12. How would your solution change for a stream of characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Real-time character stream evaluation.",
+            "bestReplyScript": "For a continuous character stream:\n- Maintain a global `left` index counter and a `right` index counter that increments per incoming character.\n- Maintain the character-to-last-index Hash Map.\n- Process each incoming character in O(1) time and update `max_len` in real time.\n\nThis processes streaming data in real-time with O(charset) memory without storing past input.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Maintain global stream indices left & right",
+                  "Process each arriving char in O(1) time",
+                  "O(charset) memory without storing full stream"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Systems",
+            "category": "Real-World Applications",
             "question": "13. Where is the sliding window technique used in real-world applications?",
-            "whatInterviewerChecks": "Practical software engineering applications and production considerations for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "The algorithmic core of Longest Substring Without Repeating Characters is widely applied in real-world systems:\n\n- Database Querying & Indexing: Rapid lookups and hash join operations.\n- Compiler & Parser Engineering: Syntax tree validation and token parsing.\n- Operating Systems & Buffering: Memory-mapped I/O, cache eviction, and stream processing.\n- Data Pipelines: High-throughput aggregation and real-time analytical event streams.",
+            "whatInterviewerChecks": "Network packet analysis, video streaming, log monitoring.",
+            "bestReplyScript": "Sliding windows are used in:\n- Network Rate Limiting & Packet Analysis (Leaky Bucket / Sliding Window Log rate limiters).\n- Real-Time Log Monitoring (detecting unique event bursts).\n- TCP Window Flow Control.\n- DNA Sequence Analysis (finding unique k-mer substrings).\n- Financial Market Data (moving averages and unique trade window monitoring).",
             "keyPoints": [
-                  "Database indexing & query engines",
-                  "OS memory & buffer management",
-                  "Compiler parsing & tokenization",
-                  "High-scale stream processing"
+                  "API Rate Limiting (Sliding Window Log)",
+                  "TCP Protocol Flow Control Window",
+                  "DNA k-mer sequence analysis"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Extension: At Most K Distinct Characters",
             "question": "14. How would you find the longest substring with at most K distinct characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Extending sliding window with character frequency map (LeetCode 340).",
+            "bestReplyScript": "For at most K distinct characters (LeetCode 340):\n- Use a Frequency Map `char -> count` instead of last index.\n- Expand `right` pointer and increment `freq[s[right]]`.\n- When `len(freq) > K`, shrink window from `left`: decrement `freq[s[left]]`, and delete key when count reaches 0.\n- Track max window length.\n\nRuns in O(n) time and O(K) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Frequency map `char -> count`",
+                  "Shrink `left` when `len(freq) > K`",
+                  "Time: O(n), Space: O(K)"
             ]
       },
       {
             "id": "q15",
-            "category": "Step-by-Step Approach",
+            "category": "Brute Force vs Sliding Window Summary",
             "question": "15. Compare the brute-force and sliding window approaches.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Longest Substring Without Repeating Characters.",
-            "bestReplyScript": "My approach for Longest Substring Without Repeating Characters follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Generates all O(n^2) substrings, checks duplicate chars in O(n) -> Time O(n^3), Space O(1).\n- Sliding Window: Monotonic 2-pointer expansion/jump with Hash Map -> Time O(n), Space O(min(n, charset)).\n\nThe sliding window transforms cubic time into linear time, making it the optimal interview solution.",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Brute force: O(n^3) time, O(1) space",
+                  "Sliding window: O(n) time, O(min(n, charset)) space",
+                  "Optimal linear solution"
             ]
       }
 ],
