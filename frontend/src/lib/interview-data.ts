@@ -1335,199 +1335,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Core Approach",
-        "question": "1. Explain your approach.",
-        "whatInterviewerChecks": "Core algorithmic intuition, step-by-step problem breakdown, and clarity.",
-        "bestReplyScript": "My approach is to compare the frequency of every character in both strings.\n\nThe steps are:\n1. If the lengths of the two strings are different, return False immediately.\n2. Count the frequency of each character in the first string using a hash map.\n3. Count the frequency of each character in the second string.\n4. Compare the two frequency maps.\n5. If they are identical, the strings are anagrams; otherwise, they are not.\n\nExample:\nInput:\ns = \"listen\"\nt = \"silent\"\n\nFrequency Map:\nl → 1\ni → 1\ns → 1\nt → 1\ne → 1\nn → 1\n\nBoth maps are identical.\n\nOutput:\nTrue\n\nThis approach is efficient, easy to understand, and works for any character set.\n\nComplexity\n• Time: O(n)\n• Space: O(n)",
-        "keyPoints": [
-          "Check length mismatch first for O(1) early exit",
-          "Build frequency map using hash table/dict",
-          "Compare frequency counts between strings",
-          "O(n) time and O(n) space complexity"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your algorithm.",
+            "whatInterviewerChecks": "Sorting + Two-Pointer strategy, tracking closestSum via `abs(curr_sum - target)`, exact match early exit.",
+            "bestReplyScript": "I first sort the array, then use a combination of a fixed element and the two-pointer technique.\n\nSteps:\n1. Sort the array.\n2. Initialize closestSum using the sum of the first three elements.\n3. Iterate through the array and fix one element at a time.\n4. Use two pointers: left = i + 1, right = n - 1.\n5. Calculate currentSum = nums[i] + nums[left] + nums[right].\n6. If abs(currentSum - target) < abs(closestSum - target), update closestSum.\n7. If:\n   - currentSum < target -> Move left forward.\n   - currentSum > target -> Move right backward.\n   - currentSum == target -> Return target immediately because it's the best possible answer.\n8. Continue until all possibilities are checked.\n\nThis efficiently finds the sum closest to the target.",
+            "keyPoints": [
+                  "Sort array first",
+                  "Track `closestSum` using `abs(currentSum - target)`",
+                  "Adjust pointers: `currentSum < target` (left++), `currentSum > target` (right--)",
+                  "Early exit on `currentSum == target`",
+                  "Time: O(n^2), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Data Structure Rationale",
-        "question": "2. Why use a frequency dictionary?",
-        "whatInterviewerChecks": "Data structure choice and understanding of hash map lookup/update efficiency.",
-        "bestReplyScript": "A frequency dictionary helps me count how many times each character appears.\n\nInstead of comparing every character repeatedly, I simply compare their frequencies.\n\nFor example:\n\nlisten\n\nl → 1\ni → 1\ns → 1\nt → 1\ne → 1\nn → 1\n\nsilent\n\ns → 1\ni → 1\nl → 1\ne → 1\nn → 1\nt → 1\n\nSince every character has the same count, the strings are anagrams.\n\nUsing a dictionary makes counting very efficient because lookup and update operations are O(1) on average.",
-        "keyPoints": [
-          "Eliminates nested O(n²) comparison loops",
-          "O(1) average hash map lookup and insert",
-          "Simple key-value frequency matching",
-          "Scales well across diverse character sets"
-        ]
+            "id": "q2",
+            "category": "Sorting Requirement Rationale",
+            "question": "2. Why is sorting necessary?",
+            "whatInterviewerChecks": "Enables directional two-pointer adjustments toward target sum.",
+            "bestReplyScript": "Sorting allows us to use the two-pointer technique.\n\nAfter sorting:\n- Moving the left pointer increases the sum.\n- Moving the right pointer decreases the sum.\n\nWithout sorting, we wouldn't know which pointer to move, and the algorithm would become inefficient.",
+            "keyPoints": [
+                  "Enables Two-Pointer directional adjustment",
+                  "Moving left increases sum, moving right decreases sum",
+                  "Eliminates random search space exploration"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Alternative Approaches",
-        "question": "3. Can you solve it without sorting?",
-        "whatInterviewerChecks": "Trade-offs between sorting and frequency hash maps.",
-        "bestReplyScript": "Yes.\n\nSorting is one approach, but I prefer using a frequency dictionary because it is more efficient.\n\nThere are two common solutions:\n\nUsing Sorting\n• Sort both strings.\n• Compare the sorted strings.\n\nUsing a Hash Map\n• Count character frequencies.\n• Compare the counts.\n\nThe hash map approach avoids sorting and achieves linear time complexity.",
-        "keyPoints": [
-          "Sorting requires O(n log n) time complexity",
-          "Hash map achieves optimal O(n) linear time",
-          "Avoids modifying or cloning input strings",
-          "Standard interview follow-up trade-off"
-        ]
+            "id": "q3",
+            "category": "Pointer Movement Decision Rule",
+            "question": "3. How do you determine which pointer to move?",
+            "whatInterviewerChecks": "Decision rule: compare `currentSum` against `target`.",
+            "bestReplyScript": "The decision depends on how the current sum compares to the target.\n- If currentSum < target, move the left pointer to increase the sum.\n- If currentSum > target, move the right pointer to decrease the sum.\n\nSince the array is sorted, this always moves us closer to the target.",
+            "keyPoints": [
+                  "Compare currentSum to target",
+                  "Increase sum: left++ when currentSum < target",
+                  "Decrease sum: right-- when currentSum > target"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Algorithmic Trade-offs",
-        "question": "4. Compare sorting vs hashing.",
-        "whatInterviewerChecks": "Ability to evaluate time/space trade-offs structured in tabular format.",
-        "bestReplyScript": "Both approaches work, but they have different trade-offs.\n\nMethod | Time | Space | Advantages\nSorting | O(n log n) | O(1) or O(n) | Simple to implement\nHash Map | O(n) | O(n) | Faster for large inputs\n\nFor interviews, I usually choose the hash map approach because it has better time complexity.",
-        "keyPoints": [
-          "Sorting: O(n log n) time, potentially O(1) auxiliary space",
-          "Hashing: O(n) linear time, O(n) auxiliary space",
-          "Hashing scales better for large input sizes",
-          "Sorting can be simpler for small in-place array scenarios"
-        ]
+            "id": "q4",
+            "category": "Complexity Analysis",
+            "question": "4. What is the time complexity?",
+            "whatInterviewerChecks": "O(n log n) sort + O(n^2) two-pointer scan = O(n^2) time, O(1) space.",
+            "bestReplyScript": "Complexity analysis:\n- Sorting takes O(n log n).\n- The outer loop runs n times.\n- The two pointers scan the remaining elements in O(n).\n\nOverall:\n- Time Complexity: O(n^2)\n- Space Complexity: O(1) (excluding sorting algorithm internal space).",
+            "keyPoints": [
+                  "Time Complexity: O(n^2)",
+                  "Space Complexity: O(1) auxiliary space",
+                  "Optimal runtime for 3Sum Closest"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Complexity Proof",
-        "question": "5. What's the complexity?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "Each character is processed once.\n\n• Building the frequency map takes O(n).\n• Comparing the maps also takes O(n).\n\nTherefore:\n• Time Complexity: O(n)\n• Space Complexity: O(n)\n\nwhere n is the length of the string.",
-        "keyPoints": [
-          "Time: O(n) single or double pass",
-          "Space: O(n) or O(k) bounded by alphabet size k",
-          "n represents the length of the string"
-        ]
+            "id": "q5",
+            "category": "Closest Sum Tracking Logic",
+            "question": "5. How do you keep track of the closest sum?",
+            "whatInterviewerChecks": "Updating `closestSum` using `abs(currentSum - target)` comparisons.",
+            "bestReplyScript": "I maintain a variable called closestSum.\n\nFor every triplet:\n1. Calculate currentSum = nums[i] + nums[left] + nums[right].\n2. Compare `abs(currentSum - target)` with `abs(closestSum - target)`.\n3. If `abs(currentSum - target) < abs(closestSum - target)`, update `closestSum = currentSum`.\n\nAt the end, closestSum contains the answer.",
+            "keyPoints": [
+                  "Initialize closestSum with first 3 elements",
+                  "Compare absolute differences `abs(sum - target)`",
+                  "Update closestSum when difference is smaller"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Unicode & Encoding",
-        "question": "6. How would Unicode affect your solution?",
-        "whatInterviewerChecks": "Understanding of character encodings, UTF-8/UTF-16, and Python dict behavior.",
-        "bestReplyScript": "The algorithm itself does not change.\n\nPython dictionaries support Unicode characters naturally.\n\nExample:\n\"नमस्ते\"\n\"こんにちは\"\n\"résumé\"\n\nEach Unicode character is treated as a separate key in the dictionary.\n\nThe only difference is that there are more possible characters compared to the English alphabet.",
-        "keyPoints": [
-          "Python 3 strings natively support full Unicode range",
-          "Dict hash map keys handle arbitrary Unicode codepoints",
-          "Space bound increases to O(k) where k is unique Unicode points",
-          "Algorithm remains O(n) linear time"
-        ]
+            "id": "q6",
+            "category": "Equal Distance Tie-Breaking",
+            "question": "6. What happens if multiple sums are equally close?",
+            "whatInterviewerChecks": "Handling tie-breaking rules.",
+            "bestReplyScript": "Either sum is acceptable unless the problem specifies a tie-breaking rule.\n\nMost interview versions (like LeetCode 16) guarantee a unique answer. If not, I would clarify the expected behavior with the interviewer.",
+            "keyPoints": [
+                  "Problem guarantees unique answer in standard specs",
+                  "Either sum acceptable if distance is equal",
+                  "Clarify tie-breaking rules if specified"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Preprocessing & Edge Cases",
-        "question": "7. Should spaces and punctuation count?",
-        "whatInterviewerChecks": "Clarifying requirements and string normalization skills.",
-        "bestReplyScript": "It depends on the problem requirements.\n\nIf spaces and punctuation should be ignored, I would:\n1. Remove all non-alphanumeric characters.\n2. Convert everything to lowercase.\n3. Then compare the character frequencies.\n\nExample:\n\"A gentleman\"\n\"Elegant man\"\n\nAfter removing spaces and converting to lowercase:\nagentleman\nelegantman\n\nThese become valid anagrams.\n\nAlways clarify this requirement with the interviewer if it isn't specified.",
-        "keyPoints": [
-          "Clarify rules with interviewer first",
-          "Normalize with isalnum() and lower() if required",
-          "Real-world anagrams often ignore spaces/casing",
-          "Ensures robustness against formatting noise"
-        ]
+            "id": "q7",
+            "category": "Edge Cases",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "n = 3 minimal elements, negative numbers, duplicates, extreme targets.",
+            "bestReplyScript": "Important edge cases include:\n1. Exactly three numbers ([1, 2, 3]) -> Only one possible sum exists.\n2. Negative numbers ([-5, -2, -1]) -> Should still work correctly.\n3. Duplicate values ([-1, -1, 2, 2]) -> Algorithm still finds closest sum.\n4. Very large positive or negative target (Target = 1000) -> Returns largest possible triplet sum.\n5. Mixed positive and negative numbers ([-4, -1, 1, 2]) -> Standard test case.",
+            "keyPoints": [
+                  "n = 3 minimal array case",
+                  "Negative numbers and extreme targets",
+                  "Duplicate values handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Scalability & Large Data",
-        "question": "8. Can this work on very large inputs?",
-        "whatInterviewerChecks": "Memory optimization, streaming data processing, and single-pass techniques.",
-        "bestReplyScript": "Yes.\n\nThe hash map solution scales well because each character is processed only once.\n\nFor extremely large datasets:\n• I would avoid creating unnecessary copies of the strings.\n• Process the input efficiently.\n• If memory is limited, I could update one frequency map while reading the data (increment for s, decrement for t).\n\nThe algorithm remains O(n), making it suitable for large inputs.",
-        "keyPoints": [
-          "Single counter map with increment/decrement technique",
-          "Early exit if count drops below 0",
-          "Stream character by character to avoid loading full string",
-          "O(n) linear runtime efficiency"
-        ]
+            "id": "q8",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your solution?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, duplicate, exact match, and extreme targets.",
+            "bestReplyScript": "I would test:\n- [-1, 2, 1, -4], target 1 -> 2 (triplet [-1, 2, 1])\n- [0, 0, 0], target 1 -> 0\n- [1, 1, 1], target 3 -> 3\n- [-3, -2, -5, 3, -4], target -1 -> Closest valid sum\n- [1, 2, 3], target 100 -> 6\n\nThese cover normal cases, duplicates, exact matches, and extreme targets.",
+            "keyPoints": [
+                  "Standard LeetCode 16 test cases",
+                  "Exact match tests",
+                  "Extreme target value bounds"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Space Optimization",
-        "question": "9. How would you solve it with constant space?",
-        "whatInterviewerChecks": "Fixed-size array optimization for restricted character sets.",
-        "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can use an array of size 26 instead of a dictionary.\n\nExample:\nIndex:\n0 → a\n1 → b\n...\n25 → z\n\nEach character updates its corresponding index.\n\nSince the array size never changes, the extra space is considered O(1).",
-        "keyPoints": [
-          "Fixed array of size 26 for 'a' through 'z'",
-          "Index calculation via ord(char) - ord('a')",
-          "Constant O(1) space bound (26 integers)",
-          "Prevents hash map overhead"
-        ]
+            "id": "q9",
+            "category": "Exact Match Early Exit Optimization",
+            "question": "9. Can you stop early if you find an exact match?",
+            "whatInterviewerChecks": "Early exit condition `if currentSum == target: return target`.",
+            "bestReplyScript": "Yes!\n\nIf `currentSum == target`:\nI immediately return target because no other sum can be closer than an exact match (difference = 0).\n\nThis avoids unnecessary computations and speeds up execution.",
+            "keyPoints": [
+                  "Check `currentSum == target`",
+                  "Return target immediately (difference = 0)",
+                  "Avoids remaining loop iterations"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Edge Cases",
-        "question": "10. What edge cases exist?",
-        "whatInterviewerChecks": "Comprehensive testing awareness across edge conditions.",
-        "bestReplyScript": "Some important edge cases are:\n\nEmpty strings\n\"\"\n\"\"\nOutput:\nTrue\n\nDifferent lengths\n\"cat\"\n\"cats\"\nOutput:\nFalse\n\nSame letters\n\"listen\"\n\"silent\"\nOutput:\nTrue\n\nSame word\n\"hello\"\n\"hello\"\nOutput:\nTrue\n\nDifferent frequencies\n\"aabb\"\n\"abbb\"\nOutput:\nFalse\n\nTesting these cases ensures the algorithm works correctly in all scenarios.",
-        "keyPoints": [
-          "Empty strings returns True",
-          "Unequal length returns False immediately",
-          "Identical strings returns True",
-          "Mismatched char counts return False"
-        ]
+            "id": "q10",
+            "category": "Generalization to K-Sum Closest",
+            "question": "10. How would you modify this for K-Sum Closest?",
+            "whatInterviewerChecks": "Recursive reduction for K-Sum Closest.",
+            "bestReplyScript": "The idea is similar:\n1. Sort the array.\n2. Fix one number.\n3. Recursively solve the remaining (K - 1)-Sum Closest problem.\n4. When K becomes 2, use the two-pointer technique.\n\nThis recursive strategy extends naturally to larger values of K.",
+            "keyPoints": [
+                  "Recursive reduction: K-Sum Closest -> (K-1)-Sum Closest",
+                  "Base case K = 2 uses Two Pointers",
+                  "Extends seamlessly to 4Sum Closest"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Fixed Array Optimization",
-        "question": "11. Can you solve it using arrays instead of dictionaries?",
-        "whatInterviewerChecks": "Direct character array indexing vs hash table lookup.",
-        "bestReplyScript": "Yes.\n\nIf the character set is fixed (for example, only lowercase English letters), I can use an array of size 26.\n\nFor every character:\n• Increment the count for the first string.\n• Decrement the count for the second string.\n\nAt the end, if every element in the array is zero, the strings are anagrams.\n\nThis approach is slightly faster than using a dictionary because array indexing is very efficient.",
-        "keyPoints": [
-          "Single fixed-size array of 26 integers",
-          "Increment on s, decrement on t",
-          "Verify all indices return to zero",
-          "Avoids dict hashing and dynamic allocations"
-        ]
+            "id": "q11",
+            "category": "Common Candidate Pitfalls",
+            "question": "11. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in 3Sum Closest (LeetCode 16).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to sort the array.\n- Not updating closestSum correctly.\n- Comparing raw sums instead of absolute differences `abs(sum - target)`.\n- Moving the wrong pointer.\n- Not handling an exact match efficiently.\n- Incorrect pointer initialization.",
+            "keyPoints": [
+                  "Comparing raw sums instead of `abs(sum - target)`",
+                  "Forgetting to sort array first",
+                  "Omitting exact match early exit"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Frequency Mismatch Logic",
-        "question": "12. What if character counts differ?",
-        "whatInterviewerChecks": "Early termination upon detecting frequency imbalance.",
-        "bestReplyScript": "If even one character has a different frequency, the strings cannot be anagrams.\n\nExample:\n\"aabb\"\n\"aabc\"\n\nFrequency:\nString 1:\na → 2\nb → 2\n\nString 2:\na → 2\nb → 1\nc → 1\n\nSince the frequencies differ, I immediately return False.",
-        "keyPoints": [
-          "Exact match required across all keys",
-          "Single mismatch guarantees False",
-          "Can fail fast as soon as a count drops below zero during second pass"
-        ]
+            "id": "q12",
+            "category": "Hash Table Applicability Analysis",
+            "question": "12. Can hashing improve this algorithm?",
+            "whatInterviewerChecks": "Why hashing fails for proximity / range search.",
+            "bestReplyScript": "Not significantly.\n\nHashing works well for finding exact sums (O(1) lookup), but this problem requires finding the CLOSEST sum (proximity search).\n\nSince we need ordered comparisons to guide pointer movement toward the target, sorting with two pointers is a much better choice.\nThe standard interview solution remains O(n^2).",
+            "keyPoints": [
+                  "Hashing targets exact match, not proximity range",
+                  "Two pointers relies on sorted ordering for directionality",
+                  "O(n^2) two-pointer approach is optimal"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Test Suite Design",
-        "question": "13. How would you test it?",
-        "whatInterviewerChecks": "Structured unit testing strategy and test case design.",
-        "bestReplyScript": "I would create test cases for different situations.\n\nInput | Output\n\"listen\", \"silent\" | True\n\"cat\", \"act\" | True\n\"rat\", \"car\" | False\n\"\", \"\" | True\n\"aabb\", \"abbb\" | False\n\"Dormitory\", \"Dirty room\" (after preprocessing) | True\n\nTesting different categories improves confidence in the solution.",
-        "keyPoints": [
-          "Standard anagram pairs",
-          "Non-anagram same-length strings",
-          "Length mismatch cases",
-          "Empty strings & spacing/case variants"
-        ]
+            "id": "q13",
+            "category": "Two Pointers vs Alternative Approaches",
+            "question": "13. Why is two-pointer the preferred approach?",
+            "whatInterviewerChecks": "Simplicity and O(1) space advantage.",
+            "bestReplyScript": "The two-pointer method:\n- Eliminates unnecessary combinations.\n- Uses the sorted order to guide pointer movement.\n- Requires only constant O(1) extra space.\n- Is simpler than recursive or hash-based approaches.\n\nIt provides the optimal balance between simplicity and efficiency.",
+            "keyPoints": [
+                  "Prunes search space efficiently",
+                  "Uses constant O(1) space",
+                  "Optimal balance of simplicity and performance"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Common Mistakes",
-        "question": "14. What mistakes do candidates make?",
-        "whatInterviewerChecks": "Interview pitfall awareness and anti-patterns.",
-        "bestReplyScript": "Some common mistakes include:\n\n• Forgetting to compare string lengths first.\n• Comparing only unique characters instead of their frequencies.\n• Ignoring duplicate characters.\n• Forgetting about uppercase and lowercase differences.\n• Not handling spaces or punctuation when required.\n• Using sorting without understanding its higher time complexity.\n\nThe most common mistake is checking whether both strings contain the same characters without verifying how many times each character appears.",
-        "keyPoints": [
-          "Using set(s) == set(t) (ignores character counts)",
-          "Forgetting initial length check",
-          "Ignoring letter case sensitivity",
-          "Overlooking O(n log n) sorting cost"
-        ]
+            "id": "q14",
+            "category": "3Sum vs 3Sum Closest Comparison Matrix",
+            "question": "14. Compare this problem with the standard 3Sum problem.",
+            "whatInterviewerChecks": "Comparing 3Sum vs 3Sum Closest requirements.",
+            "bestReplyScript": "Comparison:\n- 3Sum: Find triplets with sum exactly 0. Returns all unique triplets. Requires careful duplicate skipping. Time O(n^2), Space O(1).\n- 3Sum Closest: Find single sum closest to target. Returns single integer sum. Duplicate skipping is less critical. Time O(n^2), Space O(1).\n\nBoth use sorting and two pointers, but 3Sum returns a list of triplets while 3Sum Closest returns a single integer.",
+            "keyPoints": [
+                  "3Sum: exact 0 sum, list of unique triplets",
+                  "3Sum Closest: minimum distance to target, single integer return",
+                  "Both use Sorting + Two Pointers O(n^2)"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-World Applications",
-        "question": "15. Where are anagrams used practically?",
-        "whatInterviewerChecks": "System level intuition and real-world software engineering applications.",
-        "bestReplyScript": "Anagram checking has several practical applications.\n\nExamples include:\n• Spell-checking systems.\n• Word games like Scrabble and crossword puzzles.\n• Search engines for fuzzy matching.\n• Natural Language Processing (NLP).\n• Plagiarism detection.\n• Dictionary-based word matching.\n• Text analysis and pattern recognition.\n\nThe frequency-counting technique used here is also common in many other string-processing problems.",
-        "keyPoints": [
-          "Search engines & fuzzy query matching",
-          "NLP text normalization & spell checkers",
-          "Plagiarism detection & anagram solvers",
-          "Foundational hash frequency counting pattern"
-        ]
+            "id": "q15",
+            "category": "Real-World Applications",
+            "question": "15. Where might this type of optimization problem appear in real applications?",
+            "whatInterviewerChecks": "Recommendation engines, resource allocation, ML nearest value approximation.",
+            "bestReplyScript": "Finding the closest value is useful in many real-world scenarios, such as:\n- Recommendation Systems (finding closest match to user preferences or budget limits).\n- Financial Portfolio Optimization (approximating target yield/risk combinations).\n- Resource Allocation & Scheduling (matching total resource demands to capacity limits).\n- Machine Learning (nearest value approximations and k-nearest neighbors).",
+            "keyPoints": [
+                  "Recommendation systems budget matching",
+                  "Financial target yield optimization",
+                  "Resource allocation capacity matching"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
