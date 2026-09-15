@@ -19109,205 +19109,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your Two Sum solution in 30 seconds to an interviewer?",
-        "whatInterviewerChecks": "Verbal clarity, algorithmic confidence, and concise explanation of hash-based complement lookup.",
-        "bestReplyScript": "I solve Two Sum in a single pass using a hash map to store previously seen numbers and their indices. For each element x at index i, I compute the required complement: diff = target - x. If diff is already in our map, we immediately return [seen[diff], i]. Otherwise, we record seen[x] = i and continue. This achieves optimal O(N) time complexity and O(N) space complexity.",
-        "keyPoints": [
-          "One-pass hash map",
-          "Complement diff = target - x",
-          "O(N) time and O(N) space",
-          "Early exit on first match"
-        ],
-        "codeSnippet": "def twoSum(nums: list[int], target: int) -> list[int]:\n    seen = {}\n    for i, x in enumerate(nums):\n        diff = target - x\n        if diff in seen:\n            return [seen[diff], i]\n        seen[x] = i\n    return []"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Algorithm & Optimization",
-        "question": "Why is the single-pass hash map preferred over a two-pass hash map?",
-        "whatInterviewerChecks": "Understanding pass efficiency, duplicate handling, and avoid self-pairing.",
-        "bestReplyScript": "In a two-pass approach, pass 1 populates the entire dictionary, and pass 2 searches for target - nums[i]. The two-pass approach requires an extra condition: seen[diff] != i to ensure an element isn't paired with itself. A single-pass approach naturally avoids self-pairing because we search the map *before* inserting the current element, while also stopping early the instant the complement is encountered.",
-        "keyPoints": [
-          "Single-pass avoids self-pairing naturally",
-          "Single-pass stops early on first match",
-          "Two-pass requires full map creation before any match checks"
-        ],
-        "codeSnippet": "# \u274c Two-Pass (Extra loop & self-pair check):\n# seen = {x: i for i, x in enumerate(nums)}\n# for i, x in enumerate(nums):\n#     if target - x in seen and seen[target - x] != i:\n#         return [i, seen[target - x]]\n\n# \u2705 One-Pass (Clean & halts early):\nfor i, x in enumerate(nums):\n    diff = target - x\n    if diff in seen:\n        return [seen[diff], i]\n    seen[x] = i"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you choose a hash map instead of a nested loop?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Python Internals",
-        "question": "How does Python's `dict` achieve O(1) average lookup time under the hood?",
-        "whatInterviewerChecks": "Knowledge of CPython hash tables, hash functions, and compact dictionary architecture.",
-        "bestReplyScript": "CPython's dictionary is implemented as an open-addressing hash table. In Python 3.6+, it uses a split-array compact architecture: a sparse indices table and a dense entries table preserving insertion order. When looking up a key, CPython calls hash(key), masks it with the table size to find an index, and checks for identity (k1 is k2) or equality (k1 == k2). On average, key lookup takes O(1) time.",
-        "keyPoints": [
-          "Compact dict layout since Python 3.6",
-          "Open addressing with perturbation probing",
-          "Calls hash(k) then checks equality k1 == k2",
-          "Average O(1) read/write"
-        ],
-        "codeSnippet": "# CPython internally computes:\n# index = hash(key) & (size - 1)\n# If collision occurs, probes with: perturb >>= 5; index = (5 * index + 1 + perturb) & mask"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Data Structure Mechanics",
-        "question": "What happens when hash collisions occur in Python dictionaries, and could Two Sum degrade to O(N\u00b2)?",
-        "whatInterviewerChecks": "Worst-case hash map complexity and collision resolution.",
-        "bestReplyScript": "When two distinct keys produce the same initial bucket index, CPython uses pseudo-random probing via a perturbation formula: `i = (5*i + perturb + 1) & mask`. If an adversary crafts inputs where all keys hash to the same bucket, lookups degrade to O(N), making Two Sum O(N\u00b2). However, Python 3 employs SipHash with a randomized per-process secret seed, preventing algorithmic complexity attacks in standard execution.",
-        "keyPoints": [
-          "Perturbation recurrence formula",
-          "SipHash random seed per process",
-          "Theoretical worst-case O(N\u00b2), practical O(N)"
-        ],
-        "codeSnippet": "# Python randomized hash seed prevents predictable collisions:\nimport sys\nprint(sys.hash_info.algorithm)  # 'siphash24' or 'fnv'"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Can you solve this problem without extra space?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Alternative Patterns",
-        "question": "If the input array is already sorted, how would you solve Two Sum in O(1) space?",
-        "whatInterviewerChecks": "Two-pointer technique on sorted arrays.",
-        "bestReplyScript": "If the array is sorted, we use the Two-Pointer pattern. Place `left = 0` and `right = len(nums) - 1`. While `left < right`, compute `current_sum = nums[left] + nums[right]`. If `current_sum == target`, return [left, right]. If `current_sum < target`, increment `left` to increase the sum; if `current_sum > target`, decrement `right` to decrease the sum. This achieves O(N) time and O(1) auxiliary space.",
-        "keyPoints": [
-          "Two pointers from both ends",
-          "O(N) time and O(1) space",
-          "Only works if array is already sorted"
-        ],
-        "codeSnippet": "def twoSum_sorted(nums: list[int], target: int) -> list[int]:\n    left, right = 0, len(nums) - 1\n    while left < right:\n        s = nums[left] + nums[right]\n        if s == target:\n            return [left, right]\n        elif s < target:\n            left += 1\n        else:\n            right -= 1\n    return []"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What if the input array is already sorted?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Edge Cases & Pitfalls",
-        "question": "How does your code handle duplicate values, e.g. nums = [3, 3] and target = 6?",
-        "whatInterviewerChecks": "Dictionary overwrite vs lookup order validation.",
-        "bestReplyScript": "When `nums = [3, 3]` and `target = 6`, at index 0 (`x = 3`), `seen` is empty, so we record `seen[3] = 0`. At index 1 (`x = 3`), `diff = 6 - 3 = 3`. Because 3 is already in `seen` with index 0, the condition `diff in seen` evaluates to True *before* `seen[3]` can be overwritten! We return [0, 1] immediately. This demonstrates why single-pass lookup before insertion handles identical pairs seamlessly.",
-        "keyPoints": [
-          "Check happens before overwrite",
-          "seen[3] == 0 matched at index 1",
-          "Returns [0, 1] perfectly"
-        ],
-        "codeSnippet": "nums = [3, 3]\ntarget = 6\nseen = {}\n# i = 0: diff = 3 -> not in seen -> seen[3] = 0\n# i = 1: diff = 3 -> in seen! -> returns [seen[3], 1] == [0, 1]"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. How would you return all possible pairs instead of just one?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Language Nuance",
-        "question": "Why does `enumerate()` matter in Python, and how does it compare to `range(len(nums))`?",
-        "whatInterviewerChecks": "Idiomatic Python usage and iterator efficiency.",
-        "bestReplyScript": "`enumerate(nums)` yields pairs of `(index, value)` directly from the list iterator at C-level speed. Using `for i in range(len(nums)): x = nums[i]` requires calling `len()`, constructing a range generator, and performing manual index lookups `nums[i]` on every iteration. `enumerate()` is more pythonic, readable, and avoids indexing overhead.",
-        "keyPoints": [
-          "Yields (index, value) tuples directly",
-          "C-level iterator efficiency",
-          "Avoids repetitive nums[i] index lookups"
-        ],
-        "codeSnippet": "# \u2705 Pythonic and efficient:\nfor i, x in enumerate(nums):\n    pass\n\n# \u274c Less idiomatic, redundant indexing:\nfor i in range(len(nums)):\n    x = nums[i]"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would your solution change if duplicate values exist?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Memory & Space Complexity",
-        "question": "What is the exact memory overhead of storing N elements in a Python dictionary?",
-        "whatInterviewerChecks": "Understanding hash table resizing and memory footprint.",
-        "bestReplyScript": "A Python dictionary does not allocate memory on a per-element basis. It allocates bucket arrays in powers of two (8, 16, 32, ...). When the table reaches 2/3 fullness (load factor ~0.66), CPython reallocates a larger table and re-indexes existing entries. For N elements, auxiliary space is strictly O(N), requiring roughly 36 to 48 bytes per entry on 64-bit platforms.",
-        "keyPoints": [
-          "Resize trigger at 2/3 load factor",
-          "Power-of-two table capacity",
-          "O(N) auxiliary space in RAM"
-        ],
-        "codeSnippet": "import sys\nd = {}\nprint([sys.getsizeof(d) for _ in range(5)]) # Memory steps as capacity resizes"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Type Handling & Constraints",
-        "question": "Can integer values in Python cause 32-bit or 64-bit integer overflow during addition?",
-        "whatInterviewerChecks": "Python's arbitrary precision integer model.",
-        "bestReplyScript": "In Python 3, integers have arbitrary precision (represented by `PyLongObject`). Unlike C++ or Java where numbers over 2^31-1 overflow into negatives, Python integers dynamically allocate more memory digits as numbers grow. Therefore, `target - x` will never cause overflow in Python, though the time complexity of arithmetic on massive numbers (> 4300 digits) becomes O(log N).",
-        "keyPoints": [
-          "Arbitrary precision in Python 3",
-          "No 32-bit / 64-bit overflow bugs",
-          "PyLongObject handles digit allocation dynamically"
-        ],
-        "codeSnippet": "big = 10**30\nprint(big + big) # Works cleanly without overflow!"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "System Design / Scale",
-        "question": "How would you solve Two Sum if the input dataset contains 10 billion integers on disk and cannot fit in RAM?",
-        "whatInterviewerChecks": "External memory algorithms, map-reduce, and hashing partitioning.",
-        "bestReplyScript": "We partition the dataset into K buckets on disk using a hash function on the value: `bucket_id = hash(x) % K`. Notice that for any value `x`, its complement `target - x` will always map to a deterministic bucket: `hash(target - x) % K`. We stream numbers from disk into their respective bucket files. Then we process paired bucket files in RAM sequentially. If `target` is even and `x == target / 2`, a single bucket handles internal pairs.",
-        "keyPoints": [
-          "Hash partitioning into disk buckets",
-          "Complement mapping bucket_id = hash(target - x) % K",
-          "Process paired chunks in RAM sequentially"
-        ],
-        "codeSnippet": "# Disk bucket partitioning:\n# File 1: numbers hashing to bucket b\n# File 2: numbers hashing to bucket (target - b)\n# Process File 1 and File 2 in RAM using standard Two Sum hash map"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Variant Follow-up",
-        "question": "How would you modify the solution to return all unique pairs that sum up to target?",
-        "whatInterviewerChecks": "Handling duplicates and producing unique pair sets.",
-        "bestReplyScript": "To return all unique value pairs, we can sort the array and use the two-pointer technique while skipping duplicate values on both pointers. Alternatively, with a hash set, for each number we check if `target - x` is in our set. To prevent duplicate pairs like (2, 4) and (4, 2), we can store canonical tuples `(min(x, diff), max(x, diff))` in a result set.",
-        "keyPoints": [
-          "Sort + two-pointer skipping duplicates",
-          "Or canonical tuples in a result set (min, max)",
-          "O(N log N) or O(N) with set"
-        ],
-        "codeSnippet": "def allUniquePairs(nums: list[int], target: int) -> set[tuple[int, int]]:\n    seen = set()\n    res = set()\n    for x in nums:\n        diff = target - x\n        if diff in seen:\n            res.add((min(x, diff), max(x, diff)))\n        seen.add(x)\n    return res"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would you solve the problem for a stream of numbers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Concurrency & GIL",
-        "question": "Can Two Sum be accelerated using Python's `threading` module?",
-        "whatInterviewerChecks": "Understanding Python's Global Interpreter Lock (GIL) and CPU-bound tasks.",
-        "bestReplyScript": "Because Two Sum is a CPU-bound algorithmic task, Python's `threading` module will not achieve true parallel speedup due to the Global Interpreter Lock (GIL), which permits only one thread to execute Python bytecode at a time. To parallelize Two Sum, we must use `multiprocessing` to bypass the GIL, or compile the loop via Cython, Numba, or C extensions without GIL constraints.",
-        "keyPoints": [
-          "CPU-bound tasks are constrained by the GIL",
-          "threading gives no speedup for CPU loops",
-          "Use multiprocessing or C extensions for true parallelism"
-        ],
-        "codeSnippet": "# Multithreading won't speed up pure CPU loops:\n# from multiprocessing import Pool  # Use multiprocessing instead!"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can this problem be extended to Three Sum?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Testing & Testability",
-        "question": "What 5 test cases would you write to thoroughly validate a Two Sum implementation?",
-        "whatInterviewerChecks": "Quality engineering and defensive testing mindset.",
-        "bestReplyScript": "I would test: 1) Standard positive integers `[2, 7, 11, 15], 9` -> `[0, 1]`; 2) Two identical elements adding to target `[3, 3], 6` -> `[0, 1]`; 3) Negative numbers `[-1, -2, -3, -4, -5], -8` -> `[2, 4]`; 4) Target with zero `[0, 4, 3, 0], 0` -> `[0, 3]`; 5) No valid pair exists -> `[]` or exception handling.",
-        "keyPoints": [
-          "Standard positive case",
-          "Duplicate identical values",
-          "Negative numbers",
-          "Zeros adding to zero",
-          "No pair found"
-        ],
-        "codeSnippet": "assert twoSum([2, 7, 11, 15], 9) == [0, 1]\nassert twoSum([3, 3], 6) == [0, 1]\nassert twoSum([-3, 4, 3, 90], 0) == [0, 2]"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where is hash-based lookup used in real-world systems?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Pythonic Clean Code",
-        "question": "How should function signatures be typed per PEP 484 for Two Sum in modern Python 3.12?",
-        "whatInterviewerChecks": "Modern type annotations and clean code standards.",
-        "bestReplyScript": "In Python 3.9+, standard built-in collections can be used directly for generic typing without importing from `typing`. The modern signature is: `def two_sum(nums: list[int], target: int) -> list[int]:`. We use lowercase snake_case for PEP 8 compliance and type hints to allow static type checkers like mypy to catch mismatched arguments.",
-        "keyPoints": [
-          "Use built-in list[int] (Python 3.9+)",
-          "Snake_case naming per PEP 8",
-          "Enables static verification via mypy"
-        ],
-        "codeSnippet": "def two_sum(nums: list[int], target: int) -> list[int]:\n    # Fully typed modern Python 3\n    ..."
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Compare the brute-force and optimal approaches.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior Trade-Off Decision",
-        "question": "Under what circumstance would you choose the O(N\u00b2) brute force over the O(N) hash map?",
-        "whatInterviewerChecks": "Real-world engineering trade-offs (memory constraints vs CPU cycles).",
-        "bestReplyScript": "In deeply embedded systems or microcontroller environments (e.g. MicroPython on a sensor with 4KB of RAM), allocating a dynamic hash table with 1,000 entries could trigger an Out-Of-Memory (OOM) crash. If N is tiny (e.g. N <= 20) and memory is critically constrained, the brute-force two-loop solution uses strictly O(1) memory and may execute faster due to CPU cache locality and zero heap allocations.",
-        "keyPoints": [
-          "Extremely low memory / embedded constraints",
-          "Tiny N (N <= 20) where cache locality beats hash overhead",
-          "Zero heap allocation requirement"
-        ],
-        "codeSnippet": "# When N < 20 and memory budget is 0 bytes:\nfor i in range(len(nums)):\n    for j in range(i + 1, len(nums)):\n        if nums[i] + nums[j] == target:\n            return [i, j]"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Which solution would you use in production and why?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -19433,204 +19414,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain Container With Most Water in 30 seconds?",
-        "whatInterviewerChecks": "Greedy two-pointer logic and area formula breakdown.",
-        "bestReplyScript": "We place two pointers at opposite ends of the array, `left = 0` and `right = len(height) - 1`. At each step, the water volume is `(right - left) * min(height[left], height[right])`. To maximize area as width shrinks, our only hope of finding a larger area is finding a taller line. Therefore, we greedily advance the pointer pointing to the shorter line inward. We repeat until pointers meet in O(N) time and O(1) space.",
-        "keyPoints": [
-          "Two pointers from ends",
-          "Width decreases by 1 each step",
-          "Move shorter line pointer inward",
-          "O(N) time & O(1) space"
-        ],
-        "codeSnippet": "def maxArea(height: list[int]) -> int:\n    l, r = 0, len(height) - 1\n    max_water = 0\n    while l < r:\n        w = r - l\n        h = min(height[l], height[r])\n        max_water = max(max_water, w * h)\n        if height[l] < height[r]:\n            l += 1\n        else:\n            r -= 1\n    return max_water"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your two-pointer approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Mathematical Proof",
-        "question": "Why is it mathematically guaranteed that moving the taller pointer will never find a larger area?",
-        "whatInterviewerChecks": "Proof by contradiction and invariant reasoning.",
-        "bestReplyScript": "Let the width be W = right - left, and height[left] < height[right]. The area is W * height[left]. If we were to move the taller line `right` to some `k < right`, the new width is strictly smaller: W' < W. The new height is `min(height[left], height[k]) <= height[left]`. Thus, any new area would be at most W' * height[left] < W * height[left]. Moving the taller line is provably strictly inferior.",
-        "keyPoints": [
-          "Width strictly decreases",
-          "Height is capped by the shorter line",
-          "Moving taller line can only decrease area",
-          "Proof by contradiction"
-        ],
-        "codeSnippet": "# Proof: If height[l] < height[r]:\n# New area with (r - 1) = (w - 1) * min(height[l], height[r - 1])\n# <= (w - 1) * height[l] < w * height[l] (old area)!"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why do you move the shorter pointer instead of the taller one?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Complexity & Big-O",
-        "question": "What are the exact time and space complexities of this two-pointer approach?",
-        "whatInterviewerChecks": "Strict step-counting analysis.",
-        "bestReplyScript": "The initial distance between pointers is N - 1. In every single iteration of the while loop, exactly one pointer moves inward (`left += 1` or `right -= 1`). The distance decreases by 1 in each step. The loop executes at most N - 1 times, making time complexity strictly O(N). We only store a few integer pointers and variables (`l, r, max_water, w, h`), so auxiliary space is O(1).",
-        "keyPoints": [
-          "Loop runs N - 1 times",
-          "Strictly O(N) time",
-          "O(1) auxiliary space",
-          "Zero allocations"
-        ],
-        "codeSnippet": "# Total steps = N - 1 -> O(N) time, O(1) space"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Edge Cases & Boundaries",
-        "question": "What happens if height[left] == height[right]? Which pointer should you move?",
-        "whatInterviewerChecks": "Edge case understanding when lines have identical height.",
-        "bestReplyScript": "When `height[left] == height[right]`, you can move either pointer (or even both inward simultaneously). Because both lines have the same height H, any container formed between `left` and an interior line, or `right` and an interior line, would have width < (right - left) and height <= H, producing a smaller area. Moving either pointer preserves correctness.",
-        "keyPoints": [
-          "Either pointer can be moved",
-          "Or move both l += 1 and r -= 1",
-          "Does not compromise correctness"
-        ],
-        "codeSnippet": "if height[l] < height[r]:\n    l += 1\nelif height[r] < height[l]:\n    r -= 1\nelse:\n    l += 1  # or r -= 1, or both!"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Why is the brute-force solution inefficient?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Performance Optimization",
-        "question": "How can you optimize the two-pointer loop to skip redundant shorter lines faster?",
-        "whatInterviewerChecks": "Loop skipping optimization for duplicate or descending heights.",
-        "bestReplyScript": "After moving a pointer, if the newly reached line is shorter than or equal to the previous line height, it cannot possibly produce a larger area with the decreased width. We can fast-forward `left` past any lines `<= h` and fast-backward `right` past any lines `<= h` using inner while loops. While worst-case time remains O(N), this drastically cuts CPU cycles on flat or monotonically descending inputs.",
-        "keyPoints": [
-          "Skip lines <= current boundary height",
-          "Width decreased, so shorter lines cannot win",
-          "Improves real-world runtime"
-        ],
-        "codeSnippet": "while l < r:\n    h = min(height[l], height[r])\n    max_water = max(max_water, (r - l) * h)\n    while l < r and height[l] <= h: l += 1\n    while l < r and height[r] <= h: r -= 1"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do you know your greedy choice is correct?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Comparison With Other Problems",
-        "question": "How is Container With Most Water fundamentally different from Trapping Rain Water?",
-        "whatInterviewerChecks": "Distinguishing between 2-line containers and elevation-map trapped pools.",
-        "bestReplyScript": "In Container With Most Water, we choose *exactly two lines* to form a single bounding container, ignoring all bars in between. In Trapping Rain Water, the bars represent physical terrain where water collects in cavities between elevations. Trapping Rain Water requires computing `min(max_left, max_right) - height[i]` at every individual index, whereas Container With Most Water maximizes a single geometric rectangle.",
-        "keyPoints": [
-          "Container = Pick 2 lines for single pool",
-          "Trapping = Aggregate water trapped across terrain",
-          "Different mathematical formulas"
-        ],
-        "codeSnippet": "# Container: area = (r - l) * min(height[l], height[r])\n# Trapping: water[i] = max(0, min(left_max[i], right_max[i]) - height[i])"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Built-in Overhead",
-        "question": "Does calling `min()` and `max()` in Python add overhead in a tight loop of 100,000 iterations?",
-        "whatInterviewerChecks": "CPython function call overhead vs inline conditional expressions.",
-        "bestReplyScript": "Yes. In CPython, `min()` and `max()` are built-in functions that incur Python callable frame overhead and argument tuple processing. Replacing `min(a, b)` with an inline ternary `a if a < b else b` avoids the function call and executes up to 30-40% faster in a tight loop of 100,000 iterations.",
-        "keyPoints": [
-          "Built-in function call overhead",
-          "Ternary operator executes faster in tight loops",
-          "Micro-optimization for competitive programming"
-        ],
-        "codeSnippet": "# Micro-optimized without min/max call overhead:\nh = height[l] if height[l] < height[r] else height[r]\narea = (r - l) * h\nif area > max_water:\n    max_water = area"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Data Validation & Defensive Coding",
-        "question": "What minimum array length is required for this problem, and how should you validate inputs?",
-        "whatInterviewerChecks": "Handling constraints and defensive precondition checks.",
-        "bestReplyScript": "A container requires at least two vertical lines to hold water, so `len(height) >= 2`. If `len(height) < 2`, no container can be formed and we should return 0. Furthermore, all height values must be non-negative integers (`height[i] >= 0`).",
-        "keyPoints": [
-          "Minimum length is 2",
-          "Empty or 1-element lists return 0",
-          "Non-negative height constraint"
-        ],
-        "codeSnippet": "if not height or len(height) < 2:\n    return 0"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. Can this problem be solved using dynamic programming?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Python Memory Layout",
-        "question": "How is a Python list of integers stored in memory, and does it affect cache locality for two pointers?",
-        "whatInterviewerChecks": "CPython list implementation (`PyListObject`) and CPU cache lines.",
-        "bestReplyScript": "A Python `list` is an array of pointers (`PyObject**`) to integer objects (`PyLongObject`) scattered across heap memory. Unlike C/C++ arrays where contiguous primitive integers fit in a single CPU cache line, Python two-pointer traversal involves pointer dereferencing. However, since small integers (-5 to 256) are pre-allocated in CPython, cache locality is relatively good.",
-        "keyPoints": [
-          "Array of PyObject pointers",
-          "Pointers dereferenced on access",
-          "Small integers (-5 to 256) are cached"
-        ],
-        "codeSnippet": "# CPython array of pointers:\n# [ptr0, ptr1, ptr2] -> each points to a PyLongObject on heap"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Brute Force Comparison",
-        "question": "Why does the brute force O(N\u00b2) solution fail on large inputs, and what is the exact iteration count?",
-        "whatInterviewerChecks": "Combinatorial math and quadratic scaling limits.",
-        "bestReplyScript": "The brute-force checks all pairs: `N * (N - 1) / 2` pairs. For N = 100,000, that is `100,000 * 99,999 / 2 \u2248 5 * 10^9` operations. In Python, a typical CPU executes ~10^7 simple bytecode instructions per second, so 5 billion operations would take ~500 seconds, resulting in a Time Limit Exceeded (TLE) error. The two-pointer O(N) approach runs in ~0.02 seconds.",
-        "keyPoints": [
-          "N(N - 1) / 2 pairs for brute force",
-          "5 * 10^9 operations for N = 100k",
-          "TLE threshold ~ 10^7 ops/sec"
-        ],
-        "codeSnippet": "# Brute force O(N^2):\n# for i in range(n):\n#     for j in range(i + 1, n): ... -> TLE on N > 10,000"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would negative heights affect the problem?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Alternative 3D Extension",
-        "question": "How would you generalize this problem to 3 dimensions (2D grid of pillar heights)?",
-        "whatInterviewerChecks": "Extension to Trapping Rain Water II using Priority Queues.",
-        "bestReplyScript": "In 3D, water is bounded in a grid where every cell has a height. A two-pointer approach no longer suffices because water can spill in 4 directions (up, down, left, right). The 3D problem is solved using a Min-Heap (Priority Queue) starting with all perimeter cells, greedily expanding inward and maintaining the minimum boundary height, taking O(R * C * log(R * C)) time.",
-        "keyPoints": [
-          "3D requires tracking a 2D boundary",
-          "Min-Heap priority queue",
-          "Greedy inward BFS expansion"
-        ],
-        "codeSnippet": "# 3D generalization uses heapq:\n# import heapq\n# heap = [(height[r][c], r, c) for perimeter cells]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Can duplicate heights change the algorithm?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Property-Based Testing",
-        "question": "What invariant must hold true across every single step of the while loop?",
-        "whatInterviewerChecks": "Loop invariants and formal verification.",
-        "bestReplyScript": "The loop invariant is: 'The maximum water container formed by any pair of lines involving already-discarded lines has already been evaluated and is <= max_water'. Because any discarded line could never form a larger container with any remaining line in the active window, the search space is safely pruned without missing the global maximum.",
-        "keyPoints": [
-          "Loop invariant maintains validity of pruned space",
-          "Discarded lines provably cannot form a better pair",
-          "Guarantees global optimum"
-        ],
-        "codeSnippet": "# Invariant: optimal_solution in range [l, r] OR already recorded in max_water"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where is the two-pointer technique commonly used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Monotonicity Concept",
-        "question": "Why does greedy choice work here without needing backtracking or dynamic programming?",
-        "whatInterviewerChecks": "Understanding when greedy choice property applies.",
-        "bestReplyScript": "Greedy choice works because the width dimension is strictly monotonic: it decreases by exactly 1 at every step. Because width always shrinks, the only way to get a larger area is if the height increases. Since the height of the container is bounded by the shorter line, moving the taller line can NEVER increase height. Therefore, the decision to discard the shorter line is optimal and irreversible.",
-        "keyPoints": [
-          "Monotonically shrinking width",
-          "Height bounded by min(h1, h2)",
-          "No backtracking needed because discarded lines cannot beat current max"
-        ],
-        "codeSnippet": "# No backtracking necessary -> Strictly forward linear O(N) path"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Can this problem be parallelized?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Real-world Applications",
-        "question": "Where does this two-pointer boundary-reduction pattern appear in real-world software engineering?",
-        "whatInterviewerChecks": "Practical system engineering and algorithmic pattern transfer.",
-        "bestReplyScript": "This pattern appears in computer graphics and computational geometry (finding the largest bounding box or viewport clipping), network packet buffering (maximizing bandwidth capacity between two throttling nodes), and financial portfolio risk bounds (maximizing risk-adjusted return across time horizons).",
-        "keyPoints": [
-          "Viewport clipping in graphics",
-          "Bandwidth capacity optimization",
-          "Time-series bounding boxes"
-        ],
-        "codeSnippet": "# Geometric bounding box optimization uses similar two-pointer sweeps"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Compare brute-force and optimal solutions.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Refactoring & Production Code",
-        "question": "How would you structure this code for readability and maintainability in an enterprise codebase?",
-        "whatInterviewerChecks": "Clean architecture, naming conventions, and docstrings.",
-        "bestReplyScript": "In enterprise code, we write clear docstrings explaining the algorithmic invariant, validate inputs defensively, and use descriptive variable names like `left_idx`, `right_idx`, and `max_water_volume` rather than single-letter names.",
-        "keyPoints": [
-          "Descriptive variable names",
-          "PEP 257 docstring",
-          "Defensive validation"
-        ],
-        "codeSnippet": "def compute_max_water_container(heights: list[int]) -> int:\n    \"\"\"Compute maximum water volume using O(N) two-pointer scan.\"\"\"\n    if len(heights) < 2:\n        return 0\n    left_idx, right_idx = 0, len(heights) - 1\n    max_volume = 0\n    while left_idx < right_idx:\n        width = right_idx - left_idx\n        current_height = min(heights[left_idx], heights[right_idx])\n        max_volume = max(max_volume, width * current_height)\n        if heights[left_idx] < heights[right_idx]:\n            left_idx += 1\n        else:\n            right_idx -= 1\n    return max_volume"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Why is O(n) the best possible complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -19754,204 +19717,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain 3Sum in 30 seconds to an interviewer?",
-        "whatInterviewerChecks": "Problem reduction to Two Sum II and duplicate skipping strategy.",
-        "bestReplyScript": "I solve 3Sum by first sorting the array in O(N log N) time. Then, I iterate with index i from 0 to N-3. If nums[i] > 0, we can break early since three positive numbers cannot sum to zero. For each i, if i > 0 and nums[i] == nums[i-1], we skip it to avoid duplicate triplets. We then run a Two-Pointer search on the remaining subarray with `left = i + 1` and `right = N - 1` looking for `nums[left] + nums[right] == -nums[i]`. When found, we record the triplet and advance both pointers past duplicate values. Total time is O(N\u00b2), and space is O(1) beyond sorting.",
-        "keyPoints": [
-          "Sort array first",
-          "Fix index i, two pointers for left and right",
-          "Skip duplicates at i, left, and right",
-          "O(N\u00b2) time & O(1) space"
-        ],
-        "codeSnippet": "def threeSum(nums: list[int]) -> list[list[int]]:\n    nums.sort()\n    res = []\n    for i in range(len(nums) - 2):\n        if nums[i] > 0: break\n        if i > 0 and nums[i] == nums[i-1]: continue\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            s = nums[i] + nums[l] + nums[r]\n            if s == 0:\n                res.append([nums[i], nums[l], nums[r]])\n                while l < r and nums[l] == nums[l+1]: l += 1\n                while l < r and nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n            elif s < 0: l += 1\n            else: r -= 1\n    return res"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Duplicate Elimination",
-        "question": "Why do we skip duplicates using `i > 0 and nums[i] == nums[i-1]` instead of `nums[i] == nums[i+1]`?",
-        "whatInterviewerChecks": "Critical boundary logic preventing missed solutions.",
-        "bestReplyScript": "Checking `nums[i] == nums[i+1]` skips the first occurrence before exploring it, which incorrectly prevents valid triplets with duplicate elements like `[-1, -1, 2]` where the first and second elements are identical. Checking `i > 0 and nums[i] == nums[i-1]` ensures we fully explore all solutions using the first occurrence, and only skip redundant subproblems on subsequent occurrences.",
-        "keyPoints": [
-          "Checking nums[i] == nums[i-1] allows [-1, -1, 2]",
-          "Checking nums[i] == nums[i+1] skips valid pairs",
-          "Crucial difference in two-pointer search"
-        ],
-        "codeSnippet": "# \u274c WRONG (misses [-1, -1, 2]):\n# if nums[i] == nums[i+1]: continue\n\n# \u2705 CORRECT (processes first -1, skips second -1):\nif i > 0 and nums[i] == nums[i-1]:\n    continue"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why is sorting required before applying two pointers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Early Exit Optimization",
-        "question": "Why can we safely `break` the outer loop if `nums[i] > 0`?",
-        "whatInterviewerChecks": "Understanding sorted array properties.",
-        "bestReplyScript": "Because the array is sorted in ascending order, if `nums[i] > 0`, then all subsequent numbers `nums[l]` and `nums[r]` must also be strictly greater than 0. The sum of three positive numbers `nums[i] + nums[l] + nums[r]` will always be strictly greater than zero, making it impossible to sum to 0. Breaking early avoids unnecessary loop iterations.",
-        "keyPoints": [
-          "Array is sorted",
-          "Sum of 3 positive numbers > 0",
-          "Break terminates early"
-        ],
-        "codeSnippet": "if nums[i] > 0:\n    break  # Impossible to sum to 0 anymore!"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Time Complexity Breakdown",
-        "question": "What is the exact time complexity, including sorting?",
-        "whatInterviewerChecks": "Asymptotic analysis combining sorting and nested loops.",
-        "bestReplyScript": "Sorting `nums` with Timsort takes O(N log N) time. The outer loop runs up to N times. For each outer iteration, the inner two-pointer loop scans the remaining elements at most N times in O(N). Thus, the nested loops take O(N\u00b2) time. Since O(N\u00b2) dominates O(N log N), the total time complexity is strictly O(N\u00b2).",
-        "keyPoints": [
-          "Sorting is O(N log N)",
-          "Nested loops are O(N\u00b2)",
-          "Total time = O(N\u00b2)"
-        ],
-        "codeSnippet": "# Total Time: O(N log N) + O(N^2) = O(N^2)"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you avoid duplicate triplets?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Space Complexity & Timsort",
-        "question": "What is the auxiliary space complexity of 3Sum in Python?",
-        "whatInterviewerChecks": "CPython's Timsort memory requirements.",
-        "bestReplyScript": "In Python, `nums.sort()` uses Timsort, which requires up to O(N) auxiliary space in the worst case to store temporary merge runs. If in-place modification of `nums` is forbidden and we use `sorted(nums)`, we allocate an additional O(N) list. The two pointers themselves use O(1) space. Thus, auxiliary space is O(N) due to Python sorting.",
-        "keyPoints": [
-          "Timsort uses O(N) auxiliary space",
-          "Sorting creates merge runs in memory",
-          "Pointers use O(1) space"
-        ],
-        "codeSnippet": "# Python's Timsort uses O(N) temporary buffer memory"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. Why is brute force not practical?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Hash Set vs Two Pointers",
-        "question": "Could we solve 3Sum with a Hash Set instead of sorting? What are the trade-offs?",
-        "whatInterviewerChecks": "Evaluating hash-based vs two-pointer approaches.",
-        "bestReplyScript": "Yes. We can iterate through i and j, looking for `-(nums[i] + nums[j])` in a set. However, without sorting, handling duplicate triplets requires sorting each triplet tuple and storing them in a set of tuples, incurring substantial memory overhead and hash computation costs. The two-pointer approach on a sorted array avoids hash sets completely and runs significantly faster in practice.",
-        "keyPoints": [
-          "Hash set requires storing sorted tuples in a set",
-          "Higher memory overhead for hash table",
-          "Two pointers is more cache-friendly and uses less RAM"
-        ],
-        "codeSnippet": "# Hash Set alternative (higher memory overhead):\n# seen_triplets = set()\n# for i in range(n):\n#     seen = set()\n#     for j in range(i+1, n): ... seen_triplets.add(tuple(sorted(...)))"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python List vs Set Performance",
-        "question": "Why shouldn't you do `if triplet not in res: res.append(triplet)` when `res` is a list?",
-        "whatInterviewerChecks": "Understanding O(M) linear search in lists degrading overall complexity.",
-        "bestReplyScript": "If `res` is a list, evaluating `triplet not in res` performs a linear scan over all previously found triplets. If there are M triplets (where M can be O(N\u00b2)), doing this check on every match degrades the time complexity from O(N\u00b2) to O(N\u00b3)! That is why we sort first and use pointer increments to skip duplicates in O(1) time.",
-        "keyPoints": [
-          "'in list' takes linear O(M) time",
-          "Degrades complexity to O(N\u00b3)",
-          "Skipping pointers avoids linear membership checks"
-        ],
-        "codeSnippet": "# \u274c DANGEROUS O(N^3) trap:\n# if [a, b, c] not in res:  # O(len(res)) scan every time!\n#     res.append([a, b, c])"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you return only one valid triplet?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Edge Cases & Boundaries",
-        "question": "What happens if all numbers are zeros, e.g. nums = [0, 0, 0, 0, 0]?",
-        "whatInterviewerChecks": "Testing duplicate suppression on all-zero arrays.",
-        "bestReplyScript": "If `nums = [0, 0, 0, 0, 0]`, at `i = 0`, `nums[0] = 0`. The two pointers find `nums[1] + nums[4] == 0`, adding `[0, 0, 0]`. The inner while loops then skip all identical 0s for `left` and `right`. In the outer loop, subsequent `i = 1, 2, ...` see `nums[i] == nums[i-1]` and skip immediately. The output correctly contains exactly one triplet: `[[0, 0, 0]]`.",
-        "keyPoints": [
-          "Finds first [0, 0, 0]",
-          "Inner skips advance past all zeros",
-          "Outer skip prevents duplicate i",
-          "Returns exactly [[0, 0, 0]]"
-        ],
-        "codeSnippet": "assert threeSum([0, 0, 0, 0, 0]) == [[0, 0, 0]]"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What if the target sum is not zero?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Python Slicing Overhead",
-        "question": "Why shouldn't you slice the array inside the loop like `for x in nums[i+1:]`?",
-        "whatInterviewerChecks": "Slicing memory allocation overhead.",
-        "bestReplyScript": "In Python, `nums[i+1:]` creates a shallow copy of the sublist on the heap. Doing this inside an outer loop of N iterations allocates O(N\u00b2) total memory and wastes CPU time copying pointers. Using index pointers `left = i + 1` directly operates over the original array with zero allocations.",
-        "keyPoints": [
-          "nums[i+1:] allocates new heap list",
-          "Repeated slicing costs O(N\u00b2) memory",
-          "Pointers avoid any copying"
-        ],
-        "codeSnippet": "# \u274c Allocates O(N) memory every iteration:\n# sub = nums[i+1:]\n\n# \u2705 O(1) memory pointer:\nleft = i + 1"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you generalize this to K-Sum?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Generalization: K-Sum",
-        "question": "How does this solution generalize to 4Sum, 5Sum, or arbitrary K-Sum?",
-        "whatInterviewerChecks": "Recursive reduction from K-Sum to 2-Sum.",
-        "bestReplyScript": "Any K-Sum problem can be reduced to (K-1)-Sum recursively by fixing the first element and recursing until K == 2, where we apply the two-pointer Two Sum algorithm. The base case K=2 runs in O(N), giving total time O(N^(K-1)). For 3Sum, K=3 -> O(N\u00b2). For 4Sum, K=4 -> O(N\u00b3).",
-        "keyPoints": [
-          "K-Sum reduces recursively to (K-1)-Sum",
-          "Base case is 2-Sum using two pointers",
-          "General time complexity O(N^(K-1))"
-        ],
-        "codeSnippet": "# K-Sum recursive skeleton:\n# def kSum(nums, target, k, start):\n#     if k == 2: return twoSum(nums, target, start)\n#     for i in range(start, len(nums)): ... kSum(..., k - 1, i + 1)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can hashing solve this problem?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Memory Leaks & Circular Refs",
-        "question": "Can storing triplets in a list cause memory leaks or circular references in Python?",
-        "whatInterviewerChecks": "Garbage collection and reference counting understanding.",
-        "bestReplyScript": "No. Triplets contain primitive integers (`int`), which have no references to parent containers. Python's reference counting garbage collector will immediately deallocate the list when it goes out of scope, with no cyclic references that would require the cyclic garbage collector (`gc`).",
-        "keyPoints": [
-          "Integers are leaf nodes in GC graph",
-          "No cyclic references possible",
-          "Immediate reference count reclamation"
-        ],
-        "codeSnippet": "# Leaf objects like ints deallocate instantaneously via refcount"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Test Suite Architecture",
-        "question": "What edge cases must be included in a test suite for 3Sum?",
-        "whatInterviewerChecks": "Defensive testing edge-case coverage.",
-        "bestReplyScript": "The test suite must cover: 1) Less than 3 elements `[1, 2]` -> `[]`; 2) No zero sum possible `[1, 2, 3]` -> `[]`; 3) Multiple zeros `[0, 0, 0]` -> `[[0, 0, 0]]`; 4) Negatives and positives with duplicates `[-1, 0, 1, 2, -1, -4]` -> `[[-1, -1, 2], [-1, 0, 1]]`; 5) All identical negative and positive pairs `[-2, 0, 0, 2, 2]`.",
-        "keyPoints": [
-          "Length < 3",
-          "No valid triplets",
-          "All zeros",
-          "Mixed negatives and duplicates"
-        ],
-        "codeSnippet": "def test_3sum():\n    assert threeSum([]) == []\n    assert threeSum([0]) == []\n    assert threeSum([0, 0, 0]) == [[0, 0, 0]]\n    assert threeSum([-1, 0, 1, 2, -1, -4]) == [[-1, -1, 2], [-1, 0, 1]]"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Concurrency & Multi-Processing",
-        "question": "Can the outer loop of 3Sum be parallelized across multiple CPU cores?",
-        "whatInterviewerChecks": "Data decomposition and lock-free parallel programming.",
-        "bestReplyScript": "Yes! Because the outer loop fixes `nums[i]` and searches the remaining elements independently, each iteration `i` can be dispatched to a worker process via Python's `multiprocessing.Pool`. Since `nums` is read-only after sorting, worker processes can read from shared memory (`multiprocessing.shared_memory`) without locking, achieving linear speedup across CPU cores.",
-        "keyPoints": [
-          "Independent subproblems per index i",
-          "Shared read-only memory",
-          "multiprocessing.Pool for multi-core speedup"
-        ],
-        "codeSnippet": "# Parallelizing 3Sum outer loop with multiprocessing:\n# with Pool() as pool:\n#     results = pool.map(search_two_sum_for_i, range(len(nums) - 2))"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Why are two pointers more efficient than three nested loops?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Code Quality & Cleanliness",
-        "question": "How do you avoid variable shadowing when naming indices in two-pointer algorithms?",
-        "whatInterviewerChecks": "PEP 8 standards and avoiding naming collisions.",
-        "bestReplyScript": "In Python, using `l` (lowercase L) can be confused with the digit `1` in certain IDE fonts, which violates PEP 8. In production code, use `left` and `right` instead of `l` and `r`. Similarly, avoid using `sum` as a variable name since it shadows Python's built-in `sum()` function.",
-        "keyPoints": [
-          "Avoid 'l' which looks like '1' (PEP 8)",
-          "Never name variables 'sum' (shadows built-in sum())",
-          "Use current_sum and left / right"
-        ],
-        "codeSnippet": "# \u274c Bad names:\n# l, r = 0, n - 1\n# sum = nums[i] + nums[l] + nums[r]  # Shadows built-in sum!\n\n# \u2705 Clean names:\nleft, right = 0, n - 1\ncurrent_sum = nums[i] + nums[left] + nums[right]"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where is this pattern used in interviews?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Big-O Comparison Matrix",
-        "question": "Summarize the Time and Space trade-offs between Brute Force, Hash Set, and Two Pointers for 3Sum.",
-        "whatInterviewerChecks": "Comprehensive comparative mastery of all 3 approaches.",
-        "bestReplyScript": "1) Brute Force: 3 nested loops, O(N\u00b3) time, O(1) space, but fails on N > 500. 2) Hash Set: O(N\u00b2) time, O(N) auxiliary space, but suffers from hash collisions, memory allocation, and duplicate set sorting overhead. 3) Sorted Two Pointers: O(N\u00b2) time, O(1) auxiliary space (O(N) sort), zero hash overhead, excellent CPU cache locality, and clean duplicate skipping. Two Pointers is the undisputed industry standard.",
-        "keyPoints": [
-          "Brute force: O(N\u00b3) / O(1)",
-          "Hash set: O(N\u00b2) / O(N) with high memory overhead",
-          "Two pointers: O(N\u00b2) / O(1) - optimal standard"
-        ],
-        "codeSnippet": "# Best: Sorted Two Pointers -> O(N^2) time, O(1) auxiliary space"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Compare brute-force, hashing, and two-pointer solutions.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -20072,204 +20017,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain 3Sum Closest in 30 seconds to an interviewer?",
-        "whatInterviewerChecks": "Adaptation of Two Pointers to optimization distance minimization.",
-        "bestReplyScript": "We sort the array first in O(N log N). We initialize `closest_sum = nums[0] + nums[1] + nums[2]`. Then we iterate with index `i` from 0 to N-2, using two pointers `left = i + 1` and `right = N - 1`. At each step, compute `current_sum = nums[i] + nums[left] + nums[right]`. If `|current_sum - target| < |closest_sum - target|`, update `closest_sum`. If `current_sum == target`, return immediately. If `current_sum < target`, increment `left`; else decrement `right`. Total time is O(N\u00b2) and auxiliary space is O(1).",
-        "keyPoints": [
-          "Sort array first",
-          "Track closest_sum by absolute difference",
-          "Two pointers move based on comparison to target",
-          "Early exit if exact match found"
-        ],
-        "codeSnippet": "def threeSumClosest(nums: list[int], target: int) -> int:\n    nums.sort()\n    closest = nums[0] + nums[1] + nums[2]\n    for i in range(len(nums) - 2):\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            s = nums[i] + nums[l] + nums[r]\n            if abs(s - target) < abs(closest - target):\n                closest = s\n            if s < target: l += 1\n            elif s > target: r -= 1\n            else: return target\n    return closest"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your algorithm.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Initialization Pitfall",
-        "question": "Why is initializing `closest = float('inf')` a bug trap in 3Sum Closest?",
-        "whatInterviewerChecks": "Difference between returning minimum distance vs returning the sum itself.",
-        "bestReplyScript": "If you initialize `closest = float('inf')`, and the problem asks you to return the closest *sum* (not the distance), then if all numbers are negative and target is negative, you must do arithmetic comparisons with infinity. Initializing `closest = nums[0] + nums[1] + nums[2]` guarantees that `closest` is always a valid triplet sum from the input, eliminating infinity edge cases and type conversion bugs.",
-        "keyPoints": [
-          "Problem asks for the sum, not the distance",
-          "nums[0] + nums[1] + nums[2] is always a valid triplet",
-          "Avoids infinity comparison bugs"
-        ],
-        "codeSnippet": "# \u2705 Always initialize with a real triplet:\nclosest = nums[0] + nums[1] + nums[2]"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why is sorting necessary?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Loop Direction Logic",
-        "question": "How do you decide whether to increment `left` or decrement `right`?",
-        "whatInterviewerChecks": "Understanding monotonic direction relative to target.",
-        "bestReplyScript": "We compare `current_sum` to `target`. Because the array is sorted, if `current_sum < target`, the only way to get closer to the target is to increase the sum, which requires moving `left` to a larger value (`left += 1`). If `current_sum > target`, we must decrease the sum, which requires moving `right` to a smaller value (`right -= 1`). If `current_sum == target`, distance is 0, which cannot be beaten, so we exit immediately.",
-        "keyPoints": [
-          "Compare sum to target (not to closest)",
-          "sum < target -> left += 1",
-          "sum > target -> right -= 1",
-          "sum == target -> return target"
-        ],
-        "codeSnippet": "if s < target:\n    l += 1\nelif s > target:\n    r -= 1\nelse:\n    return target  # Distance is 0, cannot get closer!"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. How do you determine which pointer to move?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Duplicate Skipping Optimization",
-        "question": "Can we skip duplicates in 3Sum Closest like we do in 3Sum?",
-        "whatInterviewerChecks": "Optimization without missing closest candidates.",
-        "bestReplyScript": "Yes. In the outer loop, if `i > 0 and nums[i] == nums[i-1]`, we can safely skip it because the exact same subarray search space was already explored with a wider window. Inside the two-pointer loop, after evaluating the sum, if we decide to move `left`, we can skip duplicate values of `nums[left]`. This cuts runtime significantly on arrays with repeated values while preserving the closest distance.",
-        "keyPoints": [
-          "Outer loop duplicate skip is safe",
-          "Inner loop can skip identical heights",
-          "Preserves optimality while pruning iterations"
-        ],
-        "codeSnippet": "if i > 0 and nums[i] == nums[i-1]:\n    continue"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Complexity Analysis",
-        "question": "What is the time complexity and can it be solved faster than O(N\u00b2)?",
-        "whatInterviewerChecks": "3SUM hardness conjecture in computational complexity.",
-        "bestReplyScript": "Sorting is O(N log N). The outer loop runs N times, and the inner two-pointer loop runs N times, yielding strictly O(N\u00b2) time. In computational complexity theory, the 3SUM conjecture posits that no algorithm can solve 3Sum or 3Sum Closest in truly sub-quadratic time O(N^(2-\u03b5)) without specialized word-RAM assumptions. Therefore, O(N\u00b2) is optimal for interview purposes.",
-        "keyPoints": [
-          "O(N\u00b2) time complexity",
-          "3SUM conjecture states sub-quadratic is unlikely",
-          "O(1) auxiliary space"
-        ],
-        "codeSnippet": "# Time: O(N^2), Space: O(1)"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do you keep track of the closest sum?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Floating Point & Precision",
-        "question": "Does Python handle negative integer differences correctly with `abs()`?",
-        "whatInterviewerChecks": "Arithmetic correctness with signed distances.",
-        "bestReplyScript": "Yes. Python's built-in `abs()` correctly computes the absolute value for arbitrarily large positive or negative integers. For example, `abs(-5 - (-2)) = abs(-3) = 3`. Because Python integers do not overflow, there is no risk of `abs(INT_MIN)` undefined behavior as found in C or C++.",
-        "keyPoints": [
-          "abs() works seamlessly on arbitrary precision ints",
-          "No INT_MIN overflow risk in Python",
-          "Correctly computes Euclidean distance on the number line"
-        ],
-        "codeSnippet": "assert abs(-10 - (-5)) == 5\nassert abs(-2147483648) == 2147483648"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What happens if multiple sums are equally close?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases",
-        "question": "What are the key edge cases for 3Sum Closest?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "1) Exactly 3 elements: `nums = [1, 2, 3], target = 100` -> returns 6; 2) Exact match exists: returns `target` immediately; 3) All negative numbers: `nums = [-5, -4, -3, -2], target = -10` -> returns -10 or closest negative; 4) Large positive and negative values balancing out; 5) Multiple equidistant answers (problem specifies exactly one unique answer).",
-        "keyPoints": [
-          "len(nums) == 3",
-          "Exact match (distance = 0)",
-          "All negative values",
-          "Large distance gap"
-        ],
-        "codeSnippet": "assert threeSumClosest([0, 0, 0], 1) == 0\nassert threeSumClosest([1, 1, 1, 0], -100) == 2"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Binary Search Alternative",
-        "question": "Could we use binary search instead of two pointers for 3Sum Closest?",
-        "whatInterviewerChecks": "Evaluating alternative O(N\u00b2 log N) binary search pattern.",
-        "bestReplyScript": "Yes. For every pair (i, j), we could use `bisect` to binary search for the element closest to `target - (nums[i] + nums[j])` in the remaining subarray. However, binary search takes O(log N) per pair, making total time O(N\u00b2 log N), which is strictly slower than the two-pointer approach at O(N\u00b2). Two pointers is both faster and simpler.",
-        "keyPoints": [
-          "Binary search takes O(N\u00b2 log N)",
-          "Two pointers takes O(N\u00b2)",
-          "Two pointers is asymptotically superior"
-        ],
-        "codeSnippet": "# Bisect approach: O(N^2 log N) - slower than Two Pointers O(N^2)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Python `math.isclose` vs `abs()`",
-        "question": "Why shouldn't you use `math.isclose()` for this problem?",
-        "whatInterviewerChecks": "Understanding integer distance vs floating point relative tolerance.",
-        "bestReplyScript": "`math.isclose()` is designed for floating-point equality comparisons with relative and absolute tolerances (`rel_tol`, `abs_tol`) to avoid rounding errors. Here, we are working with discrete integers and need to minimize exact numeric distance `abs(a - b)`. Using `math.isclose()` adds unnecessary floating-point conversion and does not return the numeric difference.",
-        "keyPoints": [
-          "math.isclose is for float equality",
-          "abs() is exact for integer distance",
-          "Avoid floating point conversion"
-        ],
-        "codeSnippet": "# Use abs(current_sum - target), not math.isclose"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Can you stop early if you find an exact match?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Tie-Breaking Behavior",
-        "question": "If two sums have the exact same distance (e.g. diff = -2 and diff = +2), does the problem guarantee a single answer?",
-        "whatInterviewerChecks": "Reading problem constraints carefully.",
-        "bestReplyScript": "Yes, standard problem specifications guarantee that each input has exactly one unique closest triplet sum. If ties were possible, the prompt would specify whether to prefer the smaller or larger sum, which can be handled with a tie-breaking conditional: `if dist < min_dist or (dist == min_dist and s < closest): closest = s`.",
-        "keyPoints": [
-          "Problem guarantees unique answer",
-          "Ties can be handled with secondary comparison",
-          "Always clarify tie-breaking rules with interviewer"
-        ],
-        "codeSnippet": "# If tie-breaker requested:\n# if dist < min_dist or (dist == min_dist and s < closest): closest = s"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you modify this for K-Sum Closest?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Memory Allocation & Variables",
-        "question": "How many total variables are allocated on the stack during execution?",
-        "whatInterviewerChecks": "Stack frame memory consumption.",
-        "bestReplyScript": "Only 5 primitive integer references: `closest`, `i`, `l`, `r`, and `s`. No auxiliary data structures, lists, or heap buffers are allocated. In CPython, local variables in functions are indexed via fast local arrays (`FAST_LOAD`), making variable access extremely fast.",
-        "keyPoints": [
-          "5 local variable references",
-          "Zero heap allocations",
-          "CPython LOAD_FAST bytecode optimization"
-        ],
-        "codeSnippet": "# Local variables use LOAD_FAST in CPython bytecode -> near C-level speed"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Early Termination Pruning",
-        "question": "How can you prune the search space early if the smallest possible sum in an iteration exceeds target?",
-        "whatInterviewerChecks": "Advanced branch-and-bound pruning in sorted arrays.",
-        "bestReplyScript": "At any index i, the minimum possible sum with `nums[i]` is `nums[i] + nums[i+1] + nums[i+2]`. If this minimum sum is greater than `target` and its distance `min_sum - target` is greater than or equal to our best distance so far, then all subsequent triplets in the loop will only be even larger. We can immediately break out of the entire outer loop, saving thousands of iterations.",
-        "keyPoints": [
-          "min_sum = nums[i] + nums[i+1] + nums[i+2]",
-          "If min_sum > target and distance >= best, break outer loop",
-          "Branch-and-bound optimization"
-        ],
-        "codeSnippet": "min_sum = nums[i] + nums[i+1] + nums[i+2]\nif min_sum > target:\n    if abs(min_sum - target) < abs(closest - target):\n        closest = min_sum\n    break  # All future sums will be even bigger!"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can hashing improve this algorithm?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Maximum Bound Pruning",
-        "question": "Can you also prune using the largest possible sum for index i?",
-        "whatInterviewerChecks": "Dual-sided pruning logic.",
-        "bestReplyScript": "Yes! The maximum possible sum using `nums[i]` is `max_sum = nums[i] + nums[-1] + nums[-2]`. If `max_sum < target`, then no triplet using `nums[i]` can reach `target`. We update `closest` with `max_sum` if it's closer, and `continue` to the next `i` immediately without running the inner while loop.",
-        "keyPoints": [
-          "max_sum = nums[i] + nums[-1] + nums[-2]",
-          "If max_sum < target, update closest and continue",
-          "Skips entire inner while loop"
-        ],
-        "codeSnippet": "max_sum = nums[i] + nums[-1] + nums[-2]\nif max_sum < target:\n    if abs(max_sum - target) < abs(closest - target):\n        closest = max_sum\n    continue  # Skip inner two-pointer scan!"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Why is two-pointer the preferred approach?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Defensive Invariants",
-        "question": "How would you write an automated invariant check using Python's `assert` statement?",
-        "whatInterviewerChecks": "Defensive programming and assertion contracts.",
-        "bestReplyScript": "We can assert that `len(nums) >= 3` at the function entrypoint, and assert that the returned `closest` sum was formed by a valid triplet. In test suites, we can assert that our O(N\u00b2) result matches a reference O(N\u00b3) brute force result for randomized small arrays.",
-        "keyPoints": [
-          "assert len(nums) >= 3",
-          "Cross-validate against brute force in fuzz tests",
-          "Contract validation"
-        ],
-        "codeSnippet": "assert len(nums) >= 3, '3Sum requires at least 3 elements'"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Compare this problem with the standard 3Sum problem.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Interview Communication",
-        "question": "What is the biggest mistake candidates make when explaining 3Sum Closest?",
-        "whatInterviewerChecks": "Communication pitfalls and interview awareness.",
-        "bestReplyScript": "The biggest mistake is moving the pointers based on comparison to `closest` rather than `target`. If `current_sum` is closer than `closest`, some candidates mistakenly compare `current_sum` with `closest` to decide which pointer to move. The pointers must ALWAYS move based on `current_sum < target` or `current_sum > target` because the array is sorted relative to number line values, not relative to closeness.",
-        "keyPoints": [
-          "Pointers MUST move based on target, not closest",
-          "Common candidate confusion",
-          "Target defines number line direction"
-        ],
-        "codeSnippet": "# \u274c WRONG: if current_sum < closest: l += 1\n# \u2705 CORRECT: if current_sum < target: l += 1"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Where might this type of optimization problem appear in real applications?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -20383,203 +20310,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain 4Sum in 30 seconds to an interviewer?",
-        "whatInterviewerChecks": "Extension of 3Sum to 4Sum with duplicate suppression.",
-        "bestReplyScript": "I solve 4Sum by sorting the array first in O(N log N). Then I run two nested loops for indices i and j (where j = i + 1) to fix the first two numbers. For the remaining two numbers, I run a Two-Pointer scan with `left = j + 1` and `right = N - 1`. At every level, we skip duplicate values for i, j, left, and right to guarantee unique quadruplets. Total time complexity is O(N\u00b3) and auxiliary space is O(1).",
-        "keyPoints": [
-          "Sort array first",
-          "Two nested loops (i, j) + two pointers (left, right)",
-          "Duplicate skipping at all 4 levels",
-          "O(N\u00b3) time & O(1) space"
-        ],
-        "codeSnippet": "def fourSum(nums: list[int], target: int) -> list[list[int]]:\n    nums.sort()\n    res = []\n    n = len(nums)\n    for i in range(n - 3):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        for j in range(i + 1, n - 2):\n            if j > i + 1 and nums[j] == nums[j-1]: continue\n            l, r = j + 1, n - 1\n            while l < r:\n                s = nums[i] + nums[j] + nums[l] + nums[r]\n                if s == target:\n                    res.append([nums[i], nums[j], nums[l], nums[r]])\n                    while l < r and nums[l] == nums[l+1]: l += 1\n                    while l < r and nums[r] == nums[r-1]: r -= 1\n                    l += 1; r -= 1\n                elif s < target: l += 1\n                else: r -= 1\n    return res"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Duplicate Skipping Boundary",
-        "question": "Why is the inner loop duplicate check `j > i + 1 and nums[j] == nums[j-1]` and NOT `j > 0`?",
-        "whatInterviewerChecks": "Subtle boundary condition in nested loops.",
-        "bestReplyScript": "If you wrote `j > 0 and nums[j] == nums[j-1]`, then whenever `j = i + 1` (the very first element of the inner loop) happens to equal `nums[i]`, it would mistakenly skip it! For example, in `[2, 2, 2, 2]`, `i = 0` (`nums[0] = 2`) and `j = 1` (`nums[1] = 2`). Because `j > i + 1` is false on the first iteration of j, it correctly allows `nums[j]` to equal `nums[i]`, enabling quadruplets with repeated values.",
-        "keyPoints": [
-          "j > i + 1 only checks duplicates within j's loop",
-          "Allows nums[j] to equal nums[i]",
-          "Prevents missing quadruplets like [2, 2, 2, 2]"
-        ],
-        "codeSnippet": "# \u2705 Allows first element of j to match nums[i]:\nif j > i + 1 and nums[j] == nums[j-1]:\n    continue"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you sort the array first?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Early Exit Pruning",
-        "question": "How can you optimize 4Sum by 10x using min and max bound pruning?",
-        "whatInterviewerChecks": "Branch-and-bound pruning in high-order loops.",
-        "bestReplyScript": "Before running the inner loops: 1) Min-sum check: if `nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target`, then because the array is sorted, the smallest possible sum in this iteration exceeds target, so we can `break` the outer loop entirely. 2) Max-sum check: if `nums[i] + nums[-1] + nums[-2] + nums[-3] < target`, then the largest possible sum with `nums[i]` is too small, so we can `continue` to the next i. Applying this at both loop levels prunes >90% of iterations.",
-        "keyPoints": [
-          "Min-sum break: sum of 4 smallest > target -> break",
-          "Max-sum continue: sum of current + 3 largest < target -> continue",
-          "Cuts runtime dramatically"
-        ],
-        "codeSnippet": "# Min bound check:\nif nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target: break\n# Max bound check:\nif nums[i] + nums[-1] + nums[-2] + nums[-3] < target: continue"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Complexity Analysis",
-        "question": "What are the exact time and space complexities of 4Sum?",
-        "whatInterviewerChecks": "Asymptotic analysis across sorting, nested loops, and two pointers.",
-        "bestReplyScript": "Sorting takes O(N log N). The outer loop runs O(N) times, the middle loop runs O(N) times, and the inner two-pointer search runs O(N) times. Combined, they take O(N * N * N) = O(N\u00b3) time. Auxiliary space is O(1) beyond sorting (O(N) for Timsort). If we output M quadruplets, the output storage is O(M).",
-        "keyPoints": [
-          "Time: O(N\u00b3)",
-          "Auxiliary Space: O(1) (excluding output)",
-          "Timsort space: O(N)"
-        ],
-        "codeSnippet": "# Time: O(N^3)\n# Space: O(1) auxiliary"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you avoid duplicate quadruplets?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Recursive Generalization",
-        "question": "How do you write a generic K-Sum solver that solves 2Sum, 3Sum, 4Sum, and 10Sum with the same code?",
-        "whatInterviewerChecks": "Recursive problem decomposition and generalized DSA pattern.",
-        "bestReplyScript": "We sort the array once. Then we define `kSum(nums, target, k, start)`. If `k == 2`, we run the two-pointer Two Sum algorithm on `nums[start:]`. For any `k > 2`, we loop `i` from `start` to `len(nums) - k`, skip duplicates, and recursively call `kSum(nums, target - nums[i], k - 1, i + 1)`. We prepend `nums[i]` to all returned tuples.",
-        "keyPoints": [
-          "Recursive kSum function",
-          "Base case k == 2 uses two pointers",
-          "Generalizes to any K in O(N^(k-1)) time"
-        ],
-        "codeSnippet": "def kSum(nums, target, k, start):\n    res = []\n    if k == 2:\n        l, r = start, len(nums) - 1\n        while l < r:\n            s = nums[l] + nums[r]\n            if s == target:\n                res.append([nums[l], nums[r]])\n                while l < r and nums[l] == nums[l+1]: l += 1\n                while l < r and nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n            elif s < target: l += 1\n            else: r -= 1\n        return res\n    for i in range(start, len(nums) - k + 1):\n        if i > start and nums[i] == nums[i-1]: continue\n        for subset in kSum(nums, target - nums[i], k - 1, i + 1):\n            res.append([nums[i]] + subset)\n    return res"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. Why isn't brute force feasible?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Hash Map Pair Alternative",
-        "question": "Can 4Sum be solved in O(N\u00b2) time using a pair-sum hash map?",
-        "whatInterviewerChecks": "Understanding trade-offs of pair-sum hashing and index overlap.",
-        "bestReplyScript": "You can precompute all pair sums `nums[a] + nums[b]` and store them in a hash map `map[sum] = [(a, b), ...]`. Then find pairs of pairs where `sum1 + sum2 == target`. However, checking that all 4 indices `(a, b, c, d)` are distinct and eliminating duplicate value quadruplets requires extensive post-processing. In the worst case (e.g. all zeros), there are O(N\u00b2) pairs with the same sum, causing the combination step to degrade back to O(N\u2074) time with high memory overhead. The sorted two-pointer O(N\u00b3) approach is far superior in practice.",
-        "keyPoints": [
-          "Pair hash map theoretically sounds O(N\u00b2)",
-          "Worst case degrades to O(N\u2074) on repeated sums",
-          "Sorted two pointers O(N\u00b3) is cleaner and uses O(1) memory"
-        ],
-        "codeSnippet": "# Pair hash map has index overlap checks and O(N^2) memory footprint"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. How would you generalize this to K-Sum?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Integer Overflow in 4Sum",
-        "question": "In Java/C++, 4Sum can overflow 32-bit signed integers when summing 4 numbers. Does Python suffer from this?",
-        "whatInterviewerChecks": "Cross-language integer model comparison.",
-        "bestReplyScript": "In Java and C++, summing four numbers near 10^9 exceeds `2^31 - 1 = 2,147,483,647`, causing integer overflow into negative values unless cast to `long` (64-bit). In Python 3, integers have arbitrary precision (`PyLongObject`), so `nums[i] + nums[j] + nums[l] + nums[r]` will never overflow. Python handles arbitrarily large values automatically.",
-        "keyPoints": [
-          "Java/C++ requires long to prevent overflow",
-          "Python 3 arbitrary precision prevents overflow",
-          "Safe on all large integer inputs"
-        ],
-        "codeSnippet": "# In Java: long sum = (long)nums[i] + nums[j] + nums[l] + nums[r];\n# In Python: sum = nums[i] + nums[j] + nums[l] + nums[r]  # Automatically safe!"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Edge Cases & Minimum Inputs",
-        "question": "What are the key edge cases for 4Sum?",
-        "whatInterviewerChecks": "Testing coverage on 4Sum.",
-        "bestReplyScript": "1) Fewer than 4 elements: `len(nums) < 4` -> `[]`; 2) Exactly 4 elements summing to target; 3) All identical numbers `[2, 2, 2, 2, 2], target = 8` -> `[[2, 2, 2, 2]]`; 4) Large target out of reach; 5) Negative and positive mixtures with multiple distinct quadruplets.",
-        "keyPoints": [
-          "len(nums) < 4 returns []",
-          "Identical elements [2, 2, 2, 2]",
-          "Negative target values",
-          "No valid quadruplet exists"
-        ],
-        "codeSnippet": "assert fourSum([1, 2, 3], 6) == []\nassert fourSum([2, 2, 2, 2, 2], 8) == [[2, 2, 2, 2]]"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Python Generator vs List Return",
-        "question": "How would you convert 4Sum into a generator using `yield` for memory efficiency?",
-        "whatInterviewerChecks": "Python generators and streaming evaluation.",
-        "bestReplyScript": "Instead of accumulating quadruplets in a `res` list in RAM, we can replace `res.append(...)` with `yield [nums[i], nums[j], nums[l], nums[r]]`. This turns the function into a generator that yields quadruplets on demand via `next()`. This reduces memory overhead to strict O(1) for consumers streaming millions of quadruplets.",
-        "keyPoints": [
-          "Use yield instead of res.append()",
-          "Returns a generator iterator",
-          "O(1) memory footprint for consumer"
-        ],
-        "codeSnippet": "def fourSum_stream(nums, target):\n    nums.sort()\n    n = len(nums)\n    for i in range(n - 3):\n        if i > 0 and nums[i] == nums[i-1]: continue\n        for j in range(i + 1, n - 2):\n            if j > i + 1 and nums[j] == nums[j-1]: continue\n            l, r = j + 1, n - 1\n            while l < r:\n                s = nums[i] + nums[j] + nums[l] + nums[r]\n                if s == target:\n                    yield [nums[i], nums[j], nums[l], nums[r]]\n                    while l < r and nums[l] == nums[l+1]: l += 1\n                    while l < r and nums[r] == nums[r-1]: r -= 1\n                    l += 1; r -= 1\n                elif s < target: l += 1\n                else: r -= 1"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Can pruning improve the algorithm's performance?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Sorting Stability in Python",
-        "question": "Does the stability of Python's Timsort affect the correctness of 4Sum?",
-        "whatInterviewerChecks": "Understanding stable vs unstable sorting in algorithm pipelines.",
-        "bestReplyScript": "No. Stability means equal elements maintain their relative original order. For 4Sum, all elements in each equivalence class are identical values (e.g. multiple `2`s). Because we only care about the values and skip duplicate values, whether two identical numbers swapped positions during sorting has zero effect on the output.",
-        "keyPoints": [
-          "Stability preserves relative order of equal keys",
-          "4Sum only inspects scalar integer values",
-          "Any valid sort algorithm works correctly"
-        ],
-        "codeSnippet": "# Timsort is stable, but 4Sum works on any O(N log N) sort"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Comparison to 4Sum II",
-        "question": "How does this problem differ from '4Sum II' where 4 separate arrays are given?",
-        "whatInterviewerChecks": "Problem differentiation and knowing when hash maps are optimal.",
-        "bestReplyScript": "In 4Sum II, you are given four separate arrays A, B, C, D and need to find the number of tuples `(i, j, k, l)` such that `A[i] + B[j] + C[k] + D[l] == 0`. Because the indices come from 4 independent lists, there are NO index overlap constraints! You can hash all pair sums of A and B into a hash map in O(N\u00b2), and then check complements against C and D in O(N\u00b2), solving 4Sum II in O(N\u00b2) time. Standard 4Sum has overlap constraints from a single array, requiring O(N\u00b3).",
-        "keyPoints": [
-          "4Sum II uses 4 independent arrays",
-          "No index overlap restrictions in 4Sum II",
-          "4Sum II is O(N\u00b2) with hash map, standard 4Sum is O(N\u00b3)"
-        ],
-        "codeSnippet": "# 4Sum II (4 separate lists): O(N^2) via collections.Counter(a + b for a in A for b in B)"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would you solve this if only one valid quadruplet is required?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "CPython Loop Optimization",
-        "question": "Why is caching `len(nums)` in a variable `n` beneficial in CPython?",
-        "whatInterviewerChecks": "Python bytecode instruction minimization.",
-        "bestReplyScript": "In CPython, calling `len(nums)` inside loop boundary checks emits `LOAD_GLOBAL (len)` and `CALL_FUNCTION` bytecode instructions every time. Assigning `n = len(nums)` beforehand stores the length in a local variable, which CPython accesses in 1 clock cycle using `LOAD_FAST`.",
-        "keyPoints": [
-          "len() is a global function call in bytecode",
-          "Local variables use LOAD_FAST",
-          "Micro-optimization for deep loops"
-        ],
-        "codeSnippet": "# \u2705 Store length once:\nn = len(nums)\nfor i in range(n - 3): ..."
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can hashing reduce the complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Unit Testing & Assertions",
-        "question": "How do you test quadruplet uniqueness and order-independence in unit tests?",
-        "whatInterviewerChecks": "Writing robust test assertions for unordered lists of lists.",
-        "bestReplyScript": "Because the problem allows returning quadruplets in any order, comparing lists directly with `assert result == expected` can cause false test failures if ordering differs. The robust way to test is converting both the result and expected outputs to sets of sorted tuples: `assert {tuple(sorted(q)) for q in result} == {tuple(sorted(q)) for q in expected}`.",
-        "keyPoints": [
-          "Convert to sets of sorted tuples",
-          "Ignores inner and outer ordering",
-          "Prevents false test failures"
-        ],
-        "codeSnippet": "def normalize(quads):\n    return {tuple(sorted(q)) for q in quads}\n\nassert normalize(fourSum(nums, target)) == normalize(expected)"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Compare recursive K-Sum and iterative approaches.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Memory Footprint of Output",
-        "question": "What is the maximum number of quadruplets that 4Sum can return for an array of size N?",
-        "whatInterviewerChecks": "Combinatorial upper bound.",
-        "bestReplyScript": "The maximum number of quadruplets is given by the combination formula `C(N, 4) = N * (N - 1) * (N - 2) * (N - 3) / 24 = O(N\u2074)`. For an array of all zeros `[0]*N` and `target = 0`, duplicate suppression reduces the output to exactly 1 quadruplet `[[0, 0, 0, 0]]`. But if combinations are distinct, output can be up to O(N\u00b3).",
-        "keyPoints": [
-          "C(N, 4) maximum possible combinations",
-          "Duplicate suppression prunes repeated values",
-          "Output size bounded by O(N\u00b3) distinct quadruplets"
-        ],
-        "codeSnippet": "# Max combinations: math.comb(N, 4)"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where is this pattern useful outside interviews?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior Engineering Takeaway",
-        "question": "What is the key takeaway an interviewer wants to hear at the conclusion of 4Sum?",
-        "whatInterviewerChecks": "Executive summary and synthesis of algorithmic paradigms.",
-        "bestReplyScript": "The key takeaway is recognizing that 4Sum is not a new problem: it is an elegant recursive extension of Two Sum and 3Sum. By sorting up-front, we reduce time complexity by an order of magnitude (from O(N\u2074) to O(N\u00b3)), eliminate duplicate quadruplets in O(1) space without expensive hash sets, and unlock aggressive branch-and-bound pruning with min/max boundary checks.",
-        "keyPoints": [
-          "Recursive reduction to 2-Sum",
-          "Sorting replaces hash sets with O(1) duplicate skipping",
-          "Min/Max pruning cuts real-world runtimes"
-        ],
-        "codeSnippet": "# Executive Summary: Sorting + Two Pointers turns O(N^4) brute force into O(N^3) optimal pipeline"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would your solution perform on very large datasets?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -20712,203 +20622,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain Longest Substring Without Repeating Characters in 30 seconds?",
-        "whatInterviewerChecks": "Sliding window with hash map jump mechanics.",
-        "bestReplyScript": "I solve this using an optimized Sliding Window technique with a hash map. We maintain a window `[left, right]` where `right` expands character by character. We store the last seen index of each character in a dictionary `seen`. If the current character was already seen inside our active window (`seen[char] >= left`), we jump `left` to `seen[char] + 1` to immediately evict the duplicate. At each step, we update `max_len = max(max_len, right - left + 1)`. This guarantees single-pass O(N) time and O(min(N, M)) space where M is the character set size.",
-        "keyPoints": [
-          "Sliding window [left, right]",
-          "seen dict tracks last seen index",
-          "Jump left = seen[c] + 1 on duplicate",
-          "O(N) time and O(min(N, M)) space"
-        ],
-        "codeSnippet": "def lengthOfLongestSubstring(s: str) -> int:\n    seen = {}\n    left = 0\n    max_len = 0\n    for right, c in enumerate(s):\n        if c in seen and seen[c] >= left:\n            left = seen[c] + 1\n        seen[c] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your sliding window approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Critical Logic Trap",
-        "question": "Why is the condition `seen[c] >= left` strictly required when jumping the left pointer?",
-        "whatInterviewerChecks": "Understanding stale indices in dictionary memory.",
-        "bestReplyScript": "The dictionary keeps the index of every character ever encountered. If a character was seen earlier in the string but *outside* our current window (i.e. `seen[c] < left`), we must NOT jump `left` backward! For example, in 'tmmzuxt', at the second 't', the previous 't' was at index 0, but `left` is already at index 2 (after 'm'). If we didn't check `seen[c] >= left`, `left` would jump backward from 2 to 1, re-introducing previously evicted duplicates!",
-        "keyPoints": [
-          "Dictionary holds stale indices from outside active window",
-          "Jumping backward re-introduces duplicates",
-          "seen[c] >= left ensures left pointer only moves forward"
-        ],
-        "codeSnippet": "# Example: s = 'abba'\n# At second 'a', seen['a'] = 0, but left = 2 (after 'b').\n# Without seen['a'] >= left, left jumps back to 1 -> INCORRECT!"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you choose a sliding window instead of brute force?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Hash Set vs Last-Seen Index Map",
-        "question": "What is the performance difference between using a Hash Set vs a Hash Map for sliding window?",
-        "whatInterviewerChecks": "O(2N) step-by-step eviction vs O(N) index-jumping.",
-        "bestReplyScript": "With a Hash Set, when a duplicate is found at `right`, you must increment `left` one step at a time in an inner while loop and remove characters until the duplicate is evicted: `window.remove(s[left]); left += 1`. This visits each character at most twice (2N steps). With an index Hash Map, you jump `left = seen[c] + 1` in exactly 1 operation. The index map executes in strictly N steps with fewer loop overheads.",
-        "keyPoints": [
-          "Set approach takes 2N steps (step-by-step eviction)",
-          "Map approach takes N steps (direct index jump)",
-          "Map approach avoids inner while loop"
-        ],
-        "codeSnippet": "# Set approach (O(2N)):\n# while s[r] in char_set: char_set.remove(s[l]); l += 1\n# Map approach (O(N)):\n# if c in seen and seen[c] >= l: l = seen[c] + 1"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Space Complexity & Alphabet Bounds",
-        "question": "What is the upper bound on space complexity for ASCII vs Unicode strings?",
-        "whatInterviewerChecks": "Alphabet size bounds on auxiliary space.",
-        "bestReplyScript": "Space complexity is O(min(N, M)), where N is the length of string `s` and M is the size of the character set. For standard ASCII, M <= 128 (or 256 for extended ASCII). For lowercase English letters, M <= 26. Thus, for ASCII, space is bounded by O(1) constant memory (at most 128 entries). For full Unicode, M can be up to 1,114,112 characters, bounded by N.",
-        "keyPoints": [
-          "O(min(N, M)) space",
-          "ASCII: M <= 128 -> strict O(1) space",
-          "Unicode: up to O(N)"
-        ],
-        "codeSnippet": "# ASCII alphabet limit:\n# max_entries = 128 -> O(1) space"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Why did you use a hash map (or set) to track characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Array Table Micro-Optimization",
-        "question": "If the string is strictly ASCII, how can you replace the Python dictionary with an array for 2x speed?",
-        "whatInterviewerChecks": "Direct array indexing using `ord()`.",
-        "bestReplyScript": "We can allocate a fixed array `last_seen = [-1] * 128`. For each character, we access its index in O(1) using `ord(c)`. An array lookup in CPython bypasses hash computations and collision resolution, executing roughly 2x faster than a dictionary lookup with zero hash overhead.",
-        "keyPoints": [
-          "last_seen = [-1] * 128",
-          "Direct indexing via ord(c)",
-          "Eliminates hash overhead"
-        ],
-        "codeSnippet": "def lengthOfLongestSubstring_ascii(s: str) -> int:\n    last_seen = [-1] * 128\n    left = 0\n    max_len = 0\n    for right, c in enumerate(s):\n        code = ord(c)\n        if last_seen[code] >= left:\n            left = last_seen[code] + 1\n        last_seen[code] = right\n        max_len = max(max_len, right - left + 1)\n    return max_len"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do you handle duplicate characters within the window?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Edge Cases",
-        "question": "What edge cases must you test for Longest Substring Without Repeating Characters?",
-        "whatInterviewerChecks": "Comprehensive boundary testing.",
-        "bestReplyScript": "1) Empty string `''` -> returns 0; 2) Single character `'a'` -> returns 1; 3) All identical characters `'bbbbb'` -> returns 1; 4) All unique characters `'abcdef'` -> returns 6; 5) Palindromic duplicates `'abba'` (tests stale left jump trap); 6) Long string with spaces and symbols `'pwwkew'` -> returns 3 ('wke').",
-        "keyPoints": [
-          "Empty string returns 0",
-          "Single char returns 1",
-          "All same chars returns 1",
-          "'abba' tests stale pointer trap"
-        ],
-        "codeSnippet": "assert lengthOfLongestSubstring('') == 0\nassert lengthOfLongestSubstring(' ') == 1\nassert lengthOfLongestSubstring('abba') == 2"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Substring vs Subsequence",
-        "question": "What is the difference between a Substring and a Subsequence in interview terminology?",
-        "whatInterviewerChecks": "Clarifying fundamental DSA definitions.",
-        "bestReplyScript": "A Substring is a *contiguous* sequence of characters within a string (e.g. 'pwke' is NOT a substring of 'pwwkew', but 'wke' is). A Subsequence is derived by deleting zero or more characters without changing the order of the remaining characters (e.g. 'pwke' IS a valid subsequence). This problem strictly asks for a contiguous Substring.",
-        "keyPoints": [
-          "Substring = contiguous characters",
-          "Subsequence = relative order preserved, can skip characters",
-          "This problem requires contiguous sliding window"
-        ],
-        "codeSnippet": "# 'pwke' is subsequence of 'pwwkew', but 'wke' is the longest unique substring"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you return the actual substring instead of its length?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python String Iteration Mechanics",
-        "question": "How does `enumerate(s)` unpack characters in Python 3 string objects?",
-        "whatInterviewerChecks": "CPython string iterator implementation.",
-        "bestReplyScript": "In Python 3, strings are stored in one of three compact representations depending on character codepoint: `PyUnicode_1BYTE_KIND` (Latin-1/ASCII), `2BYTE_KIND` (BMP), or `4BYTE_KIND`. Iterating with `enumerate(s)` returns 1-character string objects created via CPython's character caching mechanism (ASCII chars 0-255 are singletons), ensuring low allocation overhead.",
-        "keyPoints": [
-          "Compact string representation (PEP 393)",
-          "ASCII 0-255 characters are singletons",
-          "Iterating produces cached 1-char strings"
-        ],
-        "codeSnippet": "# CPython caches single-character ASCII strings in memory:\na = 'x'; b = 'x'\nassert a is b  # True! Same object in memory"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would your solution change if the input contains Unicode characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Return the Substring Itself",
-        "question": "How would you modify the code to return the actual longest unique substring, not just its length?",
-        "whatInterviewerChecks": "Tracking window start index and max length coordinates.",
-        "bestReplyScript": "Instead of only tracking `max_len`, we maintain `best_start = 0`. Whenever `right - left + 1 > max_len`, we update `max_len = right - left + 1` and `best_start = left`. At the end of the loop, we return the slice `s[best_start : best_start + max_len]`. This avoids slicing strings during the loop.",
-        "keyPoints": [
-          "Track best_start index alongside max_len",
-          "Update best_start when new max found",
-          "Slice string once at the very end: s[best_start : best_start + max_len]"
-        ],
-        "codeSnippet": "def findLongestUniqueSubstring(s: str) -> str:\n    seen = {}\n    left = best_start = max_len = 0\n    for right, c in enumerate(s):\n        if c in seen and seen[c] >= left:\n            left = seen[c] + 1\n        seen[c] = right\n        if right - left + 1 > max_len:\n            max_len = right - left + 1\n            best_start = left\n    return s[best_start : best_start + max_len]"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Can this problem be solved with O(1) extra space?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "At Most K Distinct Characters",
-        "question": "How does this pattern adapt to 'Longest Substring with At Most K Distinct Characters'?",
-        "whatInterviewerChecks": "Sliding window generalization with frequency count maps.",
-        "bestReplyScript": "Instead of a last-seen index map, we use a frequency map `counts = collections.defaultdict(int)`. Expand `right` and increment `counts[s[right]]`. While `len(counts) > k`, decrement `counts[s[left]]`; if count hits 0, `del counts[s[left]]`, and increment `left`. This is the canonical template for sliding window with frequency constraints.",
-        "keyPoints": [
-          "Frequency map counts occurrences",
-          "Window shrinks when len(counts) > k",
-          "del counts[key] when count reaches 0"
-        ],
-        "codeSnippet": "# At Most K Distinct:\n# counts[s[r]] += 1\n# while len(counts) > k:\n#     counts[s[l]] -= 1\n#     if counts[s[l]] == 0: del counts[s[l]]\n#     l += 1"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Two-Pointer Invariant",
-        "question": "What is the sliding window invariant that must hold at the end of every loop iteration?",
-        "whatInterviewerChecks": "Formal reasoning on sliding window correctness.",
-        "bestReplyScript": "The invariant is: 'The substring `s[left : right + 1]` contains only unique characters, and `max_len` stores the length of the longest unique substring ending at or before index `right`'. By induction, after `right` reaches `len(s) - 1`, `max_len` holds the global maximum.",
-        "keyPoints": [
-          "Window contains zero duplicate characters",
-          "Invariant holds inductively",
-          "Covers all valid ending positions"
-        ],
-        "codeSnippet": "# Invariant: len(set(s[left:right+1])) == (right - left + 1)"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Streaming Input Follow-up",
-        "question": "How would you solve this if the characters arrive one-by-one from a network socket stream of unknown length?",
-        "whatInterviewerChecks": "Streaming sliding window without random index access.",
-        "bestReplyScript": "Since we cannot index `s` backwards in a stream, we maintain a FIFO `collections.deque` representing the current window and a hash set for O(1) membership check. When char `c` arrives: while `c in char_set`, pop left from deque and remove from set. Then append `c` to deque, add to set, and update `max_len = max(max_len, len(deque))`. Memory is bounded by alphabet size M.",
-        "keyPoints": [
-          "collections.deque for stream window",
-          "Set for O(1) membership",
-          "O(M) memory bound where M is alphabet size"
-        ],
-        "codeSnippet": "from collections import deque\n\ndef stream_unique_window():\n    window = deque()\n    char_set = set()\n    max_len = 0\n    # on char c arriving from socket:\n    # while c in char_set: char_set.remove(window.popleft())\n    # window.append(c); char_set.add(c)\n    # max_len = max(max_len, len(window))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How would you solve this if the input is a stream of characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python `max()` in Sliding Window",
-        "question": "Can `max(max_len, right - left + 1)` be micro-optimized to avoid function call overhead?",
-        "whatInterviewerChecks": "Inline conditional optimization.",
-        "bestReplyScript": "Yes. Calling `max()` inside an iteration of 500,000 characters adds Python function call overhead. Using an explicit if-statement `curr_len = right - left + 1; if curr_len > max_len: max_len = curr_len` runs ~25% faster in CPython.",
-        "keyPoints": [
-          "Function call overhead in Python",
-          "Explicit if-statement executes faster in CPython",
-          "Micro-optimization for high-throughput loops"
-        ],
-        "codeSnippet": "curr_len = right - left + 1\nif curr_len > max_len:\n    max_len = curr_len"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. How would you modify the solution to allow at most K distinct characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Brute Force Complexity",
-        "question": "Why is the brute-force solution O(N\u00b3) and at what input size does it time out?",
-        "whatInterviewerChecks": "Understanding exponential scaling of nested substring checks.",
-        "bestReplyScript": "Brute force checks all substrings: there are O(N\u00b2) substrings. For each substring of length L, checking whether all characters are unique by converting to a set or checking pairs takes O(L) = O(N) time. Total time is O(N\u00b3). For N = 5,000, N\u00b3 = 1.25 * 10^11 operations, which would take hours in Python. Sliding window solves it in 0.005 seconds.",
-        "keyPoints": [
-          "O(N\u00b2) substrings * O(N) uniqueness check = O(N\u00b3)",
-          "Times out on N > 1,000",
-          "Sliding window drops complexity to O(N)"
-        ],
-        "codeSnippet": "# Brute force O(N^3):\n# for i in range(n):\n#     for j in range(i+1, n+1):\n#         if len(set(s[i:j])) == j - i: max_len = max(...)"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where is the sliding window pattern commonly used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior Summary & Key Patterns",
-        "question": "What broad class of interview problems does this sliding window pattern unlock?",
-        "whatInterviewerChecks": "Pattern recognition and algorithmic mental models.",
-        "bestReplyScript": "This pattern unlocks all 'dynamic-size sliding window with hash map' problems: Minimum Window Substring, Longest Substring with At Most Two Distinct Characters, Max Consecutive Ones III, Subarray Product Less Than K, and Permutation in String. The core mental model is: expand `right` to include, shrink `left` when condition violates, and update answer on valid windows.",
-        "keyPoints": [
-          "Universal Sliding Window mental model",
-          "Expand right to consume, shrink left to satisfy invariant",
-          "Transfers across 15+ top interview questions"
-        ],
-        "codeSnippet": "# Universal Template:\n# for right, x in enumerate(stream):\n#     add_to_window(x)\n#     while window_invalid(): remove_from_window(stream[left]); left += 1\n#     update_result()"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Compare the brute-force and optimal solutions.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -21020,203 +20913,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain Longest Palindromic Substring in 30 seconds?",
-        "whatInterviewerChecks": "Expand Around Center vs Dynamic Programming.",
-        "bestReplyScript": "A palindrome mirrors around its center. In a string of length N, there are 2N - 1 possible centers: N single-character centers for odd palindromes (like 'aba') and N - 1 between-character centers for even palindromes (like 'abba'). We iterate through all 2N - 1 centers and expand outward as long as characters match: `s[left] == s[right]`. We record the longest boundary. This runs in O(N\u00b2) time and strictly O(1) auxiliary space, which outperforms the O(N\u00b2) space of DP.",
-        "keyPoints": [
-          "2N - 1 centers (odd and even)",
-          "Expand outward while s[left] == s[right]",
-          "O(N\u00b2) time and O(1) space",
-          "Better than O(N\u00b2) DP space"
-        ],
-        "codeSnippet": "def longestPalindrome(s: str) -> str:\n    if not s:\n        return ''\n    start = end = 0\n    def expand(l, r):\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1; r += 1\n        return l + 1, r - 1\n    for i in range(len(s)):\n        l1, r1 = expand(i, i)       # Odd\n        l2, r2 = expand(i, i + 1)   # Even\n        if r1 - l1 > end - start: start, end = l1, r1\n        if r2 - l2 > end - start: start, end = l2, r2\n    return s[start : end + 1]"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Center Enumeration",
-        "question": "Why are there exactly 2N - 1 centers in a string of length N?",
-        "whatInterviewerChecks": "Mathematical counting of odd vs even centers.",
-        "bestReplyScript": "A palindrome can have an odd length or an even length. For odd-length palindromes, the center is an actual character at index `i` (there are N such characters: indices 0 to N-1). For even-length palindromes, the center is the gap between index `i` and `i + 1` (there are N - 1 such adjacent pairs). Summing them: `N + (N - 1) = 2N - 1` total centers.",
-        "keyPoints": [
-          "N character centers for odd palindromes",
-          "N - 1 gap centers for even palindromes",
-          "Total = 2N - 1 centers"
-        ],
-        "codeSnippet": "# Total centers = N (odd) + (N - 1) (even) = 2N - 1"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you choose the expand-around-center technique?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Boundary Off-by-One Trap",
-        "question": "Why does the helper function return `l + 1` and `r - 1` after the while loop terminates?",
-        "whatInterviewerChecks": "Pointer overshoot when while loop exits.",
-        "bestReplyScript": "The while loop condition is `while l >= 0 and r < len(s) and s[l] == s[r]`. Inside the loop, it expands: `l -= 1; r += 1`. The loop ONLY exits when `s[l] != s[r]` or pointers go out of bounds. This means `l` has gone 1 step too far to the left, and `r` has gone 1 step too far to the right. To recover the valid palindrome boundary, we must step back: `l + 1` and `r - 1`.",
-        "keyPoints": [
-          "Loop terminates on mismatch or out-of-bounds",
-          "Pointers have overshot by 1 step in each direction",
-          "l + 1 and r - 1 recovers exact valid palindrome range"
-        ],
-        "codeSnippet": "# Overshoot correction:\nwhile l >= 0 and r < len(s) and s[l] == s[r]:\n    l -= 1; r += 1\nreturn l + 1, r - 1  # Step back inward!"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Dynamic Programming Alternative",
-        "question": "How does the Dynamic Programming approach work, and why is Expand Around Center preferred?",
-        "whatInterviewerChecks": "DP recurrence relation vs O(1) space expand method.",
-        "bestReplyScript": "The DP state is `dp[i][j] = True` if `s[i:j+1]` is a palindrome. Base cases: all length 1 strings are True; length 2 are True if `s[i] == s[i+1]`. For length >= 3, `dp[i][j] = (s[i] == s[j]) and dp[i+1][j-1]`. While DP takes O(N\u00b2) time, it allocates an N x N boolean matrix, requiring O(N\u00b2) space. For N = 1,000, that is 1 million booleans. Expand Around Center runs in the same O(N\u00b2) time with strictly O(1) space, making it vastly superior.",
-        "keyPoints": [
-          "DP recurrence: dp[i][j] = (s[i] == s[j]) and dp[i+1][j-1]",
-          "DP requires O(N\u00b2) memory table",
-          "Expand Around Center uses O(1) memory and is faster in practice"
-        ],
-        "codeSnippet": "# DP Table (O(N^2) Space):\n# dp[i][j] = (s[i] == s[j]) and (j - i < 2 or dp[i+1][j-1])"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How does your solution compare to dynamic programming?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Linear Time: Manacher's Algorithm",
-        "question": "Can Longest Palindromic Substring be solved in strictly O(N) linear time? Explain Manacher's Algorithm.",
-        "whatInterviewerChecks": "Advanced theoretical knowledge of Manacher's Algorithm.",
-        "bestReplyScript": "Yes, Manacher's Algorithm solves it in O(N) time. It first transforms the string by inserting sentinel delimiters (e.g. `'#a#b#a#'`) so all palindromes have odd lengths. It maintains the rightmost palindrome boundary `R` and its center `C`. For any index `i < R`, it mirrors `i` across `C` as `i_mirror = 2*C - i` and initializes radius `P[i] = min(R - i, P[i_mirror])`. It only expands when necessary, ensuring the right boundary `R` moves strictly forward, achieving O(N) linear time.",
-        "keyPoints": [
-          "Manacher's Algorithm runs in strictly O(N) time",
-          "Uses delimiter '#' to unify odd/even lengths",
-          "Reuses palindrome radii from mirrored positions across center"
-        ],
-        "codeSnippet": "# Manacher's intuition: reuse symmetry across center C\n# i_mirror = 2 * C - i\n# P[i] = min(R - i, P[i_mirror])"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What is Manacher's Algorithm, and when would you use it?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Edge Cases",
-        "question": "What edge cases must be tested for Longest Palindromic Substring?",
-        "whatInterviewerChecks": "Boundary and duplicate testing.",
-        "bestReplyScript": "1) Single character `'a'` -> `'a'`; 2) Two identical characters `'bb'` -> `'bb'`; 3) Two distinct characters `'ab'` -> `'a'` or `'b'`; 4) All identical characters `'aaaa'` -> `'aaaa'`; 5) Entire string is palindrome `'racecar'` -> `'racecar'`; 6) No multi-char palindrome exists `'abcdef'` -> any 1 character.",
-        "keyPoints": [
-          "Length 1 returns itself",
-          "Even palindrome like 'bb'",
-          "No palindrome > 1 char returns first char",
-          "All same chars"
-        ],
-        "codeSnippet": "assert longestPalindrome('a') == 'a'\nassert longestPalindrome('cbbd') == 'bb'\nassert longestPalindrome('babad') in ('bab', 'aba')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Memory Allocation During Expansion",
-        "question": "Why shouldn't you slice strings inside the `expand` function?",
-        "whatInterviewerChecks": "Heap allocation overhead in tight inner loops.",
-        "bestReplyScript": "If you do `sub = s[l:r+1]` inside the expansion while loop, Python allocates a new string object on the heap on *every single expansion step*. In an O(N\u00b2) loop, this causes O(N\u00b3) character copies and triggers heavy garbage collection. Instead, compare characters directly via indices `s[l] == s[r]` and slice the string exactly ONCE when returning.",
-        "keyPoints": [
-          "Slicing in loop causes O(N\u00b3) heap allocation",
-          "Compare indices directly: s[l] == s[r]",
-          "Slice string only once at the end"
-        ],
-        "codeSnippet": "# \u274c BAD: sub = s[l:r+1]  # Allocates new string every step!\n# \u2705 GOOD: s[l] == s[r]   # Pointer comparison in O(1)"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you return the starting index along with the substring?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python String Immutability & Slicing",
-        "question": "How does Python 3 slice `s[start : end + 1]` execute at the C level?",
-        "whatInterviewerChecks": "CPython string slicing memory copying (`PyUnicode_Substring`).",
-        "bestReplyScript": "In CPython, calling `s[start:end+1]` invokes `PyUnicode_Substring()`. Because Python strings are immutable, it allocates a new `PyUnicodeObject` of length `end - start + 1` and copies the bytes from the source buffer using `memcpy()`. Since this slice is done only once at the end of the function, total slice time is O(L) where L is palindrome length.",
-        "keyPoints": [
-          "Calls PyUnicode_Substring at C level",
-          "Uses memcpy to copy bytes into new string",
-          "Executed only once at the return statement"
-        ],
-        "codeSnippet": "# Single slice at return:\nreturn s[start : end + 1]  # O(L) single copy"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Early Exit Optimization",
-        "question": "Can you stop searching if the remaining centers cannot possibly beat the current maximum?",
-        "whatInterviewerChecks": "Branch-and-bound pruning for center expansion.",
-        "bestReplyScript": "Yes! If the current maximum length found is `max_len`, and the distance from center `i` to the end of the string is `(len(s) - i) <= max_len // 2`, then even if the expansion extends all the way to the end of the string, its total length cannot exceed `max_len`. We can safely break the loop early.",
-        "keyPoints": [
-          "Remaining distance to edge <= max_len // 2",
-          "Cannot beat existing palindrome",
-          "Break terminates outer loop early"
-        ],
-        "codeSnippet": "if (len(s) - i) <= (end - start + 1) // 2:\n    break"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Palindromic Substrings Count",
-        "question": "How easily can this code be modified to solve 'Count All Palindromic Substrings'?",
-        "whatInterviewerChecks": "Algorithmic pattern adaptability.",
-        "bestReplyScript": "Extremely easily! In 'Count Palindromic Substrings', every valid expansion step corresponds to finding one additional unique palindromic substring. Instead of tracking `max_len`, we maintain a `count = 0`, and inside `expand(l, r)` we do `count += 1` on every successful character match. Total count of all expansions gives the answer in O(N\u00b2) time and O(1) space.",
-        "keyPoints": [
-          "Every expansion match = 1 palindrome",
-          "Increment count on each step of while loop",
-          "Solves Count Palindromes in same O(N\u00b2) time"
-        ],
-        "codeSnippet": "def countSubstrings(s: str) -> int:\n    count = 0\n    def expand(l, r):\n        nonlocal count\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            count += 1\n            l -= 1; r += 1\n    for i in range(len(s)):\n        expand(i, i)\n        expand(i, i + 1)\n    return count"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can this problem be solved recursively?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Worst-case Input Analysis",
-        "question": "What is the worst-case input for Expand Around Center, and what is its exact iteration count?",
-        "whatInterviewerChecks": "Worst-case scenario identification.",
-        "bestReplyScript": "The worst-case input is a string of all identical characters, e.g. `'a' * N`. At every center, the expansion extends all the way to the boundaries of the string. The total number of character comparisons is `sum_{i=1}^N i = N * (N + 1) / 2 = O(N\u00b2)`. For N = 1,000, it performs ~500,000 comparisons, which executes in under 0.05 seconds in Python.",
-        "keyPoints": [
-          "All identical characters like 'aaaaa'",
-          "N(N+1)/2 comparisons",
-          "Still executes within 50ms for N = 1000"
-        ],
-        "codeSnippet": "# 'a' * 1000 causes full expansion at all centers -> worst-case O(N^2)"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would you optimize your solution for very long strings?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Best-case Input Analysis",
-        "question": "What is the best-case input for Expand Around Center?",
-        "whatInterviewerChecks": "Best-case complexity recognition.",
-        "bestReplyScript": "The best-case input is a string with all distinct characters, e.g. `'abcdefgh'`. At every odd center `expand(i, i)`, the first comparison `s[i] == s[i]` succeeds, and the very next comparison `s[i-1] == s[i+1]` immediately fails. At every even center `expand(i, i+1)`, `s[i] != s[i+1]` fails on the very first check. The loop exits in O(1) per center, achieving O(N) total best-case time!",
-        "keyPoints": [
-          "All distinct characters",
-          "Fails immediately after center check",
-          "Best-case runtime drops to O(N)"
-        ],
-        "codeSnippet": "# 'abcdef' -> 0 expansions beyond 1 char -> O(N) time"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where are palindrome algorithms used in practice?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Recursion vs Iteration",
-        "question": "Why shouldn't you implement the expansion recursively in Python?",
-        "whatInterviewerChecks": "Python recursion limit and stack frame overhead.",
-        "bestReplyScript": "A recursive expansion function adds a Python stack frame for every single character expansion. For a string of 1,000 identical characters, recursion depth would reach 1,000, risking `RecursionError: maximum recursion depth exceeded`. An iterative `while` loop runs with zero stack frames and uses O(1) space.",
-        "keyPoints": [
-          "Default recursion limit is 1,000 in Python",
-          "Recursive expansion risks RecursionError",
-          "Iterative while loop has zero stack overhead"
-        ],
-        "codeSnippet": "# Iterative while loop avoids recursion limit entirely"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Compare expand-around-center, DP, and Manacher's Algorithm.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Interview Multiple Solutions",
-        "question": "If an interviewer asks 'There are multiple palindromes of the same maximum length, which one should be returned?'",
-        "whatInterviewerChecks": "Attention to specification and strict inequality logic.",
-        "bestReplyScript": "Clarify immediately! If they want the *first* occurrence, use strict inequality `if len > max_len`. This ensures ties keep the earliest seen substring. If they want the *last* occurrence, use non-strict inequality `if len >= max_len`. Always state this distinction proactively.",
-        "keyPoints": [
-          "r - l > end - start keeps first occurrence",
-          "r - l >= end - start keeps last occurrence",
-          "Always clarify tie-breaking with interviewer"
-        ],
-        "codeSnippet": "# Strict inequality preserves the first occurrence:\nif r1 - l1 > end - start:\n    start, end = l1, r1"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would your solution handle Unicode characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior System Design Connection",
-        "question": "How are palindromic substring algorithms applied in bioinformatics and DNA sequence analysis?",
-        "whatInterviewerChecks": "Real-world domain applications of string algorithms.",
-        "bestReplyScript": "In computational biology, palindromic sequences in DNA (inverted repeats) serve as critical recognition sites for restriction enzymes (like EcoRI) and form hairpin loop structures in RNA folding. Algorithms like Manacher's and suffix trees are used in bioinformatics pipelines (BLAST, CRISPR target discovery) to detect palindromic binding motifs across millions of base pairs.",
-        "keyPoints": [
-          "DNA restriction enzyme recognition sites",
-          "RNA hairpin loop folding prediction",
-          "Motif discovery in CRISPR pipelines"
-        ],
-        "codeSnippet": "# DNA palindromic motif search uses suffix trees or Manacher's algorithm"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Which approach would you choose in a production environment and why?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -21344,205 +21220,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain Zigzag Conversion in 30 seconds?",
-        "whatInterviewerChecks": "Simulation using row buckets and direction bounce.",
-        "bestReplyScript": "Instead of building a massive 2D matrix with empty spaces, we simulate the writing process using `numRows` string buckets. We iterate through the characters of the string while tracking `curr_row` and `step`. We append each character to `rows[curr_row]`. When `curr_row == 0`, we set `step = 1` (moving downward); when `curr_row == numRows - 1`, we set `step = -1` (bouncing upward diagonally). Finally, we join the row strings: `''.join(rows)`. This runs in O(N) time and O(N) space.",
-        "keyPoints": [
-          "numRows string buckets",
-          "Bounce direction at row 0 and row numRows - 1",
-          "step = 1 or -1",
-          "''.join(rows) at the end",
-          "O(N) time & O(N) space"
-        ],
-        "codeSnippet": "def convert(s: str, numRows: int) -> str:\n    if numRows == 1 or numRows >= len(s):\n        return s\n    rows = [''] * numRows\n    curr_row, step = 0, 1\n    for c in s:\n        rows[curr_row] += c\n        if curr_row == 0:\n            step = 1\n        elif curr_row == numRows - 1:\n            step = -1\n        curr_row += step\n    return ''.join(rows)"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Edge Case: numRows == 1",
-        "question": "What happens if numRows == 1, and why does the simulation fail without a guard?",
-        "whatInterviewerChecks": "Handling division by zero or infinite direction bouncing.",
-        "bestReplyScript": "If `numRows == 1`, `curr_row` starts at 0. Both `curr_row == 0` and `curr_row == numRows - 1` evaluate to True simultaneously! If not guarded, `step` oscillates or points out of bounds, causing an IndexError or wrong output. If `numRows == 1` or `numRows >= len(s)`, no zigzag pattern can exist, so we must return `s` immediately.",
-        "keyPoints": [
-          "numRows == 1 triggers both bounce conditions",
-          "No zigzag possible with 1 row",
-          "Guarding with 'if numRows == 1: return s' is essential"
-        ],
-        "codeSnippet": "# Critical guard:\nif numRows == 1 or numRows >= len(s):\n    return s"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. How does the zigzag traversal work?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "String Concatenation Performance",
-        "question": "In Python, is `rows = [''] * numRows` and `rows[i] += c` efficient, or should we use lists of lists?",
-        "whatInterviewerChecks": "CPython string in-place concatenation optimization (`PyUnicode_Append`).",
-        "bestReplyScript": "In modern CPython, if a string has a reference count of 1, `s += c` attempts in-place reallocation via `PyUnicode_Append`, making it relatively fast. However, the most robust, guaranteed O(N) approach is using a list of lists: `rows = [[] for _ in range(numRows)]`, appending `rows[curr_row].append(c)`, and finally `''.join(''.join(r) for r in rows)`. This guarantees zero temporary string allocations across all Python implementations (PyPy, Jython).",
-        "keyPoints": [
-          "PyUnicode_Append can optimize += if refcount is 1",
-          "List of lists rows = [[] for _ in range(numRows)] is guaranteed O(N)",
-          "Avoids quadratic string copying across Python runtimes"
-        ],
-        "codeSnippet": "# Guaranteed O(N) list-of-lists approach:\nrows = [[] for _ in range(numRows)]\nfor c in s:\n    rows[curr_row].append(c)\n    # bounce step...\nreturn ''.join(''.join(r) for r in rows)"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Mathematical Cycle Jump Pattern",
-        "question": "How can you solve Zigzag Conversion with O(1) auxiliary space (excluding output)?",
-        "whatInterviewerChecks": "Mathematical cycle period derivation.",
-        "bestReplyScript": "The zigzag repeats in cycles of length `cycle_len = 2 * numRows - 2`. For row 0, characters appear at indices `k * cycle_len`. For row `numRows - 1`, characters appear at `k * cycle_len + numRows - 1`. For interior rows `r`, each cycle contains TWO characters: index `k * cycle_len + r` and index `(k + 1) * cycle_len - r`. By iterating row by row and computing indices directly, we construct the output with O(1) auxiliary space.",
-        "keyPoints": [
-          "Cycle length = 2 * numRows - 2",
-          "Row 0 and last row have 1 char per cycle",
-          "Interior rows have 2 chars per cycle (main + diagonal)",
-          "O(1) auxiliary memory"
-        ],
-        "codeSnippet": "# Cycle jump math:\ncycle_len = 2 * numRows - 2\n# For interior row r:\n# idx1 = k * cycle_len + r\n# idx2 = (k + 1) * cycle_len - r"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Why is `numRows = 1` a special case?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Time and Space Complexity",
-        "question": "What are the exact time and space complexities?",
-        "whatInterviewerChecks": "Linear scan verification.",
-        "bestReplyScript": "Every character in `s` of length N is inspected exactly once. Appending to the row bucket takes O(1) amortized time. Joining the buckets at the end takes O(N) time. Thus, time complexity is strictly O(N). Space complexity is O(N) to store the characters in the buckets and produce the final output string.",
-        "keyPoints": [
-          "Time: strictly O(N)",
-          "Space: O(N) for row buckets",
-          "Optimal: every char processed once"
-        ],
-        "codeSnippet": "# Time: O(N), Space: O(N)"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How did you determine the direction of traversal?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Cycle Period Formula Derivation",
-        "question": "How do you mathematically derive the formula `cycle_len = 2 * numRows - 2`?",
-        "whatInterviewerChecks": "Geometric reasoning on the V-shaped cycle.",
-        "bestReplyScript": "A full cycle consists of: 1) Moving down from row 0 to row `numRows - 1` (takes `numRows` characters); 2) Moving diagonally up from row `numRows - 2` to row 1 (takes `numRows - 2` characters). Adding them together: `numRows + (numRows - 2) = 2 * numRows - 2`. For `numRows = 4`, `cycle_len = 2*4 - 2 = 6`.",
-        "keyPoints": [
-          "Downwards column: numRows characters",
-          "Upwards diagonal: numRows - 2 characters",
-          "Total = 2 * numRows - 2"
-        ],
-        "codeSnippet": "# Example: numRows = 4 -> cycle = 2*4 - 2 = 6\n# Row 0: index 0, 6, 12...\n# Row 1: index 1, 5, 7, 11...\n# Row 2: index 2, 4, 8, 10...\n# Row 3: index 3, 9, 15..."
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases",
-        "question": "What edge cases should you test for Zigzag Conversion?",
-        "whatInterviewerChecks": "Input boundary coverage.",
-        "bestReplyScript": "1) `numRows = 1`: returns original `s` immediately; 2) `numRows >= len(s)`: characters never even reach the bottom row, returns `s`; 3) `len(s) <= 2`: trivially short strings; 4) `numRows = 2`: pure alternating rows without diagonal elements; 5) Long string with repeated pattern.",
-        "keyPoints": [
-          "numRows = 1",
-          "numRows >= len(s)",
-          "numRows = 2 (alternating rows)",
-          "Single character string"
-        ],
-        "codeSnippet": "assert convert('A', 1) == 'A'\nassert convert('AB', 1) == 'AB'\nassert convert('PAYPALISHIRING', 3) == 'PAHNAPLSIIGYIR'"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python List Multiplication Pitfall",
-        "question": "Why is `rows = [[]] * numRows` a dangerous bug, and what is the correct syntax?",
-        "whatInterviewerChecks": "Shallow reference copying in Python lists.",
-        "bestReplyScript": "`[[]] * numRows` creates a list of `numRows` references pointing to the *same identical list object* in memory! Appending to `rows[0]` would simultaneously append to `rows[1]`, `rows[2]`, etc. The correct syntax is a list comprehension: `rows = [[] for _ in range(numRows)]`, which creates `numRows` distinct list instances.",
-        "keyPoints": [
-          "[[]] * numRows copies the same list reference",
-          "Mutating one row mutates all rows",
-          "Use [[] for _ in range(numRows)] to create distinct lists"
-        ],
-        "codeSnippet": "# \u274c DANGEROUS BUG:\n# rows = [[]] * 3\n# rows[0].append('a') -> rows is [['a'], ['a'], ['a']]!\n\n# \u2705 CORRECT:\nrows = [[] for _ in range(3)]"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. Can this be solved without using multiple row containers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Generator Pipeline",
-        "question": "How can you write Zigzag Conversion using Python's `itertools`?",
-        "whatInterviewerChecks": "Advanced Python standard library tools (`itertools.cycle`).",
-        "bestReplyScript": "We can generate the sequence of row indices using `itertools.cycle`: the pattern of rows goes `0, 1, ..., numRows - 1, numRows - 2, ..., 1`. For `numRows = 3`, the sequence is `[0, 1, 2, 1]`. We zip `s` with `itertools.cycle(...)`, append to row buckets, and join. This is exceptionally concise and pythonic.",
-        "keyPoints": [
-          "itertools.cycle repeats row patterns",
-          "Pattern: list(range(n)) + list(range(n - 2, 0, -1))",
-          "Concise functional Python"
-        ],
-        "codeSnippet": "import itertools\n\ndef convert_itertools(s: str, numRows: int) -> str:\n    if numRows == 1 or numRows >= len(s): return s\n    pattern = list(range(numRows)) + list(range(numRows - 2, 0, -1))\n    rows = [''] * numRows\n    for c, row in zip(s, itertools.cycle(pattern)):\n        rows[row] += c\n    return ''.join(rows)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Memory Profiling",
-        "question": "How much memory does the string-bucket approach consume compared to a 2D matrix?",
-        "whatInterviewerChecks": "Sparse vs dense representation memory comparison.",
-        "bestReplyScript": "A full 2D character matrix requires `numRows * numCols` cells. For a string of length N, `numCols \u2248 N / 2`. A matrix would allocate `numRows * (N / 2)` cells, mostly filled with empty space spaces `' '`. For N = 100,000 and numRows = 1,000, that is 50,000,000 cells (hundreds of megabytes). The row bucket approach allocates exactly N characters, using only ~100KB of RAM.",
-        "keyPoints": [
-          "Matrix uses numRows * (N / 2) cells (sparse waste)",
-          "Row buckets store exactly N characters",
-          "Orders of magnitude less memory"
-        ],
-        "codeSnippet": "# Matrix: O(numRows * N) memory\n# Buckets: strictly O(N) memory"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you reconstruct the original string from the zigzag output?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Direction Toggle Logic",
-        "question": "Why is `step = -step` a cleaner direction toggle than setting explicit values?",
-        "whatInterviewerChecks": "Clean state mutation without repetitive branches.",
-        "bestReplyScript": "If we start with `step = -1` and change direction at boundaries: `if curr_row == 0 or curr_row == numRows - 1: step = -step`. When we hit bottom (`numRows - 1`), `step` flips from `1` to `-1`. When we hit top (`0`), `step` flips from `-1` to `1`. This collapses four lines of conditional branching into a single elegant expression.",
-        "keyPoints": [
-          "step = -step flips sign cleanly",
-          "Single condition: curr_row in (0, numRows - 1)",
-          "Cleaner code with fewer branch instructions"
-        ],
-        "codeSnippet": "# Clean toggle:\nif curr_row == 0 or curr_row == numRows - 1:\n    step = -step\ncurr_row += step"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Can this algorithm be generalized to other patterns?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Reconstruction / Decoding",
-        "question": "Can you reverse this process: given the zigzag string and numRows, decode it back to the original string?",
-        "whatInterviewerChecks": "Inverse problem modeling and permutation inversion.",
-        "bestReplyScript": "Yes! To decode: 1) Run the exact same simulation using character indices `0, 1, 2, ... N-1` to find which original index ended up in which row; 2) This gives the permutation mapping from original index to encoded index; 3) Invert the permutation mapping and place the encoded characters back into their original positions. Total decode time is also O(N).",
-        "keyPoints": [
-          "Simulate with indices [0, 1, ... N-1]",
-          "Maps original index to zigzag position",
-          "Invert mapping to decode in O(N) time"
-        ],
-        "codeSnippet": "# Decoding: simulate index movement to build inverse permutation map"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where might this pattern be useful?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "ASCII Transposition in C/C++",
-        "question": "Why is this problem easier in Python than in C++?",
-        "whatInterviewerChecks": "Language memory ergonomics (dynamic strings vs fixed buffers).",
-        "bestReplyScript": "In Python, string buckets or lists of characters automatically resize and dynamically allocate memory, and `''.join(rows)` handles memory calculation and concatenation in a single C-level operation. In C++, you must precalculate the size of each row or manage multiple `std::string` buffers and reallocation.",
-        "keyPoints": [
-          "Python ''.join handles byte allocation in C",
-          "Dynamic array resizing built-in",
-          "More concise than C++ manual buffers"
-        ],
-        "codeSnippet": "# Python handles all bucket memory allocations dynamically"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. How would you optimize memory usage?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Unit Testing & Invariants",
-        "question": "What invariant must hold between the input string and output string for Zigzag Conversion?",
-        "whatInterviewerChecks": "Conservation laws in string permutations.",
-        "bestReplyScript": "The output string must be an exact anagram (permutation) of the input string. Therefore: 1) `len(output) == len(input)`; 2) `collections.Counter(output) == collections.Counter(input)`. No characters can be added, modified, or lost.",
-        "keyPoints": [
-          "len(output) == len(input)",
-          "Counter(output) == Counter(input)",
-          "Output is a pure permutation of input"
-        ],
-        "codeSnippet": "assert len(res) == len(s)\nassert collections.Counter(res) == collections.Counter(s)"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Compare simulation and mathematical approaches.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Real-world Applications",
-        "question": "Does Zigzag Conversion have applications in cryptography or hardware display rendering?",
-        "whatInterviewerChecks": "Historical and practical context (Rail Fence Cipher).",
-        "bestReplyScript": "Yes! Zigzag Conversion is historically known as the **Rail Fence Cipher**, a classical transposition cipher used in military cryptography (dating back to ancient Greece and the American Civil War). In hardware, zigzag scanning (like the 8x8 zigzag order in JPEG image compression) traverses 2D discrete cosine transform (DCT) coefficients from low to high frequency for efficient run-length encoding.",
-        "keyPoints": [
-          "Classical Rail Fence transposition cipher",
-          "JPEG compression 8x8 DCT matrix zigzag scan",
-          "Displays and serial data serialization"
-        ],
-        "codeSnippet": "# Historically identical to the Rail Fence Cipher (transposition cipher)"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would your solution behave for extremely large strings?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -21662,205 +21519,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain String to Integer (atoi) in 30 seconds?",
-        "whatInterviewerChecks": "State-machine parsing, whitespace, signs, and 32-bit clamping.",
-        "bestReplyScript": "We implement a 4-step sequential parser: 1) Skip leading whitespace using an index pointer; 2) Parse an optional '+' or '-' sign to determine multiplier `sign = 1` or `-1`; 3) Traverse digit characters `'0'-'9'`, accumulating the number via `num = num * 10 + digit`; 4) If `num` exceeds the 32-bit signed range [-2^31, 2^31 - 1], clamp to `INT_MIN` or `INT_MAX`. This runs in O(N) time and O(1) space without regex.",
-        "keyPoints": [
-          "Skip leading whitespace",
-          "Parse optional + / - sign",
-          "Accumulate num = num * 10 + digit",
-          "Clamp to [-2^31, 2^31 - 1]",
-          "O(N) time & O(1) space"
-        ],
-        "codeSnippet": "def myAtoi(s: str) -> int:\n    s = s.lstrip()\n    if not s: return 0\n    sign = 1\n    idx = 0\n    if s[0] == '-': sign = -1; idx = 1\n    elif s[0] == '+': idx = 1\n    res = 0\n    INT_MAX, INT_MIN = 2**31 - 1, -2**31\n    while idx < len(s) and s[idx].isdigit():\n        res = res * 10 + int(s[idx])\n        idx += 1\n    res *= sign\n    if res < INT_MIN: return INT_MIN\n    if res > INT_MAX: return INT_MAX\n    return res"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your parsing algorithm step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "32-bit Clamping Boundaries",
-        "question": "What are the exact 32-bit signed integer limits, and why are they asymmetric?",
-        "whatInterviewerChecks": "Two's complement integer representation.",
-        "bestReplyScript": "In two's complement 32-bit representation: `INT_MIN = -2^31 = -2,147,483,648` and `INT_MAX = 2^31 - 1 = 2,147,483,647`. They are asymmetric because 0 takes up one of the non-negative slots (from 0 to 2^31 - 1), leaving the entire negative range from -1 down to -2^31.",
-        "keyPoints": [
-          "INT_MIN = -2,147,483,648",
-          "INT_MAX = 2,147,483,647",
-          "Asymmetry due to two's complement encoding of 0"
-        ],
-        "codeSnippet": "INT_MIN = -2**31      # -2147483648\nINT_MAX = 2**31 - 1  #  2147483647"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. How do you handle leading whitespace?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins: Digit Conversion",
-        "question": "How do you convert a character digit `'5'` to integer `5` if `int()` is forbidden?",
-        "whatInterviewerChecks": "ASCII ordinal subtraction.",
-        "bestReplyScript": "In ASCII and Unicode, the digit characters `'0'` through `'9'` are guaranteed to be contiguous. We subtract the ordinal value of `'0'`: `digit = ord(c) - ord('0')`. For `'5'`, `ord('5') - ord('0') = 53 - 48 = 5`. This is the standard systems programming technique in C and assembly.",
-        "keyPoints": [
-          "ord(c) - ord('0')",
-          "Digits 0-9 are contiguous in ASCII",
-          "Avoids Python's built-in int()"
-        ],
-        "codeSnippet": "# Manual digit conversion:\ndigit = ord(c) - ord('0')  # ord('7') - ord('0') == 55 - 48 == 7"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. How do you detect the sign of the number?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Finite State Machine (FSM) Design",
-        "question": "How can atoi be designed cleanly as a Deterministic Finite Automaton (DFA / FSM)?",
-        "whatInterviewerChecks": "Compiler design and state machine architecture.",
-        "bestReplyScript": "We define 4 states: `START` (handling spaces), `SIGNED` (after reading + or -), `IN_NUMBER` (reading digits), and `END` (invalid character or finished). Transitions: in `START`, space stays in `START`, sign goes to `SIGNED`, digit goes to `IN_NUMBER`. In `SIGNED`, digit goes to `IN_NUMBER`, anything else goes to `END`. In `IN_NUMBER`, digit stays in `IN_NUMBER`, non-digit goes to `END`. A DFA eliminates messy nested conditionals.",
-        "keyPoints": [
-          "4 states: START, SIGNED, IN_NUMBER, END",
-          "Clean transition table",
-          "Standard compiler lexical analysis technique"
-        ],
-        "codeSnippet": "# State transitions: (state, input_type) -> next_state"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you handle integer overflow and underflow?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Whitespace Handling Nuance",
-        "question": "Why does `s.strip()` introduce a subtle bug compared to `s.lstrip()`?",
-        "whatInterviewerChecks": "Trailing whitespace requirements.",
-        "bestReplyScript": "The problem specification states that ONLY *leading* whitespace should be ignored. Trailing non-digits or spaces should naturally stop the parsing. While `strip()` removes trailing spaces, if an input is `'  42  '`, `strip()` gives `'42'` which still parses to 42. However, `lstrip()` strictly adheres to the prompt contract without modifying the trailing buffer.",
-        "keyPoints": [
-          "Only leading whitespace should be skipped",
-          "lstrip() removes left whitespace only",
-          "Preserves trailing boundary semantics"
-        ],
-        "codeSnippet": "# Use lstrip() or manual index skipping:\nwhile idx < len(s) and s[idx] == ' ':\n    idx += 1"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Overflow Detection in Languages Without Arbitrary Precision",
-        "question": "In C++ or Java, `res = res * 10 + digit` overflows before you can clamp it. How do you detect overflow *before* it happens?",
-        "whatInterviewerChecks": "Pre-overflow boundary arithmetic.",
-        "bestReplyScript": "In languages with fixed 32-bit integers, check before multiplying: `if res > INT_MAX // 10 or (res == INT_MAX // 10 and digit > 7): return INT_MAX if sign == 1 else INT_MIN`. `INT_MAX // 10` is 214,748,364, and the last digit of INT_MAX is 7 (last digit of INT_MIN is 8). This catches overflow before multiplication occurs.",
-        "keyPoints": [
-          "Check res > INT_MAX // 10",
-          "Check digit > 7 on equality",
-          "Prevents undefined behavior in C/C++"
-        ],
-        "codeSnippet": "# Pre-multiplication overflow check (C++ standard):\n# if res > INT_MAX // 10 or (res == INT_MAX // 10 and digit > 7):\n#     return INT_MAX if sign == 1 else INT_MIN"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases & Parsing Traps",
-        "question": "What tricky edge cases must atoi handle?",
-        "whatInterviewerChecks": "Edge case mastery on string parsing.",
-        "bestReplyScript": "1) Empty or only spaces `'   '` -> 0; 2) Sign only `'+'` or `'-'` -> 0; 3) Words before digits `'words and 987'` -> 0; 4) Words after digits `'4193 with words'` -> 4193; 5) Multiple signs `'+-12'` -> 0 (only the first sign is valid, '-' is seen as non-digit); 6) Huge overflow `'-91283472332'` -> INT_MIN.",
-        "keyPoints": [
-          "'+-12' returns 0 (second sign is non-digit)",
-          "'4193 with words' returns 4193",
-          "'words and 987' returns 0",
-          "Numbers exceeding 2^31 clamped"
-        ],
-        "codeSnippet": "assert myAtoi('   -42') == -42\nassert myAtoi('4193 with words') == 4193\nassert myAtoi('words and 987') == 0\nassert myAtoi('+-12') == 0\nassert myAtoi('-91283472332') == -2147483648"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Regex Alternative",
-        "question": "How would you solve atoi in 2 lines using Python's `re` module?",
-        "whatInterviewerChecks": "Regular expression pattern construction.",
-        "bestReplyScript": "We strip leading whitespace and match with regex `^([+-]?\\d+)`: `match = re.match(r'^\\s*([+-]?\\d+)', s)`. If no match, return 0. Otherwise parse the captured group `int(match.group(1))` and clamp to `[INT_MIN, INT_MAX]`. While concise, regex compiling has runtime overhead compared to manual pointer parsing.",
-        "keyPoints": [
-          "Pattern: ^\\s*([+-]?\\d+)",
-          "Captures optional sign and contiguous digits",
-          "Clamp result to 32-bit range"
-        ],
-        "codeSnippet": "import re\ndef myAtoi_regex(s: str) -> int:\n    match = re.match(r'^\\s*([+-]?\\d+)', s)\n    if not match: return 0\n    return max(-2**31, min(2**31 - 1, int(match.group(1))))"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What happens if invalid characters appear after the number?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Python `sys.set_int_max_str_digits`",
-        "question": "What security vulnerability (CVE-2020-10735) in Python 3.11+ affects converting massive digit strings to integers?",
-        "whatInterviewerChecks": "Security awareness and Python 3.11+ integer string parsing limit.",
-        "bestReplyScript": "Converting huge strings (> 4,300 digits) to integers in Python has O(N\u00b2) quadratic time complexity, enabling Denial of Service (DoS) attacks. In Python 3.11+, `sys.set_int_max_str_digits(4300)` enforces a 4,300-digit limit on `int(str)`. If an attacker passes a 100,000-character string of digits, `int(s)` throws `ValueError: Exceeds the limit for integer string conversion`.",
-        "keyPoints": [
-          "CVE-2020-10735 quadratic DoS vulnerability",
-          "Default 4,300 digit string conversion limit in Python 3.11+",
-          "Manual digit accumulation avoids this exception"
-        ],
-        "codeSnippet": "# Python 3.11+ protects against massive string int() conversions:\nimport sys\nprint(sys.get_int_max_str_digits())  # 4300 digits default"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Can you solve this without built-in conversion functions?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Complexity Analysis",
-        "question": "What is the time and space complexity of manual atoi?",
-        "whatInterviewerChecks": "Single-pass complexity.",
-        "bestReplyScript": "We scan the string from left to right with an index pointer. Each character is visited at most once. Arithmetic operations are O(1). Time complexity is strictly O(N) where N is string length. Auxiliary space is O(1) as we only store integer variables (`res`, `sign`, `idx`).",
-        "keyPoints": [
-          "Time: strictly O(N)",
-          "Space: O(1) auxiliary",
-          "Single pass without extra buffers"
-        ],
-        "codeSnippet": "# Time: O(N), Space: O(1)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python `isdigit()` vs `isnumeric()` vs `isdecimal()`",
-        "question": "What is the difference between `isdigit()`, `isnumeric()`, and `isdecimal()` in Python?",
-        "whatInterviewerChecks": "Unicode character classification in Python strings.",
-        "bestReplyScript": "`isdecimal()` strictly checks for characters in the range 0-9 (Unicode decimal radices). `isdigit()` also returns True for superscripts like '\u00b2' or circled digits '\u2460'. `isnumeric()` also returns True for Roman numerals like '\u2163' and vulgar fractions like '\u00bd'. In atoi, we must only parse standard decimal digits (0-9), making `isdecimal()` or `ord('0') <= ord(c) <= ord('9')` the strictly correct check!",
-        "keyPoints": [
-          "isdecimal(): strictly 0-9",
-          "isdigit(): includes superscripts like '\u00b2'",
-          "isnumeric(): includes fractions like '\u00bd'",
-          "Use isdecimal() or ord check to avoid superscript bugs"
-        ],
-        "codeSnippet": "assert '2'.isdecimal() and '2'.isdigit() and '2'.isnumeric()\nassert '\u00b2'.isdigit() and not '\u00b2'.isdecimal()  # Gotcha!\nassert '\u00bd'.isnumeric() and not '\u00bd'.isdigit()  # Gotcha!"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would your solution support 64-bit integers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Leading Zeros",
-        "question": "How does your code handle multiple leading zeros, e.g. `'  0000042'`?",
-        "whatInterviewerChecks": "Mathematical absorption of leading zeros.",
-        "bestReplyScript": "Leading zeros are absorbed naturally by `res = res * 10 + digit`. At index 0, `res = 0 * 10 + 0 = 0`. This repeats for all zeros until `'4'` is reached, at which point `res = 0 * 10 + 4 = 4`. No special zero-skipping logic is needed.",
-        "keyPoints": [
-          "0 * 10 + 0 = 0 naturally absorbs leading zeros",
-          "Transitions to real value on first non-zero digit",
-          "Zero code complexity overhead"
-        ],
-        "codeSnippet": "# s = '00042' -> res stays 0 until '4', then becomes 4, then 42"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How would you modify it for hexadecimal numbers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Negative Zero Handling",
-        "question": "How is `-0` or `+0` handled by Python integers?",
-        "whatInterviewerChecks": "Signed zero representation in Python.",
-        "bestReplyScript": "In Python, integers do not have distinct representations for `+0` and `-0` (unlike IEEE 754 floating-point numbers `float`). If `s = '-0'`, `res = 0 * -1 = 0`. `0 == -0` is True, and `id(0)` points to the same singleton integer object.",
-        "keyPoints": [
-          "Python ints do not have signed zero",
-          "0 and -0 are identical object references",
-          "Floating point floats have -0.0, but integers do not"
-        ],
-        "codeSnippet": "assert -0 == 0\nassert -0 is 0"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where are parsing algorithms used in real-world systems?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Security & Malicious Input",
-        "question": "How does robust atoi implementation protect against buffer overflow or memory exhaustion?",
-        "whatInterviewerChecks": "Security engineering and defensive parsing.",
-        "bestReplyScript": "If an adversary sends a string with 10 million digits, accumulating the number without clamping could allocate a 4MB `PyLongObject` and consume CPU cycles. We can cap the maximum number of digits parsed: if `res > INT_MAX`, we can immediately clamp to `INT_MAX` or `INT_MIN` and `break` out of the loop without reading the remaining 9,999,980 digits!",
-        "keyPoints": [
-          "Break immediately once res exceeds INT_MAX",
-          "Prevents CPU/RAM exhaustion on massive inputs",
-          "Defense against denial of service"
-        ],
-        "codeSnippet": "if res > INT_MAX:\n    return INT_MAX if sign == 1 else INT_MIN"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would you design this as part of a compiler or interpreter?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior Engineering Summary",
-        "question": "Why is atoi considered a classic interview question by companies like Amazon and Microsoft?",
-        "whatInterviewerChecks": "Understanding the true evaluation intent of parser questions.",
-        "bestReplyScript": "Atoi tests whether a candidate can write clean, robust parsing code under strict edge-case contracts. It evaluates handling of preconditions (whitespace), optional flags (signs), state transitions (digits vs non-digits), boundary constraints (32-bit limits), and defensive error handling without relying on language built-ins.",
-        "keyPoints": [
-          "Evaluates edge-case thoroughness",
-          "Tests state-machine thinking",
-          "Common in systems engineering and API protocol parsing"
-        ],
-        "codeSnippet": "# Executive Takeaway: Clean sequential parser with early bounds clamping"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Compare manual parsing with built-in parsing functions.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -21981,203 +21819,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How do you explain Longest Common Prefix in 30 seconds?",
-        "whatInterviewerChecks": "Sorting trick vs Vertical scanning.",
-        "bestReplyScript": "The most elegant way to solve Longest Common Prefix is by sorting the array of strings lexicographically. In a sorted list of strings, the first string `strs[0]` and the last string `strs[-1]` will be the most different in the entire collection. Therefore, any common prefix shared by the entire array must simply be the common prefix between the first and last strings! We compare characters of `strs[0]` and `strs[-1]` until they differ. This runs in O(N * L * log N) time and O(1) auxiliary space.",
-        "keyPoints": [
-          "Sort strings lexicographically",
-          "Compare only the first and last string",
-          "First and last strings are the most divergent",
-          "O(1) auxiliary space"
-        ],
-        "codeSnippet": "def longestCommonPrefix(strs: list[str]) -> str:\n    if not strs:\n        return ''\n    strs.sort()\n    first, last = strs[0], strs[-1]\n    i = 0\n    while i < len(first) and i < len(last) and first[i] == last[i]:\n        i += 1\n    return first[:i]"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Mathematical Proof of Sorting Trick",
-        "question": "Why is it mathematically guaranteed that comparing only `strs[0]` and `strs[-1]` is sufficient?",
-        "whatInterviewerChecks": "Lexicographical order transitivity.",
-        "bestReplyScript": "In lexicographical (alphabetical) order, strings are sorted character-by-character from left to right. If a prefix `P` is common to both the first string `strs[0]` and the last string `strs[-1]`, then by transitivity of lexicographical ordering, every intermediate string `strs[i]` between them must also start with prefix `P`. Any character mismatch between intermediate strings would force them to sort outside this boundary.",
-        "keyPoints": [
-          "Lexicographical transitivity",
-          "If strs[0] and strs[-1] share prefix P, all intermediate strings must share P",
-          "Proof by ordering definition"
-        ],
-        "codeSnippet": "# Lexicographical guarantee:\n# strs[0] <= strs[i] <= strs[-1]\n# If strs[0][:k] == strs[-1][:k], then strs[i][:k] must also match!"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Which approach did you choose (horizontal, vertical, sorting, or divide-and-conquer), and why?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Vertical Scanning Alternative",
-        "question": "What is Vertical Scanning, and why is it preferred when an array contains 1,000,000 strings?",
-        "whatInterviewerChecks": "O(N * M) worst-case vs early exit on short common prefixes.",
-        "bestReplyScript": "Vertical scanning checks column by column across all strings: character 0 across all strings, then character 1, and so forth. If character `i` mismatches in ANY string, or if `i == len(s)` for any string, we return `strs[0][:i]` immediately. If there is a very short common prefix (e.g. length 1) among 1,000,000 strings, vertical scanning terminates after examining only 1 or 2 characters per string (O(N) operations), completely avoiding the O(N * L * log N) cost of sorting!",
-        "keyPoints": [
-          "Inspects character column i across all strings",
-          "Halts on first mismatch across any string",
-          "Best for large N with short prefixes"
-        ],
-        "codeSnippet": "def longestCommonPrefix_vertical(strs: list[str]) -> str:\n    if not strs: return ''\n    for i in range(len(strs[0])):\n        c = strs[0][i]\n        for s in strs[1:]:\n            if i == len(s) or s[i] != c:\n                return strs[0][:i]\n    return strs[0]"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python `zip(*strs)` Idiom",
-        "question": "How can Vertical Scanning be written in 2 lines using Python's `zip(*strs)`?",
-        "whatInterviewerChecks": "Python argument unpacking and zip tuple generation.",
-        "bestReplyScript": "`zip(*strs)` unpacks all strings into positional arguments and groups characters column by column into tuples: `('f', 'f', 'f')`, `('l', 'l', 'l')`, `('o', 'o', 'i')`. We iterate with `enumerate(zip(*strs))` and check `if len(set(col)) > 1: return strs[0][:i]`. If all columns match, return the shortest string. This is one of the most famous idiomatic Python interview solutions.",
-        "keyPoints": [
-          "zip(*strs) unpacks and aggregates columns",
-          "len(set(col)) == 1 checks column uniformity",
-          "Highly idiomatic Python 3"
-        ],
-        "codeSnippet": "def longestCommonPrefix_pythonic(strs: list[str]) -> str:\n    if not strs: return ''\n    for i, col in enumerate(zip(*strs)):\n        if len(set(col)) > 1:\n            return strs[0][:i]\n    return min(strs, key=len)"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How would your solution change if there were millions of strings?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Horizontal Scanning Alternative",
-        "question": "What is Horizontal Scanning, and how does it compare to Vertical Scanning?",
-        "whatInterviewerChecks": "Comparative analysis of prefix reduction.",
-        "bestReplyScript": "Horizontal scanning initializes `prefix = strs[0]`. Then it iterates through each string `s` in `strs[1:]`, shrinking `prefix` until `s.startswith(prefix)`: `while not s.startswith(prefix): prefix = prefix[:-1]`. While simple, if the very last string in a million-string array has no common prefix, horizontal scanning does wasted work comparing all previous strings.",
-        "keyPoints": [
-          "prefix = prefix[:-1] shrinks until match",
-          "Progressively reduces prefix across strings",
-          "Suboptimal if mismatch occurs only at the end"
-        ],
-        "codeSnippet": "# Horizontal scanning:\nprefix = strs[0]\nfor s in strs[1:]:\n    while not s.startswith(prefix):\n        prefix = prefix[:-1]\n        if not prefix: return ''"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Trie (Prefix Tree) Data Structure",
-        "question": "How would you solve this if you had to query the longest common prefix dynamically across an evolving set of strings?",
-        "whatInterviewerChecks": "Trie data structure design and multi-query optimization.",
-        "bestReplyScript": "We insert all strings into a Trie (Prefix Tree). Each node stores child pointers and an `is_end_of_word` flag. The longest common prefix corresponds to walking down the root node as long as: 1) The current node has *exactly one child*; and 2) `is_end_of_word` is False. The instant a node branches (children count > 1) or a word terminates, the common prefix ends. Trie insertion is O(total characters), and prefix retrieval is O(length of prefix).",
-        "keyPoints": [
-          "Insert strings into Trie",
-          "Traverse while node has exactly 1 child and not end_of_word",
-          "Optimal for dynamic multi-query systems"
-        ],
-        "codeSnippet": "# Trie walk: while len(node.children) == 1 and not node.is_end:\n#     node = next(iter(node.children.values()))"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Binary Search on Prefix Length",
-        "question": "How can Binary Search be applied to find the longest common prefix?",
-        "whatInterviewerChecks": "Binary search on solution space.",
-        "bestReplyScript": "The maximum possible prefix length is `min_len = min(len(s) for s in strs)`. The prefix property is monotonic: if prefix of length K matches all strings, any length < K also matches. We binary search on length from 1 to `min_len`. For `mid = (low + high) // 2`, we test if `strs[0][:mid]` matches all strings. If True, `low = mid + 1`; else `high = mid - 1`. Total time is O(N * M * log M).",
-        "keyPoints": [
-          "Binary search on length [1, min_len]",
-          "Monotonic property allows binary search",
-          "O(N * M * log M) time"
-        ],
-        "codeSnippet": "# Binary search on length: low, high = 1, min(len(s) for s in strs)"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. Can this problem be solved using a Trie? What are the trade-offs?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Divide and Conquer Approach",
-        "question": "How does the Divide and Conquer approach work for this problem?",
-        "whatInterviewerChecks": "Divide-and-conquer recurrence modeling.",
-        "bestReplyScript": "We split the list of strings into two halves `LCP(strs[0..mid])` and `LCP(strs[mid+1..end])`. We recursively compute the common prefix of each half, and then compute the common prefix of the two resulting prefix strings. Recurrence is `T(N) = 2*T(N/2) + O(M)`. By the Master Theorem, time complexity is O(N * M).",
-        "keyPoints": [
-          "Divide array into two halves",
-          "Recursively find LCP of left and right",
-          "Merge two prefixes in O(M) time"
-        ],
-        "codeSnippet": "# def lcp_divide(strs, l, r):\n#     if l == r: return strs[l]\n#     mid = (l + r) // 2\n#     return common(lcp_divide(strs, l, mid), lcp_divide(strs, mid + 1, r))"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Edge Cases",
-        "question": "What edge cases must be tested for Longest Common Prefix?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "1) Empty list `[]` -> `''`; 2) Single string `['abc']` -> `'abc'`; 3) Empty string inside list `['', 'b']` -> `''`; 4) No common prefix `['dog', 'racecar', 'car']` -> `''`; 5) All identical strings `['flower', 'flower']` -> `'flower'`; 6) One string is a prefix of another `['ab', 'a']` -> `'a'`.",
-        "keyPoints": [
-          "Empty list returns ''",
-          "Single string returns itself",
-          "Empty string in list returns ''",
-          "No common prefix returns ''"
-        ],
-        "codeSnippet": "assert longestCommonPrefix([]) == ''\nassert longestCommonPrefix(['single']) == 'single'\nassert longestCommonPrefix(['', 'b']) == ''\nassert longestCommonPrefix(['flower', 'flow', 'flight']) == 'fl'"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you handle Unicode strings?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Timsort Overhead",
-        "question": "What is the computational cost of sorting strings in Python (`strs.sort()`)?",
-        "whatInterviewerChecks": "String comparison complexity in Timsort.",
-        "bestReplyScript": "In Python, sorting an array of N strings of length at most L requires comparing strings. In the worst case, comparing two strings takes O(L) time. Timsort performs O(N log N) comparisons. Therefore, sorting takes O(N * L * log N) time in the worst case. If N is very large and L is small, sorting is fast; if L is massive, vertical scanning O(N * L) is faster.",
-        "keyPoints": [
-          "Comparing 2 strings takes up to O(L) time",
-          "Total sorting time is O(N * L * log N)",
-          "Vertical scanning O(N * L) is asymptotically faster for large N"
-        ],
-        "codeSnippet": "# Sorting: O(N * L * log N)\n# Vertical Scan: O(N * L) worst-case, O(N) best-case"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would your solution change if comparisons were case-insensitive?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python `min()` and `max()` on Strings",
-        "question": "Can you replace `strs.sort()` with `min(strs)` and `max(strs)` for 5x faster runtime?",
-        "whatInterviewerChecks": "Finding extremes in O(N) without full sorting.",
-        "bestReplyScript": "YES! To find the lexicographically first and last strings, you do NOT need to sort all N elements! You only need the minimum and maximum elements in lexicographical order: `first = min(strs)` and `last = max(strs)`. Finding min and max takes only O(N * L) time and avoids the O(N log N) sort overhead completely! This is an elite Python interview trick.",
-        "keyPoints": [
-          "min(strs) gives lexicographically smallest in O(N)",
-          "max(strs) gives lexicographically largest in O(N)",
-          "Avoids O(N log N) sort completely - runs in O(N * L)!"
-        ],
-        "codeSnippet": "def longestCommonPrefix_optimal(strs: list[str]) -> str:\n    if not strs: return ''\n    first, last = min(strs), max(strs)\n    for i, (c1, c2) in enumerate(zip(first, last)):\n        if c1 != c2:\n            return first[:i]\n    return first if len(first) < len(last) else last"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Compare horizontal scanning and vertical scanning.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Memory Footprint",
-        "question": "What is the auxiliary memory consumption of the `min(strs)` and `max(strs)` solution?",
-        "whatInterviewerChecks": "Space analysis of string references.",
-        "bestReplyScript": "`min(strs)` and `max(strs)` return existing references to strings already in the list. They do not duplicate string buffers. We only allocate two pointer references (`first`, `last`) and an integer index `i`. Thus, auxiliary space complexity is strictly O(1) beyond the output string.",
-        "keyPoints": [
-          "Zero array allocations",
-          "Only 2 object references",
-          "Strictly O(1) auxiliary space"
-        ],
-        "codeSnippet": "# Auxiliary memory = O(1)"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where are longest common prefix algorithms used in practice?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Case Sensitivity & Unicode",
-        "question": "How does ASCII casing affect lexicographical comparison in `min()` and `max()`?",
-        "whatInterviewerChecks": "ASCII ordering where uppercase precedes lowercase.",
-        "bestReplyScript": "In ASCII, all uppercase letters ('A'-'Z', values 65-90) precede lowercase letters ('a'-'z', values 97-122). For example, `'Zebra' < 'apple'`. If input strings have mixed casing like `['apple', 'Apple']`, `'Apple'` will be the minimum and `'apple'` the maximum, resulting in an empty prefix `''`. If case-insensitive prefixing is required, strings must be normalized with `.lower()` first.",
-        "keyPoints": [
-          "Uppercase letters have smaller ASCII values than lowercase",
-          "'Z' < 'a' in ASCII ordering",
-          "Case-insensitive prefixing requires .lower() normalization"
-        ],
-        "codeSnippet": "assert 'Zebra' < 'apple'  # True in ASCII!"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. How would you optimize memory usage?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Defensive Invariants",
-        "question": "What defensive checks should you add at the start of a production prefix utility?",
-        "whatInterviewerChecks": "Defensive programming in production libraries.",
-        "bestReplyScript": "1) Check `if not strs: return ''`; 2) Check if any element is `None` or not a string; 3) Check if `len(strs) == 1: return strs[0]`. This guarantees graceful execution without runtime TypeErrors.",
-        "keyPoints": [
-          "Guard against empty list",
-          "Single-element early return",
-          "Defensive type checks"
-        ],
-        "codeSnippet": "if not strs: return ''\nif len(strs) == 1: return strs[0]"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would you return all strings sharing the longest prefix?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Senior Engineering Summary",
-        "question": "Summarize the 4 approaches to Longest Common Prefix and when to choose each.",
-        "whatInterviewerChecks": "Architectural decision matrix across all 4 algorithms.",
-        "bestReplyScript": "1) **min/max Extremes**: O(N * L) time, O(1) space, cleanest and fastest for one-off batch queries; 2) **Vertical Scanning**: O(N * min_len) time, O(1) space, best when prefix is expected to be very short; 3) **Trie**: O(total chars) build, O(prefix) query, best for dynamic autocomplete engines; 4) **Binary Search**: O(N * L * log L), good for very long uniform strings.",
-        "keyPoints": [
-          "min/max: best general Python solution",
-          "Vertical scan: best when prefix is short",
-          "Trie: best for dynamic multi-query systems"
-        ],
-        "codeSnippet": "# Decision Matrix:\n# One-off -> min/max (O(N) time, O(1) space)\n# Interactive Autocomplete -> Trie (Prefix Tree)"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. Which approach would you recommend in a production system and why?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
