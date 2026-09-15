@@ -2097,189 +2097,188 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain your approach.",
-        "whatInterviewerChecks": "Step-by-step two-pointer approach explanation.",
-        "bestReplyScript": "I use the two-pointer technique to move all zeroes to the end while maintaining the relative order of the non-zero elements.\n\nThe steps are:\n1. Initialize a pointer (left) to track the position where the next non-zero element should be placed.\n2. Traverse the array using another pointer (right).\n3. Whenever a non-zero element is found:\n   • Swap it with the element at left.\n   • Increment left.\n4. After completing the traversal, all non-zero elements are at the beginning, and all zeroes are automatically moved to the end.\n\nExample:\nInput: [0, 1, 0, 3, 12]\nStep 1: [1, 0, 0, 3, 12]\nStep 2: [1, 3, 0, 0, 12]\nStep 3: [1, 3, 12, 0, 0]\nOutput: [1, 3, 12, 0, 0]\n\nThis approach is efficient because it only scans the array once.",
-        "keyPoints": [
-          "Left pointer tracks target non-zero write index",
-          "Right pointer scans array sequentially",
-          "Swap non-zero with left index and increment left",
-          "Single pass O(n) runtime, O(1) space"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your sliding window approach step by step.",
+            "whatInterviewerChecks": "Two-pointer sliding window, character index hash map, jump left pointer `left = max(left, last_idx + 1)`.",
+            "bestReplyScript": "I use the sliding window technique with a hash map to keep track of the last index where each character appeared.\n\nSteps:\n1. Initialize two pointers: left = 0, right = 0.\n2. Use a hash map to store the last seen index of each character.\n3. Expand the window by moving the right pointer.\n4. If the current character has already appeared inside the current window, move the left pointer to one position after its previous occurrence (`left = max(left, last_idx + 1)`).\n5. Update the character's latest index in the hash map.\n6. Calculate the current window length: `right - left + 1`.\n7. Update the maximum length whenever a larger window is found.\n8. Continue until the end of the string.\n\nThis ensures the window always contains unique characters.",
+            "keyPoints": [
+                  "Two pointers: left = 0, right = 0",
+                  "Hash map stores char -> last_seen_index",
+                  "Jump left pointer: `left = max(left, last_idx + 1)`",
+                  "Window length: `right - left + 1`",
+                  "Time: O(n), Space: O(min(n, m))"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Two-Pointer Strategy Rationale",
-        "question": "2. Why use two pointers?",
-        "whatInterviewerChecks": "Understanding single-pass in-place mutation advantages.",
-        "bestReplyScript": "The two-pointer approach allows me to process the array in a single pass while modifying it in-place.\n\n• right scans every element.\n• left keeps track of where the next non-zero element should go.\n\nThis eliminates the need for an extra array and minimizes unnecessary operations.\n\nCompared to creating a new array, the two-pointer method is more memory-efficient.",
-        "keyPoints": [
-          "Single pass traversal",
-          "In-place modification eliminates auxiliary array",
-          "Minimizes total array writes/swaps"
-        ]
+            "id": "q2",
+            "category": "Sliding Window vs Brute Force",
+            "question": "2. Why did you choose a sliding window instead of brute force?",
+            "whatInterviewerChecks": "O(n) linear sliding window vs O(n^3) cubic brute force.",
+            "bestReplyScript": "The brute-force approach checks every possible substring and verifies if it contains duplicates.\n- Time Complexity: O(n^3) (or O(n^2) with optimization).\n\nThe sliding window processes each character only once (or at most twice), reducing the complexity to O(n).\n\nSo it is much faster and is the standard optimal solution.",
+            "keyPoints": [
+                  "Brute force checks all substrings in O(n^3)",
+                  "Sliding window pointers move monotonically",
+                  "Achieves linear O(n) runtime"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Time & Space Complexity Proof",
-        "question": "3. What's the complexity?",
-        "whatInterviewerChecks": "Optimal lower bound complexity proof.",
-        "bestReplyScript": "Each element is visited only once.\n\n• Time Complexity: O(n)\n• Space Complexity: O(1)\n\nSince every element must be examined at least once, O(n) is the optimal time complexity.",
-        "keyPoints": [
-          "Linear scan visits n elements -> O(n)",
-          "In-place scalar pointer state -> O(1) space",
-          "Optimal theoretical bound"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(n) time bound and O(min(n, m)) space bound.",
+            "bestReplyScript": "Complexity analysis:\n- Time Complexity: O(n). Each character is visited at most twice (once by right pointer, once by left pointer).\n- Space Complexity: O(min(n, m)), where n is the length of the string and m is the number of unique characters in the character set.",
+            "keyPoints": [
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(min(n, m))",
+                  "m = size of unique character set"
+            ]
       },
       {
-        "id": "q4",
-        "category": "In-Place Modification",
-        "question": "4. Can you solve it in-place?",
-        "whatInterviewerChecks": "Verifying memory bounds and zero extra allocations.",
-        "bestReplyScript": "Yes.\n\nThe two-pointer approach modifies the original array directly without using any additional array.\n\nExample:\nOriginal: [0, 1, 0, 3, 12]\nAfter processing: [1, 3, 12, 0, 0]\n\nOnly swaps are performed, so the extra space remains O(1).",
-        "keyPoints": [
-          "Direct array element swapping",
-          "Zero secondary array/list creation",
-          "Strict O(1) memory footprint"
-        ]
+            "id": "q4",
+            "category": "Hash Map Data Structure Rationale",
+            "question": "4. Why did you use a hash map (or set) to track characters?",
+            "whatInterviewerChecks": "O(1) average lookup for last seen index.",
+            "bestReplyScript": "A hash map provides O(1) average-time lookup.\n\nIt allows me to quickly check:\n- Whether a character has already appeared.\n- Where it last appeared.\n\nA hash map is better than repeatedly scanning the window, which would increase the time complexity.",
+            "keyPoints": [
+                  "O(1) average lookup time",
+                  "Tracks character existence and last seen index",
+                  "Avoids re-scanning window contents"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Order Stability",
-        "question": "5. How do you preserve element order?",
-        "whatInterviewerChecks": "Understanding stability properties of non-zero array filtering.",
-        "bestReplyScript": "The order is preserved because non-zero elements are processed from left to right.\n\nExample:\nInput: [4, 0, 5, 0, 2]\nOutput: [4, 5, 2, 0, 0]\n\nNotice that 4, 5, and 2 remain in the same relative order.\n\nThis property is called stability, and it is important in many real-world applications.",
-        "keyPoints": [
-          "Sequential left-to-right processing",
-          "First non-zero encounter occupies first available left slot",
-          "Guarantees stable relative order"
-        ]
+            "id": "q5",
+            "category": "Duplicate Handling Mechanics",
+            "question": "5. How do you handle duplicate characters within the window?",
+            "whatInterviewerChecks": "Jumping `left` pointer past previous occurrence.",
+            "bestReplyScript": "When I encounter a duplicate character, I move the left pointer to one position after its previous occurrence.\n\nFor example:\nString: \"abca\"\nWhen the second 'a' appears:\n- Previous 'a' is at index 0.\n- Move left to 1.\n- The new window becomes \"bca\".\n\nThis removes the duplicate while keeping the window as large as possible.",
+            "keyPoints": [
+                  "Jump `left` to `last_index + 1`",
+                  "Guarantees duplicate is excluded",
+                  "Preserves maximum possible window size"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Algorithm Variation",
-        "question": "6. What if zeroes should move to the front?",
-        "whatInterviewerChecks": "Adapting two-pointer direction and target condition.",
-        "bestReplyScript": "The logic is similar.\n\nInstead of moving non-zero elements forward, I would move zeroes forward.\n\nExample:\nInput: [1, 0, 2, 0, 3]\nOutput: [0, 0, 1, 2, 3]\n\nOnly the direction of movement changes; the two-pointer technique still works.",
-        "keyPoints": [
-          "Right pointer scans array (or scan backwards)",
-          "Swap zeroes to the left pointer index",
-          "Same O(n) time and O(1) space guarantee"
-        ]
+            "id": "q6",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty string, single char, all unique, all identical, duplicates at bounds, Unicode.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty string (\"\") -> Answer = 0\n2. One character (\"a\") -> Answer = 1\n3. All unique characters (\"abcdef\") -> Answer = 6\n4. All duplicate characters (\"aaaaa\") -> Answer = 1\n5. Duplicate at beginning or end (\"abca\") -> Correctly moves left pointer.\n6. Unicode characters -> Handled correctly if language supports Unicode strings.",
+            "keyPoints": [
+                  "Empty string returns 0",
+                  "Single char returns 1",
+                  "All duplicates return 1"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases & Boundaries",
-        "question": "7. What edge cases exist?",
-        "whatInterviewerChecks": "Comprehensive boundary testing.",
-        "bestReplyScript": "Some important edge cases are:\n\nEmpty array: [] → Output: []\n\nAll zeroes: [0, 0, 0] → Output: [0, 0, 0]\n\nNo zeroes: [1, 2, 3] → Output: [1, 2, 3]\n\nOne element: [0] → Output: [0]\n\nZero at the end: [1, 2, 3, 0] → Output: [1, 2, 3, 0]\n\nTesting these ensures the algorithm handles all boundary conditions correctly.",
-        "keyPoints": [
-          "Empty input handles safely",
-          "All-zero and no-zero inputs preserve correctness",
-          "Single element and trailing zero boundaries"
-        ]
+            "id": "q7",
+            "category": "Returning Substring Content",
+            "question": "7. How would you return the actual substring instead of its length?",
+            "whatInterviewerChecks": "Tracking `startIndex` and `maxLength`.",
+            "bestReplyScript": "Along with the maximum length, I would store:\n- `startIndex`\n- `maxLength`\n\nWhenever I find a larger window, I update these values.\nAt the end, I return the slice: `s[startIndex : startIndex + maxLength]`.\n\nThis returns the longest substring itself instead of only its length.",
+            "keyPoints": [
+                  "Track `startIndex` when updating `maxLength`",
+                  "Return slice `s[startIndex : startIndex + maxLength]`",
+                  "Same O(n) time and O(min(n, m)) space"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Test Matrix Design",
-        "question": "8. How would you test it?",
-        "whatInterviewerChecks": "Structured unit test table generation.",
-        "bestReplyScript": "I would test a variety of cases.\n\nInput | Expected Output\n[0, 1, 0, 3, 12] | [1, 3, 12, 0, 0]\n[1, 2, 3] | [1, 2, 3]\n[0, 0, 0] | [0, 0, 0]\n[1, 0] | [1, 0]\n[] | []\n[0] | [0]\n\nTesting different inputs helps verify correctness and robustness.",
-        "keyPoints": [
-          "Standard mixed zeroes/non-zeroes",
-          "All-zero & non-zero variants",
-          "Empty and single-element bounds"
-        ]
+            "id": "q8",
+            "category": "Unicode Character Support",
+            "question": "8. How would your solution change if the input contains Unicode characters?",
+            "whatInterviewerChecks": "Hash map keys for Unicode codepoints.",
+            "bestReplyScript": "The algorithm remains the same.\n\nThe only difference is that the hash map keys become Unicode characters instead of ASCII characters.\n\nMost modern languages, including Python, Java, and C#, support Unicode strings natively, so no major changes are required.",
+            "keyPoints": [
+                  "Hash map keys support Unicode characters natively",
+                  "No change to algorithm logic",
+                  "Preserves O(n) linear time"
+            ]
       },
       {
-        "id": "q9",
-        "category": "All-Zero Array Handling",
-        "question": "9. What happens with all zeroes?",
-        "whatInterviewerChecks": "Behavioral analysis under 100% zero payload.",
-        "bestReplyScript": "If every element is zero, no swaps are needed.\n\nExample:\nInput: [0, 0, 0, 0]\nOutput: [0, 0, 0, 0]\n\nThe algorithm still scans the array once and finishes in O(n) time.",
-        "keyPoints": [
-          "Right pointer scans all zeroes without triggering swap",
-          "Left pointer remains at 0",
-          "Linear scan completes cleanly with zero side-effects"
-        ]
+            "id": "q9",
+            "category": "O(1) Space Character Set Trade-off",
+            "question": "9. Can this problem be solved with O(1) extra space?",
+            "whatInterviewerChecks": "Fixed-size ASCII array (128/256) vs arbitrary Unicode hash map.",
+            "bestReplyScript": "It depends on the character set.\n- If the input contains only ASCII characters (128 or 256 possible values), we can use a fixed-size array, which is considered O(1) space.\n- For arbitrary Unicode characters, we need a hash map, so the space complexity becomes O(min(n, m)).",
+            "keyPoints": [
+                  "Fixed ASCII array (128/256 size) is O(1) space",
+                  "Arbitrary Unicode hash map is O(min(n, m)) space",
+                  "Depends on character set bounds"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Swap Optimization",
-        "question": "10. Can swaps be minimized?",
-        "whatInterviewerChecks": "Self-swap check optimization.",
-        "bestReplyScript": "Yes.\n\nBefore swapping, I can check if the left and right pointers point to the same index.\n\nIf they are equal, the element is already in the correct position, so no swap is needed.\n\nExample:\nInput: [1, 2, 3, 0]\n\nNo swaps are performed because every non-zero element is already where it should be.\n\nThis optimization reduces unnecessary operations.",
-        "keyPoints": [
-          "Check if left != right before executing swap",
-          "Avoids redundant self-assignment memory writes",
-          "Optimizes array write operations on non-zero prefix arrays"
-        ]
+            "id": "q10",
+            "category": "Testing & Verification",
+            "question": "10. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering empty, single, duplicates, and standard LeetCode examples.",
+            "bestReplyScript": "I would test:\n- \"\" -> 0\n- \"a\" -> 1\n- \"abcabcbb\" -> 3 (\"abc\")\n- \"bbbbb\" -> 1 (\"b\")\n- \"pwwkew\" -> 3 (\"wke\")\n- \"dvdf\" -> 3 (\"vdf\")\n\nThese cover empty strings, duplicates, unique characters, and typical interview examples.",
+            "keyPoints": [
+                  "LeetCode 3 standard test cases",
+                  "\"dvdf\" test case (requires max(left, last_idx + 1))",
+                  "Empty and single char boundary tests"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Swapping vs Overwriting",
-        "question": "11. What's the difference between swapping and overwriting?",
-        "whatInterviewerChecks": "Comparing 2-pass write fill vs 1-pass swap methods.",
-        "bestReplyScript": "Swapping:\n• Exchanges two elements.\n• Preserves both values in a single pass.\nExample: Swap [0, 5] → [5, 0]\n\nOverwriting:\n• Copies non-zero elements forward.\n• Fills remaining positions with zeroes afterward.\nExample: Input [0, 1, 0, 3] → Copy non-zero [1, 3, 0, 3] → Fill zeroes [1, 3, 0, 0]\n\nBoth methods have O(n) time complexity.\nOverwriting often performs fewer writes than swapping.",
-        "keyPoints": [
-          "Swapping = 1 pass with dual element exchange",
-          "Overwriting = Pass 1 copy non-zeroes, Pass 2 fill trailing zeroes",
-          "Overwriting can reduce total write operations when zeroes dominate"
-        ]
+            "id": "q11",
+            "category": "Common Candidate Pitfalls",
+            "question": "11. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Longest Substring Without Repeating Characters (LeetCode 3).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to update the left pointer correctly.\n- Moving the left pointer backward (failing to use `left = max(left, last_idx + 1)`).\n- Using a set but removing characters inefficiently using step-by-step while loop.\n- Forgetting to update the maximum length after expanding the window.",
+            "keyPoints": [
+                  "Left pointer moving backward bug",
+                  "Omitting `left = max(left, last_idx + 1)`",
+                  "In-efficient set deletion"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Data Structure Adaptation",
-        "question": "12. Can this work on linked lists?",
-        "whatInterviewerChecks": "Adapting array algorithms to Linked List pointer manipulation.",
-        "bestReplyScript": "Yes, but the implementation is different.\n\nSince linked lists do not support random access, swapping nodes is more complicated.\n\nA common approach is to:\n• Rearrange node values, or\n• Build two separate lists: one containing non-zero nodes, one containing zero nodes, then connect them.\n\nThe overall complexity remains O(n).",
-        "keyPoints": [
-          "Value swapping vs node pointer re-linking",
-          "Dual tail pointer partition technique (non_zero_head, zero_head)",
-          "O(n) time and O(1) space via pointer re-wiring"
-        ]
+            "id": "q12",
+            "category": "Streaming Data Architecture",
+            "question": "12. How would you solve this if the input is a stream of characters?",
+            "whatInterviewerChecks": "Real-time character stream evaluation.",
+            "bestReplyScript": "I would still maintain:\n- A sliding window.\n- A hash map of the latest character positions.\n\nAs new characters arrive from the stream:\n- Expand the window.\n- Remove duplicates by adjusting the left pointer.\n- Update the maximum length seen so far.\n\nThis allows processing the stream continuously without storing all previous substrings.",
+            "keyPoints": [
+                  "Process arriving stream chars in O(1)",
+                  "Maintain active seen hash map",
+                  "No need to store full stream history"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Stability Mechanics",
-        "question": "13. Why is stability important?",
-        "whatInterviewerChecks": "Importance of order preservation in database and multi-key operations.",
-        "bestReplyScript": "A stable algorithm keeps the relative order of equal or related elements unchanged.\n\nExample:\nInput: [A, 0, B, 0, C]\nOutput: [A, B, C, 0, 0]\n\nNotice that A, B, and C appear in the same order.\n\nStability is important because changing the order of data can affect the correctness of other algorithms or business logic.",
-        "keyPoints": [
-          "Preserves original sequence of valid elements",
-          "Crucial for multi-stage filtering and sorting pipelines",
-          "Prevents subtle business logic bugs"
-        ]
+            "id": "q13",
+            "category": "Extension: At Most K Distinct Characters",
+            "question": "13. How would you modify the solution to allow at most K distinct characters?",
+            "whatInterviewerChecks": "Sliding window frequency map `char -> count` (LeetCode 340).",
+            "bestReplyScript": "Instead of checking for duplicate characters, I would track the frequency of each character in the current window.\n- Expand the window normally.\n- If the number of distinct characters exceeds K (`len(freq) > K`), shrink the window from the left until it becomes valid again.\n- Track the maximum window length.\n\nThis is a common variation of the sliding window technique.",
+            "keyPoints": [
+                  "Frequency map `char -> count`",
+                  "Shrink left when `len(freq) > K`",
+                  "Time: O(n), Space: O(K)"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Real-World Applications",
-        "question": "14. Where is this technique used?",
-        "whatInterviewerChecks": "System-level applications of two-pointer array compaction.",
-        "bestReplyScript": "The two-pointer technique is widely used in software development.\n\nExamples include:\n• Removing duplicates from sorted arrays.\n• Partitioning arrays (e.g. QuickSort partition).\n• Data filtering & garbage collection compaction.\n• Memory defragmentation.\n• Stream processing & sliding window problems.\n• Efficient in-place buffer management.\n\nThe idea of moving valid data forward while ignoring unwanted values appears in many real-world systems.",
-        "keyPoints": [
-          "Memory compaction & defragmentation",
-          "QuickSort array partitioning",
-          "In-place buffer filtering & deduping",
-          "Stream garbage collection"
-        ]
+            "id": "q14",
+            "category": "Real-World Applications",
+            "question": "14. Where is the sliding window pattern commonly used?",
+            "whatInterviewerChecks": "Applications in telemetry, networking, text analytics.",
+            "bestReplyScript": "Sliding windows are widely used in:\n- Network packet analysis & API rate limiting.\n- Log processing & event stream analytics.\n- Text searching & plagiarism detection.\n- DNA sequence analysis (k-mer extraction).\n- Data stream processing & moving averages.",
+            "keyPoints": [
+                  "API Rate Limiting & Network packet analysis",
+                  "Log processing & event stream analytics",
+                  "DNA sequence k-mer extraction"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Common Mistakes",
-        "question": "15. What mistakes do candidates make?",
-        "whatInterviewerChecks": "Identifying interview anti-patterns.",
-        "bestReplyScript": "Some common mistakes include:\n\n• Using an extra array instead of solving it in-place.\n• Changing the order of non-zero elements.\n• Forgetting to move the left pointer.\n• Swapping unnecessarily.\n• Not handling arrays with no zeroes or all zeroes.\n• Using nested loops, increasing the time complexity to O(n²).\n\nThe most common interview mistake is not preserving the relative order of non-zero elements, which is usually a key requirement of the problem.",
-        "keyPoints": [
-          "Violating order stability (e.g. standard two-pointer from both ends)",
-          "Allocating O(n) auxiliary list",
-          "O(n^2) nested loop implementation",
-          "Forgetting left pointer increment"
-        ]
+            "id": "q15",
+            "category": "Brute Force vs Optimal Comparison Matrix",
+            "question": "15. Compare the brute-force and optimal solutions.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Checks all substrings in O(n^3) or O(n^2) time, O(1) space. Repeated work, fails on large inputs.\n- Sliding Window: Maintains one valid window in O(n) time, O(min(n, m)) space. Efficient, scalable, standard interview solution.\n\nThe sliding window is much faster because it avoids recomputing information for overlapping substrings.",
+            "keyPoints": [
+                  "Brute force: O(n^3) time, O(1) space",
+                  "Sliding Window: O(n) time, O(min(n, m)) space",
+                  "Optimal linear solution"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
