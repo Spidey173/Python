@@ -8634,195 +8634,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Power of Two.",
-            "bestReplyScript": "My approach for Power of Two follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Single set bit property of powers of two, n > 0 check, n & (n - 1) == 0 Expression.",
+            "bestReplyScript": "I solve this problem using bit manipulation.\n\nA power of two has exactly one set bit (1) in its binary representation.\nExamples: 1=0001 (2^0), 2=0010 (2^1), 4=0100 (2^2), 8=1000 (2^3), 16=10000 (2^4).\n\nI first check if the number is positive. Then I use: n > 0 and (n & (n - 1)) == 0.\nIf this expression is true, the number is a power of two.\n\nComplexity: Time: O(1), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Powers of two have exactly one set bit in binary",
+                  "Bitwise expression: n > 0 and (n & (n - 1)) == 0",
+                  "Checks positive condition first",
+                  "Time: O(1), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Bitwise Expression Mechanics",
             "question": "2. Why does `n & (n - 1)` work?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Power of Two.",
-            "bestReplyScript": "I chose this approach for Power of Two over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Single set bit clearing mathematical proof.",
+            "bestReplyScript": "A power of two has only one set bit. Subtracting 1 changes that bit to 0 and turns all bits after it into 1.\n\nExample for n = 8 (Binary 1000):\nn - 1 = 7 (Binary 0111).\nAND operation:\n  1000\n& 0111\n------\n  0000 -> Result is 0.\n\nFor n = 10 (Binary 1010), n - 1 = 9 (Binary 1001), 1010 & 1001 = 1000 (Not 0).\nTherefore, n & (n - 1) == 0 uniquely identifies powers of two.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "n - 1 flips single 1 to 0 and all trailing 0s to 1s",
+                  "n & (n - 1) clears the only set bit for powers of 2",
+                  "Non-powers of 2 retain remaining set bits"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Power of Two.",
-            "bestReplyScript": "Here is the complexity analysis for Power of Two:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Constant time O(1) bitwise operations.",
+            "bestReplyScript": "The solution performs:\n- One comparison (n > 0).\n- One subtraction (n - 1).\n- One bitwise AND (&).\n\nThese are all constant-time operations executed directly by CPU hardware in a single cycle.\n\nTherefore:\n- Time Complexity: O(1)\n- Space Complexity: O(1)\n\nThis is the most efficient solution.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(1)",
+                  "Space Complexity: O(1)",
+                  "Single-cycle CPU execution"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Positive Check Precondition",
             "question": "4. Why must `n` be positive?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Power of Two.",
-            "bestReplyScript": "I chose this approach for Power of Two over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Edge cases n = 0 and negative numbers.",
+            "bestReplyScript": "Powers of two are strictly positive integers (1, 2, 4, 8, 16...). Numbers like 0, -2, -8 are not powers of two.\n\nFor n = 0, 0 & (-1) = 0. Without checking n > 0, the expression (0 & -1) == 0 would incorrectly return True!\n\nSo we must always verify n > 0 before applying the bitwise check.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Powers of 2 are strictly positive (n >= 1)",
+                  "n = 0 yields 0 & (-1) == 0 (false positive)",
+                  "Mandatory n > 0 guard"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Repeated Division Alternative",
             "question": "5. Can this be solved without bitwise operators?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(log n) repeated division by 2 loop.",
+            "bestReplyScript": "Yes. One approach is repeated division.\nAlgorithm:\n- While n > 0 and n % 2 == 0: n //= 2.\n- Return n == 1.\n\nExample: 16 -> 8 -> 4 -> 2 -> 1 (Returns True).\n\nComplexity: Time: O(log n), Space: O(1).\nAlthough correct, the bitwise solution is faster (O(1) vs O(log n)).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Repeated division: while n % 2 == 0: n //= 2",
+                  "Time: O(log n)",
+                  "Space: O(1) - slower than bitwise O(1)"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Power of Two.",
-            "bestReplyScript": "When handling Power of Two, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Zero, one (2^0), negative numbers, large powers of 2.",
+            "bestReplyScript": "Important edge cases include:\n1. Zero (0) -> False\n2. One (1 = 2^0) -> True\n3. Negative numbers (-8) -> False\n4. Large power of two (1024) -> True\n5. Large non-power of two (1023) -> False\n\nTesting these cases ensures the solution works correctly.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 0 returns False",
+                  "n = 1 (2^0) returns True",
+                  "Negative integers return False"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Power of Two.",
-            "bestReplyScript": "To thoroughly test Power of Two, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test matrix with powers of 2, non-powers, zero, and negative inputs.",
+            "bestReplyScript": "I would test both normal and edge cases:\n- 1 -> True\n- 2 -> True\n- 8 -> True\n- 10 -> False\n- 0 -> False\n- -8 -> False\n\nThese tests verify the correctness of the algorithm.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Valid powers of 2 (1, 2, 8)",
+                  "Non-powers (10)",
+                  "Boundary cases (0, -8)"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Extension: Power of Four",
             "question": "8. What if you need to check for powers of four?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Power of 4 bitmask optimization `(n & (n - 1)) == 0 and (n & 0x55555555) != 0`.",
+            "bestReplyScript": "Every power of four (1, 4, 16, 64...) is also a power of two, but its single set bit must lie at an even bit position (1, 4, 16 -> bit positions 0, 2, 4).\n\nSolution:\nFirst check it's a power of two: (n & (n - 1)) == 0.\nThen check odd-bit mask 0x55555555 (binary 01010101...): (n & 0x55555555) != 0.\n\nCombined: n > 0 and (n & (n - 1)) == 0 and (n & 0x55555555) != 0.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Power of 4 = Power of 2 + set bit at even position",
+                  "Bitmask: 0x55555555 (odd bit mask)",
+                  "Expression: n > 0 and (n & (n - 1)) == 0 and (n & 0x55555555) != 0"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Power of Two.",
-            "bestReplyScript": "Common candidate pitfalls when solving Power of Two include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Power of Two.",
+            "bestReplyScript": "Some common mistakes include:\n- Forgetting to check n > 0 (allowing n = 0 to pass).\n- Using ^ (XOR) instead of & (bitwise AND).\n- Assuming 0 is a power of two.\n- Using repeated multiplication or float log operations.\n- Not understanding why the bitwise trick works.\n\nThe most common mistake is forgetting the positive number check.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Forgetting n > 0 guard",
+                  "Confusing ^ with &",
+                  "Using floating point log2(n) precision bugs"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Binary Representation Intuition",
             "question": "10. How does binary representation help?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Hamming weight 1 property in binary representation.",
+            "bestReplyScript": "Binary representation makes the pattern very clear:\nPowers of two always contain exactly one 1 bit in binary.\n- 1  -> 0001\n- 2  -> 0010\n- 4  -> 0100\n- 8  -> 1000\n- 16 -> 10000\n\nNon-powers contain multiple 1 bits (e.g. 10 -> 1010). This single 1-bit binary pattern is why the bitwise trick works.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Powers of 2 have Hamming weight = 1",
+                  "Exact one-bit binary structure",
+                  "Direct visualization of n & (n - 1)"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Floating Point Scope",
             "question": "11. Can floating-point numbers be powers of two?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Integer vs floating-point scope (2^-1 = 0.5).",
+            "bestReplyScript": "Yes, mathematically (e.g. 0.5 = 2^-1, 0.25 = 2^-2).\nHowever, standard interview problems (LeetCode 231) specify integer inputs n.\nIf floats must be supported, we inspect floating-point IEEE 754 exponent bits or use log2(n) math.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Fractional powers 2^-k (0.5, 0.25)",
+                  "Integer scope restriction in interview specs",
+                  "IEEE 754 floating point exponent structure"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is this concept used in computing?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical software engineering use cases for powers of 2.",
+            "bestReplyScript": "Powers of two appear throughout computer science:\n- Memory allocation & page sizes (4KB, 8KB).\n- CPU cache line sizes & Hash Table capacity expansion (doubling factor).\n- Bitwise fast modulo (x & (2^k - 1) replaces x % 2^k).\n- Graphics textures (Power of Two textures in OpenGL/DirectX).\n- Network subnet masks & binary trees.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Fast bitwise modulo: x & (2^k - 1)",
+                  "Hash table capacity doubling",
+                  "Memory page & cache line alignment"
             ]
       },
       {
             "id": "q13",
-            "category": "Algorithmic Justification",
+            "category": "Method Comparison",
             "question": "13. Compare mathematical and bitwise solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Power of Two.",
-            "bestReplyScript": "I chose this approach for Power of Two over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(log n) division vs O(1) bitwise comparison table.",
+            "bestReplyScript": "Comparison:\n- Repeated Division (while n % 2 == 0): Time O(log n), Space O(1)\n- Bitwise AND (n & (n - 1) == 0):      Time O(1),     Space O(1)\n\nThe bitwise solution is strictly preferred because it executes in constant time O(1) with 3 machine instructions.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Division: O(log n) iterations",
+                  "Bitwise: O(1) constant time",
+                  "Bitwise uses 3 CPU instructions"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Recursive Approach",
             "question": "14. Can you solve this recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recurrence space overhead O(log n) vs O(1) bitwise.",
+            "bestReplyScript": "Yes.\nRecursive approach:\n- If n == 1: return True\n- If n <= 0 or n % 2 != 0: return False\n- Return isPowerOfTwo(n // 2)\n\nComplexity: Time O(log n), Space O(log n) call stack memory.\nThe bitwise solution remains superior (O(1) time & space).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive division by 2",
+                  "Time: O(log n), Space: O(log n) call stack",
+                  "Bitwise solution is superior"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Generalization to Power of K",
             "question": "15. How would you extend this to powers of any integer?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Power of Two.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Power of K (e.g. Power of 3, Power of K) repeated division / log math.",
+            "bestReplyScript": "Suppose we want to check whether n is a power of k (e.g. Power of 3: 81 -> 27 -> 9 -> 3 -> 1).\n\nAlgorithm:\n- While n > 0 and n % k == 0: n //= k.\n- Return n == 1.\n\nComplexity: Time O(log_k n), Space O(1).\nNote: The bitwise trick n & (n - 1) ONLY works for base 2 because computer hardware uses binary representation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Repeated division by k: n //= k",
+                  "Time: O(log_k n)",
+                  "Bitwise trick is unique to base 2"
             ]
       }
 ],
