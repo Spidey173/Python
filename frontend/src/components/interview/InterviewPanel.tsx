@@ -381,8 +381,8 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
                                 </button>
                               </div>
 
-                              <div className="rounded-2xl border border-[#30363D] bg-[#080B10] p-5 font-mono text-xs sm:text-sm text-[#E6EDF3] leading-relaxed overflow-x-auto shadow-inner">
-                                <pre className="whitespace-pre">{q.codeSnippet}</pre>
+                              <div className="rounded-2xl border border-[#30363D] bg-[#080B10] p-4 sm:p-5 font-mono text-xs sm:text-sm text-[#E6EDF3] leading-relaxed overflow-x-auto shadow-inner">
+                                <pre className="whitespace-pre-wrap break-words">{q.codeSnippet}</pre>
                               </div>
                             </div>
                           )}
@@ -400,8 +400,8 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
           {/* ======================================================== */}
           {activeTab === 'mistakes' && (
             <div className="space-y-6 max-w-5xl mx-auto">
-              <div className="border-b border-[#30363D] pb-4">
-                <h3 className="text-lg sm:text-xl font-extrabold text-[#F0F6FC]">
+              <div className="border-b border-[#30363D] pb-3 sm:pb-4">
+                <h3 className="text-base sm:text-xl font-extrabold text-[#F0F6FC]">
                   ⚠️ Common Rookie Mistakes & Traps
                 </h3>
                 <p className="text-xs sm:text-sm text-[#8B949E] mt-1">
@@ -409,34 +409,34 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
                 </p>
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 {data.mistakes.map((m) => (
-                  <div key={m.id} className="rounded-2xl border border-[#30363D] bg-[#161B22] p-6 space-y-4 shadow-md">
-                    <div className="flex items-start gap-3">
+                  <div key={m.id} className="rounded-2xl border border-[#30363D] bg-[#161B22] p-4 sm:p-6 space-y-3.5 sm:space-y-4 shadow-md min-w-0">
+                    <div className="flex items-start gap-2.5 sm:gap-3">
                       <AlertTriangle className="w-5 h-5 text-[#F85149] shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="text-base sm:text-lg font-extrabold text-[#F0F6FC]">{m.title}</h4>
-                        <p className="text-xs sm:text-sm text-[#C9D1D9] leading-relaxed mt-1">
+                      <div className="min-w-0">
+                        <h4 className="text-sm sm:text-lg font-extrabold text-[#F0F6FC] break-words">{m.title}</h4>
+                        <p className="text-xs sm:text-sm text-[#C9D1D9] leading-relaxed mt-1 break-words">
                           {m.description}
                         </p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="rounded-xl border border-[#F85149]/30 bg-[#F85149]/5 p-4 space-y-1.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <div className="rounded-xl border border-[#F85149]/30 bg-[#F85149]/5 p-3 sm:p-4 space-y-1.5 min-w-0 overflow-hidden">
                         <span className="text-xs font-mono font-extrabold text-[#F85149] block">❌ Buggy Code</span>
-                        <code className="text-xs font-mono text-[#F0F6FC] block whitespace-pre">{m.badSnippet}</code>
+                        <code className="text-xs font-mono text-[#F0F6FC] block whitespace-pre-wrap break-words leading-relaxed">{m.badSnippet}</code>
                       </div>
 
-                      <div className="rounded-xl border border-[#30363D] bg-[#0D1117] p-4 space-y-1.5">
+                      <div className="rounded-xl border border-[#30363D] bg-[#0D1117] p-3 sm:p-4 space-y-1.5 min-w-0 overflow-hidden">
                         <span className="text-xs font-mono font-extrabold text-[#8B949E] block">📥 Failing Test Input</span>
-                        <code className="text-xs font-mono text-[#58A6FF] block whitespace-pre">{m.failingInput}</code>
+                        <code className="text-xs font-mono text-[#58A6FF] block whitespace-pre-wrap break-words leading-relaxed">{m.failingInput}</code>
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-[#58A6FF]/30 bg-[#58A6FF]/5 p-4 space-y-1.5">
+                    <div className="rounded-xl border border-[#58A6FF]/30 bg-[#58A6FF]/5 p-3 sm:p-4 space-y-1.5 min-w-0">
                       <span className="text-xs font-mono font-extrabold text-[#58A6FF] block">✅ How to Fix It</span>
-                      <p className="text-xs sm:text-sm text-[#F0F6FC] font-semibold leading-relaxed">{m.howToFix}</p>
+                      <p className="text-xs sm:text-sm text-[#F0F6FC] font-semibold leading-relaxed break-words">{m.howToFix}</p>
                     </div>
                   </div>
                 ))}

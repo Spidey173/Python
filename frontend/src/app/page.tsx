@@ -162,9 +162,11 @@ export default function DashboardPage() {
   const solvedToday = useMemo(() => {
     if (!user) return 0;
     const todayStr = new Date().toDateString();
-    return submissions.filter(
+    const todayPassedSubs = submissions.filter(
       (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
-    ).length;
+    );
+    const uniqueProblems = new Set(todayPassedSubs.map((s) => s.problemId));
+    return uniqueProblems.size;
   }, [user, submissions]);
 
   // Helper to check if a problem is already solved
