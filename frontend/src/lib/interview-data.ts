@@ -5214,195 +5214,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Isomorphic Strings.",
-            "bestReplyScript": "My approach for Isomorphic Strings follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Two hash maps logic, one-to-one bijection check, linear traversal.",
+            "bestReplyScript": "I use two dictionaries (hash maps) to maintain a one-to-one mapping between the characters of the two strings.\n- The first dictionary maps characters from string s to string t.\n- The second dictionary maps characters from string t to string s.\n\nSteps:\n1. If the strings have different lengths, return False.\n2. Traverse both strings together.\n3. For each pair of characters:\n   - Check if an existing mapping is consistent.\n   - If no mapping exists, create it in both dictionaries.\n4. If any mapping is inconsistent, return False.\n5. If all characters satisfy the mapping, return True.\n\nExample:\ns = \"egg\", t = \"add\"\nMappings: e -> a, g -> d | Reverse: a -> e, d -> g\nOutput: True\n\nThis ensures that every character maps uniquely in both directions.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two hash maps for bi-directional mapping",
+                  "One-to-one character bijection check",
+                  "Early exit on length mismatch or inconsistent map",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Bi-Directional Mapping Justification",
             "question": "2. Why are two mappings required?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Isomorphic Strings.",
-            "bestReplyScript": "I chose this approach for Isomorphic Strings over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Preventing multiple-to-one mapping bugs.",
+            "bestReplyScript": "Two mappings ensure a one-to-one relationship between the characters.\n\nExample: s = \"ab\", t = \"aa\"\nIf we only check s -> t: a -> a, b -> a.\nThe mapping from s to t seems valid, but two different characters (a and b) map to the same character (a), which is invalid.\n\nUsing the reverse mapping (t -> s) immediately detects this conflict (a -> a, then a -> b conflict!).",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Ensures bi-directional bijection",
+                  "Prevents multiple characters mapping to one",
+                  "Detects conflicts immediately"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Isomorphic Strings.",
-            "bestReplyScript": "Here is the complexity analysis for Isomorphic Strings:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic bounds for linear traversal and O(1) hash table lookups.",
+            "bestReplyScript": "Each character is processed rendering O(1) average lookup and insertion.\n\nFor every character pair:\n- Dictionary lookup -> O(1) average.\n- Dictionary insertion -> O(1) average.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the length of the strings.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Single-pass character validation"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Single Character Constraint",
             "question": "4. Can one character map to multiple characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Definition of functional mapping in isomorphic strings.",
+            "bestReplyScript": "No. In an isomorphic mapping, one character must always map to exactly one character.\n\nExample: s = \"aa\", t = \"ab\"\nThe first 'a' maps to 'a'. The second 'a' would need to map to 'b', creating two different mappings for the same character.\n\nThis violates the definition of isomorphic strings and returns False.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "One-to-exact-one constraint",
+                  "Character cannot map to multiple targets",
+                  "Violates isomorphic mapping"
             ]
       },
       {
             "id": "q5",
-            "category": "Algorithmic Justification",
+            "category": "One-Way Mapping Trap",
             "question": "5. Why is a one-way mapping insufficient?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Isomorphic Strings.",
-            "bestReplyScript": "I chose this approach for Isomorphic Strings over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Failure modes of single hash map approaches.",
+            "bestReplyScript": "A one-way mapping cannot detect when multiple characters map to the same character.\n\nExample: s = \"ab\", t = \"cc\"\nOne-way mapping: a -> c, b -> c (appears valid in one direction!).\nHowever, 'c' cannot represent both 'a' and 'b'.\n\nThe reverse mapping catches this immediately: c -> a, then later c -> b -> Conflict!\n\nTherefore, two-way mapping is necessary.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Single map fails on 'ab' vs 'cc'",
+                  "Reverse map catches duplicate target collisions",
+                  "Guarantees bijective equivalence"
             ]
       },
       {
             "id": "q6",
-            "category": "Deep-Dive Question 6",
+            "category": "Unicode Compatibility",
             "question": "6. How would you handle Unicode characters?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Python dict hashability for Unicode codepoints.",
+            "bestReplyScript": "Python dictionaries support Unicode characters natively, so the exact same algorithm works without modification.\n\nExample:\ns = \"\u4f60\u597d\u4f60\", t = \"\u4e16\u754c\u4e16\"\nMappings: \u4f60 -> \u4e16, \u597d -> \u754c.\n\nThe algorithm treats Unicode characters just like normal ASCII characters. No special changes are required.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Native Python Unicode dict key support",
+                  "Works seamlessly across CJK & Emojis",
+                  "No algorithmic modifications needed"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Isomorphic Strings.",
-            "bestReplyScript": "When handling Isomorphic Strings, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty strings, length mismatch, single character, invalid & valid patterns.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty strings (s=\"\", t=\"\") -> True\n2. Different lengths (s=\"abc\", t=\"ab\") -> False\n3. Single character (\"a\", \"b\") -> True\n4. Invalid mapping (\"foo\", \"bar\") -> False\n5. Valid mapping (\"paper\", \"title\") -> True\n\nTesting these cases ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty & single character cases",
+                  "Early exit length mismatch",
+                  "Valid ('paper'/'title') & Invalid ('foo'/'bar') cases"
             ]
       },
       {
             "id": "q8",
             "category": "Testing & Verification",
             "question": "8. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Isomorphic Strings.",
-            "bestReplyScript": "To thoroughly test Isomorphic Strings, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering valid and invalid patterns.",
+            "bestReplyScript": "I would create test cases covering different scenarios:\n- \"egg\" & \"add\" -> True\n- \"foo\" & \"bar\" -> False\n- \"paper\" & \"title\" -> True\n- \"ab\" & \"aa\" -> False\n- \"\" & \"\" -> True\n\nThese tests cover valid mappings, invalid mappings, and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Comprehensive test matrix",
+                  "Covers bi-directional collisions",
+                  "Empty and single-character assertions"
             ]
       },
       {
             "id": "q9",
-            "category": "Algorithmic Justification",
+            "category": "Array-Based Lookup (ASCII)",
             "question": "9. Can you solve this using arrays instead of dictionaries?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Isomorphic Strings.",
-            "bestReplyScript": "I chose this approach for Isomorphic Strings over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Fixed-size 256-array optimization for ASCII.",
+            "bestReplyScript": "Yes, if the input is limited to ASCII or lowercase English letters.\n\nFor example:\n- Create two arrays of size 256 for ASCII characters.\n- Store the mapping using character ASCII values as indices (mapS[ord(c1)] = c2).\n\nThis avoids hashing overhead and can be slightly faster. However, dictionaries are more flexible because they also support Unicode characters.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Fixed size 256 array for ASCII",
+                  "Direct indexing via ord(char)",
+                  "Slightly faster CPU execution, less flexible than dict"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Length Mismatch Guard",
             "question": "10. What if strings have different lengths?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Early exit guard before loop execution.",
+            "bestReplyScript": "If the lengths are different, they cannot be isomorphic.\n\nExample: s = \"abc\", t = \"ab\"\nSince there isn't a one-to-one correspondence between all characters, I immediately return False.\n\nChecking the lengths first avoids unnecessary computation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "O(1) early exit length check",
+                  "Guarantees equal pairing in loop",
+                  "Saves CPU cycles"
             ]
       },
       {
             "id": "q11",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "11. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Isomorphic Strings.",
-            "bestReplyScript": "Common candidate pitfalls when solving Isomorphic Strings include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie errors in Isomorphic Strings.",
+            "bestReplyScript": "Some common mistakes include:\n- Using only one dictionary.\n- Forgetting to check reverse mappings.\n- Not checking string lengths first.\n- Overwriting existing mappings incorrectly.\n- Assuming repeated characters always make strings isomorphic.\n\nThe most common mistake is using only one mapping, which fails to detect many invalid cases.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Using single dict (fails on 'ab'/'aa')",
+                  "Forgetting length check",
+                  "Overwriting existing mappings"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Isomorphic vs Anagram Comparison",
             "question": "12. How is this different from checking anagrams?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Character counts vs structural pattern relationship.",
+            "bestReplyScript": "The two problems are different:\n- Anagram: Checks whether two strings contain the same characters with the same frequencies, regardless of order (e.g., 'listen' and 'silent' -> True).\n- Isomorphic: Checks whether characters follow the same structural mapping pattern, regardless of the actual letters (e.g., 'paper' and 'title' -> True).\n\nAnagrams focus on character counts, while isomorphic strings focus on structural relationships.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Anagram = identical letter frequency distribution",
+                  "Isomorphic = identical positional pattern structure",
+                  "Distinct algorithmic constraints"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Real-World Applications",
             "question": "13. Where is character mapping used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Software engineering use cases for symbol mapping.",
+            "bestReplyScript": "Character mapping is used in many real-world applications, including:\n- Data encoding and decoding.\n- Compiler design (symbol table mapping).\n- Cryptography (substitution ciphers).\n- Language translation systems & NLP.\n- Data format conversion (JSON/XML transformations).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Compiler symbol tables",
+                  "Substitution ciphers & cryptography",
+                  "Encoding/decoding data translation"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Generalizing to Arbitrary Objects",
             "question": "14. Can you generalize this for arbitrary objects?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Extending pattern mapping to lists of arbitrary hashable objects.",
+            "bestReplyScript": "Yes. The same idea works for any hashable objects, not just characters.\n\nFor example:\nPattern [1,2,1] and Objects [\"cat\", \"dog\", \"cat\"]\nMappings: 1 -> \"cat\", 2 -> \"dog\".\n\nAs long as each object has a unique mapping in both directions, the algorithm works correctly.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Works for any hashable Python objects",
+                  "Pattern matching on word arrays / AST nodes",
+                  "Generic bi-directional mapping"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Optimization for Lowercase Letters",
             "question": "15. How would you optimize for lowercase letters only?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Isomorphic Strings.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Array size 26 indexing via `ord(c) - ord('a')` for O(1) space.",
+            "bestReplyScript": "If the input contains only lowercase English letters (a-z), I can replace dictionaries with two arrays of size 26.\n\nEach character's index is calculated as: index = ord(character) - ord('a').\n\nThis reduces the overhead of hashing while keeping:\n- Time Complexity: O(n)\n- Space Complexity: O(1) (fixed array size 26)\n\nFor general-purpose code, however, dictionaries are preferred because they support Unicode.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Array size 26 optimization",
+                  "ord(c) - ord('a') index arithmetic",
+                  "O(1) fixed space complexity"
             ]
       }
 ],
