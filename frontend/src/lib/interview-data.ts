@@ -14297,195 +14297,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Search in a 2D Matrix.",
-            "bestReplyScript": "My approach for Search in a 2D Matrix follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Treating 2D matrix as virtual 1D array, 1D-to-2D index conversion `row = mid // cols`, `col = mid % cols`.",
+            "bestReplyScript": "I use binary search by treating the 2D matrix as a single sorted 1D array.\n\nThis works because:\n- Each row is sorted.\n- The first element of every row is greater than the last element of the previous row.\n\nAlgorithm:\n1. Let rows = m, cols = n.\n2. Set left = 0, right = m * n - 1.\n3. Compute mid = left + (right - left) // 2.\n4. Convert 1D index to 2D position: row = mid // cols, col = mid % cols.\n5. Compare matrix[row][col] with target.\n6. Continue binary search until target is found or search space is exhausted.\n\nComplexity: Time: O(log(m * n)), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Virtual 1D binary search on m * n elements",
+                  "Index conversion: row = mid // cols, col = mid % cols",
+                  "Global sorting invariant",
+                  "Time: O(log(m * n)), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Binary Search Precondition",
             "question": "2. Why is binary search applicable?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Search in a 2D Matrix.",
-            "bestReplyScript": "I chose this approach for Search in a 2D Matrix over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Global monotonic sorting invariant across rows.",
+            "bestReplyScript": "Binary search works because the matrix is globally sorted:\n- Every row is sorted in ascending order.\n- The first element of each row is strictly greater than the last element of the previous row.\n\nExample: Matrix [[1,3,5],[7,9,11],[13,15,17]] behaves identically to 1D sorted array [1,3,5,7,9,11,13,15,17].\nSince the whole 2D space is monotonically increasing, binary search is fully valid.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Globally sorted 2D matrix invariant",
+                  "matrix[i+1][0] > matrix[i][n-1]",
+                  "Equivalent to flat 1D sorted array"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Search in a 2D Matrix.",
-            "bestReplyScript": "Here is the complexity analysis for Search in a 2D Matrix:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(log(m * n)) time bound and O(1) space.",
+            "bestReplyScript": "Binary search halves the search space in every iteration.\n\nFor a matrix with m rows and n columns, total elements = m * n.\n- Time Complexity: O(log(m * n)) = O(log m + log n)\n- Space Complexity: O(1) constant auxiliary space.\n\nThis is optimal and significantly faster than linear O(m * n) or row-by-row O(m log n) searching.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(log(m * n))",
+                  "Space Complexity: O(1)",
+                  "Optimal binary halving bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "2D Index Mapping Formulas",
             "question": "4. How do you convert a 2D index into a 1D index?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "2D index formulas: row = mid // cols, col = mid % cols.",
+            "bestReplyScript": "During binary search, mid represents a virtual 1D index from 0 to (m * n - 1).\n\nTo map mid to 2D matrix coordinates:\n- row = mid // cols\n- col = mid % cols\n\nExample: 3x3 matrix (cols = 3), mid = 5 -> row = 5 // 3 = 1, col = 5 % 3 = 2 -> matrix[1][2] = 6.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "row = mid // cols (quotient)",
+                  "col = mid % cols (remainder)",
+                  "O(1) coordinate transformation"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Global Sorting Invariant Assumptions",
             "question": "5. What assumptions must hold for binary search?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "LeetCode 74 (Search 2D Matrix I) vs LeetCode 240 (Search 2D Matrix II).",
+            "bestReplyScript": "Binary search across the full 1D virtual space requires two strict conditions:\n1. Each row is individually sorted in ascending order.\n2. The first element of row i+1 is strictly greater than the last element of row i.\n\nIf condition 2 does not hold (such as in LeetCode 240 where rows and columns are independently sorted), global 1D binary search fails and we must use Top-Right Search O(m + n).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "LeetCode 74: Globally sorted -> O(log(m * n))",
+                  "LeetCode 240: Independently sorted rows/cols -> Top-Right O(m + n)",
+                  "Must verify global ordering before virtual 1D BS"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Search in a 2D Matrix.",
-            "bestReplyScript": "When handling Search in a 2D Matrix, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty matrix, 1x1 single element, target smaller/larger than all elements.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty matrix ([]) or empty rows ([[]]) -> Return False.\n2. 1x1 matrix ([[5]]) -> Correctly finds 5 or returns False.\n3. Target smaller than min element (target < matrix[0][0]) -> False.\n4. Target larger than max element (target > matrix[m-1][n-1]) -> False.\n\nTesting these guards prevents out-of-bounds errors.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty matrix check: `if not matrix or not matrix[0]`",
+                  "1x1 matrix boundaries",
+                  "Target out-of-range bounds check"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
-            "question": "7. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Search in a 2D Matrix.",
-            "bestReplyScript": "To thoroughly test Search in a 2D Matrix, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "question": "7. How would you test your solution?",
+            "whatInterviewerChecks": "Test cases table matrix covering 1x1, empty, found, and missing targets.",
+            "bestReplyScript": "I would test:\n- [[5]], target 5 -> True\n- [[5]], target 1 -> False\n- [], target 5 -> False\n- 3x4 Matrix, existing target 16 -> True\n- 3x4 Matrix, missing target 13 -> False\n\nThese cover normal, boundary, and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Single-element 1x1 assertions",
+                  "Empty matrix safety assertions",
+                  "Existing vs missing target assertions"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Row-by-Row Search Alternative",
             "question": "8. Can this be solved row by row?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Binary search on first column O(log m) then row BS O(log n).",
+            "bestReplyScript": "Yes. Two alternative approaches:\n1. Search first column to find candidate row O(log m), then binary search that row O(log n) -> Total Time: O(log m + log n) = O(log(m * n)).\n2. Binary search every row individually -> Total Time: O(m * log n).\n\nThe virtual 1D binary search is cleaner and computes the exact same O(log(m * n)) time in a single loop.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Row-by-row BS: O(m log n)",
+                  "Column BS then Row BS: O(log m + log n) = O(log(m * n))",
+                  "Virtual 1D BS is simplest implementation"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Search in a 2D Matrix.",
-            "bestReplyScript": "Common candidate pitfalls when solving Search in a 2D Matrix include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Search a 2D Matrix (LeetCode 74).",
+            "bestReplyScript": "Some common mistakes include:\n- Confusing `mid // cols` with `mid // rows` (swapping row/col index formulas).\n- Forgetting empty matrix guards (`if not matrix or not matrix[0]`).\n- Integer overflow when computing `(left + right) // 2` in C++/Java (use `left + (right - left) // 2`).\n- Applying 1D virtual binary search to LeetCode 240 (Search 2D Matrix II) where rows aren't globally ordered.\n\nThe most common mistake is swapping row and column mapping formulas.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Index formula swap: `mid // cols` vs `mid // rows`",
+                  "Applying 1D BS to non-globally sorted matrices",
+                  "Empty matrix IndexError"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Independently Sorted Matrix (Search 2D Matrix II)",
             "question": "10. What if rows are sorted but not globally ordered?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Top-Right Corner / Staircase Search O(m + n) algorithm (LeetCode 240).",
+            "bestReplyScript": "If each row and column is independently sorted (LeetCode 240), 1D virtual binary search fails.\n\nInstead, use the Top-Right Corner Search (Staircase Search):\n- Start at top-right corner `(r = 0, c = n - 1)`.\n- If `matrix[r][c] == target`, return True.\n- If `matrix[r][c] > target`, move left `(c -= 1)`.\n- If `matrix[r][c] < target`, move down `(r += 1)`.\n\nThis runs in O(m + n) time and O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Top-Right Corner / Staircase Search",
+                  "Move left if current > target, move down if current < target",
+                  "Time: O(m + n), Space: O(1)"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "High-Frequency Repeated Queries",
             "question": "11. How would you optimize for repeated searches?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "B-Tree / Hash Indexing for batch queries.",
+            "bestReplyScript": "If the matrix is queried thousands of times:\n- Flatten matrix or build a Hash Set of all matrix elements for O(1) lookup queries.\n- For database systems, build B-Tree or Spatial R-Tree indexes.\n- If memory is limited, keep the matrix as is and reuse O(log(m * n)) binary search.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Hash Set lookup: O(1) query time",
+                  "B-Tree index for database queries",
+                  "Precomputed lookup tables"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Real-World Applications",
             "question": "12. Where is this technique used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "GIS spatial indexing, spreadsheet lookups, database 2D pages.",
+            "bestReplyScript": "Searching 2D sorted matrices is used in:\n- Database storage engines (pages of sorted records mapped to 2D block arrays).\n- Geographic Information Systems (GIS) coordinate grid lookups.\n- Image processing & Spreadsheet cell range lookups.\n- Computer Vision heatmaps & bounding box searches.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Database storage engine block pages",
+                  "GIS coordinate grid indexing",
+                  "Spreadsheet cell lookup engines"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Jagged Array Limitations",
             "question": "13. Can this work on jagged arrays?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Jagged arrays invalidate fixed `cols` modulo mapping.",
+            "bestReplyScript": "No.\nJagged arrays have rows of varying lengths (different column counts per row).\n\nThe mapping formulas `row = mid // cols` and `col = mid % cols` strictly rely on a fixed `cols` dimension across all rows.\n\nFor jagged arrays, we must store row boundary prefixes or perform binary search on row offset arrays.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Fixed `cols` assumption fails on jagged arrays",
+                  "Invalidates `mid // cols` mapping",
+                  "Requires prefix sum offset arrays"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Rotated Matrix Search Variant",
             "question": "14. How would you search a rotated matrix?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Search in a 2D Matrix.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Finding pivot point in rotated 2D matrix.",
+            "bestReplyScript": "If the globally sorted matrix has been rotated:\n1. Find the 1D pivot index (smallest element) using modified binary search in O(log(m * n)).\n2. Perform binary search in the shifted virtual 1D space using shifted index `(mid + pivot) % (m * n)`.\n\nThis maintains optimal O(log(m * n)) runtime.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Find 1D pivot in O(log(m * n))",
+                  "Shifted BS index: `(mid + pivot) % (m * n)`",
+                  "O(log(m * n)) overall time"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Binary vs Linear Search Comparison",
             "question": "15. Compare binary search with linear search.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Search in a 2D Matrix.",
-            "bestReplyScript": "I chose this approach for Search in a 2D Matrix over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(log(m * n)) vs O(m * n) comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Linear Search: Scans element-by-element -> Time O(m * n), Space O(1).\n- Virtual 1D Binary Search: Halves search space -> Time O(log(m * n)), Space O(1).\n\nFor a 1,000 x 1,000 matrix (1,000,000 elements):\n- Linear Search takes up to 1,000,000 operations.\n- Binary Search takes ~20 operations!\nBinary search is exponentially faster.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Linear: O(m * n) vs Binary: O(log(m * n))",
+                  "1,000,000 elements: 1,000,000 checks vs ~20 checks",
+                  "Exponentially superior scaling"
             ]
       }
 ],
