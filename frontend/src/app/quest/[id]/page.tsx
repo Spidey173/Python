@@ -326,27 +326,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     }
   };
 
-  // Monaco Editor Reference for mobile symbol bar insertion
+  // Monaco Editor Reference
   const monacoEditorRef = useRef<any>(null);
-
-  const handleInsertSymbol = (sym: string) => {
-    if (monacoEditorRef.current) {
-      const editor = monacoEditorRef.current;
-      const selection = editor.getSelection();
-      if (selection) {
-        editor.executeEdits('symbol-bar', [
-          {
-            range: selection,
-            text: sym,
-            forceMoveMarkers: true,
-          },
-        ]);
-        editor.focus();
-        return;
-      }
-    }
-    handleCodeChange(code + sym);
-  };
 
   const handleSendCustomPrompt = async (prompt: string) => {
     if (!problem || isThinking) return;
@@ -927,7 +908,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const isCurrentProblemSolved = solvedIds.includes(problemId) || problem?.passed;
 
   return (
-    <div className="h-[calc(100vh-48px)] max-h-[calc(100vh-48px)] flex flex-col bg-[#070A0F] text-[#E6EDF3] overflow-hidden select-none">
+    <div className="h-[calc(100dvh-48px)] max-h-[calc(100dvh-48px)] md:h-[calc(100vh-48px)] md:max-h-[calc(100vh-48px)] flex flex-col bg-[#070A0F] text-[#E6EDF3] overflow-hidden select-none">
 
       {/* 1. Futuristic Mission Sub-Header (Compact Responsive Header) */}
       <header className="h-12 md:h-13 border-b border-[#21262D] bg-[#0E131C]/90 backdrop-blur-md px-3 md:px-4 flex items-center justify-between gap-2 md:gap-3 shrink-0 z-20">
@@ -1849,43 +1830,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               </div>
             </div>
 
-            {/* Mobile Python Quick Symbols Toolbar */}
-            <div className="flex items-center gap-1.5 px-2 py-1.5 bg-[#0D1117] border-b border-[#21262D] overflow-x-auto scrollbar-none shrink-0 select-none">
-              {[
-                { label: 'Tab', val: '    ' },
-                { label: ':', val: ':' },
-                { label: '(', val: '(' },
-                { label: ')', val: ')' },
-                { label: '[', val: '[' },
-                { label: ']', val: ']' },
-                { label: '{', val: '{' },
-                { label: '}', val: '}' },
-                { label: '=', val: '=' },
-                { label: '"', val: '"' },
-                { label: "'", val: "'" },
-                { label: '_', val: '_' },
-                { label: '#', val: '#' },
-                { label: 'def', val: 'def ' },
-                { label: 'return', val: 'return ' },
-                { label: 'self', val: 'self.' },
-                { label: 'if', val: 'if ' },
-                { label: 'for', val: 'for ' },
-                { label: 'in', val: 'in ' },
-                { label: 'not', val: 'not ' },
-              ].map((sym) => (
-                <button
-                  key={sym.label}
-                  type="button"
-                  onClick={() => handleInsertSymbol(sym.val)}
-                  className="px-2.5 py-1 rounded bg-[#161B22] border border-[#30363D] text-xs font-mono font-semibold text-[#C9D1D9] hover:text-white hover:bg-[#21262D] active:bg-[#30363D] transition-colors shrink-0 shadow-sm cursor-pointer"
-                >
-                  {sym.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Full-Height Mobile Monaco Editor (Distraction-Free) */}
-            <div className="flex-1 relative min-h-0 bg-[#080B12]">
+            {/* Full-Height Mobile Monaco Editor (Distraction-Free, No Symbol Bar) */}
+            <div className="flex-1 relative min-h-0 bg-[#080B12] pb-24">
               <MonacoEditor
                 height="100%"
                 defaultLanguage="python"
@@ -1904,7 +1850,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                   automaticLayout: true,
                   tabSize: 4,
                   insertSpaces: true,
-                  padding: { top: 12, bottom: 12 },
+                  padding: { top: 12, bottom: 84 },
                   renderLineHighlight: 'all',
                   cursorBlinking: 'smooth',
                   fontLigatures: true,
@@ -1913,43 +1859,43 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               />
             </div>
 
-            {/* Mobile Sticky Action Bar */}
-            <div className="border-t border-[#21262D] bg-[#0E131C] px-3 py-2 flex items-center justify-between gap-2 shrink-0 z-10 shadow-lg">
+            {/* Floating Ultra-Premium Mobile Action Dock (Guaranteed 100% Visible & Pinned to Viewport) */}
+            <div className="fixed bottom-3 left-3 right-3 z-30 flex items-center justify-between gap-2.5 p-2 px-3 rounded-2xl bg-[#161B22]/95 backdrop-blur-xl border border-[#30363D] shadow-2xl shadow-black/90">
               <button
                 onClick={handleResetCode}
-                className="p-2.5 rounded-xl border border-[#30363D] bg-[#161B22] text-[#8B949E] hover:text-white transition-colors cursor-pointer"
+                className="p-3 rounded-xl border border-[#30363D] bg-[#0D1117] text-[#8B949E] hover:text-white active:scale-95 transition-all cursor-pointer shrink-0 shadow-inner"
                 title="Reset code"
               >
                 <RotateCcw className="h-4 w-4" />
               </button>
 
-              <div className="flex items-center gap-2 flex-1">
-                <button
-                  onClick={() => handleRunTestCases()}
-                  disabled={isRunning || isSubmitting}
-                  className="flex-1 py-2.5 px-3 rounded-xl border border-white/10 bg-[#161B22] hover:bg-[#21262D] active:bg-[#30363D] text-xs font-bold text-[#E6EDF3] flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
-                >
-                  {isRunning ? (
-                    <RefreshCw className="h-4 w-4 animate-spin text-[#58A6FF]" />
-                  ) : (
-                    <Play className="h-4 w-4 fill-current text-emerald-400" />
-                  )}
-                  <span>Run</span>
-                </button>
+              <button
+                onClick={() => handleRunTestCases()}
+                disabled={isRunning || isSubmitting}
+                className="flex-1 py-3 px-3.5 rounded-xl border border-[#30363D] bg-[#21262D] hover:bg-[#30363D] active:scale-[0.98] text-xs font-bold text-[#E6EDF3] flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer shadow-sm"
+              >
+                {isRunning ? (
+                  <RefreshCw className="h-4 w-4 animate-spin text-[#58A6FF]" />
+                ) : (
+                  <Play className="h-4 w-4 fill-current text-emerald-400" />
+                )}
+                <span>Run</span>
+              </button>
 
-                <button
-                  onClick={handleSubmitCode}
-                  disabled={isRunning || isSubmitting}
-                  className="flex-[1.4] py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#238636] to-[#2EA043] hover:from-[#2EA043] hover:to-[#3FB950] text-xs font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition-all disabled:opacity-50 cursor-pointer"
-                >
-                  {isSubmitting ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Check className="h-4 w-4 stroke-[3]" />
-                  )}
-                  <span>Submit</span>
-                </button>
-              </div>
+              <button
+                onClick={handleSubmitCode}
+                disabled={isRunning || isSubmitting}
+                className="flex-[1.6] py-3 px-4 rounded-xl bg-gradient-to-r from-[#238636] via-[#2EA043] to-[#3FB950] hover:from-[#2EA043] hover:to-[#3FB950] active:scale-[0.98] text-white text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 transition-all disabled:opacity-50 cursor-pointer relative overflow-hidden"
+              >
+                {isSubmitting ? (
+                  <RefreshCw className="h-4 w-4 animate-spin text-white shrink-0" />
+                ) : (
+                  <div className="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                    <Check className="h-3.5 w-3.5 stroke-[3] text-white" />
+                  </div>
+                )}
+                <span className="tracking-wide uppercase text-[11px]">Submit Solution</span>
+              </button>
             </div>
           </div>
         )}
