@@ -4834,195 +4834,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Contains Duplicate II.",
-            "bestReplyScript": "My approach for Contains Duplicate II follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Hash map tracking of recent indices, index distance validation, single-pass logic.",
+            "bestReplyScript": "I use a hash map (dictionary) to store each number and the most recent index where it appeared.\n\nSteps:\n1. Traverse the array from left to right.\n2. For each element, check if it already exists in the hash map.\n3. If it exists, calculate the distance between the current index and the previous index.\n4. If the distance is less than or equal to k, return True.\n5. Otherwise, update the index of the current element in the hash map.\n6. If no valid duplicate is found, return False.\n\nExample:\nnums = [1,2,3,1], k = 3\nIndex 0 -> Store {1:0}\nIndex 1 -> Store {2:1}\nIndex 2 -> Store {3:2}\nIndex 3 -> 1 exists. Distance = 3 - 0 = 3 <= k. Output: True\n\nThis approach checks duplicates in a single pass.\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Hash map for O(1) recent index lookups",
+                  "Single-pass left-to-right traversal",
+                  "Check distance <= k",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
             "category": "Algorithmic Justification",
             "question": "2. Why did you choose a hash map?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Contains Duplicate II.",
-            "bestReplyScript": "I chose this approach for Contains Duplicate II over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(1) average lookup vs O(n^2) repeated linear search.",
+            "bestReplyScript": "A hash map allows me to:\n- Store the latest index of each number.\n- Check if a number has appeared before in O(1) average time.\n\nWithout a hash map, I would have to search previous elements repeatedly, resulting in O(n\u00b2) time.\n\nUsing a hash map makes the solution much more efficient.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "O(1) average lookup for previous indices",
+                  "Avoids O(n\u00b2) repeated linear search",
+                  "Optimal single-pass execution"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Contains Duplicate II.",
-            "bestReplyScript": "Here is the complexity analysis for Contains Duplicate II:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Asymptotic time and space complexity bounds.",
+            "bestReplyScript": "The array is traversed only once.\n\nFor every element:\n- Hash map lookup -> O(1) average.\n- Hash map update -> O(1) average.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThis is the optimal solution.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Optimal linear performance"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
+            "category": "Index Storage Strategy",
             "question": "4. How do you store previously seen indices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Updating hash map with the LATEST index to minimize index distance.",
+            "bestReplyScript": "I store the latest index of every value in the hash map.\n\nExample:\nnums = [1,2,1,1]\nProcessing:\nIndex 0 -> Store {1:0}\nIndex 2 -> Update {1:2} (distance = 2)\nIndex 3 -> Update {1:3} (distance = 3-2 = 1)\n\nUpdating to the latest index ensures future distance calculations are accurate.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Store & overwrite with latest index",
+                  "Ensures minimal distance calculations",
+                  "Prevents stale index distance evaluation"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Zero Distance Boundary (k = 0)",
             "question": "5. What if k = 0?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Strict inequality bounds |i - j| <= k where i != j.",
+            "bestReplyScript": "If k = 0, two different indices cannot satisfy the condition |i - j| <= 0.\n\nThe only way the difference can be zero is if both indices are the same, but the problem requires different indices.\n\nTherefore:\nnums = [1,1], k = 0 -> Output: False.\n\nNo valid pair exists.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "i != j constraint",
+                  "|i - j| <= 0 impossible for distinct indices",
+                  "Returns False for k = 0"
             ]
       },
       {
             "id": "q6",
-            "category": "Time & Space Complexity",
+            "category": "Multiple Duplicate Frequency",
             "question": "6. What if duplicate values appear multiple times?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Contains Duplicate II.",
-            "bestReplyScript": "Here is the complexity analysis for Contains Duplicate II:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Correctness when encountering 3+ duplicate numbers.",
+            "bestReplyScript": "The algorithm still works correctly.\n\nExample:\nnums = [1,2,1,1], k = 1\nIndex 0: 1 stored\nIndex 2: 1 at index 2 (distance = 2 > k) -> Update index to 2\nIndex 3: 1 at index 3 (distance = 3 - 2 = 1 <= k) -> Return True!\n\nSince we always keep the latest index, we correctly detect nearby duplicates.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Updates to latest index on mismatch",
+                  "Detects closest pair among 3+ duplicates",
+                  "Guarantees optimal sliding window boundary"
             ]
       },
       {
             "id": "q7",
-            "category": "Deep-Dive Question 7",
+            "category": "Sliding Window Set Approach",
             "question": "7. Can this be solved using a sliding window?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Sliding window of size k using Set data structure.",
+            "bestReplyScript": "Yes. Instead of storing all previous indices, we maintain a sliding window of size k using a set.\n\nSteps:\n1. Traverse the array.\n2. Keep only the last k elements in the set.\n3. If the current element already exists in the set, return True.\n4. Otherwise, add it and remove the oldest element if the window exceeds size k.\n\nExample:\nnums = [1,2,3,1], k = 3\nWindow: {1} -> {1,2} -> {1,2,3} -> Current 1 already exists -> Return True.\n\nComplexity: Time: O(n), Space: O(min(n, k)).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Sliding window using Hash Set",
+                  "Maintain size k by removing oldest element",
+                  "Space: O(min(n, k)) optimization"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Memory Optimization",
             "question": "8. How would you optimize memory usage?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Reducing space complexity from O(n) to O(k).",
+            "bestReplyScript": "Instead of storing indices for every element forever, I would use the sliding window approach.\n\nThe window contains at most k elements, so memory usage becomes O(k) instead of O(n).\n\nThis is especially useful when k is much smaller than the array size.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Switch to sliding window set",
+                  "Reduces RAM space from O(n) to O(k)",
+                  "Optimal when k << n"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Contains Duplicate II.",
-            "bestReplyScript": "When handling Contains Duplicate II, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Empty array, single element, k=0, distance > k, distance <= k.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> False\n2. One element ([5]) -> False\n3. k = 0 ([1,1], k=0) -> False\n4. Duplicate outside range ([1,2,3,1], k=2) -> False (Distance 3 > 2)\n5. Duplicate inside range ([1,2,3,1], k=3) -> True (Distance 3 <= 3)\n\nTesting these scenarios ensures correctness.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Empty & single element checks",
+                  "k = 0 boundary condition",
+                  "Distance > k vs Distance <= k validation"
             ]
       },
       {
             "id": "q10",
             "category": "Testing & Verification",
             "question": "10. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Contains Duplicate II.",
-            "bestReplyScript": "To thoroughly test Contains Duplicate II, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test suite matrix across diverse inputs and k values.",
+            "bestReplyScript": "I would test different cases:\n- [1,2,3,1], k=3 -> True\n- [1,0,1,1], k=1 -> True\n- [1,2,3,1,2,3], k=2 -> False\n- [1], k=1 -> False\n- [], k=2 -> False\n- [1,1], k=0 -> False\n\nThese tests cover normal cases, edge cases, and boundary conditions.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Positive & negative duplicate distance assertions",
+                  "Zero/single element boundary tests",
+                  "k = 0 assertion"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Streaming Data Systems",
             "question": "11. What if the array is streamed?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Real-time sliding window set on un-bounded streams.",
+            "bestReplyScript": "If numbers arrive continuously, I cannot store the entire array.\n\nInstead, I would use a sliding window of the last k elements.\n\nExample:\nIncoming 1 -> Window {1}\nIncoming 2 -> Window {1,2}\nIncoming 1 -> Already exists in window -> Return True!\n\nThis allows real-time processing while using only O(k) memory.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Stateful O(k) memory sliding window",
+                  "Real-time event processing without array storage",
+                  "Removes elements past k steps"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "No Hashing Alternative",
             "question": "12. Can you solve it without hashing?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "O(n * k) nested loop trade-offs.",
+            "bestReplyScript": "Yes, but it is less efficient.\n\nOne approach is: For every element, compare the next k elements.\n\nComplexity: Time: O(n * k), Space: O(1).\n\nAlthough this avoids hashing, it becomes much slower when k or the array size is large. Therefore, the hash map or sliding window approach is preferred.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Nested comparison of next k elements",
+                  "Time: O(n * k)",
+                  "Space: O(1) memory bound trade-off"
             ]
       },
       {
             "id": "q13",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "13. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Contains Duplicate II.",
-            "bestReplyScript": "Common candidate pitfalls when solving Contains Duplicate II include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Contains Duplicate II.",
+            "bestReplyScript": "Some common mistakes include:\n- Comparing values instead of indices.\n- Forgetting that the condition is <= k, not < k.\n- Not updating the latest index after processing a duplicate.\n- Mishandling the case where k = 0.\n- Using nested loops instead of hashing.\n\nThe most common mistake is forgetting to update the stored index, which can lead to incorrect distance calculations.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Comparing values instead of indices",
+                  "Using < k instead of <= k",
+                  "Forgetting to update index on duplicate match"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Real-World Applications",
             "question": "14. Where is this pattern used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical applications in security, fraud, and logging.",
+            "bestReplyScript": "This pattern is useful in many real-world applications, including:\n- Fraud detection (detect repeated transactions within a short time window).\n- Network packet monitoring & duplicate log detection.\n- Cache management & event processing.\n- Real-time analytics & sensor data monitoring.\n\nThe idea of tracking recently seen items appears frequently in real-time systems.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Fraud transaction time-window detection",
+                  "Network packet duplication detection",
+                  "Log deduplication & event streaming"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Extension: Contains Duplicate III",
             "question": "15. How would you extend this problem to check value differences as well?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Contains Duplicate II.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Contains Duplicate III (|i - j| <= k AND |nums[i] - nums[j]| <= t).",
+            "bestReplyScript": "This extension is similar to Contains Duplicate III, where we check:\n- Index difference <= k\n- Value difference <= t\n\nA common solution uses:\n- Bucketing (hash map buckets of size t + 1)\n- Or a balanced binary search tree (Red-Black Tree / SortedList)\n\nThese data structures allow us to efficiently find nearby values while also maintaining the index constraint.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Bucket sort hashing (bucket size t + 1)",
+                  "Balanced Binary Search Tree (SortedList)",
+                  "Maintains dual constraints |i-j|<=k and |val1-val2|<=t"
             ]
       }
 ],
