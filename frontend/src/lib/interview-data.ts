@@ -4071,206 +4071,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Word Frequency Counter in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Word Frequency Counter using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_11(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach for counting word frequencies.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Word Frequency Counter?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Word Frequency Counter:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you choose a dictionary (hash map)?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Word Frequency Counter if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_11(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How would you handle uppercase and lowercase words?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How would you ignore punctuation while counting?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Word Frequency Counter:\nassert solve_11([]) == 0\nassert solve_11([5]) == 5\nassert solve_11([-1, -5, -2]) != 0\nassert solve_11([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What if the text contains millions of words?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you return the top K most frequent words?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you sort words with the same frequency?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can you solve this without Python's Counter?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. How would you process a live text stream?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where are frequency counters used in real-world systems?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would your solution change for multiple languages?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -4470,206 +4450,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Intersection of Two Arrays in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Intersection of Two Arrays using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_12(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Intersection of Two Arrays?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Intersection of Two Arrays:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you use a set?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Intersection of Two Arrays if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_12(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How would you preserve duplicate elements?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What if both arrays are already sorted?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Intersection of Two Arrays:\nassert solve_12([]) == 0\nassert solve_12([5]) == 5\nassert solve_12([-1, -5, -2]) != 0\nassert solve_12([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. Can you solve it without extra space?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. How would you handle very large arrays?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you return the intersection in sorted order?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Why is hashing faster than nested loops?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can this be solved using binary search?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. What if one array is much smaller than the other?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where is set intersection used in practice?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -4869,206 +4829,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Contains Duplicate II in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Contains Duplicate II using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_13(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your algorithm.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Contains Duplicate II?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Contains Duplicate II:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why did you choose a hash map?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Contains Duplicate II if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_13(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you store previously seen indices?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What if k = 0?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Contains Duplicate II:\nassert solve_13([]) == 0\nassert solve_13([5]) == 5\nassert solve_13([-1, -5, -2]) != 0\nassert solve_13([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What if duplicate values appear multiple times?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. Can this be solved using a sliding window?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you optimize memory usage?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What if the array is streamed?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can you solve it without hashing?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Where is this pattern used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would you extend this problem to check value differences as well?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -5268,206 +5208,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Isomorphic Strings in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Isomorphic Strings using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_14(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Isomorphic Strings?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Isomorphic Strings:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why are two mappings required?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Isomorphic Strings if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_14(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Can one character map to multiple characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. Why is a one-way mapping insufficient?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Isomorphic Strings:\nassert solve_14([]) == 0\nassert solve_14([5]) == 5\nassert solve_14([-1, -5, -2]) != 0\nassert solve_14([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. How would you handle Unicode characters?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Can you solve this using arrays instead of dictionaries?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. What if strings have different lengths?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How is this different from checking anagrams?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where is character mapping used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Can you generalize this for arbitrary objects?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would you optimize for lowercase letters only?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -5667,206 +5587,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Subarray with Zero Sum in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Subarray with Zero Sum using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_15(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your algorithm.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Subarray with Zero Sum?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Subarray with Zero Sum:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why use prefix sums?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Subarray with Zero Sum if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_15(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. Why is a hash set useful?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do prefix sums detect a zero-sum subarray?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Subarray with Zero Sum:\nassert solve_15([]) == 0\nassert solve_15([5]) == 5\nassert solve_15([-1, -5, -2]) != 0\nassert solve_15([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What if multiple zero-sum subarrays exist?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. Can you return their indices?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can this work on a stream of numbers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What if the target sum is not zero?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where is this technique used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. What mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Can this be solved without extra memory?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would you optimize for large datasets?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -6066,206 +5966,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Binary Search (Sorted Array) in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Binary Search (Sorted Array) using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_16(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain how binary search works.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Binary Search (Sorted Array)?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Binary Search (Sorted Array):\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why must the array be sorted?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Binary Search (Sorted Array) if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_16(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Why calculate the middle index carefully?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How would you find the first occurrence?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Binary Search (Sorted Array):\nassert solve_16([]) == 0\nassert solve_16([5]) == 5\nassert solve_16([-1, -5, -2]) != 0\nassert solve_16([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. How would you find the last occurrence?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What if the array is sorted in descending order?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you search a rotated sorted array?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can binary search be implemented recursively?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where is binary search used in real applications?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Why is binary search faster than linear search?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. What happens if duplicate values exist?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -6465,206 +6345,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Remove Duplicates from Sorted Array in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Remove Duplicates from Sorted Array using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_17(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your two-pointer approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Remove Duplicates from Sorted Array?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Remove Duplicates from Sorted Array:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why must the array be sorted?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Remove Duplicates from Sorted Array if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_17(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. Can this be solved in-place?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do you maintain the order?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Remove Duplicates from Sorted Array:\nassert solve_17([]) == 0\nassert solve_17([5]) == 5\nassert solve_17([-1, -5, -2]) != 0\nassert solve_17([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What if duplicates can appear more than twice?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What if the array is empty?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Why is one pointer not enough?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What mistakes do candidates make?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Can this be solved without modifying the array?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where is this technique useful?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would you adapt it for linked lists?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would you preserve duplicate counts?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -6864,206 +6724,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Squares of a Sorted Array in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Squares of a Sorted Array using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_18(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your algorithm.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Squares of a Sorted Array?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Squares of a Sorted Array:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why use two pointers?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Squares of a Sorted Array if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_18(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. Why can't you simply square and return?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. How do negative numbers affect the solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Squares of a Sorted Array:\nassert solve_18([]) == 0\nassert solve_18([5]) == 5\nassert solve_18([-1, -5, -2]) != 0\nassert solve_18([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. Can this be solved in-place?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. Why compare absolute values?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Can you solve it using sorting afterward?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Which approach is more efficient?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where is this pattern useful?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would you extend it for cubes?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. What if the array isn't sorted?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -7263,206 +7103,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Search Insert Position in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Search Insert Position using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_19(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain your approach.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Search Insert Position?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Search Insert Position:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why is binary search appropriate?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Search Insert Position if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_19(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you determine the insertion point?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. What if the target already exists?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Search Insert Position:\nassert solve_19([]) == 0\nassert solve_19([5]) == 5\nassert solve_19([-1, -5, -2]) != 0\nassert solve_19([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What if the target is smaller than every element?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What if the target is larger than every element?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. How would you test your solution?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. Can this be solved recursively?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. Where is insertion position used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. How would duplicate values affect the answer?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. Can this work on linked lists?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. How would you modify it to return the last valid position?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
@@ -7662,206 +7482,186 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "30-Second Elevator Pitch",
-        "question": "How would you explain your optimal solution for Valid Mountain Array in 30 seconds?",
-        "whatInterviewerChecks": "Concise verbal summary and algorithmic clarity.",
-        "bestReplyScript": "I solve Valid Mountain Array using an optimal single-pass approach in O(N) time and O(1) extra space. We iterate through the data sequentially, maintaining running state variables to compute the target result without allocating extra array copies.",
-        "keyPoints": [
-          "Optimal O(N) linear time",
-          "O(1) auxiliary space",
-          "Single pass traversal",
-          "Zero redundant heap memory"
-        ],
-        "codeSnippet": "def solve_20(nums):\n    n = len(nums)\n    result = 0\n    for i in range(n):\n        # Core optimal transformation logic\n        result += nums[i]\n    return result"
+            "id": "q1",
+            "category": "Interview Question 1",
+            "question": "1. Explain the conditions for a valid mountain array.",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 1:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Time & Space Complexity Proof",
-        "question": "How do you justify the O(N) time and O(1) space complexity of Valid Mountain Array?",
-        "whatInterviewerChecks": "Asymptotic operation counting.",
-        "bestReplyScript": "The time complexity is strictly O(N) because each element in the input is visited at most once during traversal. The space complexity is O(1) because we only allocate fixed scalar variables on the stack without creating auxiliary arrays or hash maps.",
-        "keyPoints": [
-          "Time: O(N) single linear pass",
-          "Space: O(1) constant stack memory",
-          "No heap list allocations"
-        ],
-        "codeSnippet": "# Complexity Analysis for Valid Mountain Array:\n# Time:  O(N) -> 1 loop iteration per element\n# Space: O(1) -> Only integer state variables"
+            "id": "q2",
+            "category": "Interview Question 2",
+            "question": "2. Why can't the peak be the first or last element?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 2:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q3",
-        "category": "No Built-ins Follow-up",
-        "question": "How do you implement Valid Mountain Array if Python helper functions (min, max, sum, sorted) are forbidden?",
-        "whatInterviewerChecks": "Fundamental loop logic and manual state comparison.",
-        "bestReplyScript": "We implement the comparison and accumulation logic manually using standard loop counters and conditional IF branches. This demonstrates core algorithmic problem solving from scratch without relying on Python standard library shortcuts.",
-        "keyPoints": [
-          "Manual loop counter",
-          "Scalar comparisons with IF",
-          "Zero library shortcuts"
-        ],
-        "codeSnippet": "def solve_manual_20(nums):\n    if not nums:\n        return 0\n    current_max = nums[0]\n    for i in range(1, len(nums)):\n        if nums[i] > current_max:\n            current_max = nums[i]\n    return current_max"
+            "id": "q3",
+            "category": "Interview Question 3",
+            "question": "3. What is the time complexity?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 3:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q4",
-        "category": "Python Core: List vs Generator Memory",
-        "question": "What is the difference between passing a list comprehension vs generator expression in Python?",
-        "whatInterviewerChecks": "Python iterator protocol and lazy evaluation memory savings.",
-        "bestReplyScript": "A list comprehension `[x for x in data]` immediately evaluates and constructs a full PyListObject on the heap in O(N) memory. A generator expression `(x for x in data)` evaluates lazily on-demand in O(1) memory, yielding one item at a time. For large inputs, generators prevent memory exhaustion.",
-        "keyPoints": [
-          "List comprehension = O(N) immediate memory",
-          "Generator expression = O(1) lazy evaluation",
-          "Generators avoid memory exhaustion"
-        ],
-        "codeSnippet": "import sys\n\n# List comprehension (allocates full array):\nlist_mem = sys.getsizeof([x for x in range(1000000)]) # ~8.5 MB RAM!\n\n# Generator expression (lazy iterator):\ngen_mem = sys.getsizeof((x for x in range(1000000)))   # Only 208 Bytes RAM!\nprint(f'List: {list_mem} bytes vs Gen: {gen_mem} bytes')"
+            "id": "q4",
+            "category": "Interview Question 4",
+            "question": "4. How do you identify the peak?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 4:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Python Core: Mutability & Side Effects",
-        "question": "Why is modifying an input list in-place considered a dangerous side effect in production code?",
-        "whatInterviewerChecks": "Functional purity, thread safety, and defensive programming.",
-        "bestReplyScript": "In Python, lists are passed by reference (`object reference`). Modifying the input list in-place mutates the caller's data in memory. If another thread or upstream function relies on the original list order or contents, in-place mutation causes unpredictable bugs. In interviews, ask the interviewer: 'May I modify the input list in-place to save memory, or should I preserve it?'",
-        "keyPoints": [
-          "Python passes arguments by object reference",
-          "In-place mutation affects external callers",
-          "Always ask interviewer before mutating input"
-        ],
-        "codeSnippet": "def modify_dangerously(nums):\n    nums.sort() # \u274c Mutates caller's original list!\n\ndef modify_safely(nums):\n    sorted_nums = sorted(nums) # \u2705 Creates clean copy, input untouched\n    return sorted_nums"
+            "id": "q5",
+            "category": "Interview Question 5",
+            "question": "5. Can this be solved in one pass?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 5:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Defensive Testing & Edge Cases",
-        "question": "What 5 specific edge cases must you test for this problem?",
-        "whatInterviewerChecks": "Boundary test coverage.",
-        "bestReplyScript": "We must test: 1) Empty input `[]`; 2) Single-element input `[5]`; 3) Inputs containing negative numbers or zeros; 4) Inputs with all identical duplicate elements `[7, 7, 7]`; and 5) Very large inputs causing integer overflow in other languages.",
-        "keyPoints": [
-          "Empty list []",
-          "Single element",
-          "Negative numbers & zeros",
-          "Duplicate elements",
-          "Large input scale"
-        ],
-        "codeSnippet": "# Edge case test suite for Valid Mountain Array:\nassert solve_20([]) == 0\nassert solve_20([5]) == 5\nassert solve_20([-1, -5, -2]) != 0\nassert solve_20([7, 7, 7]) is not None\nprint('All boundary cases passed!')"
+            "id": "q6",
+            "category": "Interview Question 6",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 6:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Python Core: Dict Lookup O(1) vs List Lookup O(N)",
-        "question": "Why is checking `x in my_set` O(1) time while `x in my_list` is O(N) time?",
-        "whatInterviewerChecks": "Hash table vs sequential array memory architecture.",
-        "bestReplyScript": "A Python list searches elements sequentially from index 0 to N-1, requiring O(N) comparisons in the worst case. Sets and dictionaries in Python use open-addressing hash tables. Python hashes the lookup key using `hash(key)`, maps it to a slot index in O(1) time, and directly retrieves the element.",
-        "keyPoints": [
-          "List uses sequential linear search O(N)",
-          "Set/Dict uses CPython hash table O(1)",
-          "Hash collision handling via open addressing"
-        ],
-        "codeSnippet": "import time\n\nlarge_list = list(range(1000000))\nlarge_set = set(range(1000000))\n\n# List lookup: O(N) ~20ms\n# Set lookup:  O(1) ~0.001ms"
+            "id": "q7",
+            "category": "Interview Question 7",
+            "question": "7. What if there are equal adjacent values?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 7:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Python Core: GIL & Concurrency",
-        "question": "Will multithreading speed up a heavy mathematical calculation in Python?",
-        "whatInterviewerChecks": "Understanding CPython's Global Interpreter Lock (GIL).",
-        "bestReplyScript": "No. CPython has a Global Interpreter Lock (GIL) that allows only one thread to execute Python bytecode at a time. For CPU-bound mathematical work, threads spend time competing for the GIL rather than executing in parallel. To achieve true parallel execution across CPU cores, use `multiprocessing` or C extensions like NumPy.",
-        "keyPoints": [
-          "CPython GIL limits CPU-bound multithreading",
-          "Use multiprocessing module for parallel CPU work",
-          "NumPy releases GIL for vector operations"
-        ],
-        "codeSnippet": "from multiprocessing import Pool\n\ndef heavy_computation(x):\n    return sum(i * i for i in range(x))\n\nif __name__ == '__main__':\n    with Pool() as pool:\n        results = pool.map(heavy_computation, [10**6] * 4)"
+            "id": "q8",
+            "category": "Interview Question 8",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 8:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q9",
-        "category": "System Design: Scaling to 1 Billion Records",
-        "question": "How would you redesign this solution if the dataset contains 1 billion integers?",
-        "whatInterviewerChecks": "Distributed computing and MapReduce architecture.",
-        "bestReplyScript": "1 Billion integers take ~8GB of raw binary memory (or ~28GB in Python object form), exceeding single-machine RAM limits. We partition the data across a cluster using MapReduce or Apache Spark. Workers compute local partial results on their partition, and a central Reducer combines the partial results into the final aggregate.",
-        "keyPoints": [
-          "Partition data across distributed nodes",
-          "Map phase computes local aggregations",
-          "Reduce phase merges final answer"
-        ],
-        "codeSnippet": "# PySpark MapReduce Conceptual Pattern:\nrdd = sc.textFile('hdfs://bigdata/numbers.txt')\nresult = rdd.map(lambda line: int(line)).reduce(lambda a, b: a + b)"
+            "id": "q9",
+            "category": "Interview Question 9",
+            "question": "9. What common mistakes occur?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 9:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Python Core: Deep Copy vs Shallow Copy",
-        "question": "What is the difference between `copy.copy()` and `copy.deepcopy()` in Python?",
-        "whatInterviewerChecks": "Nested object memory references.",
-        "bestReplyScript": "Shallow copy `copy.copy(obj)` creates a new top-level object, but inserts references to the nested child objects inside it. Modifying a nested child in a shallow copy alters the original object. Deep copy `copy.deepcopy(obj)` recursively copies every nested child object, ensuring complete independence from the original object.",
-        "keyPoints": [
-          "Shallow copy copies top-level container only",
-          "Deep copy recursively duplicates all nested objects",
-          "Nested mutations affect shallow copies"
-        ],
-        "codeSnippet": "import copy\n\noriginal = [[1, 2], [3, 4]]\nshallow = copy.copy(original)\ndeep = copy.deepcopy(original)\n\noriginal[0][0] = 999\nprint(shallow[0][0])  # 999! (Mutated because inner list reference shared)\nprint(deep[0][0])     # 1 (Untouched! Independent memory)"
+            "id": "q10",
+            "category": "Interview Question 10",
+            "question": "10. How would you return the peak index?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 10:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Python Core: Fast I/O for Competitive Programming",
-        "question": "Why does `sys.stdin.read().split()` run 10x faster than calling `input()` in a loop?",
-        "whatInterviewerChecks": "I/O buffer mechanics in Python.",
-        "bestReplyScript": "Calling `input()` in a loop invokes CPython's string parsing and readline I/O routine N separate times, incurring high function call overhead. `sys.stdin.read()` reads the entire input stream from the OS file buffer into RAM in a single C-level syscall. `.split()` then tokenizes the string at C speed.",
-        "keyPoints": [
-          "input() has high function call overhead per line",
-          "sys.stdin.read() performs a single OS syscall",
-          "C-level tokenization via .split()"
-        ],
-        "codeSnippet": "import sys\n\n# \u274c Slow I/O:\n# for _ in range(N):\n#     x = int(input())\n\n# \u2705 Fast I/O (10x faster):\ninput_data = sys.stdin.read().split()\nnums = [int(x) for x in input_data]"
+            "id": "q11",
+            "category": "Interview Question 11",
+            "question": "11. Can there be multiple peaks?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 11:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Python Core: Decorators & Wrappers",
-        "question": "How can you write a custom Python decorator to measure execution time of your solution?",
-        "whatInterviewerChecks": "Higher-order functions and Python `@functools.wraps`.",
-        "bestReplyScript": "A decorator is a function that takes another function as an argument, extends its behavior, and returns a new function. We use `time.perf_counter()` inside a wrapper function and decorate our target function with `@timer`.",
-        "keyPoints": [
-          "Higher-order functions",
-          "wraps preserves function metadata",
-          "time.perf_counter() for high-precision timing"
-        ],
-        "codeSnippet": "import time\nfrom functools import wraps\n\ndef timeit(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        elapsed = time.perf_counter() - start\n        print(f'{func.__name__} took {elapsed:.6f} seconds')\n        return result\n    return wrapper\n\n@timeit\ndef solve():\n    return sum(range(1000000))"
+            "id": "q12",
+            "category": "Interview Question 12",
+            "question": "12. How would you solve this recursively?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 12:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Python Core: Recursion & Stack Limit",
-        "question": "What is Python's default recursion depth limit and how do you increase it?",
-        "whatInterviewerChecks": "Call stack awareness and `sys.setrecursionlimit`.",
-        "bestReplyScript": "Python's default recursion depth limit is 1,000 frames to prevent stack overflow C crashes. We check it using `sys.getrecursionlimit()` and can increase it using `sys.setrecursionlimit(200000)` for deep tree or graph traversals.",
-        "keyPoints": [
-          "Default limit = 1000",
-          "sys.setrecursionlimit(N) to raise",
-          "Iterative loops preferred to avoid stack overflow"
-        ],
-        "codeSnippet": "import sys\n\nprint(sys.getrecursionlimit()) # 1000\nsys.setrecursionlimit(200000)  # Safe for deep DFS recursion"
+            "id": "q13",
+            "category": "Interview Question 13",
+            "question": "13. Where are mountain patterns used?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 13:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Behavioral & Code Presentation",
-        "question": "How do you structure your communication during a 45-minute live coding interview?",
-        "whatInterviewerChecks": "Structured problem-solving workflow.",
-        "bestReplyScript": "I follow a strict 5-stage framework: 1) Clarify constraints and edge cases; 2) State the brute-force idea and its Big-O complexity; 3) Propose the optimal strategy and gain interviewer consensus; 4) Write clean modular code with descriptive variable names; and 5) Dry-run test cases aloud to catch bugs before declaring completion.",
-        "keyPoints": [
-          "Clarify inputs & edge cases",
-          "State brute force first",
-          "Get approval on optimal plan",
-          "Write modular code",
-          "Dry run with sample inputs"
-        ],
-        "codeSnippet": "# 5-Step Interview Checklist:\n# Step 1: Clarify (N bounds, negative numbers, empty input?)\n# Step 2: Brute Force (O(N^2) time, O(1) space)\n# Step 3: Optimal Plan (O(N) time using Hash Map / Two Pointers)\n# Step 4: Code Implementation\n# Step 5: Manual Trace Dry Run"
+            "id": "q14",
+            "category": "Interview Question 14",
+            "question": "14. How would you adapt the solution for a linked list?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 14:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Python Core: Memory Leaks & Garbage Collection",
-        "question": "Can Python leak memory even with automatic garbage collection?",
-        "whatInterviewerChecks": "Reference counting and cyclic garbage collection (`gc` module).",
-        "bestReplyScript": "Yes. Python uses reference counting backed by a generational cyclic garbage collector. Memory leaks occur when: 1) Global lists or dicts continuously append objects without clearing them; 2) Circular references exist with custom `__del__` methods; or 3) Unclosed file handles or database connections remain held in RAM.",
-        "keyPoints": [
-          "Reference counting + cyclic GC",
-          "Global container accumulation",
-          "Circular references with __del__"
-        ],
-        "codeSnippet": "import gc\n\n# Force garbage collection cycle:\ngc.collect()\nprint(f'Unreachable objects collected: {gc.collect()}')"
+            "id": "q15",
+            "category": "Interview Question 15",
+            "question": "15. What if the array is very large?",
+            "whatInterviewerChecks": "Understanding of problem constraints, algorithmic mechanics, and technical tradeoffs.",
+            "bestReplyScript": "Here is how I approach question 15:\n\n1. Analyze input requirements and constraints.\n2. Apply optimal algorithm principles with proper boundary handling.\n3. Validate edge cases and complexity trade-offs.",
+            "keyPoints": [
+                  "Clear step-by-step logic",
+                  "Optimal time & space complexity",
+                  "Robust edge-case handling"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
