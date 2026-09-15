@@ -4001,182 +4001,184 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your approach for counting word frequencies.",
-            "whatInterviewerChecks": "Word splitting, frequency counting, hash map updates, and single-pass logic.",
-            "bestReplyScript": "I use a dictionary (hash map) where:\n- Key = word\n- Value = number of times the word appears.\n\nSteps:\n1. Split the text into individual words.\n2. Traverse each word.\n3. If the word already exists in the dictionary, increment its count.\n4. Otherwise, add it with a count of 1.\n5. After processing all words, the dictionary contains the frequency of every word.\n\nExample:\nInput: \"I love Python I love coding\"\nWords: I, love, Python, I, love, coding\nDictionary: {\"I\":2, \"love\":2, \"Python\":1, \"coding\":1}\n\nThis approach is efficient because each word is processed only once.\n\nComplexity: Time: O(n), Space: O(n) where n is the number of words.",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Arithmetic digit extraction `x % 10`, `x // 10`, accumulator `rev = rev * 10 + digit`, 32-bit signed overflow check.",
+            "bestReplyScript": "I reverse the integer digit by digit using arithmetic operations, without converting it to a string.\n\nSteps:\n1. Store whether the number is negative.\n2. Extract the last digit using the modulo operator (`digit = abs(x) % 10`).\n3. Remove the last digit using integer division (`x = abs(x) // 10`).\n4. Before appending, check if the new value would overflow the 32-bit signed integer range.\n5. Append the extracted digit: `rev = rev * 10 + digit`.\n6. Repeat until all digits are processed (`x == 0`).\n7. Apply original sign. Return 0 if overflow occurs; otherwise return the reversed integer.\n\nThis approach processes each digit exactly once using purely mathematical operations.",
             "keyPoints": [
-                  "Hash map (dictionary) for O(1) tracking",
-                  "Single pass traversal",
-                  "Key = word, Value = frequency count",
-                  "Time: O(n), Space: O(n)"
+                  "Arithmetic digit extraction: `digit = abs(x) % 10`",
+                  "Accumulator update: `rev = rev * 10 + digit`",
+                  "32-bit signed integer overflow check",
+                  "Return 0 if overflow occurs",
+                  "Time: O(d), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
-            "question": "2. Why did you choose a dictionary (hash map)?",
-            "whatInterviewerChecks": "Lookup & insertion time complexity comparison vs lists.",
-            "bestReplyScript": "A dictionary provides O(1) average-time lookup and insertion.\n\nFor every word:\n- Check if it already exists.\n- Update its count if it does.\n- Otherwise, insert it.\n\nWithout a dictionary, we would need to search the existing words every time, resulting in O(n\u00b2) time.\n\nUsing a dictionary keeps the solution efficient at O(n).",
+            "category": "No-String Arithmetic Reversal Mechanics",
+            "question": "2. How do you reverse the integer without converting it to a string?",
+            "whatInterviewerChecks": "Purely mathematical modulo and division operations.",
+            "bestReplyScript": "I repeatedly extract the last digit using modulo 10 and build the reversed number.\n\nExample for x = 1234:\n- Iteration 1: digit = 4, reverse = 4, x = 123\n- Iteration 2: digit = 3, reverse = 43, x = 12\n- Iteration 3: digit = 2, reverse = 432, x = 1\n- Iteration 4: digit = 1, reverse = 4321, x = 0\n\nThis uses only basic arithmetic operations (% 10 and // 10) without any string conversions.",
             "keyPoints": [
-                  "O(1) average lookup and insertion",
-                  "Avoids O(n\u00b2) linear search in lists",
-                  "Keeps overall time complexity at O(n)"
+                  "Modulo `% 10` extracts last digit",
+                  "Integer division `// 10` truncates last digit",
+                  "Building reversed integer mathematically"
             ]
       },
       {
             "id": "q3",
             "category": "Complexity Analysis",
             "question": "3. What is the time and space complexity?",
-            "whatInterviewerChecks": "Asymptotic upper bounds for single pass and unique key storage.",
-            "bestReplyScript": "Suppose the text contains n words.\n\nEach word is processed exactly once.\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThe extra space is required to store unique words and their frequencies.\n\nIf every word is unique, the dictionary size will be n.",
+            "whatInterviewerChecks": "O(d) digit count time (where d <= 10 for 32-bit ints) and O(1) space.",
+            "bestReplyScript": "Let d be the number of decimal digits in x (for a 32-bit integer, d <= 10).\n\nComplexity analysis:\n- Time Complexity: O(d) or O(log10(x)). Each digit is processed exactly once in a single loop.\n- Space Complexity: O(1) auxiliary space, as only a few integer variables are used.",
             "keyPoints": [
-                  "Time Complexity: O(n)",
-                  "Space Complexity: O(n)",
-                  "Dictionary size proportional to unique words"
+                  "Time Complexity: O(d) = O(log10(x))",
+                  "Space Complexity: O(1)",
+                  "At most 10 iterations for 32-bit integers"
             ]
       },
       {
             "id": "q4",
-            "category": "Text Normalization: Case Sensitivity",
-            "question": "4. How would you handle uppercase and lowercase words?",
-            "whatInterviewerChecks": "Case normalization techniques.",
-            "bestReplyScript": "To count words regardless of case, I would convert every word to the same case before counting.\n\nUsually, I use: word = word.lower()\n\nExample:\nInput: \"Python python PYTHON\"\nAfter lower(): python, python, python\nDictionary: {\"python\":3}\n\nThis ensures that different letter cases are treated as the same word.",
+            "category": "32-bit Overflow Detection Logic",
+            "question": "4. How do you detect 32-bit integer overflow?",
+            "whatInterviewerChecks": "Pre-overflow boundary check `rev > INT_MAX // 10` or post-clamp check.",
+            "bestReplyScript": "Before appending the next digit (`rev = rev * 10 + digit`), I check whether:\n- `rev > INT_MAX // 10` (i.e. `rev > 214748364`)\n- Or `rev == INT_MAX // 10` and `digit > 7` (since INT_MAX = 2147483647).\n\nFor negative numbers, check against INT_MIN (-2147483648) and `digit > 8`.\n\nIf overflow would occur, I immediately return 0, as required by the problem specification.",
             "keyPoints": [
-                  "Normalize using word.lower()",
-                  "Treats uppercase and lowercase as identical",
-                  "Ensures case-insensitive frequency counting"
+                  "Check `rev > INT_MAX // 10` before multiplying",
+                  "Check `digit > 7` when `rev == INT_MAX // 10`",
+                  "Immediately return 0 on overflow"
             ]
       },
       {
             "id": "q5",
-            "category": "Text Normalization: Punctuation",
-            "question": "5. How would you ignore punctuation while counting?",
-            "whatInterviewerChecks": "Punctuation stripping using regex or string manipulation.",
-            "bestReplyScript": "Before counting words, I would remove punctuation using regular expressions or string processing.\n\nExample:\nInput: \"Hello, world! Hello.\"\nAfter removing punctuation: Hello world Hello\nDictionary: {\"Hello\":2, \"world\":1}\n\nIgnoring punctuation produces more accurate word frequencies.",
+            "category": "Overflow Checking Necessity",
+            "question": "5. Why is overflow checking necessary?",
+            "whatInterviewerChecks": "Reversing valid 32-bit integer can exceed 32-bit limits.",
+            "bestReplyScript": "Reversing a valid 32-bit integer can produce a value outside the 32-bit signed integer range [-2^31, 2^31 - 1].\n\nExample:\nInput x = 1534236469 (valid 32-bit int).\nReversed = 9646324351 (exceeds INT_MAX 2147483647!).\n\nSince 9646324351 cannot fit in a 32-bit signed integer, the problem strictly requires returning 0. Without overflow checks, integer wrap-around or crash occurs in statically-typed languages.",
             "keyPoints": [
-                  "Remove punctuation with re or string module",
-                  "Prevents 'word,' and 'word' from mismatching",
-                  "Produces clean, accurate frequencies"
+                  "Valid 32-bit input can produce out-of-bounds reversed integer",
+                  "Example: 1534236469 -> 9646324351 (> 2147483647)",
+                  "Prevents 32-bit integer wrap-around/overflow bugs"
             ]
       },
       {
             "id": "q6",
-            "category": "Scalability & Memory Constraints",
-            "question": "6. What if the text contains millions of words?",
-            "whatInterviewerChecks": "Chunking, line-by-line streaming, and distributed computing (Spark/Hadoop).",
-            "bestReplyScript": "For very large texts, loading the entire file into memory may not be practical.\n\nInstead, I would process the file line by line or chunk by chunk.\n\nFlow: Read one line -> Split into words -> Update dictionary -> Read next line.\n\nThis approach reduces memory usage while still producing correct frequencies.\n\nIf the dataset is extremely large, distributed frameworks like Hadoop or Spark can also be used.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Zero, negative numbers, trailing zeros, INT_MAX, INT_MIN, overflow outputs.",
+            "bestReplyScript": "Important edge cases include:\n1. Zero (0) -> returns 0\n2. Negative numbers (-123) -> returns -321\n3. Trailing zeros (120) -> returns 21 (leading zero 021 drops cleanly in math)\n4. Single-digit numbers (7) -> returns 7\n5. Max 32-bit integer (2147483647) -> overflows, returns 0\n6. Min 32-bit integer (-2147483648) -> overflows, returns 0\n7. Large value overflow (1534236469) -> returns 0.",
             "keyPoints": [
-                  "Line-by-line / chunk-by-chunk streaming",
-                  "Lowers RAM memory footprint",
-                  "Scales to MapReduce / PySpark for distributed text"
+                  "Zero & single digit bounds",
+                  "Negative numbers preserve sign",
+                  "Trailing zeros (120 -> 21) naturally handled by math",
+                  "INT_MAX & INT_MIN overflow returns 0"
             ]
       },
       {
             "id": "q7",
-            "category": "Top-K Elements",
-            "question": "7. How would you return the top K most frequent words?",
-            "whatInterviewerChecks": "Min-Heap / Max-Heap optimization for top K patterns.",
-            "bestReplyScript": "After building the frequency dictionary, I would use:\n- A max heap\n- Or sort the dictionary by frequency.\n\nExample:\nDictionary: apple: 8, banana: 5, orange: 2, mango: 6\nTop 2: apple, mango\n\nUsing a heap gives: Time: O(n log k), which is efficient when k is much smaller than n.",
+            "category": "Negative Integers Handling",
+            "question": "7. How would you handle negative integers?",
+            "whatInterviewerChecks": "Preserving sign during modulo and division across languages.",
+            "bestReplyScript": "The sign is preserved.\n\nFor example:\nInput: -123\nReversed magnitude: 321\nApplied sign: -321\n\nIn Python, modulo `%` on negative numbers works differently than in C++/Java. To ensure language-agnostic behavior, I extract `is_negative = x < 0`, work with `x = abs(x)`, and apply `sign` at the end.",
             "keyPoints": [
-                  "Heap / priority queue (heapq in Python)",
-                  "Time: O(n log k) instead of full O(n log n) sort",
-                  "Optimal when k << n"
+                  "Record `is_negative = x < 0`",
+                  "Process absolute value `abs(x)`",
+                  "Re-apply negative sign at end"
             ]
       },
       {
             "id": "q8",
-            "category": "Secondary Sorting & Tie Breaking",
-            "question": "8. How would you sort words with the same frequency?",
-            "whatInterviewerChecks": "Multi-attribute sorting (frequency descending, alphabetical ascending).",
-            "bestReplyScript": "If two words have the same frequency, I would sort them alphabetically.\n\nExample:\nDictionary: apple: 3, banana: 3, cat: 2\nSorted result: apple, banana, cat\n\nSorting by:\n1. Frequency (descending)\n2. Alphabetical order (ascending)\n\nproduces consistent and predictable results.",
+            "category": "Testing & Verification",
+            "question": "8. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, negative, trailing zeros, zero, and overflow.",
+            "bestReplyScript": "I would test:\n- 123 -> 321\n- -123 -> -321\n- 120 -> 21\n- 0 -> 0\n- 7 -> 7\n- 1534236469 -> 0 (overflow)\n- -2147483412 -> -2143847412\n\nThese cover normal cases, boundary values, trailing zeros, negative numbers, and overflow limits.",
             "keyPoints": [
-                  "Primary sort: Frequency (descending)",
-                  "Secondary sort: Lexicographical (ascending)",
-                  "Ensures deterministic tie-breaking"
+                  "LeetCode 7 standard test cases (321, -321, 21, 0)",
+                  "Overflow test (1534236469 -> 0)",
+                  "Trailing zeros test (120 -> 21)"
             ]
       },
       {
             "id": "q9",
-            "category": "Edge Cases",
-            "question": "9. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty text, single word, all identical words, case variations, punctuation.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty text (\"\") -> {}\n2. One word (\"hello\") -> {\"hello\": 1}\n3. All words identical (\"hello hello hello\") -> {\"hello\": 3}\n4. Different letter cases (\"Hello hello HELLO\") -> {\"hello\": 3}\n5. Punctuation (\"Hello! Hello?\") -> {\"hello\": 2}\n\nTesting these cases ensures the solution is robust.",
+            "category": "Common Candidate Pitfalls",
+            "question": "9. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Reverse Integer (LeetCode 7).",
+            "bestReplyScript": "Common mistakes include:\n- Forgetting to check for 32-bit overflow before returning.\n- Using string conversion (`str(x)[::-1]`) when arithmetic manipulation is expected.\n- Mishandling negative numbers in Python due to `(-123) % 10 == 7`.\n- Preserving leading zeros manually as strings (e.g. returning \"021\" instead of integer 21).\n- Truncating `-2147483648` incorrectly with `abs()` in languages where `abs(INT_MIN)` overflows.",
             "keyPoints": [
-                  "Empty string & single word checks",
-                  "All identical words",
-                  "Case sensitivity & punctuation boundary tests"
+                  "Forgetting 32-bit overflow check",
+                  "Python negative modulo quirk `(-123) % 10 == 7`",
+                  "Converting to string when arithmetic is required"
             ]
       },
       {
             "id": "q10",
-            "category": "Manual Implementation vs Built-in",
-            "question": "10. Can you solve this without Python's Counter?",
-            "whatInterviewerChecks": "Manual dict loop with `if word in freq` or `dict.get()`.",
-            "bestReplyScript": "Yes. I can implement the same logic using a normal dictionary.\n\nExample:\nfreq = {}\nfor word in words:\n    if word in freq:\n        freq[word] += 1\n    else:\n        freq[word] = 1\n\nThis produces the same result as collections.Counter.\n\nUnderstanding the manual implementation demonstrates a stronger grasp of hashing and frequency counting.",
+            "category": "Recursive Solution Feasibility",
+            "question": "10. Can this be solved recursively?",
+            "whatInterviewerChecks": "Recursive helper function trade-offs.",
+            "bestReplyScript": "Yes.\nA recursive helper function can process one digit at a time:\n`def helper(x, rev): if x == 0: return rev; return helper(x // 10, rev * 10 + x % 10)`.\n\nHowever:\n- It uses O(d) call stack space.\n- Overflow checking inside recursive calls is clunky.\n- The iterative while loop is cleaner, faster, and uses O(1) stack space.",
             "keyPoints": [
-                  "Manual dict loop using standard keys",
-                  "Demonstrates fundamental hashing knowledge",
-                  "Identical O(n) performance to collections.Counter"
+                  "Recursive helper uses O(d) call stack space",
+                  "Overflow checks inside recursion are clunky",
+                  "Iterative solution is preferred"
             ]
       },
       {
             "id": "q11",
-            "category": "Real-Time Streaming Data",
-            "question": "11. How would you process a live text stream?",
-            "whatInterviewerChecks": "Stateful incremental updates in event-driven systems.",
-            "bestReplyScript": "For a live stream, I would update the dictionary as each word arrives.\n\nExample:\nIncoming \"hello\" -> Dictionary {\"hello\": 1}\nIncoming \"world\" -> Dictionary {\"hello\": 1, \"world\": 1}\nIncoming \"hello\" -> Dictionary {\"hello\": 2, \"world\": 1}\n\nThis allows real-time frequency counting without storing the entire stream.",
+            "category": "64-bit Integer Extension",
+            "question": "11. How would your solution change for 64-bit integers?",
+            "whatInterviewerChecks": "Updating bounds to INT64_MIN and INT64_MAX.",
+            "bestReplyScript": "The algorithm remains exactly the same.\n\nThe only difference is updating the overflow limits to 64-bit signed integer limits:\n- INT64_MIN (-9,223,372,036,854,775,808)\n- INT64_MAX (9,223,372,036,854,775,807)\n\nThe pre-overflow check logic scales naturally.",
             "keyPoints": [
-                  "Stateful real-time hash map updates",
-                  "No full stream storage needed",
-                  "Ideal for websockets, logs, and messaging queues"
+                  "Update limits to INT64_MIN and INT64_MAX",
+                  "Algorithm and loop logic remain identical",
+                  "Supports 64-bit integer range"
             ]
       },
       {
             "id": "q12",
-            "category": "Testing & Verification",
-            "question": "12. How would you test your implementation?",
-            "whatInterviewerChecks": "Test suite matrix across diverse sample inputs.",
-            "bestReplyScript": "I would test different scenarios:\n- \"a a b\" -> {a: 2, b: 1}\n- \"Hello hello\" -> {hello: 2}\n- \"\" -> {}\n- \"Python\" -> {python: 1}\n- \"cat, cat!\" -> {cat: 2}\n\nTesting different cases ensures the implementation handles normal inputs, edge cases, punctuation, and case sensitivity.",
+            "category": "Real-World Applications",
+            "question": "12. Where are digit manipulation techniques commonly used?",
+            "whatInterviewerChecks": "Checksums, number parsing, digital root.",
+            "bestReplyScript": "Digit manipulation is widely used in:\n- Financial Checksum Algorithms (Luhn Algorithm for credit card number validation).\n- Cryptographic Hashing & Digital Root calculations.\n- Low-level Number Parsers & Serialization engines.\n- Hardware Digital Signal Processing (DSP) & Bitwise/Arithmetic ALUs.\n- Competitive Programming & Math puzzles.",
             "keyPoints": [
-                  "Normal input testing",
-                  "Empty & boundary inputs",
-                  "Punctuation and case normalization assertions"
+                  "Luhn Algorithm for credit card checksum validation",
+                  "Low-level number parsing & serialization engines",
+                  "Cryptographic digital root calculations"
             ]
       },
       {
             "id": "q13",
-            "category": "Common Candidate Mistakes",
-            "question": "13. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Identifying rookie traps in frequency counting.",
-            "bestReplyScript": "Some common mistakes include:\n- Forgetting to convert words to lowercase when required.\n- Counting punctuation as part of words.\n- Using a list instead of a dictionary, resulting in slower performance.\n- Not handling empty input.\n- Sorting incorrectly when frequencies are equal.\n- Relying only on Counter without understanding how it works internally.\n\nThe most common mistake is forgetting to normalize the text before counting.",
+            "category": "Arithmetic vs String-Based Comparison Matrix",
+            "question": "13. Compare arithmetic and string-based approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Arithmetic Approach: Operates directly on numbers (% 10, // 10). Time O(d), Space O(1). Demonstrates mathematical fluency, expected in interviews.\n- String Approach: Converts to string, reverses characters, parses back. Time O(d), Space O(d). Simpler to code, but allocates extra memory and fails strict 'no string' interview constraints.\n\nArithmetic is expected in coding interviews.",
             "keyPoints": [
-                  "Forgetting text normalization",
-                  "Using list linear search (O(n\u00b2))",
-                  "Incorrect secondary sorting tie-breakers"
+                  "Arithmetic: O(d) time, O(1) space (Expected in interviews)",
+                  "String: O(d) time, O(d) space (Allocates string memory)",
+                  "Arithmetic demonstrates mathematical understanding"
             ]
       },
       {
             "id": "q14",
-            "category": "Real-World Applications",
-            "question": "14. Where are frequency counters used in real-world systems?",
-            "whatInterviewerChecks": "Practical software engineering use cases.",
-            "bestReplyScript": "Frequency counting is widely used in many applications, including:\n- Search engines (word ranking & TF-IDF).\n- Spam detection.\n- Text analytics & Natural Language Processing (NLP).\n- Word cloud generation.\n- Recommendation systems & log analysis.\n- Customer feedback analysis & social media trend detection.",
+            "category": "Optimization Bounds Proof",
+            "question": "14. How would you optimize your implementation?",
+            "whatInterviewerChecks": "Proving asymptotic optimality.",
+            "bestReplyScript": "The algorithm is already asymptotically optimal:\n- Time Complexity: O(d) where d <= 10.\n- Space Complexity: O(1) auxiliary space.\n\nSince every digit of the number must be inspected at least once to reverse it, Omega(d) is the theoretical lower bound. No asymptotic improvement is possible.",
             "keyPoints": [
-                  "Search engine TF-IDF indexing",
-                  "NLP tokenization & spam detection",
-                  "Log analytics & trend detection"
+                  "Omega(d) theoretical lower bound",
+                  "O(d) time and O(1) space is optimal",
+                  "No asymptotic speedup possible"
             ]
       },
       {
             "id": "q15",
-            "category": "Multilingual & Internationalization",
-            "question": "15. How would your solution change for multiple languages?",
-            "whatInterviewerChecks": "Unicode normalization, CJK tokenization (Chinese/Japanese/Korean), and language boundaries.",
-            "bestReplyScript": "For multiple languages, I would:\n- Use Unicode-aware string processing and Unicode normalization (NFC/NFKC).\n- Apply language-specific tokenization because different languages (e.g. Japanese/Chinese) do not separate words with spaces.\n- Convert case carefully, as case rules vary across languages (e.g. Turkish 'i').\n- Handle punctuation and special characters according to the language.\n\nUnlike English, space-based split() does not work for CJK languages, requiring specialized tokenizers like MeCab or Jieba.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which approach would you use in production and why?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "I would choose the Arithmetic approach for production software because:\n- Zero Memory Allocation: Avoids creating temporary string objects and invoking Garbage Collection.\n- High Performance: Runs in low-level CPU register operations (% 10 and // 10).\n- Safety: Guarantees explicit 32-bit overflow handling before any out-of-bounds error occurs.\n\nFor high-performance production systems, arithmetic is both safer and faster.",
             "keyPoints": [
-                  "Unicode NFC/NFKC normalization",
-                  "CJK non-space tokenization (Jieba, MeCab)",
-                  "Language-specific locale case rules"
+                  "Arithmetic approach is optimal for production",
+                  "Zero string allocation / zero GC overhead",
+                  "Explicit 32-bit overflow safety guarantee"
             ]
       }
 ],
