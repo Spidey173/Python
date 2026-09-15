@@ -13158,195 +13158,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Simplify Unix File Path.",
-            "bestReplyScript": "My approach for Simplify Unix File Path follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Path splitting by '/', stack directory tracking, '.' & '' ignore, '..' popping logic.",
+            "bestReplyScript": "I use a stack to process each directory component in the path.\n\nAlgorithm:\n1. Split the path string using '/'.\n2. Traverse each component.\n3. Ignore empty strings (\"\") caused by multiple slashes, and ignore \".\" because it represents the current directory.\n4. If the component is \"..\": pop the top directory from the stack if the stack is non-empty.\n5. Otherwise, push valid directory names onto the stack.\n6. Join the stack contents with '/' prefixed by '/' to build the canonical path.\n\nExample: \"/home//foo/../bar/./\" -> Split [\"\", \"home\", \"\", \"foo\", \"..\", \"bar\", \".\", \"\"] -> Stack [\"home\", \"bar\"] -> Output: \"/home/bar\".\n\nComplexity: Time: O(n), Space: O(n)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Split path by '/'",
+                  "Ignore '' (multiple slashes) and '.' (current dir)",
+                  "Pop stack on '..' if stack is non-empty",
+                  "Time: O(n), Space: O(n)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Data Structure Rationale",
             "question": "2. Why did you use a stack?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Simplify Unix File Path.",
-            "bestReplyScript": "I chose this approach for Simplify Unix File Path over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "LIFO behavior for directory navigation (entering vs returning to parent dir).",
+            "bestReplyScript": "A stack follows the Last In, First Out (LIFO) principle.\n\nWhen we encounter \"..\", we need to return to the parent directory, which is exactly the last directory added to the path.\nExample: \"/home/user/docs\" -> Stack: [home, user, docs]. Encounter \"..\" -> Pop docs -> Returns to \"/home/user\".\n\nThis makes the stack the most natural data structure for hierarchical filesystem navigation.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "LIFO (Last In First Out) matches directory hierarchy",
+                  "Entering dir = Push, Parent dir '..' = Pop",
+                  "Natural fit for Unix path navigation"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Simplify Unix File Path.",
-            "bestReplyScript": "Here is the complexity analysis for Simplify Unix File Path:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "Linear scan time O(n) and string join space bounds.",
+            "bestReplyScript": "Each path component is processed exactly once.\n- Push: O(1)\n- Pop: O(1)\n\nTherefore:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nwhere n is the total number of characters in the path string.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(n)",
+                  "Linear time splitting and stack operations"
             ]
       },
       {
             "id": "q4",
-            "category": "Deep-Dive Question 4",
-            "question": "4. How do `\".\"` and `\"..\"` affect the path?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "category": "Dots Mechanics (. vs ..)",
+            "question": "4. How do `.` and `..` affect the path?",
+            "whatInterviewerChecks": "Current directory '.' vs parent directory '..' mechanics.",
+            "bestReplyScript": "- '.' means stay in the current directory, so it is completely ignored.\n- '..' means move to the parent directory, so we pop the top directory from the stack if non-empty.\n\nExample: \"/a/b/./../c\" -> Push a, b -> '.' ignored -> '..' pops b -> Push c -> Final: \"/a/c\".",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "'.' = current directory (noop / ignore)",
+                  "'..' = parent directory (pop stack)",
+                  "Prevents moving above root directory"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Multiple Slashes Deduplication",
             "question": "5. What happens with multiple consecutive slashes?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Ignoring empty string tokens from string splitting.",
+            "bestReplyScript": "Multiple consecutive slashes represent the same single separator and do not change the path location.\n\nExample: \"/abc////def///ghi\" -> Splitting yields empty string tokens: [\"\", \"abc\", \"\", \"\", \"\", \"def\", \"\", \"\", \"ghi\"].\nEmpty strings are simply ignored during iteration, resulting in final path: \"/abc/def/ghi\".",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Multiple slashes produce empty string tokens ''",
+                  "Filter out empty strings: if part and part != '.'",
+                  "Canonical path uses single slash '/' separators"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Simplify Unix File Path.",
-            "bestReplyScript": "When handling Simplify Unix File Path, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Root path, only '.', going above root, multiple slashes.",
+            "bestReplyScript": "Important edge cases include:\n1. Root directory (\"/\") -> Returns \"/\"\n2. Only \".\" (\"/././.\") -> Returns \"/\"\n3. Going above root (\"/../../\") -> Returns \"/\" (stack underflow safeguard stops at root)\n4. Multiple slashes (\"/a///b\") -> Returns \"/a/b\"\n\nTesting these ensures the solution handles all boundary conditions.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Root '/' remains '/'",
+                  "Root boundary underflow '/../../' stays '/'",
+                  "Trailing slashes are stripped"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Simplify Unix File Path.",
-            "bestReplyScript": "To thoroughly test Simplify Unix File Path, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, root, underflow, dots.",
+            "bestReplyScript": "I would test the following:\n- \"/home/\" -> \"/home\"\n- \"/../\" -> \"/\"\n- \"/home//foo/\" -> \"/home/foo\"\n- \"/a/./b/../../c/\" -> \"/c\"\n- \"/\" -> \"/\"\n\nThese tests cover normal paths, multiple slashes, '.', '..', and root boundaries.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "Canonical trailing slash removal",
+                  "Root underflow prevention",
+                  "Multiple directory pops"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "No-Stack Alternative Trade-offs",
             "question": "8. Can this be solved without a stack?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "In-place array pointer manipulation vs stack simplicity.",
+            "bestReplyScript": "Yes, using in-place array pointer manipulation on split parts.\nHowever, manually tracking previous directory boundaries without a stack requires complex pointer arithmetic and string rebuilding.\n\nThe stack solution is simple, clean, O(n) optimal, and the standard expected interview implementation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "In-place pointer array manipulation possible",
+                  "Much higher code complexity & error-prone",
+                  "Stack solution is clean and optimal"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes occur?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Simplify Unix File Path.",
-            "bestReplyScript": "Common candidate pitfalls when solving Simplify Unix File Path include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Simplify Path (LeetCode 71).",
+            "bestReplyScript": "Common mistakes include:\n- Popping from an empty stack when encountering '..' at the root directory (causes IndexError).\n- Forgetting to ignore empty strings '' produced by split('/').\n- Treating '.' as a valid directory name.\n- Forgetting to prepend '/' to final output or returning '' instead of '/'.\n\nThe most common mistake is allowing '..' to crash or move above root.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Popping empty stack on '..' at root",
+                  "Returning empty string '' instead of '/'",
+                  "Treating '.' as directory"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Absolute vs Relative Paths",
             "question": "10. How does an absolute path differ from a relative path?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Leading slash '/' requirement for absolute Unix paths.",
+            "bestReplyScript": "- Absolute path: Starts from the root directory ('/'), e.g. \"/home/user/docs\".\n- Relative path: Starts from current working directory, e.g. \"docs/project\".\n\nIn this problem (LeetCode 71), the input is an absolute Unix path, so the simplified canonical output MUST always start with a leading '/' and contain no trailing slashes unless it's root.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Absolute path begins with '/'",
+                  "Relative path begins without '/'",
+                  "Canonical simplified path requires leading '/'"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Real-World Applications",
             "question": "11. Where is path normalization used?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Practical software engineering use cases for path resolution.",
+            "bestReplyScript": "Path normalization is used in:\n- Operating system VFS (Virtual File System) resolution.\n- Web servers (Nginx/Apache preventing Path Traversal directory attack `../../etc/passwd`).\n- Cloud storage & Object store keys (S3 bucket paths).\n- Build tools & IDEs (Webpack, Git repository path resolution).",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Preventing Web Server Path Traversal attacks (../../etc/passwd)",
+                  "OS Virtual File System path resolution",
+                  "Cloud S3 object key normalization"
             ]
       },
       {
             "id": "q12",
-            "category": "Deep-Dive Question 12",
+            "category": "Symbolic Links Complexity",
             "question": "12. What if symbolic links are involved?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Symlinks invalidate simple string-based '..' popping.",
+            "bestReplyScript": "This problem assumes physical directory paths.\nIf symbolic links are involved, '..' does not necessarily pop the string parent directory; it moves to the target parent directory of the resolved symlink.\n\nResolving symlinks requires OS filesystem inode lookup (`realpath` syscall) rather than pure string manipulation.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Symlinks break string-based '..' popping",
+                  "Requires OS inode resolution (`realpath`)",
+                  "Physical vs Logical directory resolution"
             ]
       },
       {
             "id": "q13",
-            "category": "Deep-Dive Question 13",
+            "category": "Windows Path Adaptation",
             "question": "13. How would Windows paths differ?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Backslash '\\' separators and drive letters ('C:\\').",
+            "bestReplyScript": "Windows paths differ in two main ways:\n1. Directory Separators: Uses backslashes ('\\') instead of forward slashes ('/').\n2. Drive Letters: Starts with drive letters (e.g. \"C:\\Users\\Admin\\..\\Docs\").\n\nThe stack algorithm remains identical, but we split by '\\' and preserve the drive letter prefix (\"C:\\\").",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Separator: Backslash '\\' vs Forward slash '/'",
+                  "Drive letter root: 'C:\\'",
+                  "Algorithm logic remains identical"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Recursive Formulation",
             "question": "14. Can this be implemented recursively?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Recursive call stack handling of directory array.",
+            "bestReplyScript": "Yes. A recursive function can process each token from the split path list.\nHowever, it uses O(n) call stack memory, is harder to read, and offers no performance benefit over the iterative stack.\n\nThe iterative stack solution is clean and preferred.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Recursive call stack replaces explicit stack",
+                  "O(n) recursion memory overhead",
+                  "Iterative stack is preferred"
             ]
       },
       {
             "id": "q15",
-            "category": "Deep-Dive Question 15",
+            "category": "Memory & Performance Optimization",
             "question": "15. How would you optimize for extremely long paths?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Simplify Unix File Path.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Single-pass character scanner without split array overhead.",
+            "bestReplyScript": "To optimize for extremely long paths (e.g. 100MB path string):\n- Avoid `path.split('/')`, which creates a large temporary list in RAM.\n- Use a single-pass index scanner to parse directory names on the fly.\n- Push directory slice pointers or string views onto the stack.\n- Join stack at the end.\n\nThis keeps RAM footprint minimal while preserving O(n) linear execution.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Avoid `.split('/')` list allocation",
+                  "Single-pass index pointer scanner",
+                  "O(n) linear time with minimal memory churn"
             ]
       }
 ],
