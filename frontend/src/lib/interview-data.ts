@@ -6669,182 +6669,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Two pointers at opposite ends, absolute value comparison, filling result from end.",
-            "bestReplyScript": "I use the two-pointer technique because the array is already sorted, but squaring negative numbers can change their order.\n\nSteps:\n1. The left pointer starts at the beginning (index 0).\n2. The right pointer starts at the end (index n - 1).\n3. Compare the absolute values at both ends.\n4. The larger absolute value produces the larger square.\n5. Place that square at the end of the result array (index k--) and move the corresponding pointer.\n6. Repeat until all elements are processed.\n\nExample: Input [-4, -1, 0, 3, 10]\n- Compare |-4|=4 vs |10|=10 -> 100 at end -> Right moves to 3\n- Compare |-4|=4 vs |3|=3   -> 16 at index 3 -> Left moves to -1\nContinue -> Final Result: [0, 1, 9, 16, 100]\n\nComplexity: Time: O(n), Space: O(n)",
+            "question": "1. Explain your backtracking approach.",
+            "whatInterviewerChecks": "Backtracking algorithm, state variables `open` and `close`, pruning rules `open < n` and `close < open`, base case `len(path) == 2 * n`.",
+            "bestReplyScript": "I use backtracking to generate only valid parenthesis combinations instead of generating all possible strings.\n\nSteps:\n1. Start with an empty string and state variables: `open` = 0, `close` = 0.\n2. If `open < n`, append '(' to path, increment `open`, and recurse (`backtrack(path + '(', open + 1, close)`).\n3. If `close < open`, append ')' to path, increment `close`, and recurse (`backtrack(path + ')', open, close + 1)`).\n4. When `len(path) == 2 * n`, it is a valid combination, so append it to the result list.\n5. Continue until all valid paths are explored.\n\nThis ensures only valid combinations are constructed.",
             "keyPoints": [
-                  "Two pointers at left (0) and right (n-1)",
-                  "Compare absolute values |nums[left]| vs |nums[right]|",
-                  "Fill result array backwards from index n-1",
-                  "Time: O(n), Space: O(n)"
+                  "State variables: `open` count and `close` count",
+                  "Rule 1: Add '(' if `open < n`",
+                  "Rule 2: Add ')' if `close < open`",
+                  "Base case: `len(path) == 2 * n`",
+                  "Time: O(4^n / n^(3/2)), Space: O(n) recursion stack"
             ]
       },
       {
             "id": "q2",
-            "category": "Two-Pointer Justification",
-            "question": "2. Why use two pointers?",
-            "whatInterviewerChecks": "Extreme absolute values location at array boundaries.",
-            "bestReplyScript": "The largest square always comes from either:\n- The largest positive number (at the right end), or\n- The smallest (most negative) number (at the left end).\n\nExample: [-7, -2, 3, 5] -> Squares: 49, 4, 9, 25. Notice 49 comes from -7 at the left boundary.\n\nBy comparing both ends, we can always choose the next largest square without sorting again.\nThis allows us to solve the problem in linear O(n) time.",
+            "category": "Backtracking Choice Rationale",
+            "question": "2. Why is backtracking suitable for this problem?",
+            "whatInterviewerChecks": "Early pruning of invalid search branches.",
+            "bestReplyScript": "Backtracking is ideal because it builds solutions incrementally and PRUNES INVALID PATHS EARLY.\n\nInstead of generating all 2^(2n) possible strings of length 2n and checking validity afterward, backtracking only explores state paths that are guaranteed to remain valid.\n\nThis prunes massive invalid search trees and optimizes performance.",
             "keyPoints": [
-                  "Largest squares lie at left or right boundaries",
-                  "Avoids re-sorting array",
-                  "Enables O(n) linear time execution"
+                  "Incremental string construction",
+                  "Early pruning of invalid branches",
+                  "Avoids generating 2^(2n) brute-force strings"
             ]
       },
       {
             "id": "q3",
-            "category": "Naive Squaring Fallacy",
-            "question": "3. Why can't you simply square and return?",
-            "whatInterviewerChecks": "Demonstrating non-monotonic behavior after squaring negative numbers.",
-            "bestReplyScript": "Because squaring negative numbers changes their order.\n\nExample: Input [-4, -1, 0, 3].\nAfter squaring directly in-place: [16, 1, 0, 9].\nThe array is not sorted anymore! The expected output is [0, 1, 9, 16].\n\nSo simply squaring each element in forward order is not enough.",
+            "category": "Complexity Analysis & Catalan Number Proof",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "Nth Catalan number C_n bound, time O(4^n / sqrt(n)), recursion stack space O(n).",
+            "bestReplyScript": "The number of valid combinations is the nth Catalan number: C_n = (2n)! / ((n+1)! * n!) \u2248 4^n / (n^(3/2) * sqrt(pi)).\n\nComplexity analysis:\n- Time Complexity: O(C_n * n) = O(4^n / sqrt(n)), as there are C_n valid strings and building each string of length 2n takes O(n) time.\n- Space Complexity: O(n) for the recursion call stack (tree depth is 2n). The output list requires O(C_n * n) space.",
             "keyPoints": [
-                  "Squaring destroys sorted property for negative numbers",
-                  "Direct squaring yields unsorted result [16, 1, 0, 9]",
-                  "Requires sorting or two-pointer merge"
+                  "Time Complexity: O(C_n * n) \u2248 O(4^n / sqrt(n))",
+                  "Space Complexity: O(n) recursion call stack",
+                  "C_n is the nth Catalan number"
             ]
       },
       {
             "id": "q4",
-            "category": "Complexity Analysis",
-            "question": "4. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic bounds for linear two-pointer scan.",
-            "bestReplyScript": "Each pointer moves only once across the array.\n- Left pointer moves right at most n times.\n- Right pointer moves left at most n times.\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n) for the output array.\n\nThis is the optimal solution.",
+            "category": "Validity Enforcement Rules",
+            "question": "4. How do you ensure only valid combinations are generated?",
+            "whatInterviewerChecks": "The two invariant conditions `open < n` and `close < open`.",
+            "bestReplyScript": "I enforce two strict invariants during recursion:\n- Add '(' ONLY if `open < n` (ensures we never exceed n opening brackets).\n- Add ')' ONLY if `close < open` (ensures every closing bracket is matched to an unclosed opening bracket).\n\nBecause these rules prevent `close > open` at any prefix, every generated string reaching length 2n is mathematically valid.",
             "keyPoints": [
-                  "Time Complexity: O(n)",
-                  "Space Complexity: O(n)",
-                  "Optimal single-pass lower bound"
+                  "Invariant 1: `open < n` limits max opening brackets",
+                  "Invariant 2: `close < open` ensures balanced closing",
+                  "Guarantees 100% valid generated strings"
             ]
       },
       {
             "id": "q5",
-            "category": "Negative Number Effect",
-            "question": "5. How do negative numbers affect the solution?",
-            "whatInterviewerChecks": "Squaring magnitude vs sign comparison.",
-            "bestReplyScript": "Negative numbers become positive after squaring, and their squares can be larger than those of positive numbers.\n\nExample: Input [-9, -2, 5] -> Squares: 81, 4, 25. The largest square comes from -9.\n\nThat's why we compare absolute values (|nums[left]| vs |nums[right]|) instead of the raw signed numbers.",
+            "category": "Closing Parentheses Constraint Proof",
+            "question": "5. Why can't the number of closing parentheses exceed opening parentheses?",
+            "whatInterviewerChecks": "Prefix validity condition `close <= open`.",
+            "bestReplyScript": "A closing parenthesis ')' must always match a previously unclosed opening parenthesis '('.\n\nIf at any prefix index `close > open` (e.g. \")(\"), the expression is immediately invalid because there is no opening bracket to close.\n\nEnforcing `close < open` for adding ')' guarantees that `close <= open` at every step, preserving prefix validity.",
             "keyPoints": [
-                  "Magnitude determines square size",
-                  "Compare |nums[left]| vs |nums[right]|",
-                  "-9^2 (81) > 5^2 (25)"
+                  "Prefix with `close > open` cannot be salvaged (e.g. \")(\")",
+                  "Closing bracket must match prior unclosed opening bracket",
+                  "Maintains `close <= open` invariant"
             ]
       },
       {
             "id": "q6",
-            "category": "In-Place Execution Trade-off",
-            "question": "6. Can this be solved in-place?",
-            "whatInterviewerChecks": "Explaining why overwrite destroys un-processed values.",
-            "bestReplyScript": "Not easily. When we overwrite elements while computing squares, we lose values that are still needed for future comparisons.\n\nExample: [-4, -1, 3]. If we replace -4 with 16 immediately in-place, we lose -4 for later comparisons.\n\nTherefore, the standard interview solution uses a separate result array:\n- Time: O(n), Space: O(n).",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "n = 0, n = 1, n = 2, n = 3, performance scalability.",
+            "bestReplyScript": "Important edge cases include:\n1. n = 0 -> returns [] (or [\"\"] depending on API spec)\n2. n = 1 -> returns [\"()\"]\n3. n = 2 -> returns [\"(())\", \"()()\"]\n4. n = 3 -> returns 5 combinations [\"((()))\", \"(()())\", \"(())()\", \"()(())\", \"()()()\"]\n5. Larger values of n (e.g. n = 8 producing 1430 combinations) -> verified against Catalan sequence.",
             "keyPoints": [
-                  "In-place overwrite destroys unread boundary values",
-                  "Requires auxiliary result array",
-                  "Standard O(n) space allocation"
+                  "n = 0 returns [] or [\"\"]",
+                  "n = 1 returns [\"()\"]",
+                  "Catalan counts: n=1 (1), n=2 (2), n=3 (5), n=4 (14)"
             ]
       },
       {
             "id": "q7",
-            "category": "Edge Cases",
-            "question": "7. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single element, all positive, all negative, zeros.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> []\n2. One element ([-3]) -> [9]\n3. All positive ([1,2,3]) -> [1,4,9]\n4. All negative ([-5,-3,-1]) -> [1,9,25]\n5. Contains zero ([-2,0,3]) -> [0,4,9]\n\nTesting these cases ensures the algorithm works correctly.",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering Catalan counts C_n.",
+            "bestReplyScript": "I would test:\n- n = 0 -> []\n- n = 1 -> [\"()\"] (Count 1)\n- n = 2 -> [\"(())\", \"()()\"] (Count 2)\n- n = 3 -> [\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"] (Count 5)\n- n = 4 -> Count 14 combinations\n\nFor every output, verify length is 2n, no duplicates exist, and parentheses are balanced.",
             "keyPoints": [
-                  "Empty & single element checks",
-                  "All-positive & all-negative arrays",
-                  "Arrays containing zero"
+                  "LeetCode 22 standard test cases (n=3 -> 5 combinations)",
+                  "Verify total output length matches C_n",
+                  "Check length 2n and string balance for all elements"
             ]
       },
       {
             "id": "q8",
-            "category": "Testing & Verification",
-            "question": "8. How would you test your implementation?",
-            "whatInterviewerChecks": "Test cases table matrix covering positive, negative, and zero inputs.",
-            "bestReplyScript": "I would create test cases covering different scenarios:\n- [-4,-1,0,3,10] -> [0,1,9,16,100]\n- [-5,-3,-2] -> [4,9,25]\n- [1,2,3] -> [1,4,9]\n- [0] -> [0]\n- [] -> []\n\nThese tests verify correctness for both normal and edge cases.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Generate Parentheses (LeetCode 22).",
+            "bestReplyScript": "Common mistakes include:\n- Allowing `close > open` during recursion (generating invalid strings like \")(\").\n- Adding more than `n` opening brackets.\n- Forgetting the base case `len(path) == 2 * n`.\n- Generating all 2^(2n) brute-force strings and filtering with a stack (extremely slow O(2^(2n) * n)).\n- Mutating shared path strings without proper string popping/backtracking in languages with mutable strings.",
             "keyPoints": [
-                  "Mixed positive/negative array test",
-                  "All negative array test",
-                  "Empty and single-element bounds"
+                  "Generating all 2^(2n) strings and filtering (inefficient)",
+                  "Allowing `close > open` branch",
+                  "Mutable string state pollution in recursive calls"
             ]
       },
       {
             "id": "q9",
-            "category": "Absolute Value Comparison Rationale",
-            "question": "9. Why compare absolute values?",
-            "whatInterviewerChecks": "Magnitude independence of square function f(x) = x^2.",
-            "bestReplyScript": "The square depends on the magnitude of a number, not its sign.\nExample: (-8)\u00b2 = 64, 8\u00b2 = 64.\n\nInstead of comparing raw signed values (-8 vs 5), we compare their magnitudes (|-8|=8 vs |5|=5).\nThe larger absolute value produces the larger square.\nThis is the key insight behind the two-pointer solution.",
+            "category": "Iterative Implementation Variant (BFS Queue)",
+            "question": "9. Can this problem be solved iteratively?",
+            "whatInterviewerChecks": "BFS with queue storing `(path, open, close)` tuples.",
+            "bestReplyScript": "Yes!\nAn iterative BFS solution uses a Queue storing tuples `(path, open, close)`:\n1. Initialize queue with `[(\"\", 0, 0)]`.\n2. While queue is non-empty, pop item `(path, open, close)`.\n3. If `len(path) == 2 * n`, append `path` to result.\n4. If `open < n`, enqueue `(path + '(', open + 1, close)`.\n5. If `close < open`, enqueue `(path + ')', open, close + 1)`.\n\nWhile BFS works in O(C_n * n) time, DFS backtracking is simpler and uses less auxiliary memory.",
             "keyPoints": [
-                  "f(x) = x^2 is symmetric around 0",
-                  "Magnitude |-8| > |5| implies (-8)^2 > 5^2",
-                  "Key two-pointer comparison rule"
+                  "BFS Queue stores `(path, open, close)` state tuples",
+                  "Applies identical `open < n` and `close < open` pruning rules",
+                  "Backtracking DFS is simpler and uses less memory"
             ]
       },
       {
             "id": "q10",
-            "category": "Common Candidate Pitfalls",
-            "question": "10. What common mistakes occur?",
-            "whatInterviewerChecks": "Rookie traps in Squares of a Sorted Array.",
-            "bestReplyScript": "Some common mistakes include:\n- Simply squaring every element in-place without sorting.\n- Comparing actual signed values instead of absolute values.\n- Filling the result array from the beginning (index 0) instead of the end (index n-1).\n- Forgetting to move the corresponding pointer.\n- Not handling empty arrays.\n\nThe most common mistake is forgetting that negative numbers can produce the largest squares.",
+            "category": "Backtracking vs Brute Force Comparison Matrix",
+            "question": "10. Compare backtracking and brute-force generation.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Backtracking: Generates ONLY valid strings by pruning invalid branches during recursion. Time O(C_n * n) \u2248 O(4^n / sqrt(n)), Space O(n). Standard interview choice.\n- Brute Force: Generates all 2^(2n) possible binary strings, then checks valid parenthesis stack on each. Time O(2^(2n) * n), Space O(n). Extremely slow, rejected in interviews.\n\nBacktracking avoids exploring impossible solutions.",
             "keyPoints": [
-                  "Filling result array forward (0 to n-1) instead of backward",
-                  "Comparing signed values instead of abs()",
-                  "Omitting pointer decrements/increments"
+                  "Backtracking: O(4^n / sqrt(n)) time (Prunes invalid branches)",
+                  "Brute Force: O(2^(2n) * n) time (Generates all binary strings)",
+                  "Backtracking is the expected interview solution"
             ]
       },
       {
             "id": "q11",
-            "category": "Square + Sort Alternative",
-            "question": "11. Can you solve it using sorting afterward?",
-            "whatInterviewerChecks": "O(n log n) naive approach comparison.",
-            "bestReplyScript": "Yes.\nOne approach is:\n1. Square every element in O(n).\n2. Sort the resulting array in O(n log n).\n\nExample: [-4,-1,3] -> Squares [16,1,9] -> Sort [1,9,16].\nComplexity: Time O(n log n), Space O(n).\n\nAlthough correct and simple, it is slower than the O(n) two-pointer approach.",
+            "category": "Multiple Bracket Types Extension",
+            "question": "11. How would you modify your solution to support multiple bracket types?",
+            "whatInterviewerChecks": "Supporting `()`, `{}`, `[]` using Stack + Backtracking.",
+            "bestReplyScript": "If multiple bracket types are allowed (e.g. `()`, `{}`, `[]`):\n- Maintain an active opening stack in the recursive state `(path, open_stack, total_count)`.\n- Adding opening bracket: Can add '(', '{', or '[' if `total_open < n`.\n- Adding closing bracket: Can add ')', '}', or ']' ONLY IF matching top of `open_stack`.\n- Backtrack by popping stack after recursive call.\n\nThis extends the algorithm while maintaining exact structural validity.",
             "keyPoints": [
-                  "Square all elements then sort",
-                  "Time: O(n log n)",
-                  "Space: O(n) - inferior to two pointers"
+                  "Track active opening stack in recursive state",
+                  "Closing bracket must match `open_stack[-1]` top element",
+                  "Backtrack by popping stack"
             ]
       },
       {
             "id": "q12",
-            "category": "Efficiency Comparison",
-            "question": "12. Which approach is more efficient?",
-            "whatInterviewerChecks": "O(n) vs O(n log n) comparison table.",
-            "bestReplyScript": "The two-pointer approach is more efficient.\n\nComparison:\n- Square + Sort: Time O(n log n), Space O(n)\n- Two Pointers:  Time O(n), Space O(n)\n\nSince O(n) linear time is strictly faster than O(n log n) comparison sorting, the two-pointer solution is preferred in interviews.",
+            "category": "Real-World Applications of Backtracking",
+            "question": "12. Where is backtracking commonly used?",
+            "whatInterviewerChecks": "Canonical backtracking problem family.",
+            "bestReplyScript": "Backtracking is widely used in:\n- Sudoku Solver & N-Queens Problem.\n- Combinatorial Generation (Permutations, Subsets, Combination Sum).\n- Word Search in 2D Grids & Boggle Game engines.\n- Syntax Tree Parsers & Compiler Expressions.\n- Automated Theorem Provers & Constraint Satisfaction Solvers.",
             "keyPoints": [
-                  "Two Pointers: O(n) linear time",
-                  "Square + Sort: O(n log n) logarithmic time",
-                  "Linear O(n) is optimal"
+                  "Sudoku Solver & N-Queens",
+                  "Permutations, Subsets & Combination Sum",
+                  "Compiler expression syntax parsers"
             ]
       },
       {
             "id": "q13",
-            "category": "Real-World Applications",
-            "question": "13. Where is this pattern useful?",
-            "whatInterviewerChecks": "Two-pointer application scenarios.",
-            "bestReplyScript": "The two-pointer pattern is widely used in:\n- Merging sorted arrays and lists (Merge Sort merge step).\n- Two Sum in sorted arrays.\n- Image processing (contrast adjustment & magnitude normalization).\n- Signal processing (computing energy/power of discrete signals).\n- Partitioning & sliding window algorithms.",
+            "category": "Memoization Applicability Analysis",
+            "question": "13. How would memoization affect this problem?",
+            "whatInterviewerChecks": "Why DP / memoization does not help for generating distinct strings.",
+            "bestReplyScript": "Memoization does NOT help this problem significantly.\n\nWhy?\nMemoization optimizes problems with OVERLAPPING SUBPROBLEMS (e.g. Fibonacci, Min Path Sum) where same state is recomputed.\n\nHere, every valid path branch generates a UNIQUE distinct string! There are no overlapping subproblem states to reuse.\n\nBacktracking alone is optimal.",
             "keyPoints": [
-                  "Signal power/energy calculation (x^2)",
-                  "Image contrast normalization",
-                  "Merge Sort merge step pattern"
+                  "No overlapping subproblems (every path produces unique string)",
+                  "Memoization cache lookup provides zero speedup",
+                  "Backtracking alone is optimal"
             ]
       },
       {
             "id": "q14",
-            "category": "Extension to Cubes",
-            "question": "14. How would you extend it for cubes?",
-            "whatInterviewerChecks": "Monotonicity of odd powers f(x) = x^3.",
-            "bestReplyScript": "For cubes, the approach changes because cubing preserves the sign!\n\nExample: [-3,-2,1] -> Cubes [-27,-8,1].\nThe values remain ordered because f(x) = x^3 is strictly monotonic (always increasing).\n\nSo we can simply cube each element in-place in O(n) time without any two-pointer logic!",
+            "category": "Catalan Number Direct Count Formula",
+            "question": "14. Can you calculate the number of valid combinations without generating them?",
+            "whatInterviewerChecks": "Direct Catalan number formula C_n = (2n)! / ((n+1)! * n!).",
+            "bestReplyScript": "Yes!\nThe total count of valid combinations for n pairs of parentheses is given directly by the nth Catalan Number formula:\n`C_n = (2n)! / ((n + 1)! * n!)`\n\nExamples:\n- n = 1: C_1 = 2! / (2! * 1!) = 1\n- n = 2: C_2 = 4! / (3! * 2!) = 2\n- n = 3: C_3 = 6! / (4! * 3!) = 5\n- n = 4: C_4 = 8! / (5! * 4!) = 14\n- n = 5: C_5 = 10! / (6! * 5!) = 42\n\nWe can calculate C_n in O(n) time using simple factorial math without generating any strings.",
             "keyPoints": [
-                  "f(x) = x^3 is strictly monotonic (preserves order)",
-                  "Direct in-place cubing O(n) time, O(1) space",
-                  "No two-pointer logic needed"
+                  "Formula: `C_n = (2n)! / ((n+1)! * n!)`",
+                  "Computes exact count in O(n) time without generating strings",
+                  "Catalan values: 1, 2, 5, 14, 42, 132, 429..."
             ]
       },
       {
             "id": "q15",
-            "category": "Unsorted Input Handling",
-            "question": "15. What if the array isn't sorted?",
-            "whatInterviewerChecks": "Fall-back to O(n log n) sorting on unsorted inputs.",
-            "bestReplyScript": "If the array is not sorted, the two-pointer approach no longer works.\n\nExample: [3,-4,1].\nWe would have to:\n1. Square every element: [9,16,1].\n2. Sort the result: [1,9,16].\n\nComplexity: Time O(n log n).\nAlternatively, sort original array first (O(n log n)) and then apply two pointers, but that still takes O(n log n) overall.\n\nSo the O(n) solution is strictly dependent on the input array being pre-sorted.",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Why does backtracking avoid unnecessary computations?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "Backtracking avoids unnecessary computation because it prunes invalid search branches as soon as a constraint is violated.\n\nFor example, as soon as `close` would exceed `open`, that branch is killed immediately. This prevents evaluating thousands of dead-end child prefixes.\n\nBy exploring ONLY valid prefixes, backtracking achieves optimal O(C_n * n) runtime.",
             "keyPoints": [
-                  "Two pointers fail on unsorted data",
-                  "Requires O(n log n) sorting",
-                  "O(n) runtime relies on pre-sorted invariant"
+                  "Prunes dead-end search trees immediately",
+                  "Only explores valid prefix branches",
+                  "Achieves optimal O(C_n * n) execution"
             ]
       }
 ],
