@@ -5526,182 +5526,183 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
       {
             "id": "q1",
             "category": "Step-by-Step Approach",
-            "question": "1. Explain your algorithm.",
-            "whatInterviewerChecks": "Prefix sum calculation, Hash set lookup for repeated prefix sums, single-pass logic.",
-            "bestReplyScript": "I use the prefix sum technique along with a hash set.\n\nThe idea is:\n- Keep a running sum while traversing the array.\n- If the running sum becomes 0, then the subarray from the beginning to the current index has a sum of 0.\n- If the same prefix sum appears again, the elements between those two indices must sum to 0.\n\nSteps:\n1. Initialize prefix_sum = 0.\n2. Create an empty hash set.\n3. Traverse the array.\n4. Add each element to prefix_sum.\n5. If prefix_sum == 0 or it already exists in the set, return True.\n6. Otherwise, store the prefix sum in the set.\n7. If the loop finishes, return False.\n\nExample:\nnums = [4, 2, -3, 1, 6]\nRunning Prefix Sum: 4 -> 6 -> 3 -> 4 (Already seen!). Subarray [2, -3, 1] sums to 0. Output: True.\n\nComplexity: Time: O(n), Space: O(n)",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Binary search on smaller array, partition indices `i` and `j`, maxLeft/minRight comparison, odd vs even median math.",
+            "bestReplyScript": "I use binary search on the smaller array to find the correct partition between the two sorted arrays.\n\nSteps:\n1. Always perform binary search on the smaller array (`len(A) <= len(B)`) to minimize search space.\n2. Partition both arrays so that total elements on the left half equal total elements on the right half: `i = (low + high) // 2`, `j = (m + n + 1) // 2 - i`.\n3. Identify boundary elements:\n   - `maxLeftA = A[i-1]` (or -infinity if `i == 0`)\n   - `minRightA = A[i]` (or +infinity if `i == m`)\n   - `maxLeftB = B[j-1]` (or -infinity if `j == 0`)\n   - `minRightB = B[j]` (or +infinity if `j == n`)\n4. Check validity: `maxLeftA <= minRightB` and `maxLeftB <= minRightA`.\n5. If valid:\n   - Odd total length: `max(maxLeftA, maxLeftB)`\n   - Even total length: `(max(maxLeftA, maxLeftB) + min(minRightA, minRightB)) / 2.0`\n6. Else if `maxLeftA > minRightB`: move search left (`high = i - 1`).\n7. Else: move search right (`low = i + 1`).",
             "keyPoints": [
-                  "Running prefix sum tracking",
-                  "Hash set for O(1) repeated prefix sum detection",
-                  "Detects prefix_sum == 0 or repeated sum",
-                  "Time: O(n), Space: O(n)"
+                  "Binary search on smaller array `m <= n`",
+                  "Partition formula: `j = (m + n + 1) // 2 - i`",
+                  "Valid check: `maxLeftA <= minRightB` & `maxLeftB <= minRightA`",
+                  "Odd: `max(maxLeft)`, Even: `(max(maxLeft) + min(minRight)) / 2`",
+                  "Time: O(log(min(m, n))), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Prefix Sum Justification",
-            "question": "2. Why use prefix sums?",
-            "whatInterviewerChecks": "Understanding cumulative sums and zero-sum subarray mathematical proof.",
-            "bestReplyScript": "A prefix sum stores the cumulative sum from the beginning of the array up to the current index.\n\nIf two prefix sums are equal, the elements between them must sum to 0.\n\nExample: Array [3, 4, -7, 5] -> Prefix Sums: 3 -> 7 -> 0 -> 5.\nHere, the prefix sum becomes 0, which means 3 + 4 + (-7) = 0.\n\nPrefix sums allow us to detect zero-sum subarrays efficiently without checking every possible subarray.",
+            "category": "Binary Search vs Merge Arrays Rationale",
+            "question": "2. Why is binary search used instead of merging the arrays?",
+            "whatInterviewerChecks": "O(log(min(m, n))) requirement vs O(m + n) linear merge time.",
+            "bestReplyScript": "Merging both arrays using two pointers takes O(m + n) time and O(m + n) space because every element must be inspected and copied.\n\nBinary search avoids merging by directly finding the correct cut/partition between the two arrays in O(log(min(m, n))) time.\n\nThis is exponentially faster for large arrays (e.g. m=1,000,000 takes ~20 iterations vs 2,000,000 steps) and satisfies the strict O(log(m+n)) requirement.",
             "keyPoints": [
-                  "Prefix sum = cumulative sum from index 0",
-                  "Repeated prefix sum means subarray between sums to 0",
-                  "Eliminates checking every possible subarray"
+                  "Merging takes O(m + n) time and memory",
+                  "Binary search cuts search space in O(log(min(m, n))) time",
+                  "Satisfies strict LeetCode logarithmic time constraint"
             ]
       },
       {
             "id": "q3",
-            "category": "Hash Set Utility",
-            "question": "3. Why is a hash set useful?",
-            "whatInterviewerChecks": "O(1) average lookup for previous cumulative sum values.",
-            "bestReplyScript": "The hash set stores all previously seen prefix sums.\n\nWhen a prefix sum repeats, we immediately know that the subarray between the two occurrences has a sum of 0.\n\nExample: Prefix Sums: 5 -> 8 -> 5. Since 5 appears twice, 8 - 5 = 3, meaning elements between sum to 0.\n\nA hash set provides O(1) average lookup, making the algorithm efficient.",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time complexity of your solution?",
+            "whatInterviewerChecks": "O(log(min(m, n))) time bound and O(1) space bound.",
+            "bestReplyScript": "Let m = size of array A, n = size of array B.\n\nComplexity analysis:\n- Time Complexity: O(log(min(m, n))). We perform binary search exclusively on the smaller array.\n- Space Complexity: O(1) auxiliary space, as no new arrays or merged data structures are created.",
             "keyPoints": [
-                  "Stores historical prefix sums",
-                  "Average O(1) lookup time",
-                  "Triggers instant match on duplicate prefix sum"
+                  "Time Complexity: O(log(min(m, n)))",
+                  "Space Complexity: O(1)",
+                  "Performed exclusively on smaller array"
             ]
       },
       {
             "id": "q4",
-            "category": "Complexity Analysis",
-            "question": "4. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic time and space complexity bounds.",
-            "bestReplyScript": "The array is traversed only once.\n\nFor each element:\n- Update prefix sum -> O(1)\n- Hash set lookup -> O(1) average\n- Hash set insertion -> O(1) average\n\nOverall:\n- Time Complexity: O(n)\n- Space Complexity: O(n)\n\nThis is the optimal solution.",
+            "category": "Partitioning Logic Mechanics",
+            "question": "4. How does the partitioning logic work?",
+            "whatInterviewerChecks": "Visual partition example and boundary inequality check.",
+            "bestReplyScript": "The goal is to split both arrays into left and right halves such that:\n- Left half contains half of all elements: `(m + n + 1) // 2`.\n- Every element on the left <= every element on the right.\n\nExample:\nArray A: 1 3 | 8\nArray B: 7 | 9 10 11\n\nBoundaries: maxLeftA = 3, minRightA = 8, maxLeftB = 7, minRightB = 9.\nCheck: 3 <= 9 and 7 <= 8 -> Valid! Combined left half is [1, 3, 7] and right half is [8, 9, 10, 11].",
             "keyPoints": [
-                  "Time Complexity: O(n)",
-                  "Space Complexity: O(n)",
-                  "Optimal single pass execution"
+                  "Partition splits combined arrays into 2 equal halves",
+                  "Valid iff `maxLeftA <= minRightB` and `maxLeftB <= minRightA`",
+                  "Guarantees sorted left half <= right half"
             ]
       },
       {
             "id": "q5",
-            "category": "Mathematical Intuition",
-            "question": "5. How do prefix sums detect a zero-sum subarray?",
-            "whatInterviewerChecks": "Mathematical identity sum(i..j) = prefix[j] - prefix[i-1] = 0.",
-            "bestReplyScript": "If two prefix sums are equal, the sum of the elements between them must be 0.\n\nExample: Array [1, 2, -2, 4] -> Prefix Sums: 1 -> 3 -> 1 -> 5.\nThe prefix sum 1 appears twice. Between those positions: 2 + (-2) = 0.\n\nSo, the repeated prefix sum indicates a zero-sum subarray.",
+            "category": "Logarithmic Time Proof",
+            "question": "5. Why is the optimal solution O(log(min(m, n)))?",
+            "whatInterviewerChecks": "Halving search space of smaller array.",
+            "bestReplyScript": "Each iteration of binary search halves the search space of the smaller array of size `k = min(m, n)`.\n\nTotal iterations = `log2(k)`.\nSince boundary checks and pointer arithmetic take O(1) constant time per step:\nTotal Time = `O(log(min(m, n)))`.\n\nThis is the asymptotically optimal lower bound for finding the median of two sorted arrays without full merging.",
             "keyPoints": [
-                  "prefix[j] == prefix[i-1] => sum(i..j) = 0",
-                  "Visual proof with array indices",
-                  "Direct mathematical deduction"
+                  "Binary search halves smaller array size `min(m, n)`",
+                  "Each step takes O(1) constant work",
+                  "Total iterations = `log2(min(m, n))`"
             ]
       },
       {
             "id": "q6",
-            "category": "Multiple Zero-Sum Subarrays",
-            "question": "6. What if multiple zero-sum subarrays exist?",
-            "whatInterviewerChecks": "Early exit vs finding all zero-sum subarrays.",
-            "bestReplyScript": "The basic algorithm returns True as soon as it finds the first one.\n\nExample: Input [1, -1, 2, -2] contains subarrays [1, -1], [2, -2], and [1, -1, 2, -2].\n\nIf the problem asks to find all zero-sum subarrays, I would store all indices for each prefix sum instead of returning immediately.",
+            "category": "Edge Cases",
+            "question": "6. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty array, different lengths, infinity bounds, duplicates, odd/even total lengths.",
+            "bestReplyScript": "Important edge cases include:\n1. One array is empty (A = [], B = [1]) -> median = 1\n2. Partition at array index 0 (`maxLeft = -infinity`)\n3. Partition at array length m/n (`minRight = +infinity`)\n4. Odd total length (m + n = 3) vs Even total length (m + n = 4)\n5. Duplicate numbers (A = [0, 0], B = [0, 0]) -> median = 0\n6. Negative numbers (A = [-5, -2], B = [-1, 3]) -> median = -1.5.",
             "keyPoints": [
-                  "Early return on first zero-sum match",
-                  "Extendable to find all zero-sum subarrays",
-                  "Map prefix sum to list of indices"
+                  "Empty array bounds (using +/- infinity)",
+                  "Odd vs Even total lengths",
+                  "Negative values and duplicates support"
             ]
       },
       {
             "id": "q7",
-            "category": "Returning Subarray Indices",
-            "question": "7. Can you return their indices?",
-            "whatInterviewerChecks": "Switching from Set to Hash Map (Prefix Sum -> Index).",
-            "bestReplyScript": "Yes. Instead of storing only prefix sums in a set, I would store: Prefix Sum -> Index.\n\nExample: Array [4, 2, -3, 1]\nPrefix Sums: 4 -> Index 0, 6 -> Index 1, 3 -> Index 2, 4 -> Index 3.\nSince 4 appears again: Previous Index = 0, Current Index = 3. Zero-sum subarray is from Index 1 to 3.\n\nUsing a dictionary allows us to return the exact indices of the subarray.",
+            "category": "Testing & Verification",
+            "question": "7. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering odd/even lengths, empty arrays, duplicates, and negatives.",
+            "bestReplyScript": "I would test:\n- A = [1,3], B = [2] -> 2.0\n- A = [1,2], B = [3,4] -> 2.5\n- A = [], B = [1] -> 1.0\n- A = [0,0], B = [0,0] -> 0.0\n- A = [1], B = [2,3,4] -> 2.5\n- A = [-5,-2], B = [-1,3] -> -1.5\n\nThese verify odd/even total lengths, empty array bounds, duplicates, and negative numbers.",
             "keyPoints": [
-                  "Use Hash Map (Prefix Sum -> Index)",
-                  "Zero-sum range is (prev_index + 1) to curr_index",
-                  "Provides exact boundary coordinates"
+                  "LeetCode 4 standard test cases (2.0 and 2.5)",
+                  "Empty array test ([], [1] -> 1.0)",
+                  "Negative number test ([-5,-2], [-1,3] -> -1.5)"
             ]
       },
       {
             "id": "q8",
-            "category": "Edge Cases",
-            "question": "8. What edge cases did you consider?",
-            "whatInterviewerChecks": "Empty array, single zero, no zero-sum, entire array zero, negative numbers.",
-            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> False\n2. Single zero ([0]) -> True\n3. No zero-sum subarray ([1,2,3]) -> False\n4. Entire array sums to zero ([2,-2]) -> True\n5. Negative numbers ([-1,1]) -> True\n\nTesting these cases ensures the solution handles different scenarios correctly.",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Median of Two Sorted Arrays (LeetCode 4).",
+            "bestReplyScript": "Common mistakes include:\n- Performing binary search on the larger array (causes `j` index to go out of bounds!).\n- Off-by-one errors in partition formulas `(m + n + 1) // 2`.\n- Handling empty partition bounds incorrectly (failing to set `float('-inf')` / `float('inf')`).\n- Integer truncation bug in Python 2 or C++ when computing `(a + b) / 2` instead of floating point `/ 2.0`.\n- Forgetting to swap arrays if `len(A) > len(B)` at the start.",
             "keyPoints": [
-                  "Single element zero [0] check",
-                  "Entire array zero-sum ([2,-2])",
-                  "Negative number handling"
+                  "Not swapping arrays to ensure `len(A) <= len(B)`",
+                  "Index out of bounds on empty partitions (missing +/- infinity)",
+                  "Integer division truncation instead of float"
             ]
       },
       {
             "id": "q9",
-            "category": "Testing & Verification",
-            "question": "9. How would you test your implementation?",
-            "whatInterviewerChecks": "Test cases matrix with positive, negative, zero, and boundary inputs.",
-            "bestReplyScript": "I would create test cases for normal and edge cases:\n- [4,2,-3,1,6] -> True\n- [1,2,3] -> False\n- [0] -> True\n- [2,-2] -> True\n- [] -> False\n\nThese tests verify the correctness of the algorithm.",
+            "category": "Unsorted Input Handling Strategy",
+            "question": "9. How would your solution change if the arrays were unsorted?",
+            "whatInterviewerChecks": "Sorting overhead O(m log m + n log n) vs QuickSelect.",
+            "bestReplyScript": "Binary search partition strictly requires both input arrays to be pre-sorted.\n\nIf the input arrays were unsorted:\n1. Sort both arrays first: O(m log m + n log n).\n2. Then apply the binary search partition algorithm.\n\nAlternatively, combine both arrays and use QuickSelect (k-th smallest element algorithm) to find the median in O(m + n) average time.",
             "keyPoints": [
-                  "Normal zero-sum detection",
-                  "Single zero and negative numbers",
-                  "Empty array verification"
+                  "Requires pre-sorted arrays",
+                  "Unsorted option 1: Sort then binary search O(N log N)",
+                  "Unsorted option 2: QuickSelect average O(m + n) time"
             ]
       },
       {
             "id": "q10",
-            "category": "Streaming Data",
-            "question": "10. Can this work on a stream of numbers?",
-            "whatInterviewerChecks": "Real-time prefix sum tracking on continuous streams.",
-            "bestReplyScript": "Yes. As numbers arrive:\n1. Update the running prefix sum.\n2. Check if it is 0 or already exists in the hash set.\n3. Insert it if it is new.\n\nExample: Incoming 4 (Prefix 4) -> Incoming 2 (Prefix 6) -> Incoming -6 (Prefix 0) -> Return True!\n\nThis allows real-time detection without storing the entire array.",
+            "category": "Recursive Binary Search Variant",
+            "question": "10. Can this problem be solved recursively?",
+            "whatInterviewerChecks": "Find k-th smallest element recursive approach.",
+            "bestReplyScript": "Yes!\nInstead of binary search on partition, we can implement a recursive `findKth(A, B, k)` helper function:\n- In each recursive step, compare `A[k/2 - 1]` and `B[k/2 - 1]`.\n- Discard the smaller `k/2` elements.\n\nComplexity:\n- Time Complexity: O(log(m + n)).\n- Space Complexity: O(log(m + n)) call stack.\n\nThe iterative binary search partition approach is preferred because it uses O(1) stack space.",
             "keyPoints": [
-                  "Incremental prefix sum tracking",
-                  "Stateful set lookup",
-                  "No full array storage required"
+                  "Recursive `findKth(A, B, k)` discards `k/2` elements per step",
+                  "Time: O(log(m + n))",
+                  "Iterative partition is preferred for O(1) space"
             ]
       },
       {
             "id": "q11",
-            "category": "Target Sum Equals K Extension",
-            "question": "11. What if the target sum is not zero?",
-            "whatInterviewerChecks": "Generalization to Subarray Sum Equals K checking prefix_sum - K.",
-            "bestReplyScript": "The same idea still works. Suppose the target sum is K.\n\nInstead of checking whether the current prefix sum already exists, I check whether: prefix_sum - K exists in the hash map.\n\nExample: Target = 5, Current Prefix = 12 -> Need: 12 - 5 = 7. If prefix sum 7 was seen before, then the subarray between sums to 5.\n\nThis technique is commonly used in Subarray Sum Equals K problems.",
+            "category": "Merge vs Binary Search Comparison Matrix",
+            "question": "11. Compare the merge-based and binary-search approaches.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison Matrix:\n- Two-Pointer Merge: Merge elements up to middle index. Time O(m + n), Space O(1) or O(m + n). Simple, but violates logarithmic constraint.\n- Binary Search Partition: Partition smaller array. Time O(log(min(m, n))), Space O(1). Optimal, meet LeetCode requirements, but conceptually harder.\n\nBinary Search is the expected optimal solution.",
             "keyPoints": [
-                  "Check (prefix_sum - K) in hash map",
-                  "Generalizes zero-sum to target sum K",
-                  "Solves LeetCode 560 (Subarray Sum Equals K)"
+                  "Merge: O(m + n) time, O(1) space (Simple, linear)",
+                  "Binary Search Partition: O(log(min(m, n))) time, O(1) space (Optimal)",
+                  "Binary Search meets strict LeetCode logarithmic time requirement"
             ]
       },
       {
             "id": "q12",
-            "category": "Real-World Applications",
-            "question": "12. Where is this technique used?",
-            "whatInterviewerChecks": "Software engineering use cases for prefix sum & cumulative tracking.",
-            "bestReplyScript": "Prefix sums are widely used in:\n- Financial transaction analysis & Profit/Loss balance tracking.\n- Sensor data analysis & Time-series analytics.\n- Database range sum queries.\n- Competitive programming & Dynamic Programming.\n- Log analytics & image processing (Integral Images).",
+            "category": "Real-World Applications of Partitioning",
+            "question": "12. Where are partitioning algorithms used in practice?",
+            "whatInterviewerChecks": "Order statistics, database partitioning, load balancing.",
+            "bestReplyScript": "Partitioning algorithms are used in:\n- QuickSelect & Order Statistics (finding percentiles / median in streaming databases).\n- Database Sharding & Index Range Partitioning.\n- Distributed Load Balancing (splitting workloads across server clusters).\n- Parallel Sorting Algorithms (Sample Sort & Multiway Merge).",
             "keyPoints": [
-                  "Financial ledger balance analysis",
-                  "Time-series & sensor data range queries",
-                  "Computer vision integral images"
+                  "Database percentile & median order statistics",
+                  "Distributed load balancing & sharding",
+                  "Parallel multiway merge sorting"
             ]
       },
       {
             "id": "q13",
-            "category": "Common Candidate Mistakes",
-            "question": "13. What mistakes do candidates make?",
-            "whatInterviewerChecks": "Rookie traps in prefix sum zero-sum problems.",
-            "bestReplyScript": "Some common mistakes include:\n- Using nested loops, leading to O(n\u00b2) time.\n- Forgetting to check if the prefix sum itself is 0.\n- Not storing prefix sums correctly.\n- Using a list instead of a hash set for lookups.\n- Confusing prefix sums with cumulative averages.\n\nThe most common mistake is forgetting that a repeated prefix sum indicates a zero-sum subarray.",
+            "category": "Duplicate Values Handling Proof",
+            "question": "13. How would you handle duplicate values?",
+            "whatInterviewerChecks": "Non-strict inequality `<=` handling duplicates.",
+            "bestReplyScript": "Duplicate values are handled naturally without any code modification!\n\nBecause the boundary condition check uses non-strict inequality:\n`maxLeftA <= minRightB` and `maxLeftB <= minRightA`\n\nEqual elements (e.g. A = [2, 2], B = [2, 2]) satisfy `<=` trivially, allowing the partition logic to return the correct median (2.0) seamlessly.",
             "keyPoints": [
-                  "Forgetting prefix_sum == 0 base condition",
-                  "Using list lookup (O(n)) instead of set (O(1))",
-                  "Nested loops O(n\u00b2) anti-pattern"
+                  "Non-strict inequality `<=` handles duplicates natively",
+                  "Example: A = [2, 2], B = [2, 2] -> 2.0",
+                  "No special duplicate handling logic needed"
             ]
       },
       {
             "id": "q14",
-            "category": "No Extra Space Alternative",
-            "question": "14. Can this be solved without extra memory?",
-            "whatInterviewerChecks": "O(n^2) time vs O(1) space trade-offs.",
-            "bestReplyScript": "Yes, but it is much slower.\n\nOne approach is:\n1. Consider every starting index.\n2. Compute the sum of every possible subarray.\n\nComplexity: Time: O(n\u00b2), Space: O(1).\n\nThis avoids extra memory but is not practical for large arrays.",
+            "category": "Hard Level Classification Rationale",
+            "question": "14. Why is this considered one of the hardest binary search interview problems?",
+            "whatInterviewerChecks": "Dual array boundary invariants & 4-way comparison conditions.",
+            "bestReplyScript": "Because unlike standard binary search that searches for a value in one array, this problem searches for a 2D cut/partition across two arrays simultaneously.\n\nIt requires managing:\n- Dual array index linkage (`j = (m+n+1)/2 - i`).\n- 4-way boundary checks (`maxLeftA`, `minRightA`, `maxLeftB`, `minRightB`).\n- Virtual infinity bounds for empty partitions (`-inf` / `+inf`).\n- Odd vs Even median arithmetic.\n\nIt tests deep understanding of binary search invariants.",
             "keyPoints": [
-                  "Nested loop subarray summation",
-                  "Time: O(n\u00b2)",
-                  "Space: O(1) memory trade-off"
+                  "Searches for a 2D cut/partition across two arrays",
+                  "Dual array index linkage formula",
+                  "Virtual infinity bounds for empty partitions"
             ]
       },
       {
             "id": "q15",
-            "category": "Large Datasets & Distributed Systems",
-            "question": "15. How would you optimize for large datasets?",
-            "whatInterviewerChecks": "Memory optimization and distributed processing (Spark/Hadoop).",
-            "bestReplyScript": "For very large datasets, I would:\n- Process the data in a streaming fashion if possible.\n- Use efficient hash-based data structures.\n- Minimize memory by storing only the required prefix sums.\n- For distributed datasets, use frameworks like Spark or Hadoop when the data cannot fit into a single machine's memory.\n\nThe choice depends on problem constraints, but for most interview scenarios, the prefix sum + hash set solution is already optimal.",
+            "category": "Limited Time Interview Strategy",
+            "question": "15. Which solution would you choose if interview time were limited?",
+            "whatInterviewerChecks": "Interview communication & trade-off strategy.",
+            "bestReplyScript": "If time is limited:\n1. State both approaches upfront: Linear Merge O(m + n) vs Binary Search Partition O(log(min(m, n))).\n2. If interviewer demands the optimal solution, implement Binary Search Partition.\n3. If time is under 10 minutes, code the Two-Pointer Merge O(m+n) first to guarantee working code, then explain the binary search partition logic on paper.\n\nDemonstrating awareness of both trade-offs shows strong engineering judgment.",
             "keyPoints": [
-                  "Stream processing for continuous data",
-                  "Distributed map-reduce for out-of-memory arrays",
-                  "Optimal in-memory prefix set"
+                  "State both approaches upfront",
+                  "Implement Binary Search Partition if demanded",
+                  "Use Two-Pointer Merge if time is under 10 mins while explaining optimal math"
             ]
       }
 ],
