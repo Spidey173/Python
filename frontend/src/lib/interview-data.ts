@@ -16197,195 +16197,181 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
             "id": "q1",
             "category": "Step-by-Step Approach",
             "question": "1. Explain your two-pointer approach.",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Container With Most Water.",
-            "bestReplyScript": "My approach for Container With Most Water follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Two-pointer strategy (left, right), width * min(height[L], height[R]), moving shorter line.",
+            "bestReplyScript": "I use the two-pointer technique because the container is formed by two vertical lines.\n\nThe amount of water depends on:\n- The shorter height of the two lines: min(height[left], height[right]).\n- The distance (width) between them: right - left.\n\nAlgorithm:\n1. Place left = 0 and right = n - 1.\n2. Calculate current area: area = (right - left) * min(height[left], height[right]).\n3. Update max_area = max(max_area, area).\n4. Move the pointer pointing to the SHORTER line.\n5. Repeat until left and right meet.\n\nExample: [1,8,6,2,5,4,8,3,7] -> L at 1, R at 7 -> Area = 1 * 8 = 8 -> Move L (since 1 < 7) -> Output max_area = 49.\n\nComplexity: Time: O(n), Space: O(1)",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Two pointers: left = 0, right = n - 1",
+                  "Area formula: (right - left) * min(height[left], height[right])",
+                  "Always move the pointer pointing to the shorter line",
+                  "Time: O(n), Space: O(1)"
             ]
       },
       {
             "id": "q2",
-            "category": "Algorithmic Justification",
+            "category": "Greedy Pointer Movement Proof",
             "question": "2. Why does moving the taller pointer not help?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Container With Most Water.",
-            "bestReplyScript": "I chose this approach for Container With Most Water over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Mathematical proof showing width decreases while min_height remains <= shorter line.",
+            "bestReplyScript": "The area is strictly limited by the shorter height.\n\nIf we move the taller pointer:\n- The width between pointers decreases by 1.\n- The limiting height is still at most the shorter height (or even smaller).\n- Therefore, area = width * min_height CANNOT possibly increase!\n\nThe ONLY chance to find a larger area is to move the shorter pointer, hoping to discover a taller line that compensates for the decreased width.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Area is bounded by shorter line",
+                  "Moving taller pointer decreases width while min_height stays <= shorter line",
+                  "Moving shorter pointer is the only way area can increase"
             ]
       },
       {
             "id": "q3",
-            "category": "Time & Space Complexity",
+            "category": "Complexity Analysis",
             "question": "3. What is the time complexity?",
-            "whatInterviewerChecks": "Asymptotic analysis, time bounds, and auxiliary memory proof for Container With Most Water.",
-            "bestReplyScript": "Here is the complexity analysis for Container With Most Water:\n\n- Time Complexity: O(n) (or optimal O(log n) / O(n log n) depending on phase).\n  Each element is processed at most a constant number of times (e.g. pushed/popped from stack or tracked via pointers).\n\n- Space Complexity: O(1) auxiliary space if modified in-place, or O(n) when tracking frequencies/indices.\n\nThis satisfies optimal industry standards for technical interviews.",
+            "whatInterviewerChecks": "O(n) single-pass linear time and O(1) space optimality.",
+            "bestReplyScript": "Each pointer moves in only one direction:\n- left moves right.\n- right moves left.\n\nTogether, both pointers move a total of n steps until they meet.\n- Time Complexity: O(n)\n- Space Complexity: O(1) in-place auxiliary space.\n\nThis is optimal because every height element must be considered at least once.",
             "keyPoints": [
-                  "Optimal asymptotic runtime bounds",
-                  "Strict auxiliary space analysis",
-                  "Single/linear pass efficiency",
-                  "No unnecessary memory allocation"
+                  "Time Complexity: O(n)",
+                  "Space Complexity: O(1)",
+                  "Optimal single-pass lower bound"
             ]
       },
       {
             "id": "q4",
-            "category": "Algorithmic Justification",
+            "category": "Brute-Force Inefficiency",
             "question": "4. Why is the brute-force solution inefficient?",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Container With Most Water.",
-            "bestReplyScript": "I chose this approach for Container With Most Water over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "O(n^2) nested pairs comparison.",
+            "bestReplyScript": "The brute-force approach checks every pair of lines using nested loops.\n\nFor an array of size n:\n- Total pairs = n * (n - 1) / 2 = O(n^2).\n\nFor large arrays (n = 100,000), O(n^2) requires 10 billion comparisons and results in Time Limit Exceeded (TLE).\nThe two-pointer greedy choice eliminates all suboptimal pairs in O(n) linear time.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force: O(n^2) nested loop pairs",
+                  "100,000 elements -> TLE",
+                  "Two pointers prunes search space to O(n)"
             ]
       },
       {
             "id": "q5",
-            "category": "Deep-Dive Question 5",
+            "category": "Greedy Choice Rule",
             "question": "5. How do you know which pointer to move?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Container With Most Water.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Greedy decision rule: `if height[left] < height[right]: left += 1 else: right -= 1`.",
+            "bestReplyScript": "Always move the pointer with the smaller height!\n\nRule:\nif height[left] < height[right]:\n    left += 1\nelse:\n    right -= 1\n\nMoving the shorter pointer prunes all pairs containing that shorter line with smaller widths, as none of them can exceed the current area.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Move pointer with smaller height",
+                  "Equal heights: move either pointer (or both)",
+                  "Optimal greedy pruning rule"
             ]
       },
       {
             "id": "q6",
-            "category": "Edge Case Analysis",
+            "category": "Edge Cases",
             "question": "6. What edge cases did you consider?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Container With Most Water.",
-            "bestReplyScript": "When handling Container With Most Water, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Only two lines, equal heights, strictly increasing/decreasing, all equal.",
+            "bestReplyScript": "Important edge cases include:\n1. Only two lines ([1, 2]) -> Only 1 container (area = 1).\n2. Equal heights ([5, 5]) -> Area = 5 * 1 = 5.\n3. Strictly increasing ([1, 2, 3, 4, 5]) -> Max area found correctly.\n4. Strictly decreasing ([5, 4, 3, 2, 1]) -> Max area found correctly.\n5. All heights equal ([3, 3, 3, 3]) -> Max area uses outermost pair (3 * 3 = 9).\n\nTesting these ensures correctness under all array shapes.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "n = 2 minimal container",
+                  "Equal heights handling",
+                  "Strictly monotonic array shapes"
             ]
       },
       {
             "id": "q7",
             "category": "Testing & Verification",
             "question": "7. How would you test your solution?",
-            "whatInterviewerChecks": "Test suite design, boundary test cases, and assertion logic for Container With Most Water.",
-            "bestReplyScript": "To thoroughly test Container With Most Water, I construct a multi-tiered test suite:\n\n1. Happy Path: Standard representative inputs expecting typical results.\n2. Boundary Tests: Minimal input sizes (e.g., `n = 0`, `n = 1`).\n3. Extreme Test Cases: Large datasets, negative inputs, and max integer values.\n4. Stress & Performance: Verifying runtime remains within standard execution bounds.",
+            "whatInterviewerChecks": "Test cases table matrix covering 2 elements, standard LeetCode example, monotonic shapes.",
+            "bestReplyScript": "I would test:\n- [1, 1] -> 1\n- [1, 2] -> 1\n- [1,8,6,2,5,4,8,3,7] -> 49\n- Increasing heights [1,2,3,4,5] -> Correct max\n- Decreasing heights [5,4,3,2,1] -> Correct max\n- Equal heights [3,3,3,3] -> Correct max (9)\n\nThese cover normal and edge cases.",
             "keyPoints": [
-                  "Comprehensive happy-path tests",
-                  "Boundary & edge case coverage",
-                  "Extreme value validation",
-                  "Automated unit test assertions"
+                  "LeetCode 11 standard test [1,8,6,2,5,4,8,3,7] -> 49",
+                  "Minimal 2-line containers",
+                  "All equal heights"
             ]
       },
       {
             "id": "q8",
-            "category": "Deep-Dive Question 8",
+            "category": "Dynamic Programming Applicability",
             "question": "8. Can this be solved using dynamic programming?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Container With Most Water.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Lack of overlapping subproblems / optimal substructure for DP.",
+            "bestReplyScript": "No.\nThis problem lacks overlapping subproblems or optimal substructure that DP requires.\n\nThe container area depends on two independent boundary lines (left and right), which is a global choice rather than a recursive subproblem state.\n\nThe two-pointer greedy approach is both simpler and optimal in O(n) time and O(1) space.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "No overlapping subproblems",
+                  "No DP state recurrence formula",
+                  "Two-pointer greedy approach is optimal"
             ]
       },
       {
             "id": "q9",
-            "category": "Interview Pitfalls",
+            "category": "Common Candidate Pitfalls",
             "question": "9. What common mistakes do candidates make?",
-            "whatInterviewerChecks": "Common candidate errors, anti-patterns, and bug prevention for Container With Most Water.",
-            "bestReplyScript": "Common candidate pitfalls when solving Container With Most Water include:\n\n1. Off-by-One Indexing: Incorrect loop conditions leading to missing or extra iterations.\n2. Premature Exit / Return: Returning results before completing mandatory validation.\n3. Space Overhead: Allocating unnecessary intermediate arrays or copying strings.\n4. Ignoring Edge Cases: Failing to validate empty inputs or single-element datasets.",
+            "whatInterviewerChecks": "Rookie traps in Container With Most Water (LeetCode 11).",
+            "bestReplyScript": "Some common mistakes include:\n- Moving the taller pointer instead of the shorter pointer (causes early termination before finding max area).\n- Using max(height[L], height[R]) instead of min(height[L], height[R]) in area calculation.\n- Incorrect width calculation (using right - left + 1 instead of right - left).\n- Using nested loops O(n^2).\n\nThe most common mistake is moving the wrong pointer.",
             "keyPoints": [
-                  "Off-by-one indexing errors",
-                  "Unnecessary memory allocations",
-                  "Premature return bugs",
-                  "Overlooking edge case bounds"
+                  "Moving taller pointer bug",
+                  "Using max() instead of min() for container height",
+                  "Off-by-one width formula: right - left vs right - left + 1"
             ]
       },
       {
             "id": "q10",
-            "category": "Deep-Dive Question 10",
+            "category": "Two-Pointer Pattern Family",
             "question": "10. Where is the two-pointer technique useful?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Container With Most Water.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Canonical Two-Pointer problem family.",
+            "bestReplyScript": "The two-pointer technique is useful in:\n- Container With Most Water (LeetCode 11).\n- Trapping Rain Water (LeetCode 42).\n- Two Sum II (Sorted Array) & 3Sum.\n- Valid Palindrome.\n- Remove Duplicates from Sorted Array.\n\nIt is ideal whenever decisions can be made monotonically from opposite ends of an array.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Trapping Rain Water (LeetCode 42)",
+                  "Two Sum II & 3Sum",
+                  "Valid Palindrome & Remove Duplicates"
             ]
       },
       {
             "id": "q11",
-            "category": "Deep-Dive Question 11",
+            "category": "Adjacent Indices Maximum Area",
             "question": "11. Can the maximum area occur at adjacent indices?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Container With Most Water.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Adjacent max area proof.",
+            "bestReplyScript": "Yes!\nExample: [1, 100, 100].\n- Left = 0 (1), Right = 2 (100) -> Area = (2 - 0) * 1 = 2 -> Move L.\n- Left = 1 (100), Right = 2 (100) -> Area = (2 - 1) * 100 = 100.\n\nAdjacent lines at indices 1 and 2 produce the global maximum area 100. The two-pointer algorithm naturally handles this.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Adjacent lines can produce global max area",
+                  "Example: [1, 100, 100] -> max area = 100",
+                  "Handled naturally by two pointers"
             ]
       },
       {
             "id": "q12",
-            "category": "Edge Case Analysis",
+            "category": "Negative Heights Input Safety",
             "question": "12. How would negative heights affect the problem?",
-            "whatInterviewerChecks": "Defensive programming, zero/null bounds, and extreme values for Container With Most Water.",
-            "bestReplyScript": "When handling Container With Most Water, I explicitly account for key edge cases:\n\n1. Empty / Null Input: Return base values immediately (e.g., `0`, `[]`, or `False`).\n2. Single Element / Bound Inputs: Ensure pointer index bounds don't cause `IndexError`.\n3. Duplicates / Repeated Values: Correctly update counters or pointers without double-counting.\n4. Extremes & Signs: Handle zero, negative values, and integer overflow gracefully.",
+            "whatInterviewerChecks": "Non-negative constraint in LeetCode 11.",
+            "bestReplyScript": "In the standard problem specification (LeetCode 11), heights are non-negative (`height[i] >= 0`).\n\nIf negative heights were passed:\n- Physically, a line cannot have negative height for holding water.\n- Programmatically, I would add a guard: `if height[i] < 0: raise ValueError` or clamp `height[i] = max(0, height[i])`.",
             "keyPoints": [
-                  "Empty and single-element safeguards",
-                  "Index-out-of-bound protections",
-                  "Duplicate & zero handling",
-                  "Integer overflow safeguards"
+                  "Height >= 0 constraint",
+                  "Clamp negative heights to 0: `max(0, h)`",
+                  "Input validation guard"
             ]
       },
       {
             "id": "q13",
-            "category": "Step-by-Step Approach",
+            "category": "Parallel Processing Feasibility",
             "question": "13. Can this algorithm be parallelized?",
-            "whatInterviewerChecks": "Clear step-by-step breakdown, algorithmic mechanics, and boundary handling for Container With Most Water.",
-            "bestReplyScript": "My approach for Container With Most Water follows a structured, optimal strategy:\n\n1. Input Analysis: Inspect boundary limits, data structures, and edge-case invariants.\n2. Core Strategy: Utilize optimal data structures (e.g., Hash Map / Two Pointers / Monotonic Stack / Sliding Window) to reduce redundant passes.\n3. Execution: Traverse inputs, update pointer/frequency tracking in-place, and handle zero or single-element inputs cleanly.\n4. Termination: Return early upon discovering the answer or concluding the full scan.\n\nThis ensures maximum runtime efficiency while keeping space complexity strictly minimal.",
+            "whatInterviewerChecks": "Sequential dependency in pointer movement.",
+            "bestReplyScript": "Not efficiently.\nEach pointer movement step `(left += 1` or `right -= 1)` depends strictly on the comparison of the current two line heights.\nBecause every step is sequentially dependent on the previous pointer state, the O(n) algorithm is inherently sequential.\n\nWhile brute force O(n^2) can be parallelized across threads, total work remain far worse than sequential O(n).",
             "keyPoints": [
-                  "Structured multi-step breakdown",
-                  "Optimal data structure selection",
-                  "Defensive edge-case handling",
-                  "Single-pass / early termination logic"
+                  "Sequential decision dependency prevents thread parallelization",
+                  "Sequential O(n) is faster than parallelized O(n^2)",
+                  "Inherently sequential algorithm"
             ]
       },
       {
             "id": "q14",
-            "category": "Deep-Dive Question 14",
+            "category": "Greedy Choice Intuition Summary",
             "question": "14. How would you explain the intuition behind the greedy choice?",
-            "whatInterviewerChecks": "Deep technical understanding of mechanics and implementation details for Container With Most Water.",
-            "bestReplyScript": "1. Core Insight: We analyze how the data structure directly impacts performance.\n2. Implementation Strategy: We maintain strict invariant guarantees across all iterations.\n3. Optimization: We eliminate redundant operations, ensuring predictable, high-speed execution.",
+            "whatInterviewerChecks": "Clear intuitive explanation of why moving shorter line works.",
+            "bestReplyScript": "Think of it this way:\nThe height of water is choked by the shorter line.\nIf you keep the shorter line and move the taller line closer, you only lose width while staying choked by the same short line.\n\nTo get more water, you MUST discard the shorter line and search for a taller line that can increase the choked height enough to overcome the lost width.",
             "keyPoints": [
-                  "Deep architectural insight",
-                  "Invariant guarantee maintenance",
-                  "Performance optimization",
-                  "Clean code readability"
+                  "Water height is choked by shorter line",
+                  "Moving taller line shrinks width without un-choking height",
+                  "Must discard shorter line to un-choke height"
             ]
       },
       {
             "id": "q15",
-            "category": "Algorithmic Justification",
+            "category": "Brute Force vs Two-Pointer Comparison",
             "question": "15. Compare brute-force and optimal solutions.",
-            "whatInterviewerChecks": "Evaluating trade-offs, alternative approaches, and design rationale for Container With Most Water.",
-            "bestReplyScript": "I chose this approach for Container With Most Water over brute-force due to strict performance requirements:\n\n- Brute Force Drawback: Nested iterations lead to quadratic O(n\u00b2) or exponential runtime.\n- Optimal Advantage: By leveraging hash maps, bitwise tricks, or two-pointers, we achieve O(n) or O(log n).\n- Resource Efficiency: Reduces heap memory churn and avoids unnecessary copying.",
+            "whatInterviewerChecks": "Summary comparison matrix.",
+            "bestReplyScript": "Comparison:\n- Brute Force: Checks all n * (n-1) / 2 line pairs -> Time O(n^2), Space O(1).\n- Two Pointers: Starts at ends, greedily moves shorter pointer -> Time O(n), Space O(1).\n\nThe two-pointer solution reduces time from quadratic to linear while maintaining O(1) space, making it the optimal interview solution.",
             "keyPoints": [
-                  "Optimal vs brute-force trade-offs",
-                  "Heap memory & CPU cycle savings",
-                  "Algorithmic scalability",
-                  "Industry best practices"
+                  "Brute force: O(n^2) time, O(1) space",
+                  "Two Pointers: O(n) time, O(1) space",
+                  "Optimal linear solution"
             ]
       }
 ],
