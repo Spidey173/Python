@@ -3619,192 +3619,187 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     },
     "questions": [
       {
-        "id": "q1",
-        "category": "Algorithm Explanation",
-        "question": "1. Explain your algorithm.",
-        "whatInterviewerChecks": "Explaining 3-step Reverse Algorithm step by step.",
-        "bestReplyScript": "I use the Reverse Algorithm, which rotates the array in-place using three reversals.\n\nThe steps are:\n1. Compute k = k % n to handle cases where k is larger than the array size.\n2. Reverse the entire array.\n3. Reverse the first k elements.\n4. Reverse the remaining n-k elements.\n\nExample:\nInput: nums = [1,2,3,4,5,6,7], k = 3\n\nStep 1: Reverse entire array -> [7,6,5,4,3,2,1]\nStep 2: Reverse first 3 elements -> [5,6,7,4,3,2,1]\nStep 3: Reverse remaining elements -> [5,6,7,1,2,3,4]\n\nOutput: [5,6,7,1,2,3,4]\n\nThis approach is efficient because it modifies the original array without using extra memory.\n\nComplexity\n• Time: O(n)\n• Space: O(1)",
-        "keyPoints": [
-          "In-place 3-pass reverse algorithm",
-          "k = k % n bounds normalization",
-          "Reverse all -> Reverse 0..k-1 -> Reverse k..n-1",
-          "O(n) time and O(1) space"
-        ]
+            "id": "q1",
+            "category": "Step-by-Step Approach",
+            "question": "1. Explain your approach step by step.",
+            "whatInterviewerChecks": "Horizontal scanning, progressively shortening prefix `prefix = prefix[:-1]` until `str.startswith(prefix)`.",
+            "bestReplyScript": "I use the horizontal scanning approach because it is simple, efficient, and easy to explain.\n\nSteps:\n1. Assume the first string is the current longest common prefix (`prefix = strs[0]`).\n2. Compare this prefix with each remaining string in the array.\n3. While the current string does not start with the prefix (`not s.startswith(prefix)`):\n   - Remove the last character from the prefix (`prefix = prefix[:-1]`).\n   - If the prefix becomes empty `\"\"`, return `\"\"` immediately.\n4. Continue until all strings have been processed.\n5. Return the remaining prefix.\n\nThis ensures that the prefix is valid for every string in the array.",
+            "keyPoints": [
+                  "Initialize prefix with `strs[0]`",
+                  "Shorten prefix `prefix[:-1]` while `not s.startswith(prefix)`",
+                  "Early exit if prefix becomes empty `\"\"`",
+                  "Time: O(N * M), Space: O(1)"
+            ]
       },
       {
-        "id": "q2",
-        "category": "Algorithmic Mechanics",
-        "question": "2. Why reverse the array three times?",
-        "whatInterviewerChecks": "Understanding the visual re-ordering logic of reversals.",
-        "bestReplyScript": "The three reversals rearrange the elements into the correct rotated order.\n\n• The first reversal moves the last k elements to the front (but in reverse order).\n• The second reversal restores the correct order of those first k elements.\n• The third reversal restores the order of the remaining elements.\n\nExample:\nOriginal: [1,2,3,4,5,6,7]\nReverse All: [7,6,5,4,3,2,1]\nReverse First 3: [5,6,7,4,3,2,1]\nReverse Remaining: [5,6,7,1,2,3,4]\n\nThree reversals achieve rotation in-place without extra storage.",
-        "keyPoints": [
-          "1st reverse: Brings tail elements to head position in inverted order",
-          "2nd reverse: Restores proper orientation of head k elements",
-          "3rd reverse: Restores proper orientation of remaining n-k tail elements"
-        ]
+            "id": "q2",
+            "category": "Algorithm Strategy Rationale",
+            "question": "2. Which approach did you choose (horizontal, vertical, sorting, or divide-and-conquer), and why?",
+            "whatInterviewerChecks": "Comparing horizontal, vertical, sorting, and divide-and-conquer.",
+            "bestReplyScript": "I chose horizontal scanning because:\n- It is easy to implement.\n- It requires constant O(1) extra space.\n- It performs well for most interview inputs.\n- The logic is straightforward to explain.\n\nOther approaches are also valid:\n- Vertical Scanning: Compare characters column by column across all strings (early exit on first mismatch).\n- Sorting: Sort array O(N log N * M) and compare only first and last strings.\n- Divide and Conquer: Merge prefixes recursively in O(N * M) time.\n\nFor interviews, horizontal scanning is usually the clearest solution.",
+            "keyPoints": [
+                  "Horizontal scanning: simple code, O(1) space",
+                  "Vertical scanning: column-by-column comparison",
+                  "Sorting: compare first and last strings after sort"
+            ]
       },
       {
-        "id": "q3",
-        "category": "Time & Space Complexity Proof",
-        "question": "3. What's the complexity?",
-        "whatInterviewerChecks": "Summing asymptotic bounds across 3 reversal passes.",
-        "bestReplyScript": "Although the array is reversed three times, each reversal is O(n).\n\nSo,\n• Reverse whole array → O(n)\n• Reverse first k elements → O(k)\n• Reverse remaining elements → O(n-k)\n\nTotal: O(n)\nExtra Space: O(1)",
-        "keyPoints": [
-          "O(n) + O(k) + O(n-k) = O(2n) = O(n) total time",
-          "Strictly O(1) space (two pointers in-place element swap)",
-          "Optimal lower bound"
-        ]
+            "id": "q3",
+            "category": "Complexity Analysis",
+            "question": "3. What is the time and space complexity?",
+            "whatInterviewerChecks": "O(N * M) worst-case time bound and O(1) constant auxiliary space.",
+            "bestReplyScript": "Let N = number of strings, M = length of the shortest string.\n\nComplexity analysis:\n- Time Complexity: O(N * M) in the worst case (when all strings are identical).\n- Space Complexity: O(1) auxiliary space, as only a few pointer/string reference variables are used.",
+            "keyPoints": [
+                  "Time Complexity: O(N * M)",
+                  "Space Complexity: O(1)",
+                  "N = string count, M = min string length"
+            ]
       },
       {
-        "id": "q4",
-        "category": "In-place Requirement",
-        "question": "4. Can you rotate in-place?",
-        "whatInterviewerChecks": "Confirming zero auxiliary buffer allocation.",
-        "bestReplyScript": "Yes.\n\nThe reverse algorithm modifies the original array directly.\n\nNo additional array is created.\n\nExample:\nOriginal: [1,2,3,4,5]\nAfter rotation: [4,5,1,2,3]\n\nSince only swaps are used, the extra space remains O(1).",
-        "keyPoints": [
-          "Modifies input list in-place",
-          "Uses 2-pointer swap mechanism",
-          "Zero auxiliary array allocations"
-        ]
+            "id": "q4",
+            "category": "Large Scale System Optimizations",
+            "question": "4. How would your solution change if there were millions of strings?",
+            "whatInterviewerChecks": "Streaming inputs, early empty prefix exit, Trie data structure.",
+            "bestReplyScript": "For millions of strings:\n- Stop early as soon as the prefix becomes empty `\"\"`.\n- Process strings in a streaming manner instead of loading all into memory at once.\n- Parallelize scanning across worker threads (reduce prefix per worker, then intersect).\n- If performing repeated prefix queries, use a Trie (Prefix Tree).\n\nThese optimizations improve scalability for massive datasets.",
+            "keyPoints": [
+                  "Early exit on empty prefix `\"\"`",
+                  "Stream processing & parallel worker thread reduction",
+                  "Trie for repeated query workloads"
+            ]
       },
       {
-        "id": "q5",
-        "category": "Modulo Normalization",
-        "question": "5. What if k is larger than the array size?",
-        "whatInterviewerChecks": "Handling k > n via modulo reduction.",
-        "bestReplyScript": "I first compute: k = k % n.\n\nThis removes unnecessary full rotations.\n\nExample:\nArray Size = 5, k = 12\n12 % 5 = 2\n\nRotating by 12 steps is equivalent to rotating by 2 steps.\n\nThis optimization improves efficiency and avoids redundant work.",
-        "keyPoints": [
-          "Modulo reduction: k = k % n",
-          "Full array rotation (k = n) is identity operation",
-          "Prevents out-of-bounds array slicing errors"
-        ]
+            "id": "q5",
+            "category": "Edge Cases",
+            "question": "5. What edge cases did you consider?",
+            "whatInterviewerChecks": "Empty array, single string, empty strings, no common prefix, identical strings.",
+            "bestReplyScript": "Important edge cases include:\n1. Empty array ([]) -> return \"\"\n2. Array with one string ([\"apple\"]) -> return \"apple\"\n3. Array containing empty strings ([\"\", \"abc\"]) -> return \"\"\n4. No common prefix ([\"dog\", \"racecar\"]) -> return \"\"\n5. All strings identical ([\"same\", \"same\"]) -> return \"same\"\n6. Prefix equals an entire string ([\"flow\", \"flower\"]) -> return \"flow\"\n7. Unicode characters -> Handled correctly.",
+            "keyPoints": [
+                  "Empty array & single string bounds",
+                  "Empty string in array returns \"\"",
+                  "Identical & nested prefix strings"
+            ]
       },
       {
-        "id": "q6",
-        "category": "Directional Adaptation (Left Rotation)",
-        "question": "6. How would you rotate left instead?",
-        "whatInterviewerChecks": "Adapting reversal order for Left vs Right rotation.",
-        "bestReplyScript": "For a left rotation by k positions:\n1. Reverse the first k elements (0..k-1).\n2. Reverse the remaining elements (k..n-1).\n3. Reverse the entire array (0..n-1).\n\nExample:\nInput: [1,2,3,4,5], k = 2\nOutput: [3,4,5,1,2]\n\nThe logic is similar to right rotation; only the order of reversals changes.",
-        "keyPoints": [
-          "Left rotation 3-step order: Reverse 0..k-1 -> Reverse k..n-1 -> Reverse 0..n-1",
-          "Alternative: Right rotate by (n - (k % n))",
-          "Identical O(n) time and O(1) space"
-        ]
+            "id": "q6",
+            "category": "Testing & Verification",
+            "question": "6. How would you test your implementation?",
+            "whatInterviewerChecks": "Test cases table matrix covering normal, empty, single, and no-match arrays.",
+            "bestReplyScript": "I would test:\n- [\"flower\",\"flow\",\"flight\"] -> \"fl\"\n- [\"dog\",\"racecar\",\"car\"] -> \"\"\n- [\"apple\"] -> \"apple\"\n- [\"\",\"abc\"] -> \"\"\n- [] -> \"\"\n- [\"same\",\"same\",\"same\"] -> \"same\"\n\nThese cover common, boundary, and edge cases.",
+            "keyPoints": [
+                  "LeetCode 14 standard test cases (\"fl\", \"\")",
+                  "Single element & empty array bounds",
+                  "Identical strings test"
+            ]
       },
       {
-        "id": "q7",
-        "category": "Edge Cases & Boundaries",
-        "question": "7. What edge cases exist?",
-        "whatInterviewerChecks": "Identifying boundary inputs.",
-        "bestReplyScript": "Important edge cases include:\n\n• Empty array: [] -> Output []\n• One element: [5] -> Output [5]\n• k = 0: [1,2,3] -> Output [1,2,3]\n• k = n: n = 5, k = 5 -> No change\n• k > n: n = 5, k = 8 -> 8 % 5 = 3 (rotate by 3 instead)\n\nTesting these cases ensures the solution handles all boundary conditions.",
-        "keyPoints": [
-          "Empty array []",
-          "Single-element list [x]",
-          "k = 0 (no-op)",
-          "k = n (full circle no-op)",
-          "k > n (modulo reduction required)"
-        ]
+            "id": "q7",
+            "category": "Trie (Prefix Tree) Data Structure Trade-offs",
+            "question": "7. Can this problem be solved using a Trie? What are the trade-offs?",
+            "whatInterviewerChecks": "Trie implementation advantages vs memory overhead trade-offs.",
+            "bestReplyScript": "Yes!\nA Trie (Prefix Tree) naturally represents shared prefixes.\n\nAdvantages:\n- Ideal for repeated prefix queries across static dictionary datasets.\n- Fast autocomplete and prefix search.\n\nDisadvantages:\n- Higher memory overhead (allocating Trie nodes and child maps/arrays).\n- More complex code implementation.\n- Overkill for a single one-off longest common prefix query.\n\nFor a single query in an interview, horizontal scanning is preferred.",
+            "keyPoints": [
+                  "Trie ideal for repeated dictionary queries",
+                  "High memory allocation overhead for single queries",
+                  "Horizontal scanning preferred for one-off query"
+            ]
       },
       {
-        "id": "q8",
-        "category": "Auxiliary Space Alternative",
-        "question": "8. Can this be solved using extra memory?",
-        "whatInterviewerChecks": "Explaining the O(n) space auxiliary array approach.",
-        "bestReplyScript": "Yes.\n\nOne simple approach is:\n1. Create a new array.\n2. Place each element at its rotated position: nums[(i + k) % n] = original[i].\n\nComplexity:\n• Time: O(n)\n• Space: O(n)\n\nThis approach is easier to understand but uses additional memory.",
-        "keyPoints": [
-          "Formula: new_arr[(i + k) % n] = old_arr[i]",
-          "Time: O(n), Space: O(n)",
-          "High memory overhead for large arrays"
-        ]
+            "id": "q8",
+            "category": "Common Candidate Pitfalls",
+            "question": "8. What common mistakes do candidates make?",
+            "whatInterviewerChecks": "Rookie traps in Longest Common Prefix (LeetCode 14).",
+            "bestReplyScript": "Common mistakes include:\n- Not handling an empty input array `[]` (causes IndexError on `strs[0]`).\n- Accessing characters beyond the shortest string length.\n- Forgetting to stop early when prefix becomes empty `\"\"`.\n- Incorrect substring slicing indices.\n- Ignoring empty strings `\"\"` inside the input array.",
+            "keyPoints": [
+                  "Unchecked `strs[0]` access on empty array",
+                  "Index out of bounds on short strings",
+                  "Missing early return on empty prefix `\"\"`"
+            ]
       },
       {
-        "id": "q9",
-        "category": "Trade-off & Strategy Comparison",
-        "question": "9. Which approach is fastest?",
-        "whatInterviewerChecks": "Comparing Extra Array vs Reverse Algorithm vs Cyclic Replacement.",
-        "bestReplyScript": "The best approach depends on the constraints.\n\nApproach | Time | Space\nExtra Array | O(n) | O(n)\nReverse Algorithm | O(n) | O(1)\nCyclic Replacement | O(n) | O(1)\n\nFor interviews and production, the Reverse Algorithm is usually preferred because it is simple, efficient, and uses constant extra space.",
-        "keyPoints": [
-          "Reverse Algorithm: O(n) time, O(1) space, cleanest implementation",
-          "Cyclic Replacement: O(n) time, O(1) space, complex pointer math",
-          "Extra Array: O(n) time, O(n) space, simplest code"
-        ]
+            "id": "q9",
+            "category": "Unicode Character Support",
+            "question": "9. How would you handle Unicode strings?",
+            "whatInterviewerChecks": "Native string slice/comparison for Unicode graphemes.",
+            "bestReplyScript": "The algorithm remains the same.\n\nAs long as the programming language supports Unicode-aware string operations (e.g. Python handles UTF-8 natively), character comparisons work correctly.\n\nIf working with multi-byte grapheme clusters or combined characters, use language string normalization libraries to avoid splitting combined codepoints.",
+            "keyPoints": [
+                  "Native language Unicode string slicing",
+                  "Grapheme cluster normalization for combined codepoints",
+                  "No algorithmic logic change needed"
+            ]
       },
       {
-        "id": "q10",
-        "category": "Test Suite Design",
-        "question": "10. How would you test this?",
-        "whatInterviewerChecks": "Designing structured test cases.",
-        "bestReplyScript": "I would create test cases for different scenarios.\n\nInput | k | Expected Output\n[1,2,3,4,5,6,7] | 3 | [5,6,7,1,2,3,4]\n[1,2] | 1 | [2,1]\n[1] | 5 | [1]\n[] | 2 | []\n[1,2,3] | 0 | [1,2,3]\n[1,2,3] | 3 | [1,2,3]\n\nTesting different values of k ensures correctness.",
-        "keyPoints": [
-          "Standard rotation (k < n)",
-          "k = 0 and k = n boundary cases",
-          "k > n large step cases",
-          "Single and empty arrays"
-        ]
+            "id": "q10",
+            "category": "Case-Insensitive Variant Strategy",
+            "question": "10. How would your solution change if comparisons were case-insensitive?",
+            "whatInterviewerChecks": "Converting to lowercase before comparing.",
+            "bestReplyScript": "Before comparing strings, I would convert them to a uniform case (e.g. lowercase):\n\nExample: [\"Flower\", \"flow\", \"FLIGHT\"] -> [\"flower\", \"flow\", \"flight\"].\n\nThen apply the same horizontal scanning algorithm to find the lowercase prefix \"fl\". If original casing must be preserved, slice from `strs[0][:len(prefix)]`.",
+            "keyPoints": [
+                  "Normalize strings using `s.lower()`",
+                  "Apply horizontal scanning algorithm",
+                  "Slice original casing using `strs[0][:len(prefix)]`"
+            ]
       },
       {
-        "id": "q11",
-        "category": "Candidate Pitfalls & Mistakes",
-        "question": "11. What mistakes do candidates make?",
-        "whatInterviewerChecks": "Identifying common execution errors.",
-        "bestReplyScript": "Some common mistakes include:\n• Forgetting to calculate k % n.\n• Using extra memory when an in-place solution is required.\n• Reversing the wrong portions of the array.\n• Failing to handle empty arrays.\n• Incorrect index calculations.\n• Forgetting that k = n means no rotation.\n\nThe most common mistake is not applying modulo, which leads to incorrect results or IndexError when k is larger than the array size.",
-        "keyPoints": [
-          "Omitting k = k % n modulo normalization",
-          "Reversing incorrect subarray index bounds",
-          "Allocating O(n) memory when O(1) is demanded"
-        ]
+            "id": "q11",
+            "category": "Horizontal vs Vertical Scanning Comparison Matrix",
+            "question": "11. Compare horizontal scanning and vertical scanning.",
+            "whatInterviewerChecks": "Horizontal string-by-string vs Vertical column-by-column.",
+            "bestReplyScript": "Comparison:\n- Horizontal Scanning: Compares full prefix candidate against string 1, then string 2, etc. Time O(N * M), Space O(1). Easy to explain.\n- Vertical Scanning: Compares character at index 0 across all strings, then index 1 across all strings. Time O(N * M), Space O(1). Slightly faster when a mismatch occurs early in a later string.\n\nBoth have the same asymptotic worst-case complexity, but vertical scanning stops early on column mismatches.",
+            "keyPoints": [
+                  "Horizontal: string-by-string prefix shortening",
+                  "Vertical: column-by-column character comparison across strings",
+                  "Vertical stops earlier on column mismatch"
+            ]
       },
       {
-        "id": "q12",
-        "category": "Modulo Mathematics Mechanics",
-        "question": "12. How does modulo help?",
-        "whatInterviewerChecks": "Explaining equivalence classes in circular array indexing.",
-        "bestReplyScript": "Modulo converts large rotation values into the equivalent smaller rotation.\n\nExample:\nArray Size = 7, k = 17\n17 % 7 = 3\n\nRotating 17 times gives the same result as rotating 3 times.\n\nUsing modulo avoids unnecessary work and simplifies the algorithm.",
-        "keyPoints": [
-          "Periodic equivalence: rotation k == k + c*n for integer c",
-          "Reduces total pointer operations to minimum required steps",
-          "Guarantees k < n bound"
-        ]
+            "id": "q12",
+            "category": "Real-World Applications",
+            "question": "12. Where are longest common prefix algorithms used in practice?",
+            "whatInterviewerChecks": "Autocomplete, IP routing tables, file paths.",
+            "bestReplyScript": "Longest common prefix algorithms are used in:\n- Search Engine Autocomplete & Typeahead suggestions.\n- Network IP Routing (Longest Prefix Match - LPM in router forwarding tables).\n- File System Path Resolution (finding common parent directories).\n- Git & Version Control Systems (commit hash prefix resolution).\n- DNA Sequence Alignment in Bioinformatics.",
+            "keyPoints": [
+                  "Network IP Longest Prefix Matching (LPM)",
+                  "Search Engine Autocomplete & typeahead",
+                  "File System path parent directory matching"
+            ]
       },
       {
-        "id": "q13",
-        "category": "Data Structure Adaptation (Linked List)",
-        "question": "13. Can you rotate a linked list?",
-        "whatInterviewerChecks": "Adapting array rotation logic to singly linked lists.",
-        "bestReplyScript": "Yes.\n\nFor a linked list:\n1. Find its length.\n2. Compute k % length.\n3. Locate the new tail (at length - k position).\n4. Connect the last node to the original head to form a temporary circle.\n5. Break the circle at the new tail.\n\nThis rotates the linked list in:\n• Time: O(n)\n• Space: O(1)",
-        "keyPoints": [
-          "1. Count length N and find old tail",
-          "2. Make circular list: old_tail.next = head",
-          "3. Traverse N - (k % N) steps to new tail",
-          "4. Break cycle: new_head = new_tail.next, new_tail.next = None"
-        ]
+            "id": "q13",
+            "category": "Memory Optimization Strategies",
+            "question": "13. How would you optimize memory usage?",
+            "whatInterviewerChecks": "Avoiding string slice copy allocations.",
+            "bestReplyScript": "The horizontal scanning approach already uses O(1) extra space.\n\nTo avoid unnecessary string slice copy allocations in languages like Java/C++:\n- Maintain a `prefix_len` integer instead of creating new string slices `prefix = prefix[:-1]`.\n- Compare characters via `strs[i][j] == strs[0][j]` up to `prefix_len`.\n\nThis keeps auxiliary memory strictly O(1) with zero garbage collection allocations.",
+            "keyPoints": [
+                  "Track `prefix_len` integer instead of creating substring slices",
+                  "Zero memory allocations / zero GC churn",
+                  "Strictly O(1) auxiliary space"
+            ]
       },
       {
-        "id": "q14",
-        "category": "Real-world Engineering Applications",
-        "question": "14. Where is array rotation used?",
-        "whatInterviewerChecks": "Identifying system-level applications of circular array rotation.",
-        "bestReplyScript": "Array rotation has many practical applications, including:\n• Circular buffers in stream processing.\n• CPU Round-Robin scheduling algorithms.\n• Load balancing ring buffers.\n• Image and matrix transformations.\n• Cryptography & bitwise barrel shifters.\n• Ring queues in low-level drivers.\n• Operating systems process management.\n\nThe concept of cyclic movement is common in many software systems.",
-        "keyPoints": [
-          "OS Round-Robin process scheduling",
-          "Circular Ring Buffers for audio/video streaming",
-          "Hardware barrel shifters in ALU chips",
-          "Load balancer round-robin target servers"
-        ]
+            "id": "q14",
+            "category": "Matching Strings Retrieval Extension",
+            "question": "14. How would you return all strings sharing the longest prefix?",
+            "whatInterviewerChecks": "Filtering array by `s.startswith(longest_prefix)`.",
+            "bestReplyScript": "After finding the longest common prefix:\n1. Iterate through the original list of strings.\n2. Filter strings where `s.startswith(longest_prefix)`.\n3. Return both the common prefix and the matching list of strings.\n\nThis requires one additional linear pass through the array.",
+            "keyPoints": [
+                  "Find longest prefix first",
+                  "Filter strings with `s.startswith(prefix)` in 2nd pass",
+                  "Returns prefix and matching string array"
+            ]
       },
       {
-        "id": "q15",
-        "category": "Production Engineering Decision",
-        "question": "15. Which solution would you choose in production?",
-        "whatInterviewerChecks": "Balancing code readability vs memory optimization in production.",
-        "bestReplyScript": "It depends on the requirements.\n\n• If memory efficiency is important, I would use the Reverse Algorithm because it runs in O(n) time with O(1) extra space.\n• If readability is the priority and extra memory is acceptable, I might use the extra array / slice approach since it is easier to understand and maintain.\n\nIn most production environments, I would choose the Reverse Algorithm because it provides the best balance of performance and memory usage.",
-        "keyPoints": [
-          "Production choice: Reverse Algorithm (Optimal O(1) RAM)",
-          "Pythonic shortcut: `nums[:] = nums[-k:] + nums[:-k]` (Uses O(n) RAM, clean for small arrays)",
-          "Defensive validation of inputs in enterprise APIs"
-        ]
+            "id": "q15",
+            "category": "Production Implementation Choice Rationale",
+            "question": "15. Which approach would you recommend in a production system and why?",
+            "whatInterviewerChecks": "Production choice rationale.",
+            "bestReplyScript": "It depends on the system workload:\n- Horizontal / Vertical Scanning: Best for one-off prefix computation in web APIs because it is simple, zero-dependency, and O(1) space.\n- Trie (Prefix Tree): Best for high-throughput, persistent autocomplete services (e.g. search engine typeahead) where dictionary is queried repeatedly.\n- Sorting: Useful when data is already stored pre-sorted in B-Tree database indexes.\n\nFor a standard single query API, I recommend Vertical/Horizontal scanning for simplicity and maintainability.",
+            "keyPoints": [
+                  "One-off API query: Horizontal / Vertical Scanning (O(1) space, simple)",
+                  "Persistent Autocomplete service: Trie data structure",
+                  "Pre-indexed data: Sorting / B-Tree lookup"
+            ]
       }
-    ],
+],
     "mistakes": [
       {
             "id": "m1",
