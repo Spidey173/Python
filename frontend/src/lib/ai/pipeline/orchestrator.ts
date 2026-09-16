@@ -13,6 +13,7 @@ import {
   ResponseStyle,
   ErrorAnalysisResult,
   CompressedMemory,
+  QuestionType,
 } from '../types';
 import { detectIntent } from '../intent/detector';
 import { tryResolveLocalCapability } from '../router/capability-router';
@@ -59,6 +60,7 @@ export interface CognitivePipelineOutput {
   confidence: number;
   intent: StudentIntent;
   subIntent?: string;
+  questionType: QuestionType;
   tier: HelpTier;
   role: TeachingRole;
   socratic_hint: string;
@@ -139,6 +141,7 @@ export async function runCognitivePipeline(
         confidence: 0.99,
         intent: detected.intent,
         subIntent: detected.subIntent,
+        questionType: plan.questionType,
         tier: dummyState.hintLevel,
         role: 'explainer',
         socratic_hint: 'Standard Python documentation & algorithmic foundation.',
@@ -206,7 +209,9 @@ export async function runCognitivePipeline(
     errorAnalysis,
     ast,
     detected.flags.askingForFullCode,
-    normalizedMessage
+    normalizedMessage,
+    Boolean(rawError || state.lastBug),
+    detected.flags.isGreeting
   );
 
   // 12. Strict Zero-Pollution Cache Policy Guard
@@ -234,6 +239,7 @@ export async function runCognitivePipeline(
         confidence: 0.98,
         intent: detected.intent,
         subIntent: detected.subIntent,
+        questionType: responsePlan.questionType,
         tier: teachingPlan.helpLevel,
         role: responsePlan.role,
         socratic_hint: knowledge.targetHint,
@@ -306,6 +312,7 @@ export async function runCognitivePipeline(
     confidence: validated.confidence,
     intent: detected.intent,
     subIntent: detected.subIntent,
+    questionType: responsePlan.questionType,
     tier: teachingPlan.helpLevel,
     role: responsePlan.role,
     socratic_hint: knowledge.targetHint,

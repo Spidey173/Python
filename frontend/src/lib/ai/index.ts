@@ -1,6 +1,7 @@
 // State-First AI Cognitive Engine - Public Exports
 export * from './types';
 export * from './intent/detector';
+export * from './intent/question-classifier';
 export * from './router/capability-router';
 export * from './ast/summarizer';
 export * from './ast/code-diff';

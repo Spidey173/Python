@@ -278,6 +278,7 @@ export async function POST(req: NextRequest) {
       socratic_hint: output.socratic_hint,
       confidence: output.confidence,
       intent: output.intent,
+      question_type: output.questionType,
       tier: output.tier,
       role: output.role,
       astSummary: output.astSummary,

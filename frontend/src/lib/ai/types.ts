@@ -17,6 +17,17 @@ export type LearningSubIntent =
   | 'pattern'
   | 'walkthrough';
 
+export type QuestionType =
+  | 'EXPLAIN_PROBLEM'
+  | 'EXPLAIN_CODE'
+  | 'STUCK'
+  | 'WHY_ERROR'
+  | 'SHOW_CODE'
+  | 'GREETING'
+  | 'COMPLEXITY'
+  | 'REVIEW'
+  | 'GENERAL';
+
 export type ErrorType =
   | 'syntax_error'
   | 'runtime_error'
@@ -92,6 +103,7 @@ export interface CompressedMemory {
 }
 
 export interface ResponsePlan {
+  questionType: QuestionType;
   goal: string;
   teachingGoal: string;
   role: TeachingRole;
