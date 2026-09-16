@@ -314,6 +314,14 @@ export const MentorChatPanel: React.FC<MentorChatPanelProps> = ({
           >
             Show another way
           </button>
+          <button
+            type="button"
+            onClick={() => onSendCustomPrompt("Can you check my code for bugs or edge-case traps?")}
+            disabled={isThinking}
+            className="px-2.5 py-1 rounded-full border border-white/10 bg-[#161B22]/70 hover:bg-[#21262D] hover:border-[#58A6FF]/30 text-xs text-[#C9D1D9] hover:text-white transition-all shrink-0 disabled:opacity-40 cursor-pointer"
+          >
+            Debug my code
+          </button>
         </div>
       </div>
 

@@ -220,13 +220,42 @@ export const api = {
     });
   },
 
-  async chatWithTutor(message: string, code?: string, challengeId?: number, history: Array<{ role: string; content: string }> = []): Promise<{ reply: string; socratic_hint?: string }> {
+  async chatWithTutor(
+    message: string,
+    code?: string,
+    challengeId?: number,
+    history: Array<{ role: string; content: string }> = [],
+    stateMeta?: {
+      challengeTitle?: string;
+      attemptCount?: number;
+      hintTier?: number;
+      lastBug?: string | null;
+      isSolved?: boolean;
+    }
+  ): Promise<{
+    reply: string;
+    socratic_hint?: string;
+    confidence?: number;
+    intent?: string;
+    tier?: number;
+    role?: string;
+  }> {
     // 1. Direct call to the Next.js Serverless AI Tutor route
     try {
       const res = await fetch('/api/ai/tutor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),
+        body: JSON.stringify({
+          message,
+          code,
+          challenge_id: challengeId,
+          challenge_title: stateMeta?.challengeTitle,
+          chat_history: history,
+          attempt_count: stateMeta?.attemptCount,
+          hint_tier: stateMeta?.hintTier,
+          last_bug: stateMeta?.lastBug,
+          is_solved: stateMeta?.isSolved,
+        }),
       });
       if (res.ok) {
         const data = await res.json();

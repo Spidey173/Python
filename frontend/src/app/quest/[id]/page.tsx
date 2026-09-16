@@ -81,6 +81,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [isSolutionUnlocked, setIsSolutionUnlocked] = useState<boolean>(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState<boolean>(false);
   const [lastExecutionRuntime, setLastExecutionRuntime] = useState<number>(24);
+  const [attemptCount, setAttemptCount] = useState<number>(1);
+  const [lastBugNotice, setLastBugNotice] = useState<string | null>(null);
 
   // Execution & Terminal State
   const [isRunning, setIsRunning] = useState(false);
@@ -355,7 +357,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         role: m.sender === 'mentor' ? 'assistant' : 'user',
         content: m.fullText || m.text,
       }));
-      const tutorRes = await api.chatWithTutor(prompt, code, problem.id, history);
+      const tutorRes = await api.chatWithTutor(prompt, code, problem.id, history, {
+        challengeTitle: problem.title,
+        attemptCount,
+        hintTier,
+        lastBug: lastBugNotice,
+        isSolved: solvedIds.includes(problem.id) || isSolutionUnlocked,
+      });
       if (tutorRes?.reply) {
         const cleanReply = tutorRes.reply
           .replace(/🐍\s*\**Byte\s*says:\**/gi, '')
@@ -384,12 +392,18 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
   const handleAskMentorAboutError = (command: string, errorText: string) => {
     setActiveTab('mentor');
-    const prompt = `I ran into an error in the terminal while running \`${command}\`:\n\`\`\`\n${errorText.trim()}\n\`\`\`\nCan you explain what caused this error and give me a helpful hint to resolve it?`;
+    const cleanErr = errorText.trim().slice(0, 200);
+    setLastBugNotice(cleanErr);
+    setAttemptCount((prev) => prev + 1);
+    const prompt = `I ran into an error in the terminal while running \`${command}\`:\n\`\`\`\n${cleanErr}\n\`\`\`\nCan you explain what caused this error and give me a helpful hint to resolve it?`;
     handleSendCustomPrompt(prompt);
   };
 
   const handleAskMentorAboutTestFailure = (caseNum: number, input: string, expected: string, actual: string) => {
     setActiveTab('mentor');
+    const desc = `Test case ${caseNum} failed (expected ${expected}, got ${actual})`;
+    setLastBugNotice(desc);
+    setAttemptCount((prev) => prev + 1);
     const prompt = `Test Case ${caseNum} failed on my code:\nInput: \`${input}\`\nExpected: \`${expected}\`\nMy Output: \`${actual}\`\n\nCould you give me a hint on why my logic produced this output and what edge case or condition I should check?`;
     handleSendCustomPrompt(prompt);
   };
@@ -861,6 +875,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           'celebrating'
         );
       } else {
+        setAttemptCount((prev) => prev + 1);
+        setLastBugNotice('Some test cases failed on submission.');
         soundFX.playFailureThud();
         streamMentorText(
           `Some test cases failed. Check the test output below to see which inputs didn't match.`,
