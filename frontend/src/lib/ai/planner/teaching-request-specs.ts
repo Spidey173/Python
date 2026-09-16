@@ -12,38 +12,40 @@ export function getTeachingRequestSpec(
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 65 : depth === 'normal' ? 110 : 200,
+        maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 80 : depth === 'normal' ? 130 : 220,
         maxExamples: 1,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `In simple words:
-[1-2 sentences]
+        outputTemplate: `[Show a tiny concrete example first:]
 
-Input:
-[one line]
+\`\`\`
+Input: [real example value]
+       ↓
+[1-2 steps showing what happens]
+       ↓
+Output: [real example result]
+\`\`\`
 
-Output:
-[one line]
-
-Example:
-[one tiny example]`,
+In simple words: [1 sentence saying what the problem asks]`,
       };
+      break;
 
     case TeachingRequest.GiveHint:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 60 : depth === 'normal' ? 90 : 150,
+        maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 70 : depth === 'normal' ? 100 : 160,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: true,
         outputTemplate: `You're close.
 
-Hint:
-[1-2 sentences pointing to the core pattern]
+[Draw a tiny picture or trace showing the core pattern:]
+\`\`\`
+[2-3 lines showing the key insight visually]
+\`\`\`
 
-Think about:
-[1 small question to spark their thinking]`,
+[1 sentence nudge pointing them to the next step]`,
       };
       break;
 
@@ -51,18 +53,19 @@ Think about:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 45 : depth === 'short' ? 80 : depth === 'normal' ? 120 : 180,
+        maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 200,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `The main issue is:
-[1 sentence naming the single biggest mistake]
+        outputTemplate: `Let's trace your code:
 
-Why:
-[1 sentence explaining why this happens]
+\`\`\`
+[Walk through 2-3 steps of execution with actual values]
+[Show the exact step where the state breaks]
+[Arrow or ❌ marking where it goes wrong]
+\`\`\`
 
-Fix:
-[1 sentence directing them what to check]`,
+[1 sentence saying what to fix and WHY]`,
       };
       break;
 
@@ -70,7 +73,7 @@ Fix:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 60 : depth === 'short' ? 120 : depth === 'normal' ? 180 : 300,
+        maxWords: depth === 'tiny' ? 70 : depth === 'short' ? 130 : depth === 'normal' ? 200 : 320,
         maxExamples: 1,
         allowCode: true,
         allowFollowUpQuestion: false,
@@ -78,11 +81,12 @@ Fix:
 [Clean, minimal Python code]
 \`\`\`
 
-How it works:
-* [Step 1]
-* [Step 2]
-* [Step 3]
-* [Step 4]`,
+How it works (trace with real values):
+\`\`\`
+[Step 1: show state after first key operation]
+[Step 2: show state changing]
+[Step 3: show how the answer emerges]
+\`\`\``,
       };
       break;
 
@@ -90,13 +94,16 @@ How it works:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 250,
+        maxWords: depth === 'tiny' ? 60 : depth === 'short' ? 110 : depth === 'normal' ? 170 : 270,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `Line by line:
-Line [X]: [What it does in 1 sentence]
-Line [Y]: [What it does in 1 sentence]`,
+        outputTemplate: `[Explain WHY each line exists, not WHAT it does:]
+
+Line [X]: [Why this line is here — what problem it solves]
+Line [Y]: [Why this step is needed — what would break without it]
+
+[Do NOT explain syntax like "this increments x" or "this is a for loop"]`,
       };
       break;
 
@@ -104,18 +111,19 @@ Line [Y]: [What it does in 1 sentence]`,
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 80 : depth === 'normal' ? 130 : 220,
+        maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 240,
         maxExamples: 1,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `In simple words:
-[1-2 sentences]
+        outputTemplate: `[Start with a concrete example — NOT a definition:]
 
-Everyday analogy:
-[1 sentence analogy]
+\`\`\`
+[Tiny visual showing the concept in action with real values]
+\`\`\`
 
-Rule to remember:
-[1 sentence takeaway]`,
+[Now name the concept in 1 sentence]
+
+Rule to remember: [1 sentence takeaway]`,
       };
       break;
 
@@ -123,15 +131,13 @@ Rule to remember:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 30 : depth === 'short' ? 50 : depth === 'normal' ? 80 : 120,
+        maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 60 : depth === 'normal' ? 90 : 130,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `Time complexity:
-[Big-O and 1 sentence why]
+        outputTemplate: `Time: [Big-O] — [1 sentence WHY, e.g. "because we visit each element once"]
 
-Space complexity:
-[Big-O and 1 sentence why]`,
+Space: [Big-O] — [1 sentence WHY, e.g. "because we store at most N items in the hash map"]`,
       };
       break;
 
@@ -139,18 +145,20 @@ Space complexity:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 45 : depth === 'short' ? 85 : depth === 'normal' ? 130 : 200,
+        maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 220,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `Approach 1:
-[1 sentence]
+        outputTemplate: `\`\`\`
+Approach A: [name]
+[1-line visual showing how it works]
 
-Approach 2:
-[1 sentence]
+Approach B: [name]
+[1-line visual showing how it works]
+\`\`\`
 
-When to use:
-[1 sentence tradeoff]`,
+Use A when: [1 sentence]
+Use B when: [1 sentence]`,
       };
       break;
 
@@ -158,15 +166,13 @@ When to use:
       spec = {
         request,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 75 : depth === 'normal' ? 110 : 160,
+        maxWords: depth === 'tiny' ? 45 : depth === 'short' ? 80 : depth === 'normal' ? 120 : 170,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `What worked well:
-[1 sentence]
+        outputTemplate: `Nice work on: [1 sentence — what they did well and WHY it's good]
 
-One clean improvement:
-[1-2 sentences]`,
+One improvement: [1-2 sentences — what to change and WHY it helps]`,
       };
       break;
 
@@ -178,11 +184,9 @@ One clean improvement:
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: true,
-        outputTemplate: `Interviewer check:
-[1 sentence technical question]
+        outputTemplate: `[1 focused technical question about their approach]
 
-What they are testing:
-[1 sentence]`,
+What this tests: [1 sentence]`,
       };
       break;
 
@@ -191,19 +195,19 @@ What they are testing:
       spec = {
         request: TeachingRequest.General,
         explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 30 : depth === 'short' ? 60 : depth === 'normal' ? 100 : 150,
+        maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 65 : depth === 'normal' ? 110 : 160,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: false,
-        outputTemplate: `Direct answer:
-[2-3 simple sentences]`,
+        outputTemplate: `[2-3 simple sentences answering directly]`,
       };
       break;
   }
 
   if (misconception) {
-    spec.outputTemplate = `Misconception addressed:\n[1 sentence directly clarifying: ${misconception.correction}]\n\n${spec.outputTemplate}`;
+    spec.outputTemplate = `Quick note first: ${misconception.correction}\n\n${spec.outputTemplate}`;
   }
 
   return spec;
 }
+
