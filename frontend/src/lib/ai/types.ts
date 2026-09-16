@@ -171,6 +171,49 @@ export interface CompressedMemory {
   formattedText: string;
 }
 
+export type ResponseKind =
+  | 'Concept'
+  | 'Hint'
+  | 'Debug'
+  | 'Walkthrough'
+  | 'FullSolution'
+  | 'Review'
+  | 'Interview';
+
+export interface AnswerPermissions {
+  readonly includeCode: boolean;
+  readonly revealSolution: boolean;
+}
+
+export interface Presentation {
+  readonly template: TeachingRequest;
+  readonly depth: ExplanationDepth;
+  readonly maxWords: number;
+  readonly includeDiagram: boolean;
+  readonly askFollowUp: boolean;
+  readonly outputTemplate: string;
+}
+
+export interface AnswerContract {
+  readonly responseKind: ResponseKind;
+  readonly permissions: AnswerPermissions;
+  readonly presentation: Presentation;
+  readonly teachingMode: TeachingMode;
+  readonly learningGoal: LearningGoal;
+  readonly confidence: ConfidenceLevel;
+  readonly role: TeachingRole;
+  readonly questionType: QuestionType;
+  // Conveniences mirrored directly from permissions & presentation
+  readonly includeCode: boolean;
+  readonly revealSolution: boolean;
+  readonly includeDiagram: boolean;
+  readonly askFollowUp: boolean;
+  readonly depth: ExplanationDepth;
+  readonly maxWords: number;
+  readonly outputTemplate: string;
+  readonly teachingRequest: TeachingRequest;
+}
+
 export interface ResponsePlan {
   teachingRequest: TeachingRequest;
   requestSpec: TeachingRequestSpec;
@@ -179,6 +222,7 @@ export interface ResponsePlan {
   learningGoal: LearningGoal;
   teachingMode: TeachingMode;
   confidenceLevel: ConfidenceLevel;
+  contract: AnswerContract;
   misconception?: Misconception | null;
   patternStep?: PatternStep | null;
   nextBestStep?: NextBestStep | null;

@@ -175,7 +175,7 @@ export function selectTeachingMode(
   return 'Teacher';
 }
 
-export function getTeachingModeDirective(mode: TeachingMode, confidence: ConfidenceLevel): string {
+export function getTeachingModeDirective(mode: TeachingMode, confidence: ConfidenceLevel = 'medium'): string {
   let base = '';
   switch (mode) {
     case 'Teacher':
@@ -381,7 +381,7 @@ export function resolvePatternStep(topicOrTitle: string): PatternStep {
 export function resolveNextBestStep(
   topicOrTitle: string,
   isSolved: boolean,
-  confidence: ConfidenceLevel
+  confidence: ConfidenceLevel = 'medium'
 ): NextBestStep {
   const pattern = resolvePatternStep(topicOrTitle);
 

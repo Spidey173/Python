@@ -1,7 +1,8 @@
-// Main Cognitive Pipeline Orchestrator (Production ChatGPT / Claude Grade)
-// Orchestrates: Normalize -> Weighted Intent -> Capability Router -> State -> Conditional Memory & AST -> Error Analyzer
-//               -> Code Diff -> Knowledge -> Teaching Planner -> Style Engine -> Response Planner -> Modular Prompt
-//               -> Workload Provider Router -> Validator -> Natural Language Polisher -> Stream / Output
+// Main Cognitive Pipeline Orchestrator
+// Architectural Control Flow:
+// Intent Detection -> AnswerContract Resolver (Single Source of Truth, Object.freeze)
+//                  -> Declarative Planner (Object.freeze)
+//                  -> Prompt Builder (Pure data) -> LLM -> Format Validator (Formatting only)
 
 import {
   ConversationState,
@@ -25,9 +26,10 @@ import { analyzeError } from '../debugging/error-analyzer';
 import { getOrCreateConversationState, recordIntent } from '../state/conversation-state';
 import { compressMemory } from '../memory/memory-compressor';
 import { retrieveChallengeKnowledge } from '../retrieval/knowledge-retriever';
-import { createTeachingPlan } from '../planner/teaching-planner';
 import { determineResponseStyle } from '../style/response-style';
+import { resolveAnswerContract } from '../planner/contract-resolver';
 import { createResponsePlan } from '../planner/response-planner';
+import { detectMisconception } from '../pedagogy/pedagogy';
 import { buildSystemPrompt } from '../prompt/builder';
 import { validateResponse } from '../validator/response-validator';
 import { polishNaturalLanguage } from '../polisher/natural-language-rewriter';
@@ -116,34 +118,23 @@ export async function runCognitivePipeline(
     llmInvoker,
   } = input;
 
-  const verbosity: ExplanationDepth =
-    stateOverrides?.verbosity || inputVerbosity || 'short';
-
   // 1. Input Normalizer
   const normalizedMessage = message.trim();
 
-  // 2. Weighted Scoring Intent Detection (<1ms)
+  // 2. Weighted Intent Detection (<1ms)
   const detected = detectIntent(normalizedMessage, code);
 
-  // HARD OVERRIDE FOR SHOW_CODE / SOLUTION REQUESTS
-  // When a student explicitly asks for code, nothing later in the pipeline may override it.
-  const isShowCodeRequest =
+  // 3. Conditional Stage: Fast Local Capability Router (<1ms, 0 LLM tokens)
+  // Only for general language questions when the student is not asking for full challenge code
+  const isAskingCode =
     detected.flags.askingForFullCode ||
     detected.subIntent === 'walkthrough' ||
-    /\b(give (me )?(the )?(code|solution)|provide (me )?(the )?(code|solution)|show (me )?(the )?(code|solution)|give code|provide code|show code|write (the )?code|full code|just code|code please)\b/i.test(
+    /\b(give (me )?(the )?(code|solution)|provide (me )?(the )?(code|solution)|show (me )?(the )?(code|solution)|give code|provide code|show code|full code|just code|code please)\b/i.test(
       normalizedMessage
     );
 
-  if (isShowCodeRequest) {
-    detected.intent = 'learning';
-    detected.subIntent = 'walkthrough';
-    detected.flags.askingForFullCode = true;
-  }
-
-  // 3. Conditional Stage: Capability Router (Only check if message is asking a factual question)
-  // NEVER resolve locally if user is asking for challenge code!
   if (
-    !isShowCodeRequest &&
+    !isAskingCode &&
     (detected.intent === 'learning' ||
       detected.intent === 'conversation' ||
       /^(what|how|difference)/i.test(normalizedMessage))
@@ -153,27 +144,25 @@ export async function runCognitivePipeline(
       const dummyState = getOrCreateConversationState(challengeId, challengeTitle, stateOverrides);
       const memory = compressMemory(dummyState, EMPTY_AST, chatHistory);
       const style = determineResponseStyle(dummyState, detected.intent, normalizedMessage);
-      const plan = createResponsePlan(
-        detected.intent,
-        detected.subIntent,
-        dummyState.hintLevel,
-        style,
-        EMPTY_ERROR_ANALYSIS,
-        EMPTY_AST,
-        false,
-        normalizedMessage,
-        false,
-        false,
-        inputVerbosity || stateOverrides?.verbosity,
-        challengeTitle,
+
+      const contract = resolveAnswerContract({
+        message: normalizedMessage,
+        intent: detected.intent,
+        subIntent: detected.subIntent,
         code,
-        dummyState.isSolved
-      );
+        explicitVerbosity: inputVerbosity || stateOverrides?.verbosity,
+        challengeTitle,
+      });
+
+      const plan = createResponsePlan(contract, {
+        challengeTitle,
+        userMessage: normalizedMessage,
+      });
 
       console.log('🤖 [AI Pipeline Version: 2026-09-16]', {
         message: normalizedMessage,
-        requestType: plan.teachingRequest,
-        allowCode: plan.includeCode,
+        responseKind: contract.responseKind,
+        allowCode: contract.permissions.includeCode,
         resolvedLocally: true,
       });
 
@@ -182,11 +171,11 @@ export async function runCognitivePipeline(
         confidence: 0.99,
         intent: detected.intent,
         subIntent: detected.subIntent,
-        teachingRequest: plan.teachingRequest,
-        questionType: plan.questionType,
-        verbosity: plan.explanationDepth,
+        teachingRequest: contract.teachingRequest,
+        questionType: contract.questionType,
+        verbosity: contract.depth,
         tier: dummyState.hintLevel,
-        role: 'explainer',
+        role: contract.role,
         socratic_hint: 'Standard Python documentation & algorithmic foundation.',
         nextStep: plan.nextBestStep?.suggestion,
         astSummary: EMPTY_AST,
@@ -203,7 +192,6 @@ export async function runCognitivePipeline(
   recordIntent(challengeId, detected.intent);
 
   // 5. Conditional Stage: AST Code Analysis & Code Diff
-  // A pure greeting or general chat does not spend cycles analyzing syntax
   const needsCodeAnalysis =
     Boolean(code && code.trim().length > 0) &&
     (detected.intent === 'debugging' ||
@@ -220,8 +208,7 @@ export async function runCognitivePipeline(
   // 6. Memory Compression (60-90 tokens)
   const memory = compressMemory(state, ast, chatHistory);
 
-  // 7. Conditional Stage: Error Analyzer
-  // Only evaluate error details if debugging or if an explicit error is present
+  // 7. Error Analyzer
   const needsErrorAnalysis =
     detected.intent === 'debugging' ||
     detected.flags.hasErrorTrace ||
@@ -231,67 +218,59 @@ export async function runCognitivePipeline(
     ? analyzeError(rawError || state.lastBug || undefined, normalizedMessage, code)
     : EMPTY_ERROR_ANALYSIS;
 
-  // 8. Teaching Planner (Pedagogical tier progression 1..5)
-  const teachingPlan = createTeachingPlan(detected, state);
-
-  // Hard override on teaching plan if asking for code
-  if (isShowCodeRequest) {
-    teachingPlan.helpLevel = 5;
-    teachingPlan.allowCode = true;
-    teachingPlan.allowFullSolution = true;
-    teachingPlan.role = 'tutor';
-    teachingPlan.focusDirective =
-      'The student explicitly requested code. Give the clean Python code, followed by "**How it works**" with 4-6 short bullet points. No essay.';
-  }
+  // 8. Single Source of Truth: AnswerContract Resolver
+  const contract = resolveAnswerContract({
+    message: normalizedMessage,
+    intent: detected.intent,
+    subIntent: detected.subIntent,
+    code,
+    hasActiveBug: Boolean(rawError || state.lastBug),
+    hasErrorTrace: errorAnalysis.errorType !== 'none',
+    isGreeting: detected.flags.isGreeting,
+    askingForFullCode: detected.flags.askingForFullCode,
+    askingForSkeleton: detected.flags.askingForSkeleton,
+    explicitVerbosity: inputVerbosity || stateOverrides?.verbosity,
+    hintLevel: state.hintLevel,
+    isSolved: state.isSolved,
+    challengeTitle,
+  });
 
   // 9. Knowledge Retrieval Layer
+  const helpLevel = (contract.permissions.revealSolution ? 5 : state.hintLevel) as HelpTier;
   const knowledge = retrieveChallengeKnowledge(
     challengeId,
-    teachingPlan.helpLevel,
-    teachingPlan.allowFullSolution
+    helpLevel,
+    contract.permissions.revealSolution
   );
 
   // 10. Response Style Engine (Depth, tone, technical level)
   const responseStyle = determineResponseStyle(state, detected.intent, normalizedMessage);
 
-  // 11. Response Planner (Reasoning blueprint object)
-  const responsePlan = createResponsePlan(
-    detected.intent,
-    detected.subIntent,
-    teachingPlan.helpLevel,
-    responseStyle,
-    errorAnalysis,
-    ast,
-    detected.flags.askingForFullCode,
-    normalizedMessage,
-    Boolean(rawError || state.lastBug),
-    detected.flags.isGreeting,
-    inputVerbosity || stateOverrides?.verbosity,
-    challengeTitle,
-    code,
-    state.isSolved
-  );
+  // 11. Declarative Response Planner (Template and slot selection only)
+  const misconception =
+    errorAnalysis.errorType !== 'none' || Boolean(rawError || state.lastBug) || Boolean(code && code.trim().length > 0)
+      ? detectMisconception(normalizedMessage, code)
+      : null;
 
-  // Hard override on response plan if asking for code
-  if (isShowCodeRequest) {
-    responsePlan.teachingRequest = TeachingRequest.ShowSolution;
-    responsePlan.role = 'tutor';
-    responsePlan.revealSolution = true;
-    responsePlan.includeCode = true;
-    responsePlan.teachingMode = 'Teacher';
-  }
+  const responsePlan = createResponsePlan(contract, {
+    challengeTitle,
+    userMessage: normalizedMessage,
+    isSolved: state.isSolved,
+    misconception,
+  });
 
   console.log('🤖 [AI Pipeline Version: 2026-09-16]', {
     message: normalizedMessage,
-    requestType: responsePlan.teachingRequest,
-    teachingMode: responsePlan.teachingMode,
-    allowCode: responsePlan.includeCode,
-    allowFullSolution: responsePlan.revealSolution,
+    responseKind: contract.responseKind,
+    teachingMode: contract.teachingMode,
+    confidence: contract.confidence,
+    allowCode: contract.permissions.includeCode,
+    revealSolution: contract.permissions.revealSolution,
+    maxWords: contract.presentation.maxWords,
     resolvedLocally: false,
   });
 
   // 12. Strict Zero-Pollution Cache Policy Guard
-  // Never cache if student has custom code, active bugs, repeated attempts, or frustration tone!
   const isEligibleForCache =
     detected.intent === 'learning' &&
     (!code || code.trim().length === 0) &&
@@ -304,7 +283,7 @@ export async function runCognitivePipeline(
     challengeId,
     detected.intent,
     detected.subIntent || '',
-    teachingPlan.helpLevel
+    helpLevel
   );
 
   if (isEligibleForCache) {
@@ -315,11 +294,11 @@ export async function runCognitivePipeline(
         confidence: 0.98,
         intent: detected.intent,
         subIntent: detected.subIntent,
-        teachingRequest: responsePlan.teachingRequest,
-        questionType: responsePlan.questionType,
-        verbosity: responsePlan.explanationDepth,
-        tier: teachingPlan.helpLevel,
-        role: responsePlan.role,
+        teachingRequest: contract.teachingRequest,
+        questionType: contract.questionType,
+        verbosity: contract.depth,
+        tier: helpLevel,
+        role: contract.role,
         socratic_hint: knowledge.targetHint,
         nextStep: responsePlan.nextBestStep?.suggestion,
         astSummary: ast,
@@ -332,7 +311,7 @@ export async function runCognitivePipeline(
     }
   }
 
-  // 13. Modular Section-based Prompt Builder (~300-450 tokens)
+  // 13. Modular Section-based Prompt Builder
   const systemPrompt = buildSystemPrompt({
     state,
     ast,
@@ -364,21 +343,16 @@ export async function runCognitivePipeline(
       knowledge,
       ast,
       attemptCount: state.attemptCount,
-      hintLevel: teachingPlan.helpLevel,
+      hintLevel: helpLevel,
       code,
       lastBug: state.lastBug,
     });
   }
 
-  // 15. Response Validator (Deterministic premature leak guard & confidence scoring)
-  const validated = validateResponse(
-    rawReply,
-    responsePlan,
-    normalizedMessage,
-    teachingPlan.helpLevel
-  );
+  // 15. Format-Only Response Validator (Fixes formatting, never alters meaning)
+  const validated = validateResponse(rawReply, responsePlan, normalizedMessage);
 
-  // 16. Natural Language Polisher (Removes robotic phrases, boilerplate, and smooths transitions)
+  // 16. Natural Language Polisher
   const polishedReply = polishNaturalLanguage(validated.cleanedResponse);
 
   // Cache strictly generic responses
@@ -391,11 +365,11 @@ export async function runCognitivePipeline(
     confidence: validated.confidence,
     intent: detected.intent,
     subIntent: detected.subIntent,
-    teachingRequest: responsePlan.teachingRequest,
-    questionType: responsePlan.questionType,
-    verbosity: responsePlan.explanationDepth,
-    tier: teachingPlan.helpLevel,
-    role: responsePlan.role,
+    teachingRequest: contract.teachingRequest,
+    questionType: contract.questionType,
+    verbosity: contract.depth,
+    tier: helpLevel,
+    role: contract.role,
     socratic_hint: knowledge.targetHint,
     nextStep: responsePlan.nextBestStep?.suggestion,
     astSummary: ast,

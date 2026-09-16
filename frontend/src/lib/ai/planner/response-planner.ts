@@ -1,181 +1,110 @@
+// Purely Declarative Response Planner
+// Converts the frozen AnswerContract into slot templates and metadata.
+// DOES NOT MAKE BEHAVIORAL DECISIONS (All decisions belong to resolveAnswerContract).
+// Freezes the resulting plan via Object.freeze().
+
 import {
+  AnswerContract,
   ConfidenceLevel,
-  ErrorAnalysisResult,
   ExplanationDepth,
-  FactualASTSummary,
-  HelpTier,
-  LearningGoal,
-  LearningSubIntent,
   Misconception,
   NextBestStep,
   PatternStep,
   QuestionType,
   ResponsePlan,
-  ResponseStyle,
-  StudentIntent,
   TeachingMode,
   TeachingRequest,
   TeachingRole,
 } from '../types';
-import { classifyTeachingRequest, classifyQuestionType } from '../intent/question-classifier';
 import { getTeachingRequestSpec } from './teaching-request-specs';
-import {
-  classifyLearningGoal,
-  deriveAdaptiveDepth,
-  detectConfidence,
-  detectMisconception,
-  getTeachingModeDirective,
-  resolveNextBestStep,
-  resolvePatternStep,
-  selectTeachingMode,
-} from '../pedagogy/pedagogy';
+import { resolveNextBestStep, resolvePatternStep } from '../pedagogy/pedagogy';
+
+export interface DeclarativePlannerOptions {
+  challengeTitle?: string;
+  userMessage?: string;
+  isSolved?: boolean;
+  misconception?: Misconception | null;
+}
 
 export function createResponsePlan(
-  intent: StudentIntent,
-  subIntent: LearningSubIntent | undefined,
-  tier: HelpTier,
-  style: ResponseStyle,
-  errorAnalysis: ErrorAnalysisResult,
-  ast: FactualASTSummary,
-  askingForFullCode: boolean = false,
-  userMessage: string = '',
-  hasActiveBug: boolean = false,
-  isGreeting: boolean = false,
-  explicitVerbosity?: ExplanationDepth,
-  challengeTitle: string = '',
-  code: string = '',
-  isSolved: boolean = false
+  contract: AnswerContract,
+  options: DeclarativePlannerOptions = {}
 ): ResponsePlan {
-  // 1. Pedagogical Classifications
-  const learningGoal: LearningGoal = classifyLearningGoal(
-    userMessage,
-    intent,
-    subIntent,
-    askingForFullCode,
-    errorAnalysis.errorType !== 'none' || hasActiveBug
-  );
+  const {
+    challengeTitle = '',
+    userMessage = '',
+    isSolved = false,
+    misconception = null,
+  } = options;
 
-  const teachingMode: TeachingMode = selectTeachingMode(learningGoal, userMessage, intent);
-
-  // Derive adaptive depth from message phrasing if not explicitly pinned
-  const adaptiveDepth: ExplanationDepth = explicitVerbosity || deriveAdaptiveDepth(userMessage);
-
-  // Detect confidence level: low | medium | high
-  const confidenceLevel: ConfidenceLevel = detectConfidence(userMessage);
-
-  // Detect top-5 misconception only if debugging, active bug, or user has code
-  const misconception: Misconception | null =
-    errorAnalysis.errorType !== 'none' || hasActiveBug || Boolean(code && code.trim().length > 0)
-      ? detectMisconception(userMessage, code)
-      : null;
-
-  // 2. Map to deterministic TeachingRequest & QuestionType
-  const teachingRequest: TeachingRequest = classifyTeachingRequest({
-    message: userMessage,
-    intent,
-    subIntent,
-    askingForFullCode,
-    askingForSkeleton: subIntent === 'pattern' || tier === 4,
-    hasErrorTrace: errorAnalysis.errorType !== 'none',
-    isGreeting,
-    hasActiveBug,
-  });
-
-  const questionType: QuestionType = classifyQuestionType({
-    message: userMessage,
-    intent,
-    subIntent,
-    askingForFullCode,
-    askingForSkeleton: subIntent === 'pattern' || tier === 4,
-    hasErrorTrace: errorAnalysis.errorType !== 'none',
-    isGreeting,
-    hasActiveBug,
-  });
-
-  // Pattern step & Next Best Step only needed for algorithm hints/reviews/solved states
+  // Resolve pattern step only for hints or reviews
   const needsPattern =
-    teachingRequest === TeachingRequest.GiveHint ||
-    teachingRequest === TeachingRequest.Review ||
-    subIntent === 'pattern';
+    contract.teachingRequest === TeachingRequest.GiveHint ||
+    contract.teachingRequest === TeachingRequest.Review;
 
   const patternStep: PatternStep = needsPattern
     ? resolvePatternStep(challengeTitle || userMessage)
     : { pattern: 'General', transferClue: '' };
 
   const nextBestStep: NextBestStep =
-    isSolved || teachingRequest === TeachingRequest.Review
-      ? resolveNextBestStep(challengeTitle || patternStep.pattern, isSolved, confidenceLevel)
+    isSolved || contract.teachingRequest === TeachingRequest.Review
+      ? resolveNextBestStep(challengeTitle || patternStep.pattern, isSolved, contract.confidence)
       : { topic: 'Next Step', suggestion: '' };
 
-  // Resolve deterministic slot template and word budget
-  const spec = getTeachingRequestSpec(teachingRequest, adaptiveDepth, misconception);
+  const spec = getTeachingRequestSpec(contract.teachingRequest, contract.depth, misconception);
 
-  // Determine teaching role cleanly
-  let role: TeachingRole = 'tutor';
-  if (teachingRequest === TeachingRequest.Debug) {
-    role = 'debugger';
-  } else if (
-    teachingRequest === TeachingRequest.ExplainProblem ||
-    teachingRequest === TeachingRequest.ExplainCode ||
-    teachingRequest === TeachingRequest.ExplainConcept ||
-    teachingRequest === TeachingRequest.Complexity ||
-    teachingRequest === TeachingRequest.Compare
-  ) {
-    role = 'explainer';
-  } else if (teachingRequest === TeachingRequest.Review) {
-    role = 'reviewer';
-  } else if (teachingRequest === TeachingRequest.Interview) {
-    role = 'interviewer';
-  }
-
-  return {
-    teachingRequest,
+  const plan: ResponsePlan = Object.freeze({
+    contract,
+    teachingRequest: contract.teachingRequest,
     requestSpec: spec,
-    explanationDepth: adaptiveDepth,
-    questionType,
-    learningGoal,
-    teachingMode,
-    confidenceLevel,
+    explanationDepth: contract.depth,
+    questionType: contract.questionType,
+    learningGoal: contract.learningGoal,
+    teachingMode: contract.teachingMode,
+    confidenceLevel: contract.confidence,
     misconception,
     patternStep,
     nextBestStep,
-    goal: `Fill slots for ${teachingRequest}`,
-    teachingGoal: `Fill exact template slots under ${spec.maxWords} words. No extra sections.`,
-    role,
+    goal: `Fill slots for ${contract.teachingRequest}`,
+    teachingGoal: `Fill template under ${contract.maxWords} words.`,
+    role: contract.role,
     responseLength:
-      adaptiveDepth === 'tiny' || adaptiveDepth === 'short'
+      contract.depth === 'tiny' || contract.depth === 'short'
         ? 'short'
-        : adaptiveDepth === 'normal'
+        : contract.depth === 'normal'
         ? 'medium'
         : 'long',
-    revealSolution: spec.allowCode,
-    includeCode: spec.allowCode,
-    askQuestionAtEnd: spec.allowFollowUpQuestion,
-    structure: spec.outputTemplate.split('\n'),
-    confidence: confidenceLevel === 'low' ? 0.85 : confidenceLevel === 'high' ? 0.99 : 0.95,
-  };
+    revealSolution: contract.permissions.revealSolution,
+    includeCode: contract.permissions.includeCode,
+    askQuestionAtEnd: contract.presentation.askFollowUp,
+    structure: contract.outputTemplate.split('\n'),
+    confidence: contract.confidence === 'low' ? 0.85 : contract.confidence === 'high' ? 0.99 : 0.95,
+  });
+
+  return plan;
 }
 
 export function formatPlanDirective(plan: ResponsePlan): string {
-  const spec = plan.requestSpec;
+  const { contract } = plan;
   const lines: string[] = [];
 
-  lines.push(`TEACHING REQUEST: ${spec.request} (Verbosity: ${spec.explanationDepth.toUpperCase()})`);
-  lines.push(`DIRECTIVE: ${getTeachingModeDirective(plan.teachingMode, plan.confidenceLevel)}`);
+  lines.push(`RESPONSE KIND: ${contract.responseKind}`);
+  lines.push(`TEACHING MODE: ${contract.teachingMode} (Tone: ${contract.confidence} confidence)`);
+  lines.push(
+    `PERMISSIONS: includeCode=${contract.permissions.includeCode}, revealSolution=${contract.permissions.revealSolution}`
+  );
+  lines.push(`WORD LIMIT: Under ${contract.maxWords} words.`);
 
   if (
     plan.patternStep &&
     plan.patternStep.transferClue &&
-    (plan.teachingRequest === TeachingRequest.GiveHint || plan.teachingRequest === TeachingRequest.Review)
+    (contract.teachingRequest === TeachingRequest.GiveHint ||
+      contract.teachingRequest === TeachingRequest.Review)
   ) {
     lines.push(`PATTERN INSIGHT: ${plan.patternStep.pattern} — ${plan.patternStep.transferClue}`);
   }
 
-  lines.push(`WORD LIMIT: Under ${spec.maxWords} words.`);
-  lines.push(`FILL-IN TEMPLATE:\n${spec.outputTemplate}`);
-  lines.push('RULES: Fill ONLY the template above. Never refuse. Answer what was asked.');
+  lines.push(`TEMPLATE TO FILL:\n${contract.outputTemplate}`);
 
   return lines.join('\n');
 }
-
-
