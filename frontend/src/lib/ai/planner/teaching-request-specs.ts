@@ -1,9 +1,10 @@
-import { TeachingRequest, ExplanationDepth, TeachingRequestSpec, Misconception } from '../types';
+import { TeachingRequest, ExplanationDepth, TeachingRequestSpec, Misconception, DiagnosticReport } from '../types';
 
 export function getTeachingRequestSpec(
   request: TeachingRequest,
   depth: ExplanationDepth = 'short',
-  misconception?: Misconception | null
+  misconception?: Misconception | null,
+  report?: DiagnosticReport | null
 ): TeachingRequestSpec {
   let spec: TeachingRequestSpec;
 
@@ -52,15 +53,8 @@ That's the main idea behind this problem.`,
       };
       break;
 
-    case TeachingRequest.Debug:
-      spec = {
-        request,
-        explanationDepth: depth,
-        maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 200,
-        maxExamples: 0,
-        allowCode: false,
-        allowFollowUpQuestion: false,
-        outputTemplate: `Let's trace your code:
+    case TeachingRequest.Debug: {
+      let debugTemplate = `Let's trace your code:
 
 \`\`\`
 [Walk through 2-3 steps of execution with actual values]
@@ -68,9 +62,71 @@ That's the main idea behind this problem.`,
 [Arrow or ❌ marking where it goes wrong]
 \`\`\`
 
-[1 sentence saying what to fix and WHY]`,
+[1 sentence saying what to fix and WHY]`;
+
+      if (report?.contradiction?.detected) {
+        const actualVal = report.observations.find((o) => o.kind === 'actual')?.value || '(no output)';
+        const counterNote =
+          report.failureKind === 'RETURN_VALUE'
+            ? ' rather than False (meaning the function returned None)'
+            : '';
+        debugTemplate = `The solution I shared earlier is already complete and passes all tests for this challenge.
+
+Since your test produced ${actualVal}${counterNote}, the code currently running in your editor likely differs from that solution (e.g. unsaved changes, an indentation shift on paste, or a missing return).
+
+Could you paste the exact code currently in your editor? We'll spot the discrepancy immediately instead of guessing.`;
+      } else if (report?.failureKind === 'RETURN_VALUE') {
+        debugTemplate = `Your test result gives us an important clue:
+
+\`\`\`
+Input: ${report.observations.find((o) => o.kind === 'input')?.value || '[input]'}
+Expected: ${report.observations.find((o) => o.kind === 'expected')?.value || 'True'}
+Your Output: (no output)
+\`\`\`
+
+The fact that the output is empty is different from getting False. If the comparison logic were simply incorrect, we would expect False, not (no output).
+
+This usually means:
+1. Function returned None (missing or bypassed return True/False) — Python test harnesses capture the return value; reaching the end without a return yields None.
+2. An unhandled runtime exception occurred before the return statement.
+3. An infinite loop timed out before returning.
+
+[If code is missing or needs checking: "Since I can't inspect your implementation, please paste your current editor code so I can point to the exact line causing this instead of guessing."]`;
+      } else if (report?.failureKind === 'WRONG_VALUE') {
+        debugTemplate = `Let's analyze why this test case produced a different result:
+
+\`\`\`
+Input: ${report.observations.find((o) => o.kind === 'input')?.value || '[input]'}
+Expected: ${report.observations.find((o) => o.kind === 'expected')?.value || '[expected]'}
+Your Output: ${report.observations.find((o) => o.kind === 'actual')?.value || '[actual]'}
+\`\`\`
+
+[Explain the exact comparison or condition where the logic diverged on this input]
+
+[1-2 sentences with the invariant or boundary condition to check]`;
+      } else if (report?.failureKind === 'RUNTIME_EXCEPTION') {
+        debugTemplate = `Your execution encountered an unhandled exception:
+
+\`\`\`
+${report.observations.find((o) => o.kind === 'traceback')?.value || 'Runtime exception'}
+\`\`\`
+
+[Explain what guard condition is needed before accessing this index or key]
+
+[1 sentence pointing to the exact boundary check to add]`;
+      }
+
+      spec = {
+        request,
+        explanationDepth: depth,
+        maxWords: depth === 'tiny' ? 60 : depth === 'short' ? 120 : depth === 'normal' ? 170 : 230,
+        maxExamples: 0,
+        allowCode: false,
+        allowFollowUpQuestion: false,
+        outputTemplate: debugTemplate,
       };
       break;
+    }
 
     case TeachingRequest.ShowSolution:
       spec = {

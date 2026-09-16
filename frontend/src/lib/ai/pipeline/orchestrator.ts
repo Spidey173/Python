@@ -212,10 +212,11 @@ export async function runCognitivePipeline(
   const needsErrorAnalysis =
     detected.intent === 'debugging' ||
     detected.flags.hasErrorTrace ||
-    Boolean(rawError || state.lastBug);
+    Boolean(rawError || state.lastBug) ||
+    /\b(failed|expected|my output|your output|\(no output\)|traceback|error)\b/i.test(normalizedMessage);
 
   const errorAnalysis = needsErrorAnalysis
-    ? analyzeError(rawError || state.lastBug || undefined, normalizedMessage, code)
+    ? analyzeError(rawError || state.lastBug || undefined, normalizedMessage, code, chatHistory)
     : EMPTY_ERROR_ANALYSIS;
 
   // 8. Single Source of Truth: AnswerContract Resolver
@@ -233,6 +234,7 @@ export async function runCognitivePipeline(
     hintLevel: state.hintLevel,
     isSolved: state.isSolved,
     challengeTitle,
+    diagnosticReport: errorAnalysis.report,
   });
 
   // 9. Knowledge Retrieval Layer
@@ -335,18 +337,27 @@ export async function runCognitivePipeline(
     }
   }
 
-  // Fallback to dynamic topic template if LLM is offline or produced empty output
+  // Fallback to evidence-based template or dynamic topic template if LLM is offline or produced empty output
   if (!rawReply || !rawReply.trim()) {
-    const topicKey = detectTopic(knowledge, code);
-    rawReply = renderTopicResponse(topicKey, detected.intent, detected.subIntent, {
-      topicName: topicKey,
-      knowledge,
-      ast,
-      attemptCount: state.attemptCount,
-      hintLevel: helpLevel,
-      code,
-      lastBug: state.lastBug,
-    });
+    if (
+      responsePlan.contract.teachingRequest === TeachingRequest.Debug &&
+      errorAnalysis.report &&
+      errorAnalysis.report.failureKind !== 'UNKNOWN' &&
+      responsePlan.contract.outputTemplate
+    ) {
+      rawReply = responsePlan.contract.outputTemplate;
+    } else {
+      const topicKey = detectTopic(knowledge, code);
+      rawReply = renderTopicResponse(topicKey, detected.intent, detected.subIntent, {
+        topicName: topicKey,
+        knowledge,
+        ast,
+        attemptCount: state.attemptCount,
+        hintLevel: helpLevel,
+        code,
+        lastBug: state.lastBug,
+      });
+    }
   }
 
   // 15. Format-Only Response Validator (Fixes formatting, never alters meaning)

@@ -7,6 +7,7 @@ import {
   AnswerContract,
   AnswerPermissions,
   ConfidenceLevel,
+  DiagnosticReport,
   ExplanationDepth,
   HelpTier,
   LearningGoal,
@@ -44,6 +45,7 @@ export interface ContractResolverInput {
   hintLevel?: HelpTier;
   isSolved?: boolean;
   challengeTitle?: string;
+  diagnosticReport?: DiagnosticReport | null;
 }
 
 // -----------------------------------------------------------------------------
@@ -58,6 +60,7 @@ export function resolveResponseKind(input: ContractResolverInput): ResponseKind 
     hasErrorTrace = false,
     askingForFullCode = false,
     askingForSkeleton = false,
+    diagnosticReport,
   } = input;
 
   const lower = message.trim().toLowerCase();
@@ -71,6 +74,11 @@ export function resolveResponseKind(input: ContractResolverInput): ResponseKind 
 
   if (isExplicitCodeRequest) {
     return 'FullSolution';
+  }
+
+  // If a failure is actively diagnosed, it's a Debug request
+  if (diagnosticReport && diagnosticReport.failureKind !== 'UNKNOWN') {
+    return 'Debug';
   }
 
   if (
@@ -238,9 +246,10 @@ export function resolvePresentation(
   kind: ResponseKind,
   teachingRequest: TeachingRequest,
   depth: ExplanationDepth,
-  misconception: Misconception | null
+  misconception: Misconception | null,
+  report?: DiagnosticReport | null
 ): Presentation {
-  const spec = getTeachingRequestSpec(teachingRequest, depth, misconception);
+  const spec = getTeachingRequestSpec(teachingRequest, depth, misconception, report);
 
   return Object.freeze({
     template: teachingRequest,
@@ -255,7 +264,7 @@ export function resolvePresentation(
 // 5. Main Contract Assembler (Single Source of Truth)
 // -----------------------------------------------------------------------------
 export function resolveAnswerContract(input: ContractResolverInput): AnswerContract {
-  const { message, code = '', hasActiveBug = false, hasErrorTrace = false, explicitVerbosity } = input;
+  const { message, code = '', hasActiveBug = false, hasErrorTrace = false, explicitVerbosity, diagnosticReport } = input;
   const trimmed = message.trim();
 
   // 1. Kind
@@ -278,7 +287,13 @@ export function resolveAnswerContract(input: ContractResolverInput): AnswerContr
       ? detectMisconception(trimmed, code)
       : null;
 
-  const presentation = resolvePresentation(responseKind, teachingRequest, depth, misconception);
+  const presentation = resolvePresentation(
+    responseKind,
+    teachingRequest,
+    depth,
+    misconception,
+    diagnosticReport
+  );
 
   // 5. Assemble & Freeze
   return Object.freeze({

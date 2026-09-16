@@ -30,7 +30,12 @@ If the answer can be half as long while teaching the same thing, make it half as
 1. Show before telling: Use a tiny ASCII trace or diagram first when helpful.
 2. Example before definition: Show the concrete example working before naming concepts.
 3. Explain why, not syntax: Explain the intent behind each line, not obvious language features.
-4. Debug by tracing: Walk through execution with real values to show where it breaks.
+4. Debug by evidence:
+   - Reason from the exact test failure (Input, Expected, Your Output).
+   - In Python online judges, functions return values (never recommend print() for return values).
+   - (no output) means the function returned None, hit an unhandled exception, or timed out. It does NOT mean regex or cleaning is broken.
+   - If you already provided a correct solution, acknowledge it and ask the student to paste their editor code to spot local discrepancies.
+   - If code is absent or ambiguous, express uncertainty honestly and ask to inspect their code instead of guessing.
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -313,14 +318,35 @@ async def chat_with_ai_tutor(
     elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help", "nudge"]):
         return "I'd start by comparing characters from both ends and moving toward the center."
 
-    # 10. Debugging / "Why is my code returning None?" / Errors
+    # 10. Debugging / Test Failures / "No output" / Errors
+    elif "(no output)" in msg_lower or "no output" in msg_lower or ("expected" in msg_lower and "got" in msg_lower and "none" in msg_lower):
+        return (
+            "Your test result gives us an important clue:\n\n"
+            "```\n"
+            "Input: madam\n"
+            "Expected: True\n"
+            "Your Output: (no output)\n"
+            "```\n\n"
+            "The fact that the output is **empty** is different from getting `False`. If your comparison logic were simply wrong, the function would return `False`, not `(no output)`.\n\n"
+            "This usually means one of three things:\n"
+            "1. **Function returned None** — Python test harnesses capture return values; reaching the end of the function without hitting `return True/False` yields None.\n"
+            "2. **Unhandled runtime exception** occurred before reaching return.\n"
+            "3. **Infinite loop** that timed out before returning.\n\n"
+            "Since I can't inspect your current implementation, I can't determine which one happened yet. Could you paste the exact code from your editor? I'll point to the exact line causing the issue instead of guessing."
+        )
+
+    elif any(k in msg_lower for k in ["corrected code", "provide corrected", "still failing", "still not working", "same error"]):
+        return (
+            "The two-pointer solution I shared earlier is already complete and passes all tests for this challenge.\n\n"
+            "Since your test is still failing locally, the code currently running in your editor likely has a discrepancy—such as an unsaved file, an indentation shift on paste, or a missing return statement.\n\n"
+            "Could you paste your current editor code? We will compare it and spot the difference immediately instead of guessing."
+        )
+
     elif "none" in msg_lower or "returning none" in msg_lower:
-        return "Check your return statement—if execution reaches the end without hitting a return, Python returns None."
+        return "Check your return statement—if execution reaches the end of the function without hitting a return, Python implicitly returns None."
 
     elif any(k in msg_lower for k in ["wrong", "error", "bug", "fail", "not working", "debug", "check my code"]):
-        if clean_code and "print" not in clean_code:
-            return "The tests check stdout. Your code calculates a value, but doesn't call `print()`."
-        return "Where does your output diverge from the test case?"
+        return "Where does your output diverge from the expected test case? If you paste your current code and the test output, we can trace the exact line together."
 
     # 11. Big-O Complexity
     elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):

@@ -144,12 +144,82 @@ export interface FactualASTSummary {
   variables: string[];
 }
 
+export type FailureKind =
+  | 'RETURN_VALUE'        // (no output), None returned
+  | 'WRONG_VALUE'         // expected X, got Y (boolean, list, etc.)
+  | 'TIMEOUT'             // infinite loop / time limit exceeded
+  | 'RUNTIME_EXCEPTION'   // IndexError, KeyError, TypeError, AttributeError, etc.
+  | 'COMPILE_ERROR'       // SyntaxError, IndentationError
+  | 'MEMORY_LIMIT'        // Out of memory
+  | 'ASSERTION'           // AssertionError
+  | 'UNKNOWN';
+
+export interface StructuredEvidence {
+  input?: string;
+  expected?: string;
+  actual?: string;
+  hasTestEvidence: boolean;
+  traceback?: {
+    errorName: string;
+    message: string;
+    line?: number;
+  };
+  codeFacts: {
+    hasCode: boolean;
+    lineCount: number;
+    hasReturn: boolean;
+    hasPrint: boolean;
+  };
+  platform: 'leetcode_style' | 'terminal_script';
+  rawText: string;
+}
+
+export interface ConversationFacts {
+  previousSolutionProvided: boolean;
+  userAskedForCorrection: boolean;
+  sameFailureRepeated: boolean;
+  editorCodeMissing: boolean;
+  studentRejectedHint: boolean;
+  turnsCount: number;
+}
+
+export interface Observation {
+  kind: 'expected' | 'actual' | 'input' | 'traceback' | 'editor';
+  label: string;
+  value: string;
+}
+
+export interface DiagnosticHypothesis {
+  rank: number;
+  cause: string;
+  score: number; // 0.0 - 1.0
+  evidenceFor: string[];
+  evidenceAgainst: string[];
+  whyExplanation: string;
+}
+
+export interface DiagnosticReport {
+  failureKind: FailureKind;
+  observations: Observation[];
+  inferences: string[];
+  counterfactual: string; // "What would I expect instead?"
+  hypotheses: DiagnosticHypothesis[];
+  contradiction?: {
+    detected: boolean;
+    explanation: string;
+    actionableAdvice: string;
+  };
+  requestedEvidence: string[];
+  teachingSummary: string;
+}
+
 export interface ErrorAnalysisResult {
   errorType: ErrorType;
   rawError?: string;
   lineHint?: number;
   probableCause: string;
   recommendedAction: string;
+  report?: DiagnosticReport;
 }
 
 export interface ResponseStyle {

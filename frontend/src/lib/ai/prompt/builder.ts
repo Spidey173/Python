@@ -82,7 +82,52 @@ export function buildPromptSections(input: ModularPromptInput): PromptSection[] 
     });
   }
 
-  // 5. Response Plan & Blueprint
+  // 5. Diagnostic Evidence & Ranked Hypotheses (when debugging a failure)
+  if (errorAnalysis.report && errorAnalysis.report.failureKind !== 'UNKNOWN') {
+    const rep = errorAnalysis.report;
+    const diagLines: string[] = [];
+    diagLines.push(`Failure Kind: ${rep.failureKind}`);
+
+    if (rep.observations.length > 0) {
+      diagLines.push('Factual Observations:');
+      for (const obs of rep.observations) {
+        diagLines.push(`• ${obs.label}: ${obs.value}`);
+      }
+    }
+
+    if (rep.counterfactual) {
+      diagLines.push(`Counterfactual ("What would I expect instead?"): ${rep.counterfactual}`);
+    }
+
+    if (rep.hypotheses.length > 0) {
+      diagLines.push('Ranked Hypotheses:');
+      for (const hyp of rep.hypotheses) {
+        diagLines.push(`• [${Math.round(hyp.score * 100)}% Likelihood] ${hyp.cause}`);
+        diagLines.push(`  Why: ${hyp.whyExplanation}`);
+        if (hyp.evidenceAgainst.length > 0) {
+          diagLines.push(`  Evidence Against: ${hyp.evidenceAgainst.join('; ')}`);
+        }
+      }
+    }
+
+    if (rep.contradiction?.detected) {
+      diagLines.push(`Contradiction Flag: ${rep.contradiction.explanation}`);
+      diagLines.push(`Action Instruction: ${rep.contradiction.actionableAdvice}`);
+    }
+
+    if (rep.requestedEvidence.length > 0) {
+      diagLines.push(`Missing Evidence: ${rep.requestedEvidence.join(', ')} — ask student to paste current editor implementation.`);
+    }
+
+    diagLines.push('CRITICAL RULE: Base your debugging explanation only on the observations and hypotheses below. Do not invent additional causes unless the evidence is insufficient. Never suggest print() statements (the platform evaluates function return values), and do not invent regex or string-cleaning guesses when output is missing.');
+
+    sections.push({
+      title: 'DIAGNOSTIC EVIDENCE',
+      content: diagLines.join('\n'),
+    });
+  }
+
+  // 6. Response Plan & Blueprint
   sections.push({
     title: 'RESPONSE PLAN',
     content: formatPlanDirective(plan),
