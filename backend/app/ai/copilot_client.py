@@ -101,8 +101,17 @@ async def chat_with_ai_tutor(
     """
     Direct context pass-through LLM tutor call.
     """
+    msg_lower = message.lower().strip()
     clean_code = (code or "").strip()
     clean_starter = (starter_code or "").strip()
+
+    # Determine if user is asking to debug or fix existing code
+    is_debug_request = any(k in msg_lower for k in [
+        "debug", "why failing", "my error", "fix my code", "check my code",
+        "wrong output", "syntax error", "traceback", "failing test", "why failed",
+        "not working", "test case failed", "why is this wrong", "can you correct",
+        "error", "failed", "bug in my code", "fix this"
+    ])
 
     # Build clear context envelope right above user question
     context_sections = []
@@ -118,7 +127,6 @@ async def chat_with_ai_tutor(
         "### Platform Rules & Solution Style\n"
         "- Platform Judge Type: Function-based judge (LeetCode style).\n"
         "- Authoritative Template: Starter Code Template.\n"
-        "- Conflict Resolution: Ignore any script-style code (input()/print()) in the editor. Always complete the starter template.\n"
         "- Preferred Solution Style: Easiest interview-accepted solution first (prefer two pointers / hash maps / simple loops over recursion).\n"
         "- Avoid: Complex recursive or advanced variants unless required or requested.\n"
         "- Do NOT ask the user which format to use. Provide code using the starter template directly."
@@ -129,11 +137,12 @@ async def chat_with_ai_tutor(
             f"### Starter Code Template (SINGLE SOURCE OF TRUTH)\n```python\n{clean_starter}\n```"
         )
 
-    if clean_code:
-        context_sections.append(f"### Current User Code\n```python\n{clean_code}\n```")
-
-    if last_error:
-        context_sections.append(f"### Latest Test Result / Error\n```\n{last_error}\n```")
+    # Only send editor code and error details when user explicitly asks for debugging/fixing
+    if is_debug_request:
+        if clean_code:
+            context_sections.append(f"### Current User Code (For Debugging)\n```python\n{clean_code}\n```")
+        if last_error:
+            context_sections.append(f"### Latest Test Result / Error\n```\n{last_error}\n```")
 
     context_sections.append(f"### User Question\n{message}")
     full_user_prompt = "\n\n".join(context_sections)
