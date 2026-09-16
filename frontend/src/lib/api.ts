@@ -225,22 +225,9 @@ export const api = {
     code?: string,
     challengeId?: number,
     history: Array<{ role: string; content: string }> = [],
-    stateMeta?: {
-      challengeTitle?: string;
-      attemptCount?: number;
-      hintTier?: number;
-      lastBug?: string | null;
-      isSolved?: boolean;
-    }
-  ): Promise<{
-    reply: string;
-    socratic_hint?: string;
-    confidence?: number;
-    intent?: string;
-    tier?: number;
-    role?: string;
-  }> {
-    // 1. Direct call to the Next.js Serverless AI Tutor route
+    starterCode?: string,
+    lastError?: string
+  ): Promise<{ reply: string }> {
     try {
       const res = await fetch('/api/ai/tutor', {
         method: 'POST',
@@ -249,12 +236,9 @@ export const api = {
           message,
           code,
           challenge_id: challengeId,
-          challenge_title: stateMeta?.challengeTitle,
           chat_history: history,
-          attempt_count: stateMeta?.attemptCount,
-          hint_tier: stateMeta?.hintTier,
-          last_bug: stateMeta?.lastBug,
-          is_solved: stateMeta?.isSolved,
+          starter_code: starterCode,
+          last_error: lastError,
         }),
       });
       if (res.ok) {
@@ -264,15 +248,22 @@ export const api = {
         }
       }
     } catch (e) {
-      console.warn('Next.js /api/ai/tutor error, falling back to backend:', e);
+      console.warn('/api/ai/tutor error, falling back to backend /ai/tutor:', e);
     }
 
-    // 2. Fallback to external backend API if configured
     return request('/ai/tutor', {
       method: 'POST',
-      body: JSON.stringify({ message, code, challenge_id: challengeId, chat_history: history }),
+      body: JSON.stringify({
+        message,
+        code,
+        challenge_id: challengeId,
+        chat_history: history,
+        starter_code: starterCode,
+        last_error: lastError,
+      }),
     });
   },
+
 
   // Gamification
   async getLeaderboard(): Promise<LeaderboardEntry[]> {

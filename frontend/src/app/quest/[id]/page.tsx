@@ -15,14 +15,10 @@ import { DifficultyBadge } from '@/components/ui/Badge';
 import { CommandPalette } from '@/components/ui/CommandPalette';
 import { useAuth } from '@/lib/auth-context';
 import { soundFX } from '@/lib/audio';
-import {
-  MentorMessage, HintTier,
-  analyzeExecutionForMentor
-} from '@/lib/mentor-engine';
-import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
 import { SolutionVault } from '@/components/mentor/SolutionVault';
 import { MissionCompleteModal } from '@/components/mentor/MissionCompleteModal';
 import { InterviewPanel } from '@/components/interview/InterviewPanel';
+import { ChatbotPanel, ChatMessage } from '@/components/chatbot/ChatbotPanel';
 import {
   Play, RotateCcw, ArrowLeft, Clock, BookOpen,
   Check, X, Terminal, ChevronDown, ChevronUp, Copy, Trash2,
@@ -62,8 +58,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // Layout & Tabs
   const [consoleCollapsed, setConsoleCollapsed] = useState(false);
   const [dockHeight, setDockHeight] = useState<'normal' | 'expanded'>('normal');
-  // Left Panel Tab: Problem Spec, Mentor, Solution Vault, Interview Q&A
-  const [activeTab, setActiveTab] = useState<'spec' | 'mentor' | 'vault' | 'interview'>('spec');
+  // Left Panel Tab: Problem Spec, Chatbot, Solution Vault, Interview Q&A
+  const [activeTab, setActiveTab] = useState<'spec' | 'chat' | 'vault' | 'interview'>('spec');
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isChatThinking, setIsChatThinking] = useState(false);
   const [activeConsoleTab, setActiveConsoleTab] = useState<'terminal' | 'tests'>('terminal');
   const [selectedCaseIndex, setSelectedCaseIndex] = useState(0);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -73,16 +71,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [showMobileConsoleLogs, setShowMobileConsoleLogs] = useState(false);
 
-  // Mentor & Hint State
-  const [messages, setMessages] = useState<MentorMessage[]>([]);
-  const hintTier: HintTier = 1;
-  const [isThinking, setIsThinking] = useState(false);
-  const [thinkingPhase, setThinkingPhase] = useState<string>('');
+  // Solution Vault & Modal State
+  const hintTier = 1;
   const [isSolutionUnlocked, setIsSolutionUnlocked] = useState<boolean>(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState<boolean>(false);
   const [lastExecutionRuntime, setLastExecutionRuntime] = useState<number>(24);
-  const [attemptCount, setAttemptCount] = useState<number>(1);
-  const [lastBugNotice, setLastBugNotice] = useState<string | null>(null);
 
   // Execution & Terminal State
   const [isRunning, setIsRunning] = useState(false);
@@ -168,47 +161,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  // 2. Stream Typewriter Effect for Mentor
-  const streamMentorText = useCallback((fullText: string, mood: MentorMessage['mood'], codeSnippet?: string) => {
-    const msgId = Math.random().toString(36).substring(7);
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Insert empty streaming message
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: msgId,
-        sender: 'mentor',
-        text: '',
-        fullText,
-        status: 'streaming',
-        mood,
-        codeSnippet,
-        timestamp: timeStr,
-      },
-    ]);
-
-    const words = fullText.split(' ');
-    let currentIdx = 0;
-
-    const interval = setInterval(() => {
-      if (currentIdx >= words.length) {
-        clearInterval(interval);
-        setMessages((prev) =>
-          prev.map((m) => (m.id === msgId ? { ...m, text: fullText, status: 'done' } : m))
-        );
-        return;
-      }
-
-      currentIdx++;
-      const partial = words.slice(0, currentIdx).join(' ');
-      soundFX.playTypewriterBlip();
-
-      setMessages((prev) =>
-        prev.map((m) => (m.id === msgId ? { ...m, text: partial } : m))
-      );
-    }, 22);
-  }, []);
 
   // 3. Load Problem, Restore Draft & Initialize Mentor Greeting
   useEffect(() => {
@@ -263,20 +216,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
         // Solution is strictly locked until the user submits code and passes all test suites in this session
         setIsSolutionUnlocked(false);
-
-        // Initialize Partner with natural conversational opening
-        const greetingText = "Hey! What's your initial take on this one?";
-        setMessages([
-          {
-            id: 'init-greeting',
-            sender: 'mentor',
-            text: greetingText,
-            fullText: greetingText,
-            status: 'done',
-            mood: 'neutral',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          },
-        ]);
       } catch (err) {
         console.error('Failed to load problem workspace:', err);
       }
@@ -331,83 +270,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // Monaco Editor Reference
   const monacoEditorRef = useRef<any>(null);
 
-  const handleSendCustomPrompt = async (prompt: string) => {
-    if (!problem || isThinking) return;
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substring(7),
-        sender: 'user',
-        text: prompt,
-        fullText: prompt,
-        status: 'done',
-        mood: 'curious',
-        timestamp: timeStr,
-      },
-    ]);
-
-    setIsThinking(true);
-    setThinkingPhase('Thinking...');
-
-    // Directly query the backend AI Chatbot model for all custom questions & greetings
-    try {
-      const history = messages.slice(-6).map((m) => ({
-        role: m.sender === 'mentor' ? 'assistant' : 'user',
-        content: m.fullText || m.text,
-      }));
-      const tutorRes = await api.chatWithTutor(prompt, code, problem.id, history, {
-        challengeTitle: problem.title,
-        attemptCount,
-        hintTier,
-        lastBug: lastBugNotice,
-        isSolved: solvedIds.includes(problem.id) || isSolutionUnlocked,
-      });
-      if (tutorRes?.reply) {
-        const cleanReply = tutorRes.reply
-          .replace(/🐍\s*\**Byte\s*says:\**/gi, '')
-          .trim();
-        setIsThinking(false);
-        streamMentorText(cleanReply, 'coaching');
-        return;
-      }
-    } catch (err) {
-      console.warn('AI Chatbot request error, using fallback:', err);
-    }
-
-    // Fallback if backend API is unreachable
-    const lower = prompt.trim().toLowerCase();
-    let coachReply = '';
-
-    if (lower.includes('hi') || lower.includes('hello') || lower.includes('hey')) {
-      coachReply = `Hey. I'm working through "${problem.title}" with you. Where do you want to start?`;
-    } else {
-      coachReply = `Looking at "${problem.title}". What part of the logic or implementation are you thinking about right now?`;
-    }
-
-    setIsThinking(false);
-    streamMentorText(coachReply, 'coaching');
-  };
-
-  const handleAskMentorAboutError = (command: string, errorText: string) => {
-    setActiveTab('mentor');
-    const cleanErr = errorText.trim().slice(0, 200);
-    setLastBugNotice(cleanErr);
-    setAttemptCount((prev) => prev + 1);
-    const prompt = `I ran into an error in the terminal while running \`${command}\`:\n\`\`\`\n${cleanErr}\n\`\`\`\nCan you explain what caused this error and give me a helpful hint to resolve it?`;
-    handleSendCustomPrompt(prompt);
-  };
-
-  const handleAskMentorAboutTestFailure = (caseNum: number, input: string, expected: string, actual: string) => {
-    setActiveTab('mentor');
-    const desc = `Test case ${caseNum} failed (expected ${expected}, got ${actual})`;
-    setLastBugNotice(desc);
-    setAttemptCount((prev) => prev + 1);
-    const prompt = `Test Case ${caseNum} failed on my code:\nInput: \`${input}\`\nExpected: \`${expected}\`\nMy Output: \`${actual}\`\n\nCould you give me a hint on why my logic produced this output and what edge case or condition I should check?`;
-    handleSendCustomPrompt(prompt);
-  };
-
   // 6. Interactive VS Code Terminal & Code Pipeline
   const extractInputPrompts = (codeStr: string): string[] => {
     // Strip single-line comments to avoid matching commented-out inputs
@@ -419,6 +281,63 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       prompts.push(match[2] !== undefined ? match[2] : '');
     }
     return prompts;
+  };
+
+  const handleSendChatMessage = async (msgText: string) => {
+    if (!msgText.trim() || isChatThinking) return;
+
+    const userMsg: ChatMessage = {
+      id: Math.random().toString(36).substring(7),
+      sender: 'user',
+      text: msgText,
+    };
+
+    setChatMessages((prev) => [...prev, userMsg]);
+    setIsChatThinking(true);
+
+    try {
+      const history = chatMessages.slice(-6).map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.text,
+      }));
+
+      const lastErr = runResponse
+        ? runResponse.passed_all
+          ? null
+          : (runResponse.test_results || []).find((t: any) => !t.passed)?.error || runResponse.stderr || 'Test case failed'
+        : null;
+
+      const res = await api.chatWithTutor(
+        msgText,
+        code,
+        problem?.id,
+        history,
+        problem?.starter_code,
+        lastErr || undefined
+      );
+      if (res?.reply) {
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            id: Math.random().toString(36).substring(7),
+            sender: 'assistant',
+            text: res.reply,
+          },
+        ]);
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(36).substring(7),
+          sender: 'assistant',
+          text: "I couldn't complete that request right now. Please try asking again!",
+        },
+      ]);
+    } finally {
+      setIsChatThinking(false);
+    }
   };
 
   const executeWithStdin = async (
@@ -828,8 +747,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     try {
       setIsSubmitting(true);
-      setIsThinking(true);
-      setThinkingPhase('Verifying solution against all interview test suites...');
+      setIsSubmitting(true);
       await persistence.saveDraft(problemId, code);
 
       setConsoleCollapsed(false);
@@ -869,19 +787,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
         window.dispatchEvent(new CustomEvent('pyforge_problem_solved', { detail: { problemId: canonicalNum } }));
         setShowMissionCompleteModal(true);
-
-        streamMentorText(
-          `All test cases passed in ${duration}ms. The solution vault is unlocked if you want to inspect alternative approaches.`,
-          'celebrating'
-        );
       } else {
-        setAttemptCount((prev) => prev + 1);
-        setLastBugNotice('Some test cases failed on submission.');
         soundFX.playFailureThud();
-        streamMentorText(
-          `Some test cases failed. Check the test output below to see which inputs didn't match.`,
-          'coaching'
-        );
       }
 
       const runRes = await api.runCode(problemId, code);
@@ -899,8 +806,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       alert(err?.message || 'Submission failed.');
     } finally {
       setIsSubmitting(false);
-      setIsThinking(false);
-      setThinkingPhase('');
     }
   };
 
@@ -1102,20 +1007,20 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               <span>Problem Spec</span>
             </button>
 
-            {/* Tab 2: Mentor */}
+            {/* Tab 2: AI Chatbot */}
             <button
-              onClick={() => setActiveTab('mentor')}
+              onClick={() => setActiveTab('chat')}
               className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
-                activeTab === 'mentor'
+                activeTab === 'chat'
                   ? 'bg-[#1F6FEB]/20 text-[#58A6FF] border border-[#1F6FEB]/40 shadow-sm'
                   : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
               }`}
             >
               <Bot className="w-4 h-4 text-[#58A6FF]" />
-              <span>Mentor</span>
+              <span>AI Chat</span>
             </button>
 
-            {/* Tab 3: Solution */}
+            {/* Tab 2: Solution */}
             <button
               onClick={() => setActiveTab('vault')}
               className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
@@ -1134,7 +1039,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               <span>Solution</span>
             </button>
 
-            {/* Tab 4: Interview Q&A */}
+            {/* Tab 3: Interview Q&A */}
             <button
               onClick={() => setActiveTab('interview')}
               className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
@@ -1156,13 +1061,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
           {/* Cockpit Content Panes */}
           <div className="flex-1 overflow-hidden">
-            {/* VIEW: MENTOR CHAT */}
-            {activeTab === 'mentor' && (
-              <MentorChatPanel
-                messages={messages}
-                isThinking={isThinking}
-                thinkingPhase={thinkingPhase}
-                onSendCustomPrompt={handleSendCustomPrompt}
+
+            {/* VIEW 1: CHATBOT */}
+            {activeTab === 'chat' && (
+              <ChatbotPanel
+                messages={chatMessages}
+                isThinking={isChatThinking}
+                onSendMessage={handleSendChatMessage}
               />
             )}
 
@@ -1486,17 +1391,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                           </pre>
                         )}
 
-                        {/* On-Demand AI Help Action for Errors */}
                         {(item.exitCode !== 0 || !!item.stderr) && (
                           <div className="pt-1 pb-0.5 flex items-center gap-2 flex-wrap">
-                            <button
-                              type="button"
-                              onClick={() => handleAskMentorAboutError(item.command, item.stderr || item.stdout)}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1f242c] hover:bg-[#28303d] border border-[#388bfd]/30 text-xs text-[#58a6ff] hover:text-[#79c0ff] transition-all cursor-pointer shadow-sm font-sans"
-                            >
-                              <Sparkles className="w-3.5 h-3.5 text-[#58a6ff]" />
-                              <span>Ask AI Mentor to explain this error</span>
-                            </button>
                             <span className="text-[11px] text-[#858585] font-mono">• exit {item.exitCode}</span>
                           </div>
                         )}
@@ -1658,18 +1554,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
                               </div>
                             </div>
                           )}
-                          {result && !result.passed && (
-                            <div className="pt-1.5">
-                              <button
-                                type="button"
-                                onClick={() => handleAskMentorAboutTestFailure(selectedCaseIndex + 1, testCase?.input || '', result.expected_output || testCase?.expected || '', result.actual_output || '')}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1f242c] hover:bg-[#28303d] border border-[#388bfd]/30 text-xs text-[#58a6ff] hover:text-[#79c0ff] transition-all cursor-pointer shadow-sm font-sans"
-                              >
-                                <Sparkles className="w-3.5 h-3.5 text-[#58a6ff]" />
-                                <span>Ask AI Mentor why this test case failed</span>
-                              </button>
-                            </div>
-                          )}
+
                         </div>
                       );
                     })()}

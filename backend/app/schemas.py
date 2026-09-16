@@ -174,13 +174,14 @@ class ExplainResponse(BaseModel):
 class AITutorChatRequest(BaseModel):
     challenge_id: Optional[int] = None
     code: Optional[str] = None
+    starter_code: Optional[str] = None
+    last_error: Optional[str] = None
     message: str
     chat_history: Optional[List[Dict[str, str]]] = []
 
 
 class AITutorChatResponse(BaseModel):
     reply: str
-    socratic_hint: Optional[str] = None
 
 
 # --- Gamification Schemas ---

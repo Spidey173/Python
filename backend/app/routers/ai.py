@@ -48,16 +48,21 @@ async def tutor_chat(req: AITutorChatRequest, db: AsyncSession = Depends(get_db)
         )
         ch = res.scalars().first()
         if ch:
-            ch_info = f"{ch.title} - Objective: {ch.objective}"
+            ch_info = {
+                "title": ch.title,
+                "objective": ch.objective,
+            }
+            if not req.starter_code:
+                req.starter_code = ch.starter_code
 
     reply = await chat_with_ai_tutor(
         message=req.message,
         code=req.code,
         challenge_info=ch_info,
+        starter_code=req.starter_code,
+        last_error=req.last_error,
         chat_history=req.chat_history
     )
 
-    return AITutorChatResponse(
-        reply=reply,
-        socratic_hint="Think about what each variable holds right before the loop ends."
-    )
+    return AITutorChatResponse(reply=reply)
+
