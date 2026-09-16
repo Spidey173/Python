@@ -23,11 +23,15 @@ SYSTEM_TUTOR_PROMPT = """You are a senior software engineer helping users learn 
 Reply naturally, like ChatGPT.
 Be conversational, clear, and practical.
 
-Use the provided challenge, starter code, current code, and execution results when answering.
+The starter code template is the single source of truth. Always follow the starter code template format over any conflicting editor code.
 
-If the user asks for code, provide complete working code that fits the provided starter template.
+When the user asks for code:
+- Provide complete working code using the exact starter code template.
+- Never hesitate or ask which format the judge expects; assume the platform is function-based.
+- Do not generate input(), print(), or main() scripts.
+
 If they ask for a hint, give only a hint.
-If they ask to debug, explain the issue and show the fix.
+If they ask to debug, explain the issue and show the fix using the starter template format.
 If information is missing, ask for it instead of guessing."""
 
 
@@ -108,15 +112,16 @@ async def chat_with_ai_tutor(
             context_sections.append(f"### Problem Description\n{objective}")
 
     context_sections.append(
-        "### Platform Rules\n"
-        "- The judge calls the function automatically.\n"
-        "- Do NOT use input(), print(), or if __name__ == '__main__'.\n"
-        "- Complete the provided starter code template only."
+        "### Platform Rules & Authoritative Target\n"
+        "- Platform Judge Type: Function-based judge (LeetCode style).\n"
+        "- Authoritative Template: Starter Code Template.\n"
+        "- Conflict Resolution: Ignore any script-style code (input()/print()) in the editor. Always complete the starter template.\n"
+        "- Do NOT ask the user which format to use. Provide code using the starter template directly."
     )
 
     if clean_starter:
         context_sections.append(
-            f"### Starter Code (MUST use this exact template)\n```python\n{clean_starter}\n```"
+            f"### Starter Code Template (SINGLE SOURCE OF TRUTH)\n```python\n{clean_starter}\n```"
         )
 
     if clean_code:
