@@ -18,6 +18,8 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
@@ -27,6 +29,9 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
     if (!input.trim() || isThinking) return;
     onSendMessage(input.trim());
     setInput('');
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 10);
   };
 
   const handleCopyCode = (code: string, id: string) => {
@@ -134,11 +139,8 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
           <div className="w-6 h-6 rounded-full bg-[#1F6FEB]/20 border border-[#1F6FEB]/40 flex items-center justify-center">
             <Bot className="w-3.5 h-3.5 text-[#58A6FF]" />
           </div>
-          <span className="font-semibold text-sm text-[#E6EDF3]">ChatGPT AI Assistant</span>
+          <span className="font-semibold text-sm text-[#E6EDF3]">AI Assistant</span>
         </div>
-        <span className="text-[11px] font-mono text-[#58A6FF] bg-[#1F6FEB]/10 px-2 py-0.5 rounded-full border border-[#1F6FEB]/30 font-medium">
-          GPT-4o / Gemini
-        </span>
       </div>
 
       {/* Messages Feed */}
@@ -149,7 +151,7 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
               <Bot className="w-5 h-5 text-[#58A6FF]" />
             </div>
             <p className="font-semibold text-base text-[#E6EDF3]">How can I help you solve this challenge?</p>
-            <p className="text-xs max-w-xs mx-auto text-[#8B949E]">Ask for a hint, solution code in the starter template format, or help debugging your logic.</p>
+            <p className="text-xs max-w-xs mx-auto text-[#8B949E]">Ask for a hint, solution code, or help debugging your logic.</p>
           </div>
         )}
 
@@ -189,7 +191,7 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
             <div className="w-7 h-7 rounded-full bg-[#1F6FEB]/20 border border-[#1F6FEB]/40 flex items-center justify-center shrink-0">
               <Bot className="w-4 h-4 text-[#58A6FF] animate-pulse" />
             </div>
-            <span className="animate-pulse">Generating response...</span>
+            <span className="animate-pulse">Thinking...</span>
           </div>
         )}
 
@@ -199,11 +201,11 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="p-3 border-t border-[#21262D] bg-[#0E131C] flex gap-2">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask ChatGPT anything about this problem..."
-          disabled={isThinking}
+          placeholder={isThinking ? "Thinking..." : "Ask a question or get help with this problem..."}
           className="flex-1 bg-[#161B22] border border-[#30363D] rounded-xl px-4 py-2.5 text-sm text-[#E6EDF3] placeholder-[#8B949E] focus:outline-none focus:border-[#58A6FF] transition-colors"
         />
         <button
