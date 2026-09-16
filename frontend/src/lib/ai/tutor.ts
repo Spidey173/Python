@@ -27,19 +27,25 @@ export async function chatWithSeniorEngineer(
 ): Promise<SeniorEngineerOutput> {
   const { message, code = '', challengeTitle = '', chatHistory = [], llmInvoker } = input;
 
-  // 1. Build contextual user message if code or challenge context is present
-  const contextParts: string[] = [];
+  // 1. Build contextual user message
+  const trimmedMsg = message.trim();
+  const isGreeting =
+    /^(hi|hello|hey|sup|yo|howdy|good\s+(morning|afternoon|evening))\b/i.test(trimmedMsg);
 
-  if (challengeTitle && challengeTitle.trim().length > 0) {
-    contextParts.push(`Challenge context: ${challengeTitle.trim()}`);
+  let combinedUserMessage = trimmedMsg;
+
+  if (!isGreeting) {
+    const contextPrefix: string[] = [];
+    if (challengeTitle && challengeTitle.trim().length > 0) {
+      contextPrefix.push(`[Problem: ${challengeTitle.trim()}]`);
+    }
+    if (code && code.trim().length > 0) {
+      contextPrefix.push(`[Editor Code:\n\`\`\`python\n${code.trim()}\n\`\`\`]`);
+    }
+    if (contextPrefix.length > 0) {
+      combinedUserMessage = `${contextPrefix.join('\n\n')}\n\n${trimmedMsg}`;
+    }
   }
-
-  if (code && code.trim().length > 0) {
-    contextParts.push(`Current code:\n\`\`\`python\n${code.trim()}\n\`\`\``);
-  }
-
-  contextParts.push(message.trim());
-  const combinedUserMessage = contextParts.join('\n\n');
 
   // 2. Normalize recent chat history
   const normalizedHistory: ChatMessage[] = chatHistory.slice(-8).map((m) => ({

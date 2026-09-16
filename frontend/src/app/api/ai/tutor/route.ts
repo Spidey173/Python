@@ -30,7 +30,7 @@ async function callOpenAICompatible(
 ): Promise<string> {
   const messages: any[] = [{ role: 'system', content: systemPrompt }];
 
-  for (const m of history.slice(-4)) {
+  for (const m of history.slice(-8)) {
     messages.push({
       role: m.role === 'assistant' || m.role === 'mentor' ? 'assistant' : 'user',
       content: m.content,
@@ -53,8 +53,11 @@ async function callOpenAICompatible(
     body: JSON.stringify({
       model,
       messages,
-      temperature: 0.6,
-      max_tokens: 1000,
+      temperature: 0.7,
+      top_p: 0.9,
+      max_tokens: 1200,
+      presence_penalty: 0,
+      frequency_penalty: 0,
     }),
   });
 
@@ -76,7 +79,7 @@ async function callGemini(
 ): Promise<string> {
   const contents = [];
 
-  for (const m of history.slice(-4)) {
+  for (const m of history.slice(-8)) {
     contents.push({
       role: m.role === 'assistant' || m.role === 'mentor' ? 'model' : 'user',
       parts: [{ text: m.content }],
@@ -101,8 +104,9 @@ async function callGemini(
       system_instruction: { parts: [{ text: systemPrompt }] },
       contents,
       generationConfig: {
-        maxOutputTokens: 1000,
-        temperature: 0.6,
+        maxOutputTokens: 1200,
+        temperature: 0.7,
+        topP: 0.9,
       },
     }),
   });
@@ -123,7 +127,7 @@ async function callClaude(
   userMessage: string,
   history: ChatMessage[]
 ): Promise<string> {
-  const messages = history.slice(-4).map((m) => ({
+  const messages = history.slice(-8).map((m) => ({
     role: m.role === 'assistant' || m.role === 'mentor' ? 'assistant' : 'user',
     content: m.content,
   }));
@@ -139,10 +143,11 @@ async function callClaude(
     },
     body: JSON.stringify({
       model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
-      max_tokens: 1000,
+      max_tokens: 1200,
       system: systemPrompt,
       messages,
-      temperature: 0.6,
+      temperature: 0.7,
+      top_p: 0.9,
     }),
   });
 
