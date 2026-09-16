@@ -1,23 +1,4 @@
-// State-First AI Cognitive Engine - Public Exports
-export * from './types';
-export * from './intent/detector';
-export * from './intent/question-classifier';
-export * from './router/capability-router';
-export * from './ast/summarizer';
-export * from './ast/code-diff';
-export * from './debugging/error-analyzer';
-export * from './style/response-style';
-export * from './memory/memory-compressor';
-export * from './state/conversation-state';
-export * from './planner/teaching-planner';
-export * from './planner/teaching-request-specs';
-export * from './planner/response-planner';
-export * from './retrieval/knowledge-retriever';
-export * from './prompt/builder';
-export * from './prompt/templates';
-export * from './validator/response-validator';
-export * from './polisher/natural-language-rewriter';
-export * from './cache/prompt-cache';
-export * from './fallback/template-engine';
-export * from './pedagogy/pedagogy';
-export * from './pipeline/orchestrator';
+// Clean Public Interface for AI Senior Software Engineer
+export * from './system-prompt';
+export * from './formatter';
+export * from './tutor';

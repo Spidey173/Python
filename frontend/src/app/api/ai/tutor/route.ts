@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { runCognitivePipeline, HelpTier, StudentIntent, ExplanationDepth } from '@/lib/ai';
+import { chatWithSeniorEngineer } from '@/lib/ai';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'mentor';
@@ -13,10 +13,10 @@ interface TutorRequestBody {
   challenge_title?: string;
   chat_history?: ChatMessage[];
   attempt_count?: number;
-  hint_tier?: HelpTier;
+  hint_tier?: number;
   last_bug?: string | null;
   is_solved?: boolean;
-  verbosity?: ExplanationDepth;
+  verbosity?: string;
 }
 
 // Provider 1: Call Groq / OpenAI / OpenRouter API
@@ -180,7 +180,7 @@ export async function POST(req: NextRequest) {
       systemPrompt: string,
       userMsg: string,
       history: Array<{ role: string; content: string }>,
-      intent?: StudentIntent
+      intent?: string
     ): Promise<string> => {
       const groqKey = process.env.GROQ_API_KEY;
       const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
@@ -244,12 +244,7 @@ export async function POST(req: NextRequest) {
         }
       };
 
-      // Workload routing: Code reviews & complex debugs route to Claude/Gemini first
-      // Quick hints & general learn route to ultra-low-latency Groq first
-      const providers =
-        intent === 'reviewing' || intent === 'debugging'
-          ? [tryClaude, tryGemini, tryGroq, tryOpenAI]
-          : [tryGroq, tryGemini, tryClaude, tryOpenAI];
+      const providers = [tryGroq, tryGemini, tryClaude, tryOpenAI];
 
       for (const provider of providers) {
         const reply = await provider();
@@ -259,53 +254,39 @@ export async function POST(req: NextRequest) {
       return '';
     };
 
-    // Execute the State-First Cognitive Pipeline
-    const output = await runCognitivePipeline({
+    // Chat directly with Senior Engineer (Direct LLM call with tiny formatter)
+    const output = await chatWithSeniorEngineer({
       message,
       code,
-      challengeId: challenge_id,
       challengeTitle: challenge_title,
-      chatHistory: chat_history,
-      verbosity,
-      stateOverrides: {
-        attemptCount: attempt_count,
-        hintLevel: hint_tier,
-        lastBug: last_bug,
-        isSolved: is_solved,
-        verbosity,
+      chatHistory: chat_history as any,
+      llmInvoker: async (systemPrompt, userMsg, history) => {
+        return llmInvoker(systemPrompt, userMsg, history);
       },
-      llmInvoker,
-    });
-
-    console.log('🤖 [/api/ai/tutor Pipeline Version: 2026-09-16]', {
-      message,
-      teachingRequest: output.teachingRequest,
-      allowCode: output.responsePlan.includeCode,
-      replyPreview: output.reply.slice(0, 100),
     });
 
     return NextResponse.json({
       reply: output.reply,
-      socratic_hint: output.socratic_hint,
-      next_step: output.nextStep,
-      confidence: output.confidence,
-      intent: output.intent,
-      teaching_request: output.teachingRequest,
-      question_type: output.questionType,
-      verbosity: output.verbosity,
-      max_words: output.responsePlan.requestSpec.maxWords,
-      tier: output.tier,
-      role: output.role,
-      astSummary: output.astSummary,
-      clarification_question: output.clarificationQuestion,
+      socratic_hint: output.reply,
+      next_step: undefined,
+      confidence: 1.0,
+      intent: 'general',
+      teaching_request: 'chat',
+      question_type: 'general',
+      verbosity,
+      max_words: undefined,
+      tier: hint_tier || 1,
+      role: 'Senior Engineer',
+      astSummary: undefined,
+      clarification_question: undefined,
     });
   } catch (error: any) {
-    console.error('Tutor cognitive pipeline error:', error);
+    console.error('Tutor API error:', error);
     return NextResponse.json(
       {
         reply:
-          "I ran into an issue connecting to the reasoning pipeline. What part of the logic or edge case are you working on?",
-        socratic_hint: 'Verify loop bounds and terminal stdout print(...).',
+          "I ran into a temporary issue connecting to the AI service. What part of the problem or code can I help you with?",
+        socratic_hint: 'Verify your logic and test case inputs.',
         confidence: 0.5,
       },
       { status: 200 }
