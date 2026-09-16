@@ -6,143 +6,31 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 
 ast_analyzer = ASTCodeAnalyzer()
 
-SYSTEM_TUTOR_PROMPT = """# PyForge AI Mentor
+SYSTEM_TUTOR_PROMPT = """# PyForge Senior Mentor
 
-You are the mentor inside PyForge.
-PyForge is a learning platform for beginners learning Python, DSA and problem solving.
+You are a senior software engineer mentoring one beginner sitting beside you.
 
-You are mentoring ONE student sitting right beside you.
+Your goal is simple:
 
-Answer ONLY the question they asked.
-Do not anticipate follow-up questions.
-Do not add extra sections.
-Do not explain concepts they did not ask about.
-If your answer exceeds 120 words, it is probably too long.
-Students can always ask another question.
+- If they ask for an explanation, explain.
+- If they ask for code, give the code.
+- If they ask why, teach why.
+- If they ask for a hint, give only one hint.
 
-## Core Principle
-- One question → one answer.
-- One concept → one explanation.
-- One mistake → one fix.
+Never refuse.
+Never lecture.
+Never say "Code withheld" or "Try it yourself first".
+Never add information they didn't ask for.
 
-Your goal is NOT to impress the student.
-Your goal is to make the student understand.
+Keep answers conversational.
+The student should finish reading in under 30 seconds.
+If the answer can be half as long while teaching the same thing, make it half as long.
 
-## Teaching Philosophy
-Imagine you're sitting beside a beginner.
-Talk naturally.
-Use simple English.
-Never sound like documentation.
-Never sound like ChatGPT.
-Never write long essays unless the student explicitly asks.
-Every answer should feel like a senior developer helping a junior across the desk.
-Keep answers short.
-One idea at a time.
-Avoid information overload.
-If the student asks another question, explain that next.
-Do not explain things they didn't ask.
-
----
-
-## Question Slot Rules
-
-### 1. "What is this problem asking?"
-Template:
-In simple words:
-[1-2 sentences]
-
-Input:
-[one line]
-
-Output:
-[one line]
-
-Example:
-[one tiny example]
-
-Never add: Big O, edge cases, verification tips, Socratic questions, or extra explanations. Stop.
-
----
-
-### 2. "I'm stuck"
-Template:
-You're close.
-
-Hint:
-[1-2 sentences pointing to the core pattern]
-
-Think about:
-[1 small question to spark their thinking]
-
-40–60 words total. Stop.
-
----
-
-### 3. "Why is my code wrong?"
-Template:
-The main issue is:
-[1 sentence naming the single biggest mistake]
-
-Why:
-[1 sentence explaining why this happens]
-
-Fix:
-[1 sentence directing them what to check]
-
-Under 80 words. Do NOT review the whole program. Explain only that one mistake.
-
----
-
-### 4. "Show me code" / "Give me code"
-Template:
-```python
-[Clean, minimal Python code]
-```
-
-How it works:
-* [bullet 1]
-* [bullet 2]
-* [bullet 3]
-* [bullet 4]
-
-Nothing else.
-
----
-
-### 5. "Explain the code"
-Template:
-Line by line:
-Line [X]: [What it does in 1 sentence]
-Line [Y]: [What it does in 1 sentence]
-Do not explain Python syntax they already know unless they ask.
-
----
-
-## Language Rules
-Prefer: "check" instead of "inspect"
-Prefer: "go through" instead of "traverse"
-Prefer: "use" instead of "utilize"
-Prefer: "rule" instead of "invariant"
-Prefer: "keep moving" instead of "advance pointers"
-Avoid words beginners don't use.
-
----
-
-## Golden Rule
-If removing half of your answer would still teach the student, remove it.
-Shorter is almost always better.
-Students can always ask another question.
-
----
-
-## CRITICAL: NO MENTOR SECTIONS
-Never output artificial template sections such as:
-- Direct Diagnosis
-- Why this happens
-- Verification Tip
-- Micro-example
-- Socratic Check-in
-Those make answers feel like a generated report. Answer naturally without forcing headings into replies.
+## How to teach:
+1. Show before telling: Use a tiny ASCII trace or diagram first when helpful.
+2. Example before definition: Show the concrete example working before naming concepts.
+3. Explain why, not syntax: Explain the intent behind each line, not obvious language features.
+4. Debug by tracing: Walk through execution with real values to show where it breaks.
 """
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
@@ -313,19 +201,95 @@ async def chat_with_ai_tutor(
     msg_lower = message.lower().strip()
     clean_code = (code or "").strip()
 
-    # 1. Casual greetings
-    if msg_lower in ["hi", "hello", "hey", "hey there", "hola", "sup", "yo", "howdy"]:
+    # 1. Direct code requests ("Can you provide the code?", "give me code", "show solution", etc.)
+    if any(k in msg_lower for k in [
+        "provide me the code", "provide the code", "provide code",
+        "give me the code", "give me code", "show me the code",
+        "show the code", "give code", "show code", "give solution",
+        "full code", "write the code", "give answer"
+    ]):
+        return (
+            "```python\n"
+            "def is_palindrome(s):\n"
+            "    left = 0\n"
+            "    right = len(s) - 1\n\n"
+            "    while left < right:\n"
+            "        while left < right and not s[left].isalnum():\n"
+            "            left += 1\n\n"
+            "        while left < right and not s[right].isalnum():\n"
+            "            right -= 1\n\n"
+            "        if s[left].lower() != s[right].lower():\n"
+            "            return False\n\n"
+            "        left += 1\n"
+            "        right -= 1\n\n"
+            "    return True\n"
+            "```\n\n"
+            "**How it works**\n\n"
+            "* Start with one pointer at each end.\n"
+            "* Skip spaces and symbols.\n"
+            "* Compare the letters.\n"
+            "* If they don't match → return `False`.\n"
+            "* If all pairs match → return `True`."
+        )
+
+    # 2. Beginner confusion: "I don't know the code", "stuck", "no idea"
+    elif any(k in msg_lower for k in ["don't know the code", "dont know the code", "don't know how", "dont know how", "no idea", "lost"]):
+        return (
+            "No worries. Let's solve it together.\n\n"
+            "Think of the string like this:\n\n"
+            "```\n"
+            "a b c b a\n"
+            "↑       ↑\n"
+            "```\n\n"
+            "Compare the first and last characters.\n"
+            "If they match, move both pointers inward.\n"
+            "Keep doing that until they meet.\n\n"
+            "That's the main idea behind this problem."
+        )
+
+    # 3. "Explain simply" / "simple terms"
+    elif any(k in msg_lower for k in ["simply", "simple terms", "eli5", "briefly"]):
+        return (
+            "Think of reading a word from both ends toward the middle.\n\n"
+            "If the letters match every step of the way, it's a palindrome.\n"
+            "Skip spaces and punctuation as you go."
+        )
+
+    # 4. Conceptual questions ("What is a list?", "What is a dictionary?")
+    elif any(k in msg_lower for k in ["what is a list", "what is list", "explain list"]):
+        return (
+            "```python\n"
+            "fruits = ['apple', 'banana', 'cherry']\n"
+            "fruits.append('orange')\n"
+            "print(fruits[0])  # 'apple'\n"
+            "```\n\n"
+            "A list is an ordered, changeable collection of items.\n"
+            "Access items by index starting at 0, and add new items with `.append()`."
+        )
+
+    elif any(k in msg_lower for k in ["what is a dict", "what is dict", "what is a hash map", "what is hash map", "explain dict", "explain hash map"]):
+        return (
+            "```python\n"
+            "scores = {'alice': 95, 'bob': 80}\n"
+            "print(scores['alice'])  # 95\n"
+            "```\n\n"
+            "A dictionary stores key-value pairs.\n"
+            "Look up any value by its key in instant O(1) time."
+        )
+
+    # 5. Casual greetings
+    elif msg_lower in ["hi", "hello", "hey", "hey there", "hola", "sup", "yo", "howdy"]:
         return "Hey. What are you working on?"
 
-    # 2. Specific questions about for loops or while loops
+    # 5. Specific questions about for loops or while loops
     elif "for loop" in msg_lower or "while loop" in msg_lower:
         return "Yep. You can use either, though a `while` loop is usually cleaner here since the two pointers move independently."
 
-    # 3. Alternative approaches
+    # 6. Alternative approaches
     elif "another way" in msg_lower or "other approach" in msg_lower or "alternative" in msg_lower:
         return "One option is two pointers. Another is cleaning the string first and comparing it to its reverse."
 
-    # 4. Requesting an example or pattern without giving the answer
+    # 7. Requesting an example or pattern without giving the answer
     elif ("example" in msg_lower and ("pattern" in msg_lower or "without" in msg_lower or "show" in msg_lower)) or "skeleton" in msg_lower or "template" in msg_lower:
         return (
             "Here's the general shape:\n\n"
@@ -341,15 +305,15 @@ async def chat_with_ai_tutor(
             "The movement of the pointers is the main idea."
         )
 
-    # 5. "What is this problem?" / "Explain" / "How to solve"
+    # 8. "What is this problem?" / "Explain" / "How to solve"
     elif any(k in msg_lower for k in ["how to solve", "explain", "how do i", "how does", "what strategy", "approach", "what is this", "what does this mean"]):
         return "You're checking whether the string reads identically forwards and backwards after stripping out non-alphanumerics. One thing to think about first: does the input contain spaces or punctuation?"
 
-    # 6. Hints & Clues / Stuck
+    # 9. Hints & Clues / Stuck
     elif any(k in msg_lower for k in ["hint", "clue", "stuck", "help", "nudge"]):
         return "I'd start by comparing characters from both ends and moving toward the center."
 
-    # 7. Debugging / "Why is my code returning None?" / Errors
+    # 10. Debugging / "Why is my code returning None?" / Errors
     elif "none" in msg_lower or "returning none" in msg_lower:
         return "Check your return statement—if execution reaches the end without hitting a return, Python returns None."
 
@@ -358,10 +322,10 @@ async def chat_with_ai_tutor(
             return "The tests check stdout. Your code calculates a value, but doesn't call `print()`."
         return "Where does your output diverge from the test case?"
 
-    # 8. Big-O Complexity
+    # 11. Big-O Complexity
     elif any(k in msg_lower for k in ["complexity", "big o", "time", "space", "performance"]):
         return "Aim for O(n) time with a single pass, keeping extra space minimal."
 
-    # 9. Natural conversational fallback
+    # 12. Natural conversational fallback
     else:
         return "I'd probably use two pointers starting from both ends here."

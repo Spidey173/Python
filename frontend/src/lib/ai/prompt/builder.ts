@@ -41,49 +41,50 @@ export function buildPromptSections(input: ModularPromptInput): PromptSection[] 
 
   // 2. Role & Dynamic Style
   const roleText = ROLE_TEMPLATES[plan.role] || ROLE_TEMPLATES.tutor;
-  const styleDirective = formatStyleDirective(style);
   sections.push({
-    title: 'ROLE & STYLE',
-    content: `${roleText}\n${styleDirective}`,
+    title: 'ROLE',
+    content: roleText,
   });
 
-  // 3. Challenge Context
-  sections.push({
-    title: 'CHALLENGE CONTEXT',
-    content: `Challenge: ${state.challengeTitle}
-Topic: ${knowledge.conceptName} | Time: ${knowledge.timeComplexity}, Space: ${knowledge.spaceComplexity}
-Target Clue: ${knowledge.targetHint}
-Interview Trap: ${knowledge.commonTrap}`,
-  });
+  // 3. Challenge Context (ONLY when working on challenge-specific logic)
+  const isChallengeRelated =
+    plan.teachingRequest === 'GiveHint' ||
+    plan.teachingRequest === 'ShowSolution' ||
+    plan.teachingRequest === 'Debug' ||
+    plan.teachingRequest === 'ExplainProblem';
 
-  // 4. Compressed Memory
-  sections.push({
-    title: 'STUDENT MEMORY',
-    content: memory.formattedText,
-  });
-
-  // 5. AST & Code Observations
-  const astFormatted = formatASTForPrompt(ast);
-  let codeContext = astFormatted;
-  if (errorAnalysis.errorType !== 'none') {
-    codeContext += `\nDiagnostic Flag: ${errorAnalysis.errorType} (${errorAnalysis.probableCause})`;
-  }
-  sections.push({
-    title: 'CODE OBSERVATIONS',
-    content: codeContext,
-  });
-
-  // 6. Code Iteration Diff (if student modified code between attempts)
-  if (codeDiff?.hasChanges) {
+  if (isChallengeRelated && knowledge.conceptName) {
     sections.push({
-      title: 'CODE ITERATION DIFF',
-      content: `Recent code adjustment from previous attempt: ${codeDiff.summary}`,
+      title: 'CHALLENGE CONTEXT',
+      content: `Challenge: ${state.challengeTitle}\nTopic: ${knowledge.conceptName} | Time: ${knowledge.timeComplexity}, Space: ${knowledge.spaceComplexity}`,
     });
   }
 
-  // 6. Response Plan & Blueprint
+  // 4. Code Observations & AST (ONLY if student has code and is debugging or reviewing)
+  const isCodeRelated =
+    ast.linesOfCode > 0 &&
+    (plan.teachingRequest === 'Debug' ||
+      plan.teachingRequest === 'Review' ||
+      errorAnalysis.errorType !== 'none');
+
+  if (isCodeRelated) {
+    const astFormatted = formatASTForPrompt(ast);
+    let codeContext = astFormatted;
+    if (errorAnalysis.errorType !== 'none') {
+      codeContext += `\nDiagnostic Flag: ${errorAnalysis.errorType} (${errorAnalysis.probableCause})`;
+    }
+    if (codeDiff?.hasChanges) {
+      codeContext += `\nRecent code change: ${codeDiff.summary}`;
+    }
+    sections.push({
+      title: 'CODE OBSERVATIONS',
+      content: codeContext,
+    });
+  }
+
+  // 5. Response Plan & Blueprint
   sections.push({
-    title: 'RESPONSE PLAN & STRUCTURE',
+    title: 'RESPONSE PLAN',
     content: formatPlanDirective(plan),
   });
 

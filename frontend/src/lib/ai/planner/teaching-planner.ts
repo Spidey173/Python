@@ -12,7 +12,7 @@ export function createTeachingPlan(
   const { intent, subIntent, flags } = detected;
 
   // 1. Solution / Full code request
-  if (flags.askingForFullCode || (intent === 'learning' && subIntent === 'walkthrough' && state.hintLevel === 5)) {
+  if (flags.askingForFullCode || (intent === 'learning' && subIntent === 'walkthrough')) {
     return {
       intent: 'learning',
       subIntent: 'walkthrough',
@@ -34,7 +34,7 @@ export function createTeachingPlan(
       allowFullSolution: false,
       role: 'debugger',
       focusDirective:
-        'Find the ONE biggest mistake. Explain only that mistake in under 150 words. Do not review the whole program or list multiple issues.',
+        'Trace through their code with real values. Show WHERE it breaks. Explain the ONE biggest mistake and how to fix it.',
     };
   }
 
@@ -115,11 +115,11 @@ export function createTeachingPlan(
     ) as HelpTier;
 
     const directives: Record<HelpTier, string> = {
-      1: 'Give ONE hint only (max 3 sentences). End with one small question. DO NOT show code.',
-      2: 'Highlight the essential rule or data structure requirement. Give a 1-line tip.',
-      3: 'Provide step-by-step simple pseudocode outlining the process.',
-      4: 'Provide a code skeleton with # TODO comments where student fills logic.',
-      5: 'Provide the code block, then 4-6 short bullet points under "**How it works**". No essay.',
+      1: 'Give a gentle hint with a tiny visual showing the core pattern. One idea, one nudge.',
+      2: 'Highlight the key data structure or rule. Show a small example of how it works.',
+      3: 'Walk through the approach step by step in plain English or simple pseudocode.',
+      4: 'Provide a code skeleton showing the structure. Let the student fill in the details.',
+      5: 'Give the clean code, then trace through it with real values showing how it works.',
     };
 
     return {

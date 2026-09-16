@@ -277,6 +277,13 @@ export async function POST(req: NextRequest) {
       llmInvoker,
     });
 
+    console.log('🤖 [/api/ai/tutor Pipeline Version: 2026-09-16]', {
+      message,
+      teachingRequest: output.teachingRequest,
+      allowCode: output.responsePlan.includeCode,
+      replyPreview: output.reply.slice(0, 100),
+    });
+
     return NextResponse.json({
       reply: output.reply,
       socratic_hint: output.socratic_hint,

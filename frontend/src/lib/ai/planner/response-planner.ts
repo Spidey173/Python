@@ -63,18 +63,11 @@ export function createResponsePlan(
   // Detect confidence level: low | medium | high
   const confidenceLevel: ConfidenceLevel = detectConfidence(userMessage);
 
-  // Detect top-5 misconception if present in message or code
-  const misconception: Misconception | null = detectMisconception(userMessage, code);
-
-  // Look up pattern step from pattern graph
-  const patternStep: PatternStep = resolvePatternStep(challengeTitle || userMessage);
-
-  // Compute Next Best Teaching Step
-  const nextBestStep: NextBestStep = resolveNextBestStep(
-    challengeTitle || patternStep.pattern,
-    isSolved,
-    confidenceLevel
-  );
+  // Detect top-5 misconception only if debugging, active bug, or user has code
+  const misconception: Misconception | null =
+    errorAnalysis.errorType !== 'none' || hasActiveBug || Boolean(code && code.trim().length > 0)
+      ? detectMisconception(userMessage, code)
+      : null;
 
   // 2. Map to deterministic TeachingRequest & QuestionType
   const teachingRequest: TeachingRequest = classifyTeachingRequest({
@@ -99,7 +92,22 @@ export function createResponsePlan(
     hasActiveBug,
   });
 
-  // Resolve deterministic slot template and word budget (with misconception prepended if present)
+  // Pattern step & Next Best Step only needed for algorithm hints/reviews/solved states
+  const needsPattern =
+    teachingRequest === TeachingRequest.GiveHint ||
+    teachingRequest === TeachingRequest.Review ||
+    subIntent === 'pattern';
+
+  const patternStep: PatternStep = needsPattern
+    ? resolvePatternStep(challengeTitle || userMessage)
+    : { pattern: 'General', transferClue: '' };
+
+  const nextBestStep: NextBestStep =
+    isSolved || teachingRequest === TeachingRequest.Review
+      ? resolveNextBestStep(challengeTitle || patternStep.pattern, isSolved, confidenceLevel)
+      : { topic: 'Next Step', suggestion: '' };
+
+  // Resolve deterministic slot template and word budget
   const spec = getTeachingRequestSpec(teachingRequest, adaptiveDepth, misconception);
 
   // Determine teaching role cleanly
@@ -152,20 +160,20 @@ export function formatPlanDirective(plan: ResponsePlan): string {
   const spec = plan.requestSpec;
   const lines: string[] = [];
 
-  lines.push(`TEACHING REQUEST: ${spec.request} (Verbosity Level: ${spec.explanationDepth.toUpperCase()})`);
-  lines.push(`LEARNING GOAL: ${plan.learningGoal}`);
-  lines.push(`TEACHING DIRECTIVE: ${getTeachingModeDirective(plan.teachingMode, plan.confidenceLevel)}`);
+  lines.push(`TEACHING REQUEST: ${spec.request} (Verbosity: ${spec.explanationDepth.toUpperCase()})`);
+  lines.push(`DIRECTIVE: ${getTeachingModeDirective(plan.teachingMode, plan.confidenceLevel)}`);
 
-  if (plan.patternStep) {
+  if (
+    plan.patternStep &&
+    plan.patternStep.transferClue &&
+    (plan.teachingRequest === TeachingRequest.GiveHint || plan.teachingRequest === TeachingRequest.Review)
+  ) {
     lines.push(`PATTERN INSIGHT: ${plan.patternStep.pattern} — ${plan.patternStep.transferClue}`);
   }
 
-  lines.push(`WORD LIMIT: Strictly under ${spec.maxWords} words.`);
-  lines.push(`MANDATORY FILL-IN TEMPLATE:\n${spec.outputTemplate}`);
-  lines.push('SLOT RULES:');
-  lines.push('- Fill ONLY the template slots above.');
-  lines.push('- Never add Big O, edge cases, verification tips, Socratic questions, or extra explanations unless requested.');
-  lines.push('- Do NOT output artificial headers like "Direct Diagnosis", "Why this happens", or "Verification Tip".');
+  lines.push(`WORD LIMIT: Under ${spec.maxWords} words.`);
+  lines.push(`FILL-IN TEMPLATE:\n${spec.outputTemplate}`);
+  lines.push('RULES: Fill ONLY the template above. Never refuse. Answer what was asked.');
 
   return lines.join('\n');
 }

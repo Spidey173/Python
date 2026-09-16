@@ -28,10 +28,10 @@ export function classifyTeachingRequest(input: QuestionClassifierInput): Teachin
 
   const lower = message.toLowerCase().trim();
 
-  // 1. ShowSolution ("Show me code", "give me code")
+  // 1. ShowSolution ("Show me code", "give me code", "provide me the code")
   if (
     askingForFullCode ||
-    /\b(give (me )?(the )?code|show (me )?code|show (the )?code|full code|give code|give solution|full solution|just code|write the code)\b/i.test(lower)
+    /\b(give (me )?(the )?code|provide (me )?(the )?code|show (me )?(the )?code|full code|give code|provide code|show code|give solution|provide solution|full solution|just code|write the code)\b/i.test(lower)
   ) {
     return TeachingRequest.ShowSolution;
   }

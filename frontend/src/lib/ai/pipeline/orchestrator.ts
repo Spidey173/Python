@@ -125,11 +125,28 @@ export async function runCognitivePipeline(
   // 2. Weighted Scoring Intent Detection (<1ms)
   const detected = detectIntent(normalizedMessage, code);
 
+  // HARD OVERRIDE FOR SHOW_CODE / SOLUTION REQUESTS
+  // When a student explicitly asks for code, nothing later in the pipeline may override it.
+  const isShowCodeRequest =
+    detected.flags.askingForFullCode ||
+    detected.subIntent === 'walkthrough' ||
+    /\b(give (me )?(the )?(code|solution)|provide (me )?(the )?(code|solution)|show (me )?(the )?(code|solution)|give code|provide code|show code|write (the )?code|full code|just code|code please)\b/i.test(
+      normalizedMessage
+    );
+
+  if (isShowCodeRequest) {
+    detected.intent = 'learning';
+    detected.subIntent = 'walkthrough';
+    detected.flags.askingForFullCode = true;
+  }
+
   // 3. Conditional Stage: Capability Router (Only check if message is asking a factual question)
+  // NEVER resolve locally if user is asking for challenge code!
   if (
-    detected.intent === 'learning' ||
-    detected.intent === 'conversation' ||
-    /^(what|how|difference)/i.test(normalizedMessage)
+    !isShowCodeRequest &&
+    (detected.intent === 'learning' ||
+      detected.intent === 'conversation' ||
+      /^(what|how|difference)/i.test(normalizedMessage))
   ) {
     const localCap = tryResolveLocalCapability(normalizedMessage);
     if (localCap) {
@@ -152,6 +169,13 @@ export async function runCognitivePipeline(
         code,
         dummyState.isSolved
       );
+
+      console.log('🤖 [AI Pipeline Version: 2026-09-16]', {
+        message: normalizedMessage,
+        requestType: plan.teachingRequest,
+        allowCode: plan.includeCode,
+        resolvedLocally: true,
+      });
 
       return {
         reply: polishNaturalLanguage(localCap.response),
@@ -210,6 +234,16 @@ export async function runCognitivePipeline(
   // 8. Teaching Planner (Pedagogical tier progression 1..5)
   const teachingPlan = createTeachingPlan(detected, state);
 
+  // Hard override on teaching plan if asking for code
+  if (isShowCodeRequest) {
+    teachingPlan.helpLevel = 5;
+    teachingPlan.allowCode = true;
+    teachingPlan.allowFullSolution = true;
+    teachingPlan.role = 'tutor';
+    teachingPlan.focusDirective =
+      'The student explicitly requested code. Give the clean Python code, followed by "**How it works**" with 4-6 short bullet points. No essay.';
+  }
+
   // 9. Knowledge Retrieval Layer
   const knowledge = retrieveChallengeKnowledge(
     challengeId,
@@ -237,6 +271,24 @@ export async function runCognitivePipeline(
     code,
     state.isSolved
   );
+
+  // Hard override on response plan if asking for code
+  if (isShowCodeRequest) {
+    responsePlan.teachingRequest = TeachingRequest.ShowSolution;
+    responsePlan.role = 'tutor';
+    responsePlan.revealSolution = true;
+    responsePlan.includeCode = true;
+    responsePlan.teachingMode = 'Teacher';
+  }
+
+  console.log('🤖 [AI Pipeline Version: 2026-09-16]', {
+    message: normalizedMessage,
+    requestType: responsePlan.teachingRequest,
+    teachingMode: responsePlan.teachingMode,
+    allowCode: responsePlan.includeCode,
+    allowFullSolution: responsePlan.revealSolution,
+    resolvedLocally: false,
+  });
 
   // 12. Strict Zero-Pollution Cache Policy Guard
   // Never cache if student has custom code, active bugs, repeated attempts, or frustration tone!

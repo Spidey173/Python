@@ -188,8 +188,8 @@ export function renderTopicResponse(
 
   if (intent === 'learning') {
     if (subIntent === 'complexity') return template.renderComplexity(ctx);
-    if (subIntent === 'pattern' || subIntent === 'pseudocode' || ctx.hintLevel >= 4) return template.renderSkeleton(ctx);
-    if (subIntent === 'walkthrough') return template.renderSolution(ctx);
+    if (subIntent === 'walkthrough' || ctx.hintLevel === 5) return template.renderSolution(ctx);
+    if (subIntent === 'pattern' || subIntent === 'pseudocode' || ctx.hintLevel === 4) return template.renderSkeleton(ctx);
     return template.renderHint(ctx);
   }
 

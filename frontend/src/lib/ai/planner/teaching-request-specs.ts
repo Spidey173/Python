@@ -38,14 +38,17 @@ In simple words: [1 sentence saying what the problem asks]`,
         maxExamples: 0,
         allowCode: false,
         allowFollowUpQuestion: true,
-        outputTemplate: `You're close.
+        outputTemplate: `No worries. Let's solve it together.
 
-[Draw a tiny picture or trace showing the core pattern:]
+Think of it like this:
+
 \`\`\`
-[2-3 lines showing the key insight visually]
+[Draw a tiny ASCII picture or trace showing the core pattern with pointers or state]
 \`\`\`
 
-[1 sentence nudge pointing them to the next step]`,
+[1-2 sentences explaining what to check and how pointers or state move]
+
+That's the main idea behind this problem.`,
       };
       break;
 
@@ -81,12 +84,12 @@ In simple words: [1 sentence saying what the problem asks]`,
 [Clean, minimal Python code]
 \`\`\`
 
-How it works (trace with real values):
-\`\`\`
-[Step 1: show state after first key operation]
-[Step 2: show state changing]
-[Step 3: show how the answer emerges]
-\`\`\``,
+**How it works**
+
+* [Bullet 1: setup / initial pointers / state]
+* [Bullet 2: what we check at each step]
+* [Bullet 3: condition that triggers return or update]
+* [Bullet 4: final answer returned]`,
       };
       break;
 

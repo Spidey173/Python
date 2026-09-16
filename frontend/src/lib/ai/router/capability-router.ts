@@ -78,6 +78,63 @@ print(words) # Output: ['the', 'sky', 'is', 'blue']
     },
   },
   {
+    match: /\b(what is|explain)\s+(a\s+)?list\b/i,
+    capability: {
+      title: 'Python Lists',
+      response: `\`\`\`python
+fruits = ["apple", "banana", "cherry"]
+fruits.append("orange")
+print(fruits[0])  # "apple"
+\`\`\`
+
+A list is an ordered, changeable collection of items.
+You access items by index starting at 0, and add new items with \`.append()\`.`,
+    },
+  },
+  {
+    match: /\b(what is|explain)\s+(a\s+)?(dictionary|dict|hash\s*map)\b/i,
+    capability: {
+      title: 'Python Dictionaries',
+      response: `\`\`\`python
+scores = {"alice": 95, "bob": 80}
+scores["charlie"] = 90
+print(scores["alice"])  # 95 (instant O(1) lookup)
+\`\`\`
+
+A dictionary stores key-value pairs.
+Instead of an index number, you look up values using keys. Lookups take O(1) instant time.`,
+    },
+  },
+  {
+    match: /\b(what is|explain)\s+(a\s+)?(stack)\b/i,
+    capability: {
+      title: 'Python Stack',
+      response: `\`\`\`python
+stack = []
+stack.append(10)  # push
+stack.append(20)  # push
+top = stack.pop()  # removes 20 (Last-In, First-Out)
+\`\`\`
+
+Think of a stack of plates: you add to the top, and remove from the top.
+Useful for matching parentheses, undo features, and depth-first search.`,
+    },
+  },
+  {
+    match: /\b(what is|explain)\s+(a\s+)?(set)\b/i,
+    capability: {
+      title: 'Python Sets',
+      response: `\`\`\`python
+seen = {1, 2, 3}
+seen.add(2)  # duplicates are automatically ignored!
+print(2 in seen)  # True (O(1) instant check)
+\`\`\`
+
+A set stores unique items without order.
+Checking if an item exists (\`item in seen\`) takes O(1) instant time.`,
+    },
+  },
+  {
     match: /\b(what is|difference between)\s+(list and tuple|tuple and list)\b/i,
     capability: {
       title: 'Python List vs Tuple',

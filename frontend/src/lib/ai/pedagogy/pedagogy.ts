@@ -36,7 +36,7 @@ export function classifyLearningGoal(
   // ShowCode
   if (
     askingForFullCode ||
-    /\b(give (me )?(the )?code|show (me )?code|full code|give code|give solution|full solution|just code|write the code)\b/i.test(lower)
+    /\b(give (me )?(the )?code|provide (me )?(the )?code|show (me )?(the )?code|full code|give code|provide code|show code|give solution|provide solution|full solution|just code|write the code)\b/i.test(lower)
   ) {
     return 'ShowCode';
   }
@@ -179,32 +179,30 @@ export function getTeachingModeDirective(mode: TeachingMode, confidence: Confide
   let base = '';
   switch (mode) {
     case 'Teacher':
-      base = 'TEACHING MODE [TEACHER]: Explain concepts clearly using concrete mental models and decision-making tradeoffs.';
+      base = 'TEACHING MODE [TEACHER]: Explain concepts clearly with a concrete example or visual. Answer directly.';
       break;
     case 'Coach':
-      base = 'TEACHING MODE [COACH]: Give a progressive nudge. Never write full code. Challenge the student to take the next step.';
+      base = 'TEACHING MODE [COACH]: Give one focused hint or nudge. If the student asked for code, give the code.';
       break;
     case 'Debugger':
-      base = 'TEACHING MODE [DEBUGGER]: Pinpoint the exact invariant failure or edge case breakdown. Be systematic and direct.';
+      base = 'TEACHING MODE [DEBUGGER]: Trace through execution with real values to show where the state breaks.';
       break;
     case 'Interviewer':
-      base = 'TEACHING MODE [INTERVIEWER]: Act as a senior FAANG technical interviewer. Probe communication, edge cases, and Big O tradeoffs.';
+      base = 'TEACHING MODE [INTERVIEWER]: Ask one focused technical question. Keep it conversational.';
       break;
     case 'PairProgrammer':
-      base = 'TEACHING MODE [PAIR PROGRAMMER]: Collaborate like a friendly peer sitting beside the student. Suggest one concrete line or step together.';
+      base = 'TEACHING MODE [PAIR PROGRAMMER]: Suggest the next concrete step together.';
       break;
   }
 
   let tone = '';
   if (confidence === 'low') {
-    tone = ' Tone: [Low confidence] The student feels lost. Be warm, reassuring, and start with the simplest possible intuition. Avoid jargon.';
+    tone = ' Tone: [Low confidence] Be warm, reassuring, and start with the simplest possible intuition.';
   } else if (confidence === 'high') {
-    tone = ' Tone: [High confidence] The student is confident. Skip filler encouragement; be crisp, technical, and precise.';
-  } else {
-    tone = ' Tone: Balanced and encouraging.';
+    tone = ' Tone: [High confidence] Crisp, technical, and precise.';
   }
 
-  return `${base}${tone}`;
+  return `${base}${tone}`.trim();
 }
 
 // ============================================================================

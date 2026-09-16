@@ -90,6 +90,10 @@ export function polishNaturalLanguage(text: string): string {
   // 7. Clean trailing robotic sign-offs
   cleaned = cleaned.replace(/\n\s*(happy coding|best regards|happy learning|good luck|let me know)[^\n]*$/i, '');
 
+  // 8. Strip any leftover refusal or code-withholding artifacts
+  cleaned = cleaned.replace(/>?\s*💡?\s*\*?\[Code withheld[^\]]*\]\*?\s*/gi, '');
+  cleaned = cleaned.replace(/>\s*Focus on the rule first:[^\n]*\n?/gi, '');
+
   return cleaned.trim();
 }
 

@@ -93,9 +93,9 @@ const RULES: IntentScoringRule[] = [
     intent: 'learning',
     subIntent: 'walkthrough',
     positive: [
-      { pattern: /\b(give me the code|give me code|show me the code|give code)\b/i, weight: 8 },
-      { pattern: /\b(give me the solution|show (the )?solution|just show me the code)\b/i, weight: 6 },
-      { pattern: /\b(full (code|solution|answer)|what is the (answer|solution)|give up|show answer)\b/i, weight: 5 },
+      { pattern: /\b(give (me )?(the )?code|provide (me )?(the )?code|show (me )?(the )?code|give code|provide code|show code)\b/i, weight: 8 },
+      { pattern: /\b(give (me )?(the )?solution|show (the )?solution|provide (the )?solution|just show (me )?the code)\b/i, weight: 6 },
+      { pattern: /\b(full (code|solution|answer)|what is the (answer|solution)|give up|show answer|write (the )?code)\b/i, weight: 5 },
     ],
     negative: [
       { pattern: /\b(hint|nudge|don't give|without spoiling)\b/i, weight: 4 },
@@ -216,7 +216,9 @@ export function detectIntent(message: string, code?: string): DetectedIntentResu
   // Context flags
   const hasErrorTrace = /(error|exception|traceback|line \d+|failed)/i.test(lower);
   const mentionsTerminalOutput = /(print|stdout|terminal|output|returned)/i.test(lower);
-  const askingForFullCode = topSubIntent === 'walkthrough' || /\b(solution|full code|give up)\b/i.test(lower);
+  const askingForFullCode =
+    topSubIntent === 'walkthrough' ||
+    /\b(solution|full code|give up|provide (me )?(the )?code|give (me )?(the )?code|show (me )?(the )?code|provide code|give code|show code|write the code)\b/i.test(lower);
   const askingForSkeleton = topSubIntent === 'pattern' || /\b(skeleton|scaffold|boilerplate)\b/i.test(lower);
   const isGreeting = topIntent === 'greeting';
 
