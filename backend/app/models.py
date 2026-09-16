@@ -65,24 +65,36 @@ class Challenge(Base):
     @property
     def hints(self):
         try:
-            return json.loads(self.hints_json or "[]")
+            val = json.loads(self.hints_json or "[]")
+            while isinstance(val, str):
+                val = json.loads(val)
+            return val if isinstance(val, list) else []
         except Exception:
             return []
 
     @hints.setter
     def hints(self, val):
-        self.hints_json = json.dumps(val)
+        if isinstance(val, (list, dict)):
+            self.hints_json = json.dumps(val)
+        elif isinstance(val, str):
+            self.hints_json = val
 
     @property
     def test_cases(self):
         try:
-            return json.loads(self.test_cases_json or "[]")
+            val = json.loads(self.test_cases_json or "[]")
+            while isinstance(val, str):
+                val = json.loads(val)
+            return val if isinstance(val, list) else []
         except Exception:
             return []
 
     @test_cases.setter
     def test_cases(self, val):
-        self.test_cases_json = json.dumps(val)
+        if isinstance(val, (list, dict)):
+            self.test_cases_json = json.dumps(val)
+        elif isinstance(val, str):
+            self.test_cases_json = val
 
     progress_entries = relationship("UserProgress", back_populates="challenge", cascade="all, delete-orphan")
     submissions = relationship("Submission", back_populates="challenge", cascade="all, delete-orphan")
