@@ -3,6 +3,7 @@ export * from './types';
 export * from './intent/detector';
 export * from './router/capability-router';
 export * from './ast/summarizer';
+export * from './ast/code-diff';
 export * from './debugging/error-analyzer';
 export * from './style/response-style';
 export * from './memory/memory-compressor';

@@ -44,8 +44,8 @@ const RULES: IntentScoringRule[] = [
     positive: [
       { pattern: /\b(indexerror|keyerror|typeerror|attributeerror|syntaxerror|zerodivisionerror|valueerror|recursionerror)\b/i, weight: 6 },
       { pattern: /\b(traceback|exception|line \d+|error:|failed test)\b/i, weight: 5 },
-      { pattern: /\b(debug|bug|failing|broken|crash|not working|infinite loop|stuck in loop)\b/i, weight: 4 },
-      { pattern: /\b(wrong|returns? none|unexpected output|differs from)\b/i, weight: 3 },
+      { pattern: /\b(debug|bug|fail|fails|failing|failed|broken|crash|not working|infinite loop|stuck in loop)\b/i, weight: 5 },
+      { pattern: /\b(wrong|returns? none|unexpected output|differs from)\b/i, weight: 4 },
     ],
     negative: [
       { pattern: /\b(give me the solution|full code|hire me)\b/i, weight: 3 },

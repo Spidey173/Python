@@ -46,6 +46,8 @@ export interface ConversationState {
   lastHintProvided?: string;
   conceptsGrasped?: string[];
   currentBottlenecks?: string[];
+  previousCode?: string;
+  codeDiffSummary?: string;
 }
 
 export interface FactualASTSummary {

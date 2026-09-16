@@ -24,11 +24,12 @@ export interface ModularPromptInput {
   style: ResponseStyle;
   knowledge: RetrievedKnowledge;
   errorAnalysis: ErrorAnalysisResult;
+  codeDiff?: { hasChanges: boolean; summary: string } | null;
   userMessage: string;
 }
 
 export function buildPromptSections(input: ModularPromptInput): PromptSection[] {
-  const { state, ast, memory, plan, style, knowledge, errorAnalysis } = input;
+  const { state, ast, memory, plan, style, knowledge, errorAnalysis, codeDiff } = input;
 
   const sections: PromptSection[] = [];
 
@@ -71,6 +72,14 @@ Interview Trap: ${knowledge.commonTrap}`,
     title: 'CODE OBSERVATIONS',
     content: codeContext,
   });
+
+  // 6. Code Iteration Diff (if student modified code between attempts)
+  if (codeDiff?.hasChanges) {
+    sections.push({
+      title: 'CODE ITERATION DIFF',
+      content: `Recent code adjustment from previous attempt: ${codeDiff.summary}`,
+    });
+  }
 
   // 6. Response Plan & Blueprint
   sections.push({

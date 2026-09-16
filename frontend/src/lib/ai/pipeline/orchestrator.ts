@@ -1,6 +1,6 @@
 // Main Cognitive Pipeline Orchestrator (Production ChatGPT / Claude Grade)
-// Orchestrates: Normalize -> Weighted Intent -> Capability Router -> State -> Memory Compression -> AST -> Error Analyzer
-//               -> Knowledge -> Teaching Planner -> Style Engine -> Response Planner -> Modular Prompt
+// Orchestrates: Normalize -> Weighted Intent -> Capability Router -> State -> Conditional Memory & AST -> Error Analyzer
+//               -> Code Diff -> Knowledge -> Teaching Planner -> Style Engine -> Response Planner -> Modular Prompt
 //               -> Workload Provider Router -> Validator -> Natural Language Polisher -> Stream / Output
 
 import {
@@ -17,6 +17,7 @@ import {
 import { detectIntent } from '../intent/detector';
 import { tryResolveLocalCapability } from '../router/capability-router';
 import { summarizeCode } from '../ast/summarizer';
+import { computeCodeDiff, CodeDiffResult } from '../ast/code-diff';
 import { analyzeError } from '../debugging/error-analyzer';
 import { getOrCreateConversationState, recordIntent } from '../state/conversation-state';
 import { compressMemory } from '../memory/memory-compressor';
@@ -62,6 +63,7 @@ export interface CognitivePipelineOutput {
   role: TeachingRole;
   socratic_hint: string;
   astSummary: FactualASTSummary;
+  codeDiff?: CodeDiffResult | null;
   errorAnalysis?: ErrorAnalysisResult;
   responsePlan: ResponsePlan;
   responseStyle: ResponseStyle;
@@ -69,6 +71,26 @@ export interface CognitivePipelineOutput {
   clarificationQuestion?: string;
   resolvedLocally?: boolean;
 }
+
+const EMPTY_AST: FactualASTSummary = {
+  functions: [],
+  loopCount: 0,
+  hasNestedLoops: false,
+  hasRecursion: false,
+  usesHashMap: false,
+  usesStackOrQueue: false,
+  hasPrint: false,
+  hasReturn: false,
+  linesOfCode: 0,
+  potentialTraps: [],
+  variables: [],
+};
+
+const EMPTY_ERROR_ANALYSIS: ErrorAnalysisResult = {
+  errorType: 'none',
+  probableCause: '',
+  recommendedAction: '',
+};
 
 export async function runCognitivePipeline(
   input: CognitivePipelineInput
@@ -90,58 +112,87 @@ export async function runCognitivePipeline(
   // 2. Weighted Scoring Intent Detection (<1ms)
   const detected = detectIntent(normalizedMessage, code);
 
-  // 3. Capability Router (Resolves static docs/concepts without LLM cost)
-  const localCap = tryResolveLocalCapability(normalizedMessage);
-  if (localCap) {
-    const dummyState = getOrCreateConversationState(challengeId, challengeTitle, stateOverrides);
-    const ast = summarizeCode(code);
-    const memory = compressMemory(dummyState, ast, chatHistory);
-    const style = determineResponseStyle(dummyState, detected.intent, normalizedMessage);
-    const plan = createResponsePlan(
-      detected.intent,
-      detected.subIntent,
-      dummyState.hintLevel,
-      style,
-      { errorType: 'none', probableCause: '', recommendedAction: '' },
-      ast
-    );
+  // 3. Conditional Stage: Capability Router (Only check if message is asking a factual question)
+  if (
+    detected.intent === 'learning' ||
+    detected.intent === 'conversation' ||
+    /^(what|how|difference)/i.test(normalizedMessage)
+  ) {
+    const localCap = tryResolveLocalCapability(normalizedMessage);
+    if (localCap) {
+      const dummyState = getOrCreateConversationState(challengeId, challengeTitle, stateOverrides);
+      const memory = compressMemory(dummyState, EMPTY_AST, chatHistory);
+      const style = determineResponseStyle(dummyState, detected.intent, normalizedMessage);
+      const plan = createResponsePlan(
+        detected.intent,
+        detected.subIntent,
+        dummyState.hintLevel,
+        style,
+        EMPTY_ERROR_ANALYSIS,
+        EMPTY_AST
+      );
 
-    return {
-      reply: polishNaturalLanguage(localCap.response),
-      confidence: 0.99,
-      intent: detected.intent,
-      subIntent: detected.subIntent,
-      tier: dummyState.hintLevel,
-      role: 'explainer',
-      socratic_hint: 'Standard Python documentation & algorithmic foundation.',
-      astSummary: ast,
-      responsePlan: plan,
-      responseStyle: style,
-      memory,
-      resolvedLocally: true,
-    };
+      return {
+        reply: polishNaturalLanguage(localCap.response),
+        confidence: 0.99,
+        intent: detected.intent,
+        subIntent: detected.subIntent,
+        tier: dummyState.hintLevel,
+        role: 'explainer',
+        socratic_hint: 'Standard Python documentation & algorithmic foundation.',
+        astSummary: EMPTY_AST,
+        responsePlan: plan,
+        responseStyle: style,
+        memory,
+        resolvedLocally: true,
+      };
+    }
   }
 
   // 4. Conversation State Manager
   const state = getOrCreateConversationState(challengeId, challengeTitle, stateOverrides);
   recordIntent(challengeId, detected.intent);
 
-  // 5. AST & Code Summarizer (Structural facts only)
-  const ast = summarizeCode(code);
+  // 5. Conditional Stage: AST Code Analysis & Code Diff
+  // A pure greeting or general chat does not spend cycles analyzing syntax
+  const needsCodeAnalysis =
+    Boolean(code && code.trim().length > 0) &&
+    (detected.intent === 'debugging' ||
+      detected.intent === 'reviewing' ||
+      detected.subIntent === 'pattern' ||
+      detected.subIntent === 'walkthrough');
+
+  const ast = needsCodeAnalysis ? summarizeCode(code) : EMPTY_AST;
+  const codeDiff = needsCodeAnalysis ? computeCodeDiff(code, state.previousCode) : null;
+  if (code && code.trim().length > 0) {
+    state.previousCode = code;
+  }
 
   // 6. Memory Compression (60-90 tokens)
   const memory = compressMemory(state, ast, chatHistory);
 
-  // 7. Error Analyzer (Syntax, Runtime, Wrong Answer, Infinite Loop, Missing Output)
-  const errorAnalysis = analyzeError(rawError || state.lastBug || undefined, normalizedMessage, code);
+  // 7. Conditional Stage: Error Analyzer
+  // Only evaluate error details if debugging or if an explicit error is present
+  const needsErrorAnalysis =
+    detected.intent === 'debugging' ||
+    detected.flags.hasErrorTrace ||
+    Boolean(rawError || state.lastBug);
+
+  const errorAnalysis = needsErrorAnalysis
+    ? analyzeError(rawError || state.lastBug || undefined, normalizedMessage, code)
+    : EMPTY_ERROR_ANALYSIS;
 
   // 8. Teaching Planner (Pedagogical tier progression 1..5)
   const teachingPlan = createTeachingPlan(detected, state);
 
   // 9. Knowledge Retrieval Layer
-  const knowledge = retrieveChallengeKnowledge(challengeId, teachingPlan.helpLevel, teachingPlan.allowFullSolution);
+  const knowledge = retrieveChallengeKnowledge(
+    challengeId,
+    teachingPlan.helpLevel,
+    teachingPlan.allowFullSolution
+  );
 
-  // 10. Response Style Engine (Depth, tone, technical level, example flag)
+  // 10. Response Style Engine (Depth, tone, technical level)
   const responseStyle = determineResponseStyle(state, detected.intent, normalizedMessage);
 
   // 11. Response Planner (Reasoning blueprint object)
@@ -155,7 +206,7 @@ export async function runCognitivePipeline(
     detected.flags.askingForFullCode
   );
 
-  // 12. Strict Cache Policy Guard
+  // 12. Strict Zero-Pollution Cache Policy Guard
   // Never cache if student has custom code, active bugs, repeated attempts, or frustration tone!
   const isEligibleForCache =
     detected.intent === 'learning' &&
@@ -165,7 +216,12 @@ export async function runCognitivePipeline(
     responseStyle.tone === 'neutral' &&
     ['concept', 'complexity'].includes(detected.subIntent || '');
 
-  const cacheKey = getCacheKey(challengeId, detected.intent, detected.subIntent || '', teachingPlan.helpLevel);
+  const cacheKey = getCacheKey(
+    challengeId,
+    detected.intent,
+    detected.subIntent || '',
+    teachingPlan.helpLevel
+  );
 
   if (isEligibleForCache) {
     const cached = getCachedResponse(cacheKey);
@@ -179,6 +235,7 @@ export async function runCognitivePipeline(
         role: responsePlan.role,
         socratic_hint: knowledge.targetHint,
         astSummary: ast,
+        codeDiff,
         errorAnalysis,
         responsePlan,
         responseStyle,
@@ -196,6 +253,7 @@ export async function runCognitivePipeline(
     style: responseStyle,
     knowledge,
     errorAnalysis,
+    codeDiff,
     userMessage: normalizedMessage,
   });
 
@@ -225,7 +283,12 @@ export async function runCognitivePipeline(
   }
 
   // 15. Response Validator (Deterministic premature leak guard & confidence scoring)
-  const validated = validateResponse(rawReply, responsePlan, normalizedMessage, teachingPlan.helpLevel);
+  const validated = validateResponse(
+    rawReply,
+    responsePlan,
+    normalizedMessage,
+    teachingPlan.helpLevel
+  );
 
   // 16. Natural Language Polisher (Removes robotic phrases, boilerplate, and smooths transitions)
   const polishedReply = polishNaturalLanguage(validated.cleanedResponse);
@@ -244,6 +307,7 @@ export async function runCognitivePipeline(
     role: responsePlan.role,
     socratic_hint: knowledge.targetHint,
     astSummary: ast,
+    codeDiff,
     errorAnalysis,
     responsePlan,
     responseStyle,
