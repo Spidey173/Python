@@ -40,11 +40,12 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Sleek ChatGPT-style text parser for code blocks, inline code, bolding, and lists
+  // Sleek Notion × Linear × Stripe Docs text parser
   const renderFormattedMessage = (text: string, msgId: string) => {
     const parts = text.split(/(```[\s\S]*?```)/g);
 
     return parts.map((part, index) => {
+      // 1. Code Blocks
       if (part.startsWith('```') && part.endsWith('```')) {
         const raw = part.slice(3, -3).trim();
         const firstNewline = raw.indexOf('\n');
@@ -59,52 +60,154 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
         const isCopied = copiedId === blockId;
 
         return (
-          <div key={index} className="my-3 rounded-lg border border-[#30363D] bg-[#0D1117] overflow-hidden font-mono text-xs shadow-md">
-            <div className="flex items-center justify-between px-3 py-1.5 bg-[#161B22] border-b border-[#30363D] text-[#8B949E] text-[11px]">
-              <span className="lowercase font-semibold text-[#58A6FF]">{language || 'code'}</span>
+          <div key={index} className="my-4 rounded-xl border border-white/10 bg-[#0B1220] overflow-hidden font-mono text-xs shadow-xl">
+            <div className="flex items-center justify-between px-3.5 py-2.5 bg-[#111827] border-b border-white/10 text-[#9CA3AF] text-[11px]">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]/80" />
+                </div>
+                <span className="text-[#9CA3AF] text-xs font-mono ml-1">solution.py</span>
+              </div>
               <button
                 onClick={() => handleCopyCode(code, blockId)}
-                className="flex items-center gap-1 hover:text-[#E6EDF3] transition-colors py-0.5 px-1.5 rounded bg-[#21262D]/60 hover:bg-[#30363D]"
+                className="flex items-center gap-1.5 hover:text-[#F3F4F6] transition-all py-1 px-2.5 rounded-md bg-[#1F2937] hover:bg-[#374151] text-[11px] font-medium border border-white/5"
               >
                 {isCopied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-[#3FB950]" />
-                    <span className="text-[#3FB950]">Copied!</span>
+                    <Check className="w-3.5 h-3.5 text-[#10B981]" />
+                    <span className="text-[#10B981] font-semibold">✓ Copied</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>Copy code</span>
+                    <span>Copy</span>
                   </>
                 )}
               </button>
             </div>
-            <pre className="p-3.5 overflow-x-auto text-[#E6EDF3] leading-relaxed select-text font-mono">
+            <pre className="p-4 overflow-x-auto text-[#E5E7EB] leading-relaxed select-text font-mono text-[12px]">
               <code>{code}</code>
             </pre>
           </div>
         );
       }
 
-      // Format inline elements: **bold**, `inline code`, bullet lines
+      // 2. Headings, Callouts, Lists, and Text
       const lines = part.split('\n');
       return (
-        <span key={index} className="block whitespace-pre-wrap leading-relaxed">
+        <div key={index} className="space-y-3 leading-relaxed text-[#D1D5DB]">
           {lines.map((line, lIdx) => {
-            // Render bullet points cleanly
-            const isBullet = line.trim().startsWith('- ') || line.trim().startsWith('* ');
-            const lineContent = isBullet ? line.trim().substring(2) : line;
+            const trimmed = line.trim();
+            if (!trimmed) return <div key={lIdx} className="h-1.5" />;
 
-            // Parse inline bold and inline code
-            const inlineTokens = lineContent.split(/(\*\*.*?\*\*|`[^`]+`)/g);
+            // TL;DR Card
+            if (trimmed.includes('TL;DR') || trimmed.includes('TLDR')) {
+              return (
+                <div key={lIdx} className="my-3 rounded-xl border border-[#3B82F6]/40 bg-[#1E293B]/70 p-4 text-xs text-[#E2E8F0] space-y-2 shadow-md">
+                  <div className="font-bold text-[#60A5FA] flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5">
+                      <span>💡</span>
+                      <span>TL;DR Solution Summary</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-[#94A3B8] bg-[#0F172A] px-2 py-0.5 rounded border border-white/10">
+                      ~2 min read
+                    </span>
+                  </div>
+                  <p className="text-[#CBD5E1] leading-relaxed">
+                    {trimmed.replace(/^[>#*\s💡]+/, '').replace(/^TL;?DR:?\s*/i, '')}
+                  </p>
+                </div>
+              );
+            }
 
-            const renderedLine = inlineTokens.map((token, tIdx) => {
+            // Callout: Tips (💡)
+            if (trimmed.startsWith('💡') || trimmed.startsWith('> ## 💡') || trimmed.startsWith('**Interview Tip**') || trimmed.startsWith('💡 Interview Tip')) {
+              return (
+                <div key={lIdx} className="my-3 rounded-xl border border-[#3B82F6]/30 bg-[#1E293B]/60 p-4 text-xs text-[#E2E8F0] space-y-1.5 shadow-sm">
+                  <div className="font-semibold text-[#60A5FA] flex items-center gap-1.5 text-xs">
+                    <span>💡</span>
+                    <span>Interview Tip / Core Idea</span>
+                  </div>
+                  <p className="text-[#CBD5E1] leading-relaxed pl-5">
+                    {trimmed.replace(/^[>#*\s💡]+/, '').replace(/^Interview Tip:?\s*/i, '')}
+                  </p>
+                </div>
+              );
+            }
+
+            // Callout: Warning / Common Mistake (⚠️ or ❌)
+            if (trimmed.startsWith('⚠️') || trimmed.startsWith('❌') || trimmed.startsWith('**Common Mistake**')) {
+              return (
+                <div key={lIdx} className="my-3 rounded-xl border border-[#EF4444]/30 bg-[#7F1D1D]/20 p-4 text-xs text-[#FECACA] space-y-1.5 shadow-sm">
+                  <div className="font-semibold text-[#F87171] flex items-center gap-1.5 text-xs">
+                    <span>⚠️</span>
+                    <span>Common Mistake</span>
+                  </div>
+                  <p className="text-[#FCA5A5] leading-relaxed pl-5">
+                    {trimmed.replace(/^[⚠️❌*\s]+/, '').replace(/^Common Mistake:?\s*/i, '')}
+                  </p>
+                </div>
+              );
+            }
+
+            // Callout: Complexity (⏱)
+            if (trimmed.startsWith('⏱') || trimmed.includes('Complexity')) {
+              return (
+                <div key={lIdx} className="my-3 rounded-xl border border-[#F59E0B]/30 bg-[#78350F]/20 p-4 text-xs text-[#FEF3C7] space-y-1.5 shadow-sm">
+                  <div className="font-semibold text-[#FBBF24] flex items-center gap-1.5 text-xs">
+                    <span>⏱</span>
+                    <span>Complexity</span>
+                  </div>
+                  <p className="text-[#FDE68A] leading-relaxed pl-5">
+                    {trimmed.replace(/^[⏱*\s]+/, '').replace(/^Complexity:?\s*/i, '')}
+                  </p>
+                </div>
+              );
+            }
+
+            // Callout: Success / Recap (✅)
+            if (trimmed.startsWith('✅') && (trimmed.includes('Recap') || trimmed.includes('Done') || trimmed.includes('Summary'))) {
+              return (
+                <div key={lIdx} className="my-3 rounded-xl border border-[#10B981]/30 bg-[#064E3B]/20 p-4 text-xs text-[#D1FAE5] space-y-1.5 shadow-sm">
+                  <div className="font-semibold text-[#34D399] flex items-center gap-1.5 text-xs">
+                    <span>✅</span>
+                    <span>Quick Recap</span>
+                  </div>
+                  <p className="text-[#A7F3D0] leading-relaxed pl-5">
+                    {trimmed.replace(/^[✅*\s]+/, '')}
+                  </p>
+                </div>
+              );
+            }
+
+            // Section Headings (## or ###)
+            if (trimmed.startsWith('### ') || trimmed.startsWith('## ') || trimmed.startsWith('# ')) {
+              const headingText = trimmed.replace(/^#+\s*/, '');
+              return (
+                <div key={lIdx} className="pt-3 pb-1 border-b border-white/10">
+                  <h4 className="text-sm font-bold text-[#F9FAFB] tracking-tight flex items-center gap-2">
+                    {headingText}
+                  </h4>
+                </div>
+              );
+            }
+
+            // Bullet Points (- or * or •)
+            const isBullet = trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ') || trimmed.startsWith('✅ ');
+            const bulletIcon = trimmed.startsWith('✅ ') ? '✅' : '•';
+            const rawContent = isBullet ? trimmed.replace(/^[-*•✅]\s*/, '') : line;
+
+            // Parse inline variable badges, code pills, and bolding
+            const inlineTokens = rawContent.split(/(\*\*.*?\*\*|`[^`]+`)/g);
+            const renderedContent = inlineTokens.map((token, tIdx) => {
               if (token.startsWith('**') && token.endsWith('**')) {
-                return <strong key={tIdx} className="font-semibold text-white">{token.slice(2, -2)}</strong>;
+                return <strong key={tIdx} className="font-semibold text-[#F3F4F6]">{token.slice(2, -2)}</strong>;
               }
               if (token.startsWith('`') && token.endsWith('`')) {
                 return (
-                  <code key={tIdx} className="px-1.5 py-0.5 rounded bg-[#21262D] text-[#58A6FF] font-mono text-[12px] border border-[#30363D]">
+                  <code key={tIdx} className="px-1.5 py-0.5 rounded-md bg-[#1F2937] text-[#60A5FA] font-mono text-[11px] border border-[#374151]">
                     {token.slice(1, -1)}
                   </code>
                 );
@@ -112,21 +215,22 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
               return token;
             });
 
+            if (isBullet) {
+              return (
+                <div key={lIdx} className="flex items-start gap-2.5 my-1 pl-1 text-xs">
+                  <span className="text-[#60A5FA] font-bold select-none shrink-0">{bulletIcon}</span>
+                  <span className="text-[#E2E8F0] leading-relaxed">{renderedContent}</span>
+                </div>
+              );
+            }
+
             return (
-              <React.Fragment key={lIdx}>
-                {isBullet ? (
-                  <span className="flex items-start gap-2 my-1 pl-1">
-                    <span className="text-[#58A6FF] font-bold select-none">•</span>
-                    <span>{renderedLine}</span>
-                  </span>
-                ) : (
-                  <span>{renderedLine}</span>
-                )}
-                {lIdx < lines.length - 1 && !isBullet && <br />}
-              </React.Fragment>
+              <p key={lIdx} className="text-xs leading-relaxed text-[#CBD5E1]">
+                {renderedContent}
+              </p>
             );
           })}
-        </span>
+        </div>
       );
     });
   };
