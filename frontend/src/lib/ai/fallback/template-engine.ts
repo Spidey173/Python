@@ -1,5 +1,5 @@
-// Dynamic DSA Topic Template Fallback Engine
-// Replaces hardcoded if-chains with modular topic templates
+// Dynamic Topic Fallback Engine (PyForge Minimalist Teaching Philosophy)
+// Core Principle: Smallest explanation that answers the question. Conversation over documentation.
 
 import { RetrievedKnowledge, FactualASTSummary, HelpTier, StudentIntent } from '../types';
 
@@ -24,167 +24,112 @@ interface TopicTemplate {
 
 const twoPointersTemplate: TopicTemplate = {
   renderGreeting: (ctx) =>
-    `Hey! For **${ctx.knowledge.conceptName}**, we can use two pointers moving toward each other. Where would you like to begin?`,
+    `Hey! I'm working through "${ctx.knowledge.conceptName}" with you. Where would you like to start?`,
 
   renderHint: (ctx) =>
-    `### Conceptual Nudge (Tier ${ctx.hintLevel})\n` +
-    `${ctx.knowledge.targetHint}\n\n` +
-    `> **Key Invariant**: Keep track of what \`left\` and \`right\` represent. Ensure your condition prevents pointers from crossing past each other.`,
+    `${ctx.knowledge.targetHint}\n\nWhat rule should decide when to move the left pointer versus the right pointer?`,
 
   renderDebug: (ctx) =>
-    `### Diagnostic: Two Pointers Loop\n` +
-    (ctx.lastBug ? `Recent Error: \`${ctx.lastBug}\`\n\n` : '') +
-    `1. **Pointer Movement**: Are you incrementing \`left += 1\` or decrementing \`right -= 1\` on *every* path?\n` +
-    `2. **Bounds**: Use \`while left < right:\` to avoid index out of range.\n` +
-    `3. **Terminal Output**: Does your script print the final boolean or value?`,
+    (ctx.lastBug
+      ? `The main issue looks like: \`${ctx.lastBug}\`.\n\n`
+      : 'Check your loop pointers.\n\n') +
+    'Make sure `left` moves forward (`left += 1`) and `right` moves backward (`right -= 1`). Otherwise the loop will run forever or miss elements.',
 
   renderComplexity: (ctx) =>
-    `### Complexity Analysis\n` +
-    `• **Time**: \`${ctx.knowledge.timeComplexity}\` (each element is inspected at most once as pointers converge).\n` +
-    `• **Space**: \`${ctx.knowledge.spaceComplexity}\` in-place auxiliary space.`,
+    `• Time: ${ctx.knowledge.timeComplexity} (we go through the input once)\n• Memory: ${ctx.knowledge.spaceComplexity} (in-place)`,
 
   renderSkeleton: (ctx) =>
-    `### Two Pointers Pattern Skeleton\n` +
-    `\`\`\`python\n` +
-    `# 1. Initialize pointers at both boundaries\n` +
-    `left = 0\n` +
-    `right = len(data) - 1\n\n` +
-    `while left < right:\n` +
-    `    # TODO: Compare data[left] and data[right]\n` +
-    `    if condition:\n` +
-    `        left += 1\n` +
-    `    else:\n` +
-    `        right -= 1\n\n` +
-    `# TODO: Output result\n` +
-    `\`\`\``,
+    `\`\`\`python\nleft = 0\nright = len(data) - 1\n\nwhile left < right:\n    # TODO: compare data[left] and data[right]\n    if condition:\n        left += 1\n    else:\n        right -= 1\n\`\`\`\n\nFill in the condition to decide which pointer moves.`,
 
   renderSolution: (ctx) =>
-    `### Optimal Solution\n` +
     (ctx.knowledge.optimalCodeSnippet
       ? `\`\`\`python\n${ctx.knowledge.optimalCodeSnippet}\n\`\`\`\n\n`
       : '') +
-    `• **Approach**: ${ctx.knowledge.optimalApproachTitle}\n` +
-    `• **Complexity**: Time ${ctx.knowledge.timeComplexity}, Space ${ctx.knowledge.spaceComplexity}`,
+    `• We use two pointers moving from outside to inside.\n` +
+    `• Each step compares the two ends.\n` +
+    `• Time: ${ctx.knowledge.timeComplexity}\n` +
+    `• Space: ${ctx.knowledge.spaceComplexity}`,
 };
 
 const hashMapTemplate: TopicTemplate = {
   renderGreeting: (ctx) =>
-    `Hey! We're working on **${ctx.knowledge.conceptName}**. A dictionary or hash map allows fast $O(1)$ lookups. How is your logic structured so far?`,
+    `Hey! Looking at "${ctx.knowledge.conceptName}". What part of the logic are you thinking about?`,
 
   renderHint: (ctx) =>
-    `### Intuition Nudge (Tier ${ctx.hintLevel})\n` +
-    `${ctx.knowledge.targetHint}\n\n` +
-    `> **Tip**: Instead of nested loops, store previously seen values in a dictionary to find matches in a single pass.`,
+    `${ctx.knowledge.targetHint}\n\nCan we store values we've already seen in a dictionary so lookups take $O(1)$ time?`,
 
   renderDebug: (ctx) =>
-    `### Diagnostic: Hash Map Lookup\n` +
-    (ctx.lastBug ? `Recent Error: \`${ctx.lastBug}\`\n\n` : '') +
-    `1. **Key Existence**: Use \`seen.get(key, 0)\` or \`if key in seen:\` to avoid KeyError.\n` +
-    `2. **Order preservation**: When seeking the first unique item, iterate over the original sequence, not the dictionary keys.\n` +
-    `3. **Return Value**: Check what you return when no matching pair exists.`,
+    (ctx.lastBug
+      ? `Looking at this error: \`${ctx.lastBug}\`.\n\n`
+      : 'Check your dictionary lookup.\n\n') +
+    'Remember to check `if key in seen:` before accessing it, or use `seen.get(key, 0)` so Python doesn\'t throw a KeyError.',
 
   renderComplexity: (ctx) =>
-    `### Complexity Analysis\n` +
-    `• **Time**: \`${ctx.knowledge.timeComplexity}\` (single pass with $O(1)$ dictionary average lookups).\n` +
-    `• **Space**: \`${ctx.knowledge.spaceComplexity}\` (stores elements in memory).`,
+    `• Time: ${ctx.knowledge.timeComplexity} (single pass using dictionary lookups)\n• Memory: ${ctx.knowledge.spaceComplexity} (stores elements in dictionary)`,
 
   renderSkeleton: (ctx) =>
-    `### Hash Map Pattern Skeleton\n` +
-    `\`\`\`python\n` +
-    `seen = {}\n` +
-    `for item in items:\n` +
-    `    target = complement_of(item)\n` +
-    `    if target in seen:\n` +
-    `        # Found match!\n` +
-    `        break\n` +
-    `    seen[item] = current_index\n` +
-    `\`\`\``,
+    `\`\`\`python\nseen = {}\nfor item in items:\n    target = match_for(item)\n    if target in seen:\n        # TODO: found match\n        break\n    seen[item] = True\n\`\`\`\n\nWhat value should you store in \`seen\`?`,
 
   renderSolution: (ctx) =>
-    `### Optimal Solution\n` +
     (ctx.knowledge.optimalCodeSnippet
       ? `\`\`\`python\n${ctx.knowledge.optimalCodeSnippet}\n\`\`\`\n\n`
       : '') +
-    `• **Approach**: ${ctx.knowledge.optimalApproachTitle}\n` +
-    `• **Complexity**: Time ${ctx.knowledge.timeComplexity}, Space ${ctx.knowledge.spaceComplexity}`,
+    `• We walk through the list once.\n` +
+    `• A dictionary stores previous numbers for instant lookup.\n` +
+    `• Time: ${ctx.knowledge.timeComplexity}\n` +
+    `• Space: ${ctx.knowledge.spaceComplexity}`,
 };
 
 const stackTemplate: TopicTemplate = {
   renderGreeting: (ctx) =>
-    `Welcome! **${ctx.knowledge.conceptName}** relies on Last-In, First-Out (LIFO) order. What are you thinking for the stack condition?`,
+    `Hey! For "${ctx.knowledge.conceptName}", a stack helps us match items in Last-In, First-Out order. Where should we start?`,
 
   renderHint: (ctx) =>
-    `### Stack Invariant (Tier ${ctx.hintLevel})\n` +
-    `${ctx.knowledge.targetHint}\n\n` +
-    `> **Tip**: Push items onto the stack as you encounter them; pop to match or reduce when a closing condition is met.`,
+    `${ctx.knowledge.targetHint}\n\nWhat should we do when we see a closing character and the stack is empty?`,
 
   renderDebug: (ctx) =>
-    `### Diagnostic: Stack Boundaries\n` +
-    `1. **Empty Stack**: Always verify \`if stack:\` before calling \`stack.pop()\` to prevent IndexError.\n` +
-    `2. **Leftover Elements**: After processing, is the stack completely empty?`,
+    'Always check `if stack:` before calling `stack.pop()`. If the stack is empty, popping from it throws an IndexError.',
 
   renderComplexity: (ctx) =>
-    `### Complexity Analysis\n` +
-    `• **Time**: \`${ctx.knowledge.timeComplexity}\` (each element pushed and popped at most once).\n` +
-    `• **Space**: \`${ctx.knowledge.spaceComplexity}\` in the worst case.`,
+    `• Time: ${ctx.knowledge.timeComplexity}\n• Memory: ${ctx.knowledge.spaceComplexity}`,
 
   renderSkeleton: (ctx) =>
-    `### Stack Pattern Skeleton\n` +
-    `\`\`\`python\n` +
-    `stack = []\n` +
-    `for char in s:\n` +
-    `    if is_opening(char):\n` +
-    `        stack.append(char)\n` +
-    `    elif stack and matches(stack[-1], char):\n` +
-    `        stack.pop()\n` +
-    `    else:\n` +
-    `        return False\n` +
-    `return len(stack) == 0\n` +
-    `\`\`\``,
+    `\`\`\`python\nstack = []\nfor item in data:\n    if is_open(item):\n        stack.append(item)\n    elif stack and matches(stack[-1], item):\n        stack.pop()\n    else:\n        return False\nreturn len(stack) == 0\n\`\`\``,
 
   renderSolution: (ctx) =>
-    `### Optimal Solution\n` +
     (ctx.knowledge.optimalCodeSnippet
       ? `\`\`\`python\n${ctx.knowledge.optimalCodeSnippet}\n\`\`\`\n\n`
       : '') +
-    `• **Complexity**: Time ${ctx.knowledge.timeComplexity}, Space ${ctx.knowledge.spaceComplexity}`,
+    `• Push opening items onto the stack.\n` +
+    `• Pop when a match is found.\n` +
+    `• Return True only if the stack is completely empty at the end.`,
 };
 
 const generalTemplate: TopicTemplate = {
   renderGreeting: (ctx) =>
-    `Hey! I'm here to help you solve **${ctx.knowledge.conceptName}**. What part of the implementation are you considering?`,
+    `Hey! I'm here with you on "${ctx.knowledge.conceptName}". What are you thinking for the first step?`,
 
   renderHint: (ctx) =>
-    `### Hint (Tier ${ctx.hintLevel})\n` +
-    `${ctx.knowledge.targetHint}\n\n` +
-    `> **Interview Trap to Avoid**: ${ctx.knowledge.commonTrap}`,
+    `${ctx.knowledge.targetHint}\n\nHow can we break this into a single pass?`,
 
   renderDebug: (ctx) =>
-    `### Code Diagnostic\n` +
-    (ctx.lastBug ? `Recent Error: \`${ctx.lastBug}\`\n\n` : '') +
-    `• **Loops**: ${ctx.ast.loopCount} loops detected.\n` +
-    `• **Output**: ${ctx.ast.hasPrint ? 'Prints to stdout.' : 'No print() found — make sure to print your result!'}\n` +
-    `• **Traps**: ${ctx.ast.potentialTraps.join(' ') || 'Check edge cases (empty or single element).'}\n\n` +
-    `Where does your output diverge from expected?`,
+    ctx.lastBug
+      ? `The main issue is: \`${ctx.lastBug}\`. Check your input bounds or terminal print output.`
+      : !ctx.ast.hasPrint
+      ? 'Your code computes a value, but never calls `print(...)`. Add `print(result)` at the end!'
+      : 'Check your loop termination condition to ensure pointers move forward on every step.',
 
   renderComplexity: (ctx) =>
-    `### Target Complexity\n` +
-    `• **Time Complexity**: \`${ctx.knowledge.timeComplexity}\`\n` +
-    `• **Space Complexity**: \`${ctx.knowledge.spaceComplexity}\``,
+    `• Time: ${ctx.knowledge.timeComplexity}\n• Space: ${ctx.knowledge.spaceComplexity}`,
 
   renderSkeleton: (ctx) =>
-    `### High-Level Outline\n` +
-    `1. Parse input and handle edge cases.\n` +
-    `2. Traverse data with a single pass or pointers.\n` +
-    `3. Print the resulting boolean or value.`,
+    `1. Read input.\n2. Process elements in one pass.\n3. Print the final result.`,
 
   renderSolution: (ctx) =>
-    `### Optimal Solution\n` +
     (ctx.knowledge.optimalCodeSnippet
       ? `\`\`\`python\n${ctx.knowledge.optimalCodeSnippet}\n\`\`\`\n\n`
       : '') +
-    `• **Approach**: ${ctx.knowledge.optimalApproachTitle}\n` +
-    `• **Complexity**: Time ${ctx.knowledge.timeComplexity}, Space ${ctx.knowledge.spaceComplexity}`,
+    `• Time: ${ctx.knowledge.timeComplexity}\n• Space: ${ctx.knowledge.spaceComplexity}`,
 };
 
 export const TOPIC_TEMPLATES: Record<string, TopicTemplate> = {

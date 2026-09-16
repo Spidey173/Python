@@ -1,5 +1,5 @@
-// Structured Response Planner
-// Plans exact objective, constraints, and section blueprint before LLM invocation
+// Structured Response Planner (PyForge Teaching Philosophy)
+// Enforces: Minimal explanation, short sentences, no unnecessary sections, conversation over documentation
 
 import {
   ErrorAnalysisResult,
@@ -9,7 +9,6 @@ import {
   ResponsePlan,
   ResponseStyle,
   StudentIntent,
-  TeachingRole,
 } from '../types';
 
 export function createResponsePlan(
@@ -21,156 +20,172 @@ export function createResponsePlan(
   ast: FactualASTSummary,
   askingForFullCode: boolean = false
 ): ResponsePlan {
-  // 1. Solution Request / Tier 5 Walkthrough
+  // 1. Solution Request / Full Code
   if (askingForFullCode || (intent === 'learning' && subIntent === 'walkthrough' && tier === 5)) {
     return {
-      goal: 'Walk through the complete optimal Python solution with trade-off analysis.',
-      teachingGoal: 'Explain why the optimal approach outperforms brute force.',
+      goal: 'Give clean Python code, followed by 4-6 simple bullet points explaining how it works.',
+      teachingGoal: 'Direct and simple. No essay. No extra sections.',
       role: 'tutor',
       responseLength: 'medium',
       revealSolution: true,
       includeCode: true,
       askQuestionAtEnd: false,
       structure: [
-        '1. Optimal Solution Code Block',
-        '2. Line-by-Line Intuition & Core Invariant',
-        '3. Time & Space Big-O Trade-off',
-        '4. Key Takeaway for Interviews',
+        '1. Clean Python Code Block',
+        '2. 4 to 6 simple bullet points explaining how it works',
+        '3. Stop there (no extra theory)',
       ],
-      confidence: 0.98,
+      confidence: 0.99,
     };
   }
 
-  // 2. Debugging Flow
+  // 2. Debugging Flow (Under 180 words, ONE main issue only)
   if (intent === 'debugging' || errorAnalysis.errorType !== 'none') {
     return {
-      goal: `Help student diagnose and fix ${errorAnalysis.errorType === 'none' ? 'the logic bug' : errorAnalysis.errorType.replace('_', ' ')}.`,
-      teachingGoal: 'Explain the root cause so the student fixes the condition themselves.',
+      goal: 'Point out the ONE main bug in their code and explain only that issue.',
+      teachingGoal: 'Do not list five possible things. Speak like a senior dev sitting next to them.',
       role: 'debugger',
-      responseLength: style.depth === 'brief' ? 'short' : 'medium',
+      responseLength: 'short',
       revealSolution: false,
       includeCode: false,
-      askQuestionAtEnd: style.askFollowup,
+      askQuestionAtEnd: true,
       structure: [
-        '1. Direct Diagnosis (Identify the root cause)',
-        '2. Why this happens in Python runtime/indexing',
-        '3. Specific line or loop condition to inspect',
-        '4. Verification tip',
+        '1. Name the ONE main issue directly (e.g. index bounds or loop update)',
+        '2. Plain English explanation of why it happens (2-3 sentences)',
+        '3. Tell them what specific line or rule to check',
       ],
       confidence: 0.95,
     };
   }
 
-  // 3. Greeting Flow
+  // 3. Greeting Flow (2 sentences max)
   if (intent === 'greeting') {
     return {
-      goal: 'Welcome the student and establish friendly technical mentorship.',
-      teachingGoal: 'Prompt the student to state what part of the challenge they want to tackle.',
+      goal: 'Short, warm greeting as a senior teammate.',
+      teachingGoal: 'Keep it to 2 sentences. No customer support tone.',
       role: 'tutor',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
       askQuestionAtEnd: true,
       structure: [
-        '1. Natural, warm greeting (no customer service tone)',
-        '2. Acknowledge current problem',
-        '3. Open check-in question',
+        '1. Hey! Working on [Problem Name] with you.',
+        '2. What part do you want to tackle first?',
       ],
       confidence: 0.99,
     };
   }
 
-  // 4. Code Review Flow
-  if (intent === 'reviewing') {
+  // 4. Problem Explanation ("What is this problem asking?")
+  if (subIntent === 'concept' || intent === 'learning') {
+    if (subIntent === 'concept') {
+      return {
+        goal: 'Explain what the problem is asking in under 120 words.',
+        teachingGoal: '1. What the input is. 2. What output is expected. 3. ONE simple example. Stop there.',
+        role: 'explainer',
+        responseLength: 'short',
+        revealSolution: false,
+        includeCode: false,
+        askQuestionAtEnd: false,
+        structure: [
+          '1. Input: What data is given',
+          '2. Output: What should be returned or printed',
+          '3. One clean example with expected result',
+          '4. Stop there (do not mention Big O, edge cases, or algorithms)',
+        ],
+        confidence: 0.95,
+      };
+    }
+
+    if (subIntent === 'complexity') {
+      return {
+        goal: 'State the target Big-O time and memory in 2-3 sentences.',
+        teachingGoal: 'Short and conversational. No huge tables.',
+        role: 'explainer',
+        responseLength: 'short',
+        revealSolution: false,
+        includeCode: false,
+        askQuestionAtEnd: false,
+        structure: [
+          '1. Target Time Complexity in plain English',
+          '2. Target Space Complexity in plain English',
+        ],
+        confidence: 0.96,
+      };
+    }
+
+    if (subIntent === 'pattern' || tier === 4) {
+      return {
+        goal: 'Provide a code skeleton with # TODO comments where student fills logic.',
+        teachingGoal: 'Scaffold only. Do not complete the solution.',
+        role: 'tutor',
+        responseLength: 'medium',
+        revealSolution: false,
+        includeCode: true,
+        askQuestionAtEnd: true,
+        structure: [
+          '1. Code Skeleton with # TODO comments',
+          '2. One rule to remember while filling it in',
+        ],
+        confidence: 0.94,
+      };
+    }
+
+    // Default Hint Flow (Under 80 words, ONE hint only + 1 question)
     return {
-      goal: 'Provide senior engineering code review on style, efficiency, and edge cases.',
-      teachingGoal: 'Reinforce clean Python idioms (PEP 8) and optimal time/space usage.',
-      role: 'reviewer',
-      responseLength: 'medium',
+      goal: 'Give exactly ONE small hint and end with one question to help them think.',
+      teachingGoal: 'Smallest explanation possible. Do not explain the entire algorithm.',
+      role: 'tutor',
+      responseLength: 'short',
       revealSolution: false,
       includeCode: false,
-      askQuestionAtEnd: style.askFollowup,
+      askQuestionAtEnd: true,
       structure: [
-        '1. Commend what is clean and functional',
-        '2. Idiomatic Python improvement (readability/cleanliness)',
-        '3. Potential edge case or bounds vulnerability',
-        '4. Efficiency observation',
+        '1. Exactly ONE intuitive hint (2-3 sentences max)',
+        '2. One small reflective question at the end',
       ],
       confidence: 0.94,
     };
   }
 
-  // 5. Learning Flow (Tiered escalation)
-  if (subIntent === 'complexity') {
+  // 5. Code Review (Under 120 words)
+  if (intent === 'reviewing') {
     return {
-      goal: 'Explain the Time and Space complexity trade-offs clearly.',
-      teachingGoal: 'Connect loop nesting and dictionary operations to Big-O.',
-      role: 'explainer',
+      goal: 'Mention 1 thing done well, and 1 clean practical improvement.',
+      teachingGoal: 'Brief, conversational, no checklist essay.',
+      role: 'reviewer',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
-      askQuestionAtEnd: style.askFollowup,
+      askQuestionAtEnd: true,
       structure: [
-        '1. Quick Time & Space Complexity Summary',
-        '2. Intuitive Explanation (how loop depth dictates runtime)',
-        '3. Space Trade-off (auxiliary memory vs in-place)',
+        '1. One strength in their approach',
+        '2. One clean tip to improve it',
       ],
-      confidence: 0.95,
-    };
-  }
-
-  if (subIntent === 'pattern' || subIntent === 'pseudocode' || tier >= 3) {
-    const isSkeleton = subIntent === 'pattern' || tier === 4;
-    return {
-      goal: isSkeleton
-        ? 'Provide an architectural code scaffold with TODO placeholders.'
-        : 'Provide step-by-step algorithmic pseudocode.',
-      teachingGoal: 'Help student visualize loop logic without giving away finished code.',
-      role: 'tutor',
-      responseLength: 'medium',
-      revealSolution: false,
-      includeCode: isSkeleton,
-      askQuestionAtEnd: style.askFollowup,
-      structure: isSkeleton
-        ? [
-            '1. Pattern Architecture Overview',
-            '2. Scaffold Skeleton with # TODO comments',
-            '3. Core Invariant to maintain in loop',
-          ]
-        : [
-            '1. High-Level Algorithm Strategy',
-            '2. Step-by-Step Pseudocode (Plain English)',
-            '3. Critical Boundary Condition',
-          ],
       confidence: 0.93,
     };
   }
 
-  // Default Conceptual Nudge (Tier 1-2)
+  // General fallback
   return {
-    goal: 'Guide student thinking with a focused Socratic nudge.',
-    teachingGoal: 'Help student uncover the core data structure or two-pointer concept.',
+    goal: 'Answer the question directly in 2-4 sentences using simple English.',
+    teachingGoal: 'Less is better. Simple is better.',
     role: 'tutor',
-    responseLength: style.depth === 'brief' ? 'short' : 'medium',
+    responseLength: 'short',
     revealSolution: false,
     includeCode: false,
-    askQuestionAtEnd: true,
-    structure: [
-      '1. Direct Conceptual Nudge',
-      '2. Core Algorithmic Invariant',
-      '3. Common Interview Trap to Avoid',
-      '4. Reflection Question',
-    ],
-    confidence: 0.92,
+    askQuestionAtEnd: false,
+    structure: ['1. Direct, simple answer in 2-4 sentences'],
+    confidence: 0.85,
   };
 }
 
 export function formatPlanDirective(plan: ResponsePlan): string {
   const lines: string[] = [];
   lines.push(`Goal: ${plan.goal}`);
-  lines.push(`Length: ${plan.responseLength.toUpperCase()}`);
-  lines.push(`Code Policy: ${plan.revealSolution ? 'Full optimal code allowed' : plan.includeCode ? 'Skeleton/Scaffold with TODOs only' : 'NO Python code blocks'}`);
-  lines.push(`Required Structure:\n${plan.structure.map((s) => `  ${s}`).join('\n')}`);
+  lines.push(`Length Limit: ${plan.responseLength.toUpperCase()} (Keep it brief, simple sentences)`);
+  lines.push(`Code Policy: ${plan.revealSolution ? 'Complete code allowed + 4-6 bullet points' : plan.includeCode ? 'Skeleton with # TODO only' : 'NO Python code blocks'}`);
+  lines.push(`Blueprint:\n${plan.structure.map((s) => `  - ${s}`).join('\n')}`);
 
   return lines.join('\n');
 }
