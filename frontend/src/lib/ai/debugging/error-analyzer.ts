@@ -49,7 +49,9 @@ export function analyzeError(
 
   const topHypothesis = report.hypotheses[0];
   const probableCause = topHypothesis
-    ? `${topHypothesis.cause} (${Math.round(topHypothesis.score * 100)}% likelihood)`
+    ? `${topHypothesis.cause} (${topHypothesis.calibration})`
+    : report.mode === 'INFORMATION_GATHERING'
+    ? 'Insufficient evidence to form a diagnosis'
     : 'General algorithmic logic check';
 
   return {

@@ -342,7 +342,7 @@ export async function runCognitivePipeline(
     if (
       responsePlan.contract.teachingRequest === TeachingRequest.Debug &&
       errorAnalysis.report &&
-      errorAnalysis.report.failureKind !== 'UNKNOWN' &&
+      (errorAnalysis.report.failureKind !== 'UNKNOWN' || errorAnalysis.report.mode === 'INFORMATION_GATHERING') &&
       responsePlan.contract.outputTemplate
     ) {
       rawReply = responsePlan.contract.outputTemplate;

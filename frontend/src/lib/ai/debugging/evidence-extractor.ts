@@ -37,6 +37,11 @@ export function extractEvidence(
     }
   }
 
+  // Also check if (no output) is mentioned standalone
+  if (!actual && /\(no output\)/i.test(combined)) {
+    actual = '(no output)';
+  }
+
   const hasTestEvidence = expected !== undefined || actual !== undefined;
 
   // 2. Extract traceback details if an exception occurred

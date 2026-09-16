@@ -144,6 +144,38 @@ export interface FactualASTSummary {
   variables: string[];
 }
 
+export type FailureCategory =
+  | 'OUTPUT'
+  | 'EXECUTION'
+  | 'COMPILATION'
+  | 'PERFORMANCE'
+  | 'INFRASTRUCTURE'
+  | 'UNKNOWN';
+
+export type FailureSubcategory =
+  // OUTPUT
+  | 'NONE_RETURNED'
+  | 'WRONG_VALUE'
+  | 'WRONG_BOOLEAN'
+  | 'WRONG_NUMBER'
+  | 'WRONG_STRING'
+  | 'WRONG_COLLECTION'
+  // EXECUTION
+  | 'RUNTIME_EXCEPTION'
+  | 'INDEX_ERROR'
+  | 'TYPE_ERROR'
+  | 'KEY_ERROR'
+  | 'ATTRIBUTE_ERROR'
+  // COMPILATION
+  | 'SYNTAX'
+  | 'INDENTATION'
+  // PERFORMANCE
+  | 'TIMEOUT'
+  | 'MEMORY'
+  // INFRASTRUCTURE
+  | 'ASSERTION'
+  | 'UNKNOWN';
+
 export type FailureKind =
   | 'RETURN_VALUE'        // (no output), None returned
   | 'WRONG_VALUE'         // expected X, got Y (boolean, list, etc.)
@@ -153,6 +185,42 @@ export type FailureKind =
   | 'MEMORY_LIMIT'        // Out of memory
   | 'ASSERTION'           // AssertionError
   | 'UNKNOWN';
+
+export type DiagnosticMode = 'DIAGNOSIS' | 'INFORMATION_GATHERING';
+
+export type ConfidenceCalibration =
+  | 'Nearly certain'    // >= 0.90
+  | 'Likely'            // 0.70 - 0.89
+  | 'Possible'          // 0.40 - 0.69
+  | 'Weak hypothesis';  // < 0.40
+
+export enum ContradictionType {
+  PREVIOUS_SOLUTION_REPORTED_FAILING = 'PREVIOUS_SOLUTION_REPORTED_FAILING',
+  HISTORY_CONFLICT = 'HISTORY_CONFLICT',
+  PLATFORM_MISMATCH = 'PLATFORM_MISMATCH',
+  NONE = 'NONE',
+}
+
+export enum InformationGap {
+  USER_CODE_MISSING = 'USER_CODE_MISSING',
+  TRACEBACK_MISSING = 'TRACEBACK_MISSING',
+  TEST_CASE_MISSING = 'TEST_CASE_MISSING',
+  ACTUAL_OUTPUT_MISSING = 'ACTUAL_OUTPUT_MISSING',
+}
+
+export interface WeightedCompleteness {
+  score: number; // 0.0 - 1.0 based on weights: code(0.40), traceback(0.30), input/output(0.20), convo(0.10)
+  quality: 'high' | 'medium' | 'low' | 'starved';
+  observed: string[];
+  missing: string[];
+}
+
+export interface ReasoningTraceStep {
+  step: number;
+  observation: string;
+  languageRule: string;
+  deduction: string;
+}
 
 export interface StructuredEvidence {
   input?: string;
@@ -192,19 +260,30 @@ export interface Observation {
 export interface DiagnosticHypothesis {
   rank: number;
   cause: string;
-  score: number; // 0.0 - 1.0
+  score: number; // 0.0 - 1.0 (internal ranking only)
+  calibration: ConfidenceCalibration; // User-facing verbal calibration band
   evidenceFor: string[];
   evidenceAgainst: string[];
   whyExplanation: string;
 }
 
 export interface DiagnosticReport {
+  mode: DiagnosticMode;
+  category: FailureCategory;
+  subcategory: FailureSubcategory;
   failureKind: FailureKind;
+  completeness: WeightedCompleteness;
+  confidenceScore: number; // Diagnostic certainty (0.0 - 1.0)
+  confidenceCalibration: ConfidenceCalibration;
+  informationGaps: InformationGap[];
   observations: Observation[];
   inferences: string[];
   counterfactual: string; // "What would I expect instead?"
+  reasoningTrace: ReasoningTraceStep[];
   hypotheses: DiagnosticHypothesis[];
+  stoppingRuleApplied?: string;
   contradiction?: {
+    type: ContradictionType;
     detected: boolean;
     explanation: string;
     actionableAdvice: string;

@@ -75,6 +75,13 @@ That's the main idea behind this problem.`,
 Since your test produced ${actualVal}${counterNote}, the code currently running in your editor likely differs from that solution (e.g. unsaved changes, an indentation shift on paste, or a missing return).
 
 Could you paste the exact code currently in your editor? We'll spot the discrepancy immediately instead of guessing.`;
+      } else if (report?.mode === 'INFORMATION_GATHERING') {
+        debugTemplate = `To help you fix this bug without guessing, I need a bit more context from your workspace:
+
+1. **Your current code** — Please paste the code currently in your editor.
+2. **The test case or error** — What input failed, what was expected, and what was your output or traceback?
+
+Once you share those, we can trace the exact line causing the discrepancy together!`;
       } else if (report?.failureKind === 'RETURN_VALUE') {
         debugTemplate = `Your test result gives us an important clue:
 

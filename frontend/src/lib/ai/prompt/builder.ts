@@ -82,44 +82,65 @@ export function buildPromptSections(input: ModularPromptInput): PromptSection[] 
     });
   }
 
-  // 5. Diagnostic Evidence & Ranked Hypotheses (when debugging a failure)
-  if (errorAnalysis.report && errorAnalysis.report.failureKind !== 'UNKNOWN') {
+  // 5. Diagnostic Evidence & Hypotheses (when debugging a failure)
+  if (errorAnalysis.report && (errorAnalysis.report.failureKind !== 'UNKNOWN' || errorAnalysis.report.mode === 'INFORMATION_GATHERING')) {
     const rep = errorAnalysis.report;
     const diagLines: string[] = [];
-    diagLines.push(`Failure Kind: ${rep.failureKind}`);
 
-    if (rep.observations.length > 0) {
-      diagLines.push('Factual Observations:');
-      for (const obs of rep.observations) {
-        diagLines.push(`• ${obs.label}: ${obs.value}`);
+    if (rep.mode === 'INFORMATION_GATHERING') {
+      diagLines.push('MODE: INFORMATION GATHERING (Evidence Starvation Detected)');
+      diagLines.push('The student reported an issue but did not provide code, test inputs, or an error traceback.');
+      diagLines.push('CRITICAL RULE: Do NOT invent or guess any bug causes. Ask the student for their current editor implementation and exact test output.');
+      if (rep.requestedEvidence.length > 0) {
+        diagLines.push(`Requested Items: ${rep.requestedEvidence.join(', ')}`);
       }
-    }
+    } else {
+      diagLines.push(`Failure Category: ${rep.category} / ${rep.subcategory} (Kind: ${rep.failureKind})`);
+      diagLines.push(`Evidence Completeness: ${Math.round(rep.completeness.score * 100)}% (${rep.completeness.quality}) | Diagnostic Certainty: ${rep.confidenceCalibration}`);
 
-    if (rep.counterfactual) {
-      diagLines.push(`Counterfactual ("What would I expect instead?"): ${rep.counterfactual}`);
-    }
+      if (rep.stoppingRuleApplied) {
+        diagLines.push(`Stopping Rule: ${rep.stoppingRuleApplied}`);
+      }
 
-    if (rep.hypotheses.length > 0) {
-      diagLines.push('Ranked Hypotheses:');
-      for (const hyp of rep.hypotheses) {
-        diagLines.push(`• [${Math.round(hyp.score * 100)}% Likelihood] ${hyp.cause}`);
-        diagLines.push(`  Why: ${hyp.whyExplanation}`);
-        if (hyp.evidenceAgainst.length > 0) {
-          diagLines.push(`  Evidence Against: ${hyp.evidenceAgainst.join('; ')}`);
+      if (rep.observations.length > 0) {
+        diagLines.push('\n[FACTUAL OBSERVATIONS]');
+        for (const obs of rep.observations) {
+          diagLines.push(`• ${obs.label}: ${obs.value}`);
         }
       }
-    }
 
-    if (rep.contradiction?.detected) {
-      diagLines.push(`Contradiction Flag: ${rep.contradiction.explanation}`);
-      diagLines.push(`Action Instruction: ${rep.contradiction.actionableAdvice}`);
-    }
+      if (rep.counterfactual) {
+        diagLines.push(`\n[COUNTERFACTUAL INSIGHT]\n${rep.counterfactual}`);
+      }
 
-    if (rep.requestedEvidence.length > 0) {
-      diagLines.push(`Missing Evidence: ${rep.requestedEvidence.join(', ')} — ask student to paste current editor implementation.`);
-    }
+      if (rep.reasoningTrace.length > 0) {
+        diagLines.push('\n[REASONING TRACE]');
+        for (const trace of rep.reasoningTrace) {
+          diagLines.push(`• Step ${trace.step}: [Observed: ${trace.observation}] -> [Rule: ${trace.languageRule}] -> [Deduction: ${trace.deduction}]`);
+        }
+      }
 
-    diagLines.push('CRITICAL RULE: Base your debugging explanation only on the observations and hypotheses below. Do not invent additional causes unless the evidence is insufficient. Never suggest print() statements (the platform evaluates function return values), and do not invent regex or string-cleaning guesses when output is missing.');
+      if (rep.hypotheses.length > 0) {
+        diagLines.push('\n[CONCLUSIONS / RANKED HYPOTHESES]');
+        for (const hyp of rep.hypotheses) {
+          diagLines.push(`• [${hyp.calibration}] ${hyp.cause}`);
+          diagLines.push(`  Why: ${hyp.whyExplanation}`);
+          if (hyp.evidenceAgainst.length > 0) {
+            diagLines.push(`  Evidence Against: ${hyp.evidenceAgainst.join('; ')}`);
+          }
+        }
+      }
+
+      if (rep.contradiction?.detected) {
+        diagLines.push(`\n[CONTRADICTION FLAG: ${rep.contradiction.type}]\nExplanation: ${rep.contradiction.explanation}\nAction Instruction: ${rep.contradiction.actionableAdvice}`);
+      }
+
+      if (rep.requestedEvidence.length > 0) {
+        diagLines.push(`\n[INFORMATION GAPS]\nMissing: ${rep.requestedEvidence.join(', ')} — ask student to paste their current editor code.`);
+      }
+
+      diagLines.push('\nCRITICAL RULE: Base your debugging explanation only on the observations and hypotheses above. Do not invent additional causes unless the evidence is insufficient. Never expose raw numeric probabilities to the student—use verbal certainty ("Likely", "Nearly certain"). Never suggest print() statements (the platform evaluates function return values), and do not invent regex or string-cleaning guesses when output is missing.');
+    }
 
     sections.push({
       title: 'DIAGNOSTIC EVIDENCE',

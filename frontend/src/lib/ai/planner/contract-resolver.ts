@@ -76,8 +76,11 @@ export function resolveResponseKind(input: ContractResolverInput): ResponseKind 
     return 'FullSolution';
   }
 
-  // If a failure is actively diagnosed, it's a Debug request
-  if (diagnosticReport && diagnosticReport.failureKind !== 'UNKNOWN') {
+  // If a failure is actively diagnosed or in information gathering mode, it's a Debug request
+  if (
+    diagnosticReport &&
+    (diagnosticReport.failureKind !== 'UNKNOWN' || diagnosticReport.mode === 'INFORMATION_GATHERING')
+  ) {
     return 'Debug';
   }
 
