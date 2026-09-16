@@ -135,7 +135,7 @@ const PROBLEMS_INDEX = [
   { id: 65, title: 'Median of Two Sorted Arrays', module: 13, difficulty: 'Hard' },
   { id: 66, title: 'Add Two Numbers', module: 14, difficulty: 'Medium' },
   { id: 67, title: 'Remove Nth Node From End of List', module: 14, difficulty: 'Medium' },
-  { id: 68, title: 'Valid Parentheses II', module: 14, difficulty: 'Easy' },
+  { id: 68, title: 'Generate Parentheses', module: 14, difficulty: 'Easy' },
   { id: 69, title: 'Letter Combinations of a Phone Number', module: 14, difficulty: 'Medium' },
   { id: 70, title: 'Regular Expression Matching', module: 14, difficulty: 'Hard' },
 ];
