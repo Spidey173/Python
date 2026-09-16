@@ -66,8 +66,8 @@ export function formatStyleDirective(style: ResponseStyle): string {
   items.push(`Tone: ${style.tone}`);
   items.push(`Depth: ${style.depth}`);
   items.push(`Level: ${style.technicalLevel}`);
-  if (style.includeExample) items.push('Include 1 clear micro-example');
-  if (style.askFollowup) items.push('Conclude with 1 Socratic check-in question');
+  if (style.includeExample) items.push('Include 1 tiny example');
+  if (style.askFollowup) items.push('End with 1 small question');
   else items.push('Do NOT force a question at the end');
 
   return items.join(' | ');

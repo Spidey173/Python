@@ -21,7 +21,7 @@ export function createTeachingPlan(
       allowFullSolution: true,
       role: 'tutor',
       focusDirective:
-        'The student has explicitly requested the full solution. Provide the optimal Python code clearly with Big-O analysis and why it works.',
+        'The student explicitly requested code. Give the clean Python code, followed by "**How it works**" with 4-6 short bullet points. No essay.',
     };
   }
 
@@ -34,7 +34,7 @@ export function createTeachingPlan(
       allowFullSolution: false,
       role: 'debugger',
       focusDirective:
-        'Diagnose the student bug or error. Explain WHY the bug happens, what line or condition to inspect, but do not replace their entire code.',
+        'Find the ONE biggest mistake. Explain only that mistake in under 150 words. Do not review the whole program or list multiple issues.',
     };
   }
 
@@ -115,11 +115,11 @@ export function createTeachingPlan(
     ) as HelpTier;
 
     const directives: Record<HelpTier, string> = {
-      1: 'Provide a small conceptual nudge. Guide their thinking with a Socratic question. DO NOT show code.',
-      2: 'Highlight the essential invariant or data structure requirement. Give a 1-line conceptual tip.',
-      3: 'Provide step-by-step algorithmic pseudocode outlining the process.',
-      4: 'Provide a code skeleton/scaffold with unfilled condition blocks.',
-      5: 'Provide the full optimal solution with time/space complexity.',
+      1: 'Give ONE hint only (max 3 sentences). End with one small question. DO NOT show code.',
+      2: 'Highlight the essential rule or data structure requirement. Give a 1-line tip.',
+      3: 'Provide step-by-step simple pseudocode outlining the process.',
+      4: 'Provide a code skeleton with # TODO comments where student fills logic.',
+      5: 'Provide the code block, then 4-6 short bullet points under "**How it works**". No essay.',
     };
 
     return {

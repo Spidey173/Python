@@ -42,6 +42,7 @@ const RULES: IntentScoringRule[] = [
   {
     intent: 'debugging',
     positive: [
+      { pattern: /\b(why is my code wrong|what('s| is) wrong with my code|where is my mistake|why is this wrong)\b/i, weight: 7 },
       { pattern: /\b(indexerror|keyerror|typeerror|attributeerror|syntaxerror|zerodivisionerror|valueerror|recursionerror)\b/i, weight: 6 },
       { pattern: /\b(traceback|exception|line \d+|error:|failed test)\b/i, weight: 5 },
       { pattern: /\b(debug|bug|fail|fails|failing|failed|broken|crash|not working|infinite loop|stuck in loop)\b/i, weight: 5 },
@@ -92,7 +93,8 @@ const RULES: IntentScoringRule[] = [
     intent: 'learning',
     subIntent: 'walkthrough',
     positive: [
-      { pattern: /\b(give me the solution|show (the )?solution|give (me )?(the )?code|just show me the code)\b/i, weight: 6 },
+      { pattern: /\b(give me the code|give me code|show me the code|give code)\b/i, weight: 8 },
+      { pattern: /\b(give me the solution|show (the )?solution|just show me the code)\b/i, weight: 6 },
       { pattern: /\b(full (code|solution|answer)|what is the (answer|solution)|give up|show answer)\b/i, weight: 5 },
     ],
     negative: [
@@ -128,6 +130,8 @@ const RULES: IntentScoringRule[] = [
     intent: 'learning',
     subIntent: 'concept',
     positive: [
+      { pattern: /\b(what is this problem asking|what is the problem asking|what does this problem mean|what is it asking|explain the problem|understand the problem)\b/i, weight: 8 },
+      { pattern: /\b(i don't understand|i do not understand|confused|didn't get it|did not get it)\b/i, weight: 7 },
       { pattern: /\b(what is|how does|explain|concept behind|intuition of|meaning of)\b/i, weight: 4 },
       { pattern: /\b(difference between|why do we use|analogy)\b/i, weight: 3 },
     ],

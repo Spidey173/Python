@@ -129,7 +129,9 @@ export async function runCognitivePipeline(
         dummyState.hintLevel,
         style,
         EMPTY_ERROR_ANALYSIS,
-        EMPTY_AST
+        EMPTY_AST,
+        false,
+        normalizedMessage
       );
 
       return {
@@ -203,7 +205,8 @@ export async function runCognitivePipeline(
     responseStyle,
     errorAnalysis,
     ast,
-    detected.flags.askingForFullCode
+    detected.flags.askingForFullCode,
+    normalizedMessage
   );
 
   // 12. Strict Zero-Pollution Cache Policy Guard

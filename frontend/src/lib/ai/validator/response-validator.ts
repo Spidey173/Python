@@ -64,7 +64,7 @@ export function validateResponse(
         // Replace leaked block with conceptual blueprint
         cleaned = cleaned.replace(
           m[0],
-          `> 💡 *[Full code withheld for Progressive Learning Tier ${effectiveTier}]*\n> Focus on the invariant first: try writing out the loop and pointer checks step-by-step!`
+          `> 💡 *[Code withheld for Learning Tier ${effectiveTier}]*\n> Focus on the rule first: try writing out the loop and checks step-by-step!`
         );
       }
     }

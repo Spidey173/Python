@@ -1,5 +1,5 @@
 // Structured Response Planner (PyForge Teaching Philosophy)
-// Enforces: Minimal explanation, short sentences, no unnecessary sections, conversation over documentation
+// "Teach first. Explain second. Lecture only when asked."
 
 import {
   ErrorAnalysisResult,
@@ -18,12 +18,15 @@ export function createResponsePlan(
   style: ResponseStyle,
   errorAnalysis: ErrorAnalysisResult,
   ast: FactualASTSummary,
-  askingForFullCode: boolean = false
+  askingForFullCode: boolean = false,
+  userMessage: string = ''
 ): ResponsePlan {
-  // 1. Solution Request / Full Code
-  if (askingForFullCode || (intent === 'learning' && subIntent === 'walkthrough' && tier === 5)) {
+  const lowerMsg = (userMessage || '').toLowerCase().trim();
+
+  // 1. Give me the code
+  if (askingForFullCode || /\b(give (me )?(the )?code|show (me )?code|full solution)\b/i.test(lowerMsg) || (intent === 'learning' && subIntent === 'walkthrough' && tier === 5)) {
     return {
-      goal: 'Give clean Python code, followed by 4-6 simple bullet points explaining how it works.',
+      goal: 'Give the working code, then 4-6 short bullet points under "**How it works**".',
       teachingGoal: 'Direct and simple. No essay. No extra sections.',
       role: 'tutor',
       responseLength: 'medium',
@@ -31,151 +34,191 @@ export function createResponsePlan(
       includeCode: true,
       askQuestionAtEnd: false,
       structure: [
-        '1. Clean Python Code Block',
-        '2. 4 to 6 simple bullet points explaining how it works',
-        '3. Stop there (no extra theory)',
+        'Clean Python code block',
+        '**How it works** heading followed by 4-6 short bullet points',
+        'Stop there (no essay)',
       ],
       confidence: 0.99,
     };
   }
 
-  // 2. Debugging Flow (Under 180 words, ONE main issue only)
-  if (intent === 'debugging' || errorAnalysis.errorType !== 'none') {
+  // 2. Explain the code
+  if (/\b(explain (the|this|my) code|line by line|walk through (the|this) code)\b/i.test(lowerMsg)) {
     return {
-      goal: 'Point out the ONE main bug in their code and explain only that issue.',
-      teachingGoal: 'Do not list five possible things. Speak like a senior dev sitting next to them.',
+      goal: 'Explain the code line by line. Each line or block gets 1-2 simple sentences.',
+      teachingGoal: 'Line-by-line explanation. Do not explain basic Python syntax they already know.',
+      role: 'explainer',
+      responseLength: 'medium',
+      revealSolution: false,
+      includeCode: false,
+      askQuestionAtEnd: false,
+      structure: [
+        'Go line by line',
+        'Each explanation should be 1-2 simple sentences',
+        'Stop. No essay.',
+      ],
+      confidence: 0.98,
+    };
+  }
+
+  // 3. Why is my code wrong?
+  if (intent === 'debugging' || errorAnalysis.errorType !== 'none' || /\b(why is my code wrong|what('s| is) wrong with my code|my mistake)\b/i.test(lowerMsg)) {
+    return {
+      goal: 'Find the biggest mistake and explain only that mistake. Maximum 150 words.',
+      teachingGoal: 'Do NOT review the whole program. Do not list 5 possible things. Talk like a teammate.',
       role: 'debugger',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
       askQuestionAtEnd: true,
       structure: [
-        '1. Name the ONE main issue directly (e.g. index bounds or loop update)',
-        '2. Plain English explanation of why it happens (2-3 sentences)',
-        '3. Tell them what specific line or rule to check',
+        'State the biggest mistake in 1-2 simple sentences',
+        'Explain what rule was broken (under 150 words)',
+        'Tell them what to check without giving the whole answer',
       ],
       confidence: 0.95,
     };
   }
 
-  // 3. Greeting Flow (2 sentences max)
+  // 4. Greeting
   if (intent === 'greeting') {
     return {
-      goal: 'Short, warm greeting as a senior teammate.',
-      teachingGoal: 'Keep it to 2 sentences. No customer support tone.',
+      goal: 'Short, warm greeting from a senior teammate (2 sentences max).',
+      teachingGoal: 'No customer support tone. One friendly sentence and an open question.',
       role: 'tutor',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
       askQuestionAtEnd: true,
       structure: [
-        '1. Hey! Working on [Problem Name] with you.',
-        '2. What part do you want to tackle first?',
+        'Hey! Working on [Problem Name] with you.',
+        'What part do you want to tackle first?',
       ],
       confidence: 0.99,
     };
   }
 
-  // 4. Problem Explanation ("What is this problem asking?")
-  if (subIntent === 'concept' || intent === 'learning') {
-    if (subIntent === 'concept') {
-      return {
-        goal: 'Explain what the problem is asking in under 120 words.',
-        teachingGoal: '1. What the input is. 2. What output is expected. 3. ONE simple example. Stop there.',
-        role: 'explainer',
-        responseLength: 'short',
-        revealSolution: false,
-        includeCode: false,
-        askQuestionAtEnd: false,
-        structure: [
-          '1. Input: What data is given',
-          '2. Output: What should be returned or printed',
-          '3. One clean example with expected result',
-          '4. Stop there (do not mention Big O, edge cases, or algorithms)',
-        ],
-        confidence: 0.95,
-      };
-    }
+  // 5. What is this problem asking?
+  if (/\b(what is (this|the) problem asking|what does (this|the) problem mean|explain (the|this) problem)\b/i.test(lowerMsg) || (intent === 'learning' && subIntent === 'concept' && !/\b(i don('t| not) understand|confused)\b/i.test(lowerMsg))) {
+    return {
+      goal: 'Reply in exact format: In simple words, Input, Output, Example. Stop.',
+      teachingGoal: 'Stop right after the example. Do NOT explain Big-O, edge cases, or algorithms.',
+      role: 'explainer',
+      responseLength: 'short',
+      revealSolution: false,
+      includeCode: false,
+      askQuestionAtEnd: false,
+      structure: [
+        '**In simple words:** (1-2 sentences)',
+        '**Input:** (one line)',
+        '**Output:** (one line)',
+        '**Example:** (one tiny example showing input -> output)',
+        'STOP there.',
+      ],
+      confidence: 0.99,
+    };
+  }
 
-    if (subIntent === 'complexity') {
-      return {
-        goal: 'State the target Big-O time and memory in 2-3 sentences.',
-        teachingGoal: 'Short and conversational. No huge tables.',
-        role: 'explainer',
-        responseLength: 'short',
-        revealSolution: false,
-        includeCode: false,
-        askQuestionAtEnd: false,
-        structure: [
-          '1. Target Time Complexity in plain English',
-          '2. Target Space Complexity in plain English',
-        ],
-        confidence: 0.96,
-      };
-    }
+  // 6. I don't understand
+  if (/\b(i don('t| not) understand|confused|didn't get it)\b/i.test(lowerMsg)) {
+    return {
+      goal: 'Explain the idea in 3-5 simple sentences using everyday language.',
+      teachingGoal: 'Avoid technical words if possible. No essay.',
+      role: 'explainer',
+      responseLength: 'short',
+      revealSolution: false,
+      includeCode: false,
+      askQuestionAtEnd: false,
+      structure: [
+        'Explain the core idea in 3-5 simple sentences',
+        'Use everyday language, avoid technical jargon',
+      ],
+      confidence: 0.98,
+    };
+  }
 
+  // 5. Complexity
+  if (subIntent === 'complexity') {
+    return {
+      goal: 'State target time and memory in 2-3 sentences. No huge tables.',
+      teachingGoal: 'Short and conversational.',
+      role: 'explainer',
+      responseLength: 'short',
+      revealSolution: false,
+      includeCode: false,
+      askQuestionAtEnd: false,
+      structure: [
+        'Time complexity in plain English',
+        'Memory complexity in plain English',
+      ],
+      confidence: 0.96,
+    };
+  }
+
+  // 6. Give me a hint (ONE hint only, max 3 sentences + 1 question)
+  if (intent === 'learning') {
     if (subIntent === 'pattern' || tier === 4) {
       return {
         goal: 'Provide a code skeleton with # TODO comments where student fills logic.',
-        teachingGoal: 'Scaffold only. Do not complete the solution.',
+        teachingGoal: 'Scaffold only.',
         role: 'tutor',
         responseLength: 'medium',
         revealSolution: false,
         includeCode: true,
         askQuestionAtEnd: true,
         structure: [
-          '1. Code Skeleton with # TODO comments',
-          '2. One rule to remember while filling it in',
+          'Code skeleton with # TODO comments',
+          'One rule to remember while filling it in',
         ],
         confidence: 0.94,
       };
     }
 
-    // Default Hint Flow (Under 80 words, ONE hint only + 1 question)
     return {
-      goal: 'Give exactly ONE small hint and end with one question to help them think.',
-      teachingGoal: 'Smallest explanation possible. Do not explain the entire algorithm.',
+      goal: 'Give ONE hint only. Maximum 3 sentences. End with one small question. Stop.',
+      teachingGoal: 'Smallest explanation possible.',
       role: 'tutor',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
       askQuestionAtEnd: true,
       structure: [
-        '1. Exactly ONE intuitive hint (2-3 sentences max)',
-        '2. One small reflective question at the end',
+        'ONE hint only (max 3 sentences)',
+        'End with one small question to make them think',
+        'Stop.',
       ],
-      confidence: 0.94,
+      confidence: 0.95,
     };
   }
 
-  // 5. Code Review (Under 120 words)
+  // 7. Reviewing
   if (intent === 'reviewing') {
     return {
-      goal: 'Mention 1 thing done well, and 1 clean practical improvement.',
-      teachingGoal: 'Brief, conversational, no checklist essay.',
+      goal: 'Mention 1 thing done well, and 1 clean improvement.',
+      teachingGoal: 'Under 120 words. Friendly and direct.',
       role: 'reviewer',
       responseLength: 'short',
       revealSolution: false,
       includeCode: false,
       askQuestionAtEnd: true,
       structure: [
-        '1. One strength in their approach',
-        '2. One clean tip to improve it',
+        'One thing done well',
+        'One clean tip to improve it',
       ],
       confidence: 0.93,
     };
   }
 
-  // General fallback
+  // Fallback
   return {
-    goal: 'Answer the question directly in 2-4 sentences using simple English.',
+    goal: 'Answer directly in 2-4 simple sentences. No essay.',
     teachingGoal: 'Less is better. Simple is better.',
     role: 'tutor',
     responseLength: 'short',
     revealSolution: false,
     includeCode: false,
     askQuestionAtEnd: false,
-    structure: ['1. Direct, simple answer in 2-4 sentences'],
+    structure: ['Direct answer in 2-4 sentences'],
     confidence: 0.85,
   };
 }
@@ -183,9 +226,9 @@ export function createResponsePlan(
 export function formatPlanDirective(plan: ResponsePlan): string {
   const lines: string[] = [];
   lines.push(`Goal: ${plan.goal}`);
-  lines.push(`Length Limit: ${plan.responseLength.toUpperCase()} (Keep it brief, simple sentences)`);
-  lines.push(`Code Policy: ${plan.revealSolution ? 'Complete code allowed + 4-6 bullet points' : plan.includeCode ? 'Skeleton with # TODO only' : 'NO Python code blocks'}`);
-  lines.push(`Blueprint:\n${plan.structure.map((s) => `  - ${s}`).join('\n')}`);
+  lines.push(`Length: ${plan.responseLength.toUpperCase()}`);
+  lines.push(`Format Instructions:\n${plan.structure.map((s) => `  - ${s}`).join('\n')}`);
+  lines.push('Do NOT output template section names like "Direct Diagnosis" or "Verification Tip". Speak naturally.');
 
   return lines.join('\n');
 }
