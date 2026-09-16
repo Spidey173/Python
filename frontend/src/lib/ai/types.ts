@@ -28,6 +28,36 @@ export type QuestionType =
   | 'REVIEW'
   | 'GENERAL';
 
+export enum TeachingRequest {
+  ExplainProblem = 'ExplainProblem',
+  ExplainConcept = 'ExplainConcept',
+  ExplainCode = 'ExplainCode',
+  GiveHint = 'GiveHint',
+  Debug = 'Debug',
+  ShowSolution = 'ShowSolution',
+  Complexity = 'Complexity',
+  Compare = 'Compare',
+  Review = 'Review',
+  Interview = 'Interview',
+  General = 'General',
+}
+
+export type ExplanationDepth =
+  | 'tiny'    // ~30 words
+  | 'short'   // ~80 words (default)
+  | 'normal'  // ~150 words
+  | 'deep';   // unlimited
+
+export interface TeachingRequestSpec {
+  request: TeachingRequest;
+  maxWords: number;
+  maxExamples: number;
+  allowCode: boolean;
+  allowFollowUpQuestion: boolean;
+  explanationDepth: ExplanationDepth;
+  outputTemplate: string;
+}
+
 export type ErrorType =
   | 'syntax_error'
   | 'runtime_error'
@@ -53,6 +83,7 @@ export interface ConversationState {
   lastBug?: string | null;
   isSolved: boolean;
   learningMode?: 'socratic' | 'direct' | 'interview';
+  verbosity?: ExplanationDepth;
   recentIntents?: StudentIntent[];
   lastHintProvided?: string;
   conceptsGrasped?: string[];
@@ -103,6 +134,9 @@ export interface CompressedMemory {
 }
 
 export interface ResponsePlan {
+  teachingRequest: TeachingRequest;
+  requestSpec: TeachingRequestSpec;
+  explanationDepth: ExplanationDepth;
   questionType: QuestionType;
   goal: string;
   teachingGoal: string;

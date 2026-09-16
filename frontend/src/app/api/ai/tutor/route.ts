@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { runCognitivePipeline, HelpTier, StudentIntent } from '@/lib/ai';
+import { runCognitivePipeline, HelpTier, StudentIntent, ExplanationDepth } from '@/lib/ai';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'mentor';
@@ -16,6 +16,7 @@ interface TutorRequestBody {
   hint_tier?: HelpTier;
   last_bug?: string | null;
   is_solved?: boolean;
+  verbosity?: ExplanationDepth;
 }
 
 // Provider 1: Call Groq / OpenAI / OpenRouter API
@@ -167,6 +168,7 @@ export async function POST(req: NextRequest) {
       hint_tier = 1,
       last_bug = null,
       is_solved = false,
+      verbosity = 'short',
     } = body;
 
     if (!message || typeof message !== 'string') {
@@ -264,11 +266,13 @@ export async function POST(req: NextRequest) {
       challengeId: challenge_id,
       challengeTitle: challenge_title,
       chatHistory: chat_history,
+      verbosity,
       stateOverrides: {
         attemptCount: attempt_count,
         hintLevel: hint_tier,
         lastBug: last_bug,
         isSolved: is_solved,
+        verbosity,
       },
       llmInvoker,
     });
@@ -278,7 +282,10 @@ export async function POST(req: NextRequest) {
       socratic_hint: output.socratic_hint,
       confidence: output.confidence,
       intent: output.intent,
+      teaching_request: output.teachingRequest,
       question_type: output.questionType,
+      verbosity: output.verbosity,
+      max_words: output.responsePlan.requestSpec.maxWords,
       tier: output.tier,
       role: output.role,
       astSummary: output.astSummary,

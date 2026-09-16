@@ -10,6 +10,7 @@ export * from './style/response-style';
 export * from './memory/memory-compressor';
 export * from './state/conversation-state';
 export * from './planner/teaching-planner';
+export * from './planner/teaching-request-specs';
 export * from './planner/response-planner';
 export * from './retrieval/knowledge-retriever';
 export * from './prompt/builder';

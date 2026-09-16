@@ -14,6 +14,8 @@ import {
   ErrorAnalysisResult,
   CompressedMemory,
   QuestionType,
+  TeachingRequest,
+  ExplanationDepth,
 } from '../types';
 import { detectIntent } from '../intent/detector';
 import { tryResolveLocalCapability } from '../router/capability-router';
@@ -39,11 +41,13 @@ export interface CognitivePipelineInput {
   challengeTitle?: string;
   chatHistory?: Array<{ role: string; content: string }>;
   rawError?: string;
+  verbosity?: ExplanationDepth;
   stateOverrides?: {
     attemptCount?: number;
     hintLevel?: HelpTier;
     lastBug?: string | null;
     isSolved?: boolean;
+    verbosity?: ExplanationDepth;
     conceptsGrasped?: string[];
     currentBottlenecks?: string[];
   };
@@ -60,7 +64,9 @@ export interface CognitivePipelineOutput {
   confidence: number;
   intent: StudentIntent;
   subIntent?: string;
+  teachingRequest: TeachingRequest;
   questionType: QuestionType;
+  verbosity: ExplanationDepth;
   tier: HelpTier;
   role: TeachingRole;
   socratic_hint: string;
@@ -104,9 +110,13 @@ export async function runCognitivePipeline(
     challengeTitle = `Challenge #${challengeId}`,
     chatHistory = [],
     rawError,
+    verbosity: inputVerbosity,
     stateOverrides,
     llmInvoker,
   } = input;
+
+  const verbosity: ExplanationDepth =
+    stateOverrides?.verbosity || inputVerbosity || 'short';
 
   // 1. Input Normalizer
   const normalizedMessage = message.trim();
@@ -133,7 +143,10 @@ export async function runCognitivePipeline(
         EMPTY_ERROR_ANALYSIS,
         EMPTY_AST,
         false,
-        normalizedMessage
+        normalizedMessage,
+        false,
+        false,
+        verbosity
       );
 
       return {
@@ -141,7 +154,9 @@ export async function runCognitivePipeline(
         confidence: 0.99,
         intent: detected.intent,
         subIntent: detected.subIntent,
+        teachingRequest: plan.teachingRequest,
         questionType: plan.questionType,
+        verbosity: plan.explanationDepth,
         tier: dummyState.hintLevel,
         role: 'explainer',
         socratic_hint: 'Standard Python documentation & algorithmic foundation.',
@@ -211,7 +226,8 @@ export async function runCognitivePipeline(
     detected.flags.askingForFullCode,
     normalizedMessage,
     Boolean(rawError || state.lastBug),
-    detected.flags.isGreeting
+    detected.flags.isGreeting,
+    verbosity
   );
 
   // 12. Strict Zero-Pollution Cache Policy Guard
@@ -239,7 +255,9 @@ export async function runCognitivePipeline(
         confidence: 0.98,
         intent: detected.intent,
         subIntent: detected.subIntent,
+        teachingRequest: responsePlan.teachingRequest,
         questionType: responsePlan.questionType,
+        verbosity: responsePlan.explanationDepth,
         tier: teachingPlan.helpLevel,
         role: responsePlan.role,
         socratic_hint: knowledge.targetHint,
@@ -312,7 +330,9 @@ export async function runCognitivePipeline(
     confidence: validated.confidence,
     intent: detected.intent,
     subIntent: detected.subIntent,
+    teachingRequest: responsePlan.teachingRequest,
     questionType: responsePlan.questionType,
+    verbosity: responsePlan.explanationDepth,
     tier: teachingPlan.helpLevel,
     role: responsePlan.role,
     socratic_hint: knowledge.targetHint,
