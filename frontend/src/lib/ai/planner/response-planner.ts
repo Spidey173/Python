@@ -1,22 +1,34 @@
-// Structured Response Planner (PyForge Teaching Philosophy)
-// "The LLM should only fill slots. Your application should decide the format."
-// "One question → one answer → one concept."
-
 import {
+  ConfidenceLevel,
   ErrorAnalysisResult,
   ExplanationDepth,
   FactualASTSummary,
   HelpTier,
+  LearningGoal,
   LearningSubIntent,
+  Misconception,
+  NextBestStep,
+  PatternStep,
   QuestionType,
   ResponsePlan,
   ResponseStyle,
   StudentIntent,
+  TeachingMode,
   TeachingRequest,
   TeachingRole,
 } from '../types';
 import { classifyTeachingRequest, classifyQuestionType } from '../intent/question-classifier';
 import { getTeachingRequestSpec } from './teaching-request-specs';
+import {
+  classifyLearningGoal,
+  deriveAdaptiveDepth,
+  detectConfidence,
+  detectMisconception,
+  getTeachingModeDirective,
+  resolveNextBestStep,
+  resolvePatternStep,
+  selectTeachingMode,
+} from '../pedagogy/pedagogy';
 
 export function createResponsePlan(
   intent: StudentIntent,
@@ -29,8 +41,42 @@ export function createResponsePlan(
   userMessage: string = '',
   hasActiveBug: boolean = false,
   isGreeting: boolean = false,
-  verbosity: ExplanationDepth = 'short'
+  explicitVerbosity?: ExplanationDepth,
+  challengeTitle: string = '',
+  code: string = '',
+  isSolved: boolean = false
 ): ResponsePlan {
+  // 1. Pedagogical Classifications
+  const learningGoal: LearningGoal = classifyLearningGoal(
+    userMessage,
+    intent,
+    subIntent,
+    askingForFullCode,
+    errorAnalysis.errorType !== 'none' || hasActiveBug
+  );
+
+  const teachingMode: TeachingMode = selectTeachingMode(learningGoal, userMessage, intent);
+
+  // Derive adaptive depth from message phrasing if not explicitly pinned
+  const adaptiveDepth: ExplanationDepth = explicitVerbosity || deriveAdaptiveDepth(userMessage);
+
+  // Detect confidence level: low | medium | high
+  const confidenceLevel: ConfidenceLevel = detectConfidence(userMessage);
+
+  // Detect top-5 misconception if present in message or code
+  const misconception: Misconception | null = detectMisconception(userMessage, code);
+
+  // Look up pattern step from pattern graph
+  const patternStep: PatternStep = resolvePatternStep(challengeTitle || userMessage);
+
+  // Compute Next Best Teaching Step
+  const nextBestStep: NextBestStep = resolveNextBestStep(
+    challengeTitle || patternStep.pattern,
+    isSolved,
+    confidenceLevel
+  );
+
+  // 2. Map to deterministic TeachingRequest & QuestionType
   const teachingRequest: TeachingRequest = classifyTeachingRequest({
     message: userMessage,
     intent,
@@ -53,8 +99,8 @@ export function createResponsePlan(
     hasActiveBug,
   });
 
-  // Resolve deterministic slot template and word budget based on verbosity
-  const spec = getTeachingRequestSpec(teachingRequest, verbosity);
+  // Resolve deterministic slot template and word budget (with misconception prepended if present)
+  const spec = getTeachingRequestSpec(teachingRequest, adaptiveDepth, misconception);
 
   // Determine teaching role cleanly
   let role: TeachingRole = 'tutor';
@@ -77,29 +123,43 @@ export function createResponsePlan(
   return {
     teachingRequest,
     requestSpec: spec,
-    explanationDepth: verbosity,
+    explanationDepth: adaptiveDepth,
     questionType,
+    learningGoal,
+    teachingMode,
+    confidenceLevel,
+    misconception,
+    patternStep,
+    nextBestStep,
     goal: `Fill slots for ${teachingRequest}`,
     teachingGoal: `Fill exact template slots under ${spec.maxWords} words. No extra sections.`,
     role,
     responseLength:
-      verbosity === 'tiny' || verbosity === 'short'
+      adaptiveDepth === 'tiny' || adaptiveDepth === 'short'
         ? 'short'
-        : verbosity === 'normal'
+        : adaptiveDepth === 'normal'
         ? 'medium'
         : 'long',
     revealSolution: spec.allowCode,
     includeCode: spec.allowCode,
     askQuestionAtEnd: spec.allowFollowUpQuestion,
     structure: spec.outputTemplate.split('\n'),
-    confidence: 0.98,
+    confidence: confidenceLevel === 'low' ? 0.85 : confidenceLevel === 'high' ? 0.99 : 0.95,
   };
 }
 
 export function formatPlanDirective(plan: ResponsePlan): string {
   const spec = plan.requestSpec;
   const lines: string[] = [];
+
   lines.push(`TEACHING REQUEST: ${spec.request} (Verbosity Level: ${spec.explanationDepth.toUpperCase()})`);
+  lines.push(`LEARNING GOAL: ${plan.learningGoal}`);
+  lines.push(`TEACHING DIRECTIVE: ${getTeachingModeDirective(plan.teachingMode, plan.confidenceLevel)}`);
+
+  if (plan.patternStep) {
+    lines.push(`PATTERN INSIGHT: ${plan.patternStep.pattern} — ${plan.patternStep.transferClue}`);
+  }
+
   lines.push(`WORD LIMIT: Strictly under ${spec.maxWords} words.`);
   lines.push(`MANDATORY FILL-IN TEMPLATE:\n${spec.outputTemplate}`);
   lines.push('SLOT RULES:');

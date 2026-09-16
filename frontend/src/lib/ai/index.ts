@@ -19,4 +19,5 @@ export * from './validator/response-validator';
 export * from './polisher/natural-language-rewriter';
 export * from './cache/prompt-cache';
 export * from './fallback/template-engine';
+export * from './pedagogy/pedagogy';
 export * from './pipeline/orchestrator';

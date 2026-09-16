@@ -48,6 +48,44 @@ export type ExplanationDepth =
   | 'normal'  // ~150 words
   | 'deep';   // unlimited
 
+export type LearningGoal =
+  | 'Understand'
+  | 'Hint'
+  | 'Debug'
+  | 'ShowCode'
+  | 'Review'
+  | 'Compare'
+  | 'Interview';
+
+export type TeachingMode =
+  | 'Teacher'
+  | 'Coach'
+  | 'Debugger'
+  | 'Interviewer'
+  | 'PairProgrammer';
+
+export type ConfidenceLevel = 'low' | 'medium' | 'high';
+
+export type MasteryState = 'learned' | 'learning' | 'not_started';
+
+export interface Misconception {
+  id: string;
+  name: string;
+  correction: string;
+}
+
+export interface PatternStep {
+  pattern: string;
+  nextPattern?: string;
+  prerequisite?: string;
+  transferClue: string;
+}
+
+export interface NextBestStep {
+  topic: string;
+  suggestion: string;
+}
+
 export interface TeachingRequestSpec {
   request: TeachingRequest;
   maxWords: number;
@@ -138,6 +176,12 @@ export interface ResponsePlan {
   requestSpec: TeachingRequestSpec;
   explanationDepth: ExplanationDepth;
   questionType: QuestionType;
+  learningGoal: LearningGoal;
+  teachingMode: TeachingMode;
+  confidenceLevel: ConfidenceLevel;
+  misconception?: Misconception | null;
+  patternStep?: PatternStep | null;
+  nextBestStep?: NextBestStep | null;
   goal: string;
   teachingGoal: string;
   role: TeachingRole;

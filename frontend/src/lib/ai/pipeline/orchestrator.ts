@@ -70,6 +70,7 @@ export interface CognitivePipelineOutput {
   tier: HelpTier;
   role: TeachingRole;
   socratic_hint: string;
+  nextStep?: string;
   astSummary: FactualASTSummary;
   codeDiff?: CodeDiffResult | null;
   errorAnalysis?: ErrorAnalysisResult;
@@ -146,7 +147,10 @@ export async function runCognitivePipeline(
         normalizedMessage,
         false,
         false,
-        verbosity
+        inputVerbosity || stateOverrides?.verbosity,
+        challengeTitle,
+        code,
+        dummyState.isSolved
       );
 
       return {
@@ -160,6 +164,7 @@ export async function runCognitivePipeline(
         tier: dummyState.hintLevel,
         role: 'explainer',
         socratic_hint: 'Standard Python documentation & algorithmic foundation.',
+        nextStep: plan.nextBestStep?.suggestion,
         astSummary: EMPTY_AST,
         responsePlan: plan,
         responseStyle: style,
@@ -227,7 +232,10 @@ export async function runCognitivePipeline(
     normalizedMessage,
     Boolean(rawError || state.lastBug),
     detected.flags.isGreeting,
-    verbosity
+    inputVerbosity || stateOverrides?.verbosity,
+    challengeTitle,
+    code,
+    state.isSolved
   );
 
   // 12. Strict Zero-Pollution Cache Policy Guard
@@ -261,6 +269,7 @@ export async function runCognitivePipeline(
         tier: teachingPlan.helpLevel,
         role: responsePlan.role,
         socratic_hint: knowledge.targetHint,
+        nextStep: responsePlan.nextBestStep?.suggestion,
         astSummary: ast,
         codeDiff,
         errorAnalysis,
@@ -336,6 +345,7 @@ export async function runCognitivePipeline(
     tier: teachingPlan.helpLevel,
     role: responsePlan.role,
     socratic_hint: knowledge.targetHint,
+    nextStep: responsePlan.nextBestStep?.suggestion,
     astSummary: ast,
     codeDiff,
     errorAnalysis,

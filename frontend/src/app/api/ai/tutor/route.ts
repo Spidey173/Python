@@ -280,6 +280,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       reply: output.reply,
       socratic_hint: output.socratic_hint,
+      next_step: output.nextStep,
       confidence: output.confidence,
       intent: output.intent,
       teaching_request: output.teachingRequest,

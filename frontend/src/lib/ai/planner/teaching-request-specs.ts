@@ -1,15 +1,15 @@
-// Deterministic Teaching Request Specifications & Slot Templates
-// Architecture Rule: The LLM should only fill slots. Your application should decide the format.
-
-import { TeachingRequest, ExplanationDepth, TeachingRequestSpec } from '../types';
+import { TeachingRequest, ExplanationDepth, TeachingRequestSpec, Misconception } from '../types';
 
 export function getTeachingRequestSpec(
   request: TeachingRequest,
-  depth: ExplanationDepth = 'short'
+  depth: ExplanationDepth = 'short',
+  misconception?: Misconception | null
 ): TeachingRequestSpec {
+  let spec: TeachingRequestSpec;
+
   switch (request) {
     case TeachingRequest.ExplainProblem:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 65 : depth === 'normal' ? 110 : 200,
@@ -30,7 +30,7 @@ Example:
       };
 
     case TeachingRequest.GiveHint:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 35 : depth === 'short' ? 60 : depth === 'normal' ? 90 : 150,
@@ -45,9 +45,10 @@ Hint:
 Think about:
 [1 small question to spark their thinking]`,
       };
+      break;
 
     case TeachingRequest.Debug:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 45 : depth === 'short' ? 80 : depth === 'normal' ? 120 : 180,
@@ -63,9 +64,10 @@ Why:
 Fix:
 [1 sentence directing them what to check]`,
       };
+      break;
 
     case TeachingRequest.ShowSolution:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 60 : depth === 'short' ? 120 : depth === 'normal' ? 180 : 300,
@@ -82,9 +84,10 @@ How it works:
 * [Step 3]
 * [Step 4]`,
       };
+      break;
 
     case TeachingRequest.ExplainCode:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 50 : depth === 'short' ? 100 : depth === 'normal' ? 150 : 250,
@@ -95,9 +98,10 @@ How it works:
 Line [X]: [What it does in 1 sentence]
 Line [Y]: [What it does in 1 sentence]`,
       };
+      break;
 
     case TeachingRequest.ExplainConcept:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 80 : depth === 'normal' ? 130 : 220,
@@ -113,9 +117,10 @@ Everyday analogy:
 Rule to remember:
 [1 sentence takeaway]`,
       };
+      break;
 
     case TeachingRequest.Complexity:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 30 : depth === 'short' ? 50 : depth === 'normal' ? 80 : 120,
@@ -128,9 +133,10 @@ Rule to remember:
 Space complexity:
 [Big-O and 1 sentence why]`,
       };
+      break;
 
     case TeachingRequest.Compare:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 45 : depth === 'short' ? 85 : depth === 'normal' ? 130 : 200,
@@ -146,9 +152,10 @@ Approach 2:
 When to use:
 [1 sentence tradeoff]`,
       };
+      break;
 
     case TeachingRequest.Review:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 75 : depth === 'normal' ? 110 : 160,
@@ -161,9 +168,10 @@ When to use:
 One clean improvement:
 [1-2 sentences]`,
       };
+      break;
 
     case TeachingRequest.Interview:
-      return {
+      spec = {
         request,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 40 : depth === 'short' ? 70 : depth === 'normal' ? 110 : 150,
@@ -176,10 +184,11 @@ One clean improvement:
 What they are testing:
 [1 sentence]`,
       };
+      break;
 
     case TeachingRequest.General:
     default:
-      return {
+      spec = {
         request: TeachingRequest.General,
         explanationDepth: depth,
         maxWords: depth === 'tiny' ? 30 : depth === 'short' ? 60 : depth === 'normal' ? 100 : 150,
@@ -189,5 +198,12 @@ What they are testing:
         outputTemplate: `Direct answer:
 [2-3 simple sentences]`,
       };
+      break;
   }
+
+  if (misconception) {
+    spec.outputTemplate = `Misconception addressed:\n[1 sentence directly clarifying: ${misconception.correction}]\n\n${spec.outputTemplate}`;
+  }
+
+  return spec;
 }
