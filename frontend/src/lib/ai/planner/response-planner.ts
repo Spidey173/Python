@@ -76,7 +76,7 @@ export function createResponsePlan(
         : 'long',
     revealSolution: contract.permissions.revealSolution,
     includeCode: contract.permissions.includeCode,
-    askQuestionAtEnd: contract.presentation.askFollowUp,
+    askQuestionAtEnd: contract.askFollowUp,
     structure: contract.outputTemplate.split('\n'),
     confidence: contract.confidence === 'low' ? 0.85 : contract.confidence === 'high' ? 0.99 : 0.95,
   });

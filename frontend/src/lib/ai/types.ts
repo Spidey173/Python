@@ -183,6 +183,7 @@ export type ResponseKind =
 export interface AnswerPermissions {
   readonly includeCode: boolean;
   readonly revealSolution: boolean;
+  readonly askFollowUp: boolean;
 }
 
 export interface Presentation {
@@ -190,20 +191,23 @@ export interface Presentation {
   readonly depth: ExplanationDepth;
   readonly maxWords: number;
   readonly includeDiagram: boolean;
-  readonly askFollowUp: boolean;
   readonly outputTemplate: string;
+}
+
+export interface TeachingStyle {
+  readonly mode: TeachingMode;
+  readonly confidence: ConfidenceLevel;
 }
 
 export interface AnswerContract {
   readonly responseKind: ResponseKind;
   readonly permissions: AnswerPermissions;
   readonly presentation: Presentation;
-  readonly teachingMode: TeachingMode;
+  readonly teaching: TeachingStyle;
   readonly learningGoal: LearningGoal;
-  readonly confidence: ConfidenceLevel;
   readonly role: TeachingRole;
   readonly questionType: QuestionType;
-  // Conveniences mirrored directly from permissions & presentation
+  // Conveniences mirrored directly for ergonomic access
   readonly includeCode: boolean;
   readonly revealSolution: boolean;
   readonly includeDiagram: boolean;
@@ -212,6 +216,8 @@ export interface AnswerContract {
   readonly maxWords: number;
   readonly outputTemplate: string;
   readonly teachingRequest: TeachingRequest;
+  readonly teachingMode: TeachingMode;
+  readonly confidence: ConfidenceLevel;
 }
 
 export interface ResponsePlan {

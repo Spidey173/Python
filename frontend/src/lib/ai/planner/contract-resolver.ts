@@ -1,7 +1,7 @@
-// Answer Contract Resolver
+// Modular Answer Contract Resolver
 // SINGLE SOURCE OF TRUTH: All behavioral decisions, capabilities, and permissions
-// are decided here ONCE and frozen via Object.freeze().
-// Nothing downstream may alter or re-interpret these decisions.
+// are decided here once and frozen via Object.freeze().
+// Decomposed into clean sub-resolvers to avoid God Object sprawl.
 
 import {
   AnswerContract,
@@ -19,6 +19,7 @@ import {
   TeachingMode,
   TeachingRequest,
   TeachingRole,
+  TeachingStyle,
 } from '../types';
 import { getTeachingRequestSpec } from './teaching-request-specs';
 import {
@@ -45,25 +46,21 @@ export interface ContractResolverInput {
   challengeTitle?: string;
 }
 
-export function resolveAnswerContract(input: ContractResolverInput): AnswerContract {
+// -----------------------------------------------------------------------------
+// 1. ResponseKind Sub-Resolver
+// -----------------------------------------------------------------------------
+export function resolveResponseKind(input: ContractResolverInput): ResponseKind {
   const {
     message,
     intent,
     subIntent,
-    code = '',
     hasActiveBug = false,
     hasErrorTrace = false,
-    isGreeting = false,
     askingForFullCode = false,
     askingForSkeleton = false,
-    explicitVerbosity,
   } = input;
 
-  const trimmed = message.trim();
-  const lower = trimmed.toLowerCase();
-
-  // 1. Determine ResponseKind (Clean discriminated union)
-  let responseKind: ResponseKind;
+  const lower = message.trim().toLowerCase();
 
   const isExplicitCodeRequest =
     askingForFullCode ||
@@ -73,18 +70,24 @@ export function resolveAnswerContract(input: ContractResolverInput): AnswerContr
     );
 
   if (isExplicitCodeRequest) {
-    responseKind = 'FullSolution';
-  } else if (
+    return 'FullSolution';
+  }
+
+  if (
     intent === 'career' ||
     /\b(mock interview|faang|maang|interviewer question|test my knowledge)\b/i.test(lower)
   ) {
-    responseKind = 'Interview';
-  } else if (
+    return 'Interview';
+  }
+
+  if (
     intent === 'reviewing' ||
     /\b(review( my)? code|check my code|rate my code|feedback on( my)? code|critique)\b/i.test(lower)
   ) {
-    responseKind = 'Review';
-  } else if (
+    return 'Review';
+  }
+
+  if (
     hasErrorTrace ||
     hasActiveBug ||
     intent === 'debugging' ||
@@ -92,32 +95,64 @@ export function resolveAnswerContract(input: ContractResolverInput): AnswerContr
       lower
     )
   ) {
-    responseKind = 'Debug';
-  } else if (
+    return 'Debug';
+  }
+
+  if (
     askingForSkeleton ||
     subIntent === 'pattern' ||
     subIntent === 'pseudocode' ||
     /\b(skeleton|scaffold|boilerplate|pseudocode)\b/i.test(lower)
   ) {
-    responseKind = 'Walkthrough';
-  } else if (
+    return 'Walkthrough';
+  }
+
+  if (
     subIntent === 'hint' ||
     /\b(i('m| am) stuck|stuck|give me a hint|need a hint|another hint|clue|nudge|where do i start|help me start|i('m| am) lost|lost|i don't know|i do not know|help)\b/i.test(
       lower
     )
   ) {
-    responseKind = 'Hint';
-  } else {
-    responseKind = 'Concept';
+    return 'Hint';
   }
 
-  // 2. Determine Permissions (Strictly separated from pedagogy)
-  const permissions: AnswerPermissions = Object.freeze({
-    includeCode: responseKind === 'FullSolution' || responseKind === 'Walkthrough',
-    revealSolution: responseKind === 'FullSolution' || responseKind === 'Walkthrough',
-  });
+  return 'Concept';
+}
 
-  // 3. Determine Pedagogy & Voice
+// -----------------------------------------------------------------------------
+// 2. Permission Sub-Resolver
+// -----------------------------------------------------------------------------
+export function resolvePermissions(kind: ResponseKind): AnswerPermissions {
+  const isCodeAllowed = kind === 'FullSolution' || kind === 'Walkthrough';
+  const askFollowUp = kind === 'Hint' || kind === 'Interview';
+
+  return Object.freeze({
+    includeCode: isCodeAllowed,
+    revealSolution: isCodeAllowed,
+    askFollowUp,
+  });
+}
+
+// -----------------------------------------------------------------------------
+// 3. Teaching & Voice Sub-Resolver
+// -----------------------------------------------------------------------------
+interface TeachingResolution {
+  teaching: TeachingStyle;
+  learningGoal: LearningGoal;
+  role: TeachingRole;
+  questionType: QuestionType;
+  teachingRequest: TeachingRequest;
+}
+
+export function resolveTeachingResolution(
+  input: ContractResolverInput,
+  kind: ResponseKind,
+  permissions: AnswerPermissions
+): TeachingResolution {
+  const { message, intent, subIntent, hasActiveBug = false, hasErrorTrace = false, isGreeting = false } = input;
+  const trimmed = message.trim();
+  const lower = trimmed.toLowerCase();
+
   const learningGoal: LearningGoal = classifyLearningGoal(
     trimmed,
     intent,
@@ -126,20 +161,19 @@ export function resolveAnswerContract(input: ContractResolverInput): AnswerContr
     hasActiveBug || hasErrorTrace
   );
 
-  const teachingMode: TeachingMode = selectTeachingMode(learningGoal, trimmed, intent);
-
-  // Confidence is categorized cleanly: 'low' | 'medium' | 'high'
+  const mode: TeachingMode = selectTeachingMode(learningGoal, trimmed, intent);
   const confidence: ConfidenceLevel = detectConfidence(trimmed);
 
-  // Depth derives adaptively unless explicitly provided
-  const depth: ExplanationDepth = explicitVerbosity || deriveAdaptiveDepth(trimmed);
+  const teaching: TeachingStyle = Object.freeze({
+    mode,
+    confidence,
+  });
 
-  // 4. Map to TeachingRequest & TeachingRole
   let teachingRequest: TeachingRequest;
   let role: TeachingRole = 'tutor';
   let questionType: QuestionType = 'GENERAL';
 
-  switch (responseKind) {
+  switch (kind) {
     case 'FullSolution':
     case 'Walkthrough':
       teachingRequest = TeachingRequest.ShowSolution;
@@ -188,42 +222,83 @@ export function resolveAnswerContract(input: ContractResolverInput): AnswerContr
       break;
   }
 
-  // Detect misconception only if relevant
-  const misconception: Misconception | null =
+  return {
+    teaching,
+    learningGoal,
+    role,
+    questionType,
+    teachingRequest,
+  };
+}
+
+// -----------------------------------------------------------------------------
+// 4. Presentation Sub-Resolver
+// -----------------------------------------------------------------------------
+export function resolvePresentation(
+  kind: ResponseKind,
+  teachingRequest: TeachingRequest,
+  depth: ExplanationDepth,
+  misconception: Misconception | null
+): Presentation {
+  const spec = getTeachingRequestSpec(teachingRequest, depth, misconception);
+
+  return Object.freeze({
+    template: teachingRequest,
+    depth,
+    maxWords: spec.maxWords,
+    includeDiagram: kind === 'Hint' || kind === 'Debug' || kind === 'Concept',
+    outputTemplate: spec.outputTemplate,
+  });
+}
+
+// -----------------------------------------------------------------------------
+// 5. Main Contract Assembler (Single Source of Truth)
+// -----------------------------------------------------------------------------
+export function resolveAnswerContract(input: ContractResolverInput): AnswerContract {
+  const { message, code = '', hasActiveBug = false, hasErrorTrace = false, explicitVerbosity } = input;
+  const trimmed = message.trim();
+
+  // 1. Kind
+  const responseKind = resolveResponseKind(input);
+
+  // 2. Permissions
+  const permissions = resolvePermissions(responseKind);
+
+  // 3. Teaching & Voice
+  const { teaching, learningGoal, role, questionType, teachingRequest } = resolveTeachingResolution(
+    input,
+    responseKind,
+    permissions
+  );
+
+  // 4. Presentation
+  const depth: ExplanationDepth = explicitVerbosity || deriveAdaptiveDepth(trimmed);
+  const misconception =
     hasErrorTrace || hasActiveBug || Boolean(code && code.trim().length > 0)
       ? detectMisconception(trimmed, code)
       : null;
 
-  // 5. Determine Presentation
-  const spec = getTeachingRequestSpec(teachingRequest, depth, misconception);
+  const presentation = resolvePresentation(responseKind, teachingRequest, depth, misconception);
 
-  const presentation: Presentation = Object.freeze({
-    template: teachingRequest,
-    depth,
-    maxWords: spec.maxWords,
-    includeDiagram: responseKind === 'Hint' || responseKind === 'Debug' || responseKind === 'Concept',
-    askFollowUp: spec.allowFollowUpQuestion && (responseKind === 'Hint' || responseKind === 'Interview'),
-    outputTemplate: spec.outputTemplate,
-  });
-
-  // 6. Return Fully Frozen Contract
+  // 5. Assemble & Freeze
   return Object.freeze({
     responseKind,
     permissions,
     presentation,
-    teachingMode,
+    teaching,
     learningGoal,
-    confidence,
     role,
     questionType,
-    // Direct access conveniences mirrored from permissions & presentation
+    // Ergonomic direct mirrors
     includeCode: permissions.includeCode,
     revealSolution: permissions.revealSolution,
+    askFollowUp: permissions.askFollowUp,
     includeDiagram: presentation.includeDiagram,
-    askFollowUp: presentation.askFollowUp,
     depth: presentation.depth,
     maxWords: presentation.maxWords,
     outputTemplate: presentation.outputTemplate,
     teachingRequest,
+    teachingMode: teaching.mode,
+    confidence: teaching.confidence,
   });
 }
