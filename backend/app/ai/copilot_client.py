@@ -26,6 +26,9 @@ Be conversational, clear, and practical.
 The starter code template is the single source of truth. Always follow the starter code template format over any conflicting editor code. Ignore conflicting script-style code (input()/print()) in the editor.
 
 When the user asks for code:
+- Prefer the easiest interview-accepted solution first.
+- Prefer iterative, direct, readable code (e.g. two pointers, hash map, simple loops) over recursive or overly clever code.
+- Do not lead with harder recursive solutions unless the problem specifically requires recursion or the user asks for it.
 - Always provide complete working code using the exact starter code template.
 - Never ask the user which format the judge expects or ask for clarification on script vs function format. Assume the platform is function-based.
 - Do not use input(), print(), or main() scripts.
@@ -112,10 +115,12 @@ async def chat_with_ai_tutor(
             context_sections.append(f"### Problem Description\n{objective}")
 
     context_sections.append(
-        "### Platform Rules & Authoritative Target\n"
+        "### Platform Rules & Solution Style\n"
         "- Platform Judge Type: Function-based judge (LeetCode style).\n"
         "- Authoritative Template: Starter Code Template.\n"
         "- Conflict Resolution: Ignore any script-style code (input()/print()) in the editor. Always complete the starter template.\n"
+        "- Preferred Solution Style: Easiest interview-accepted solution first (prefer two pointers / hash maps / simple loops over recursion).\n"
+        "- Avoid: Complex recursive or advanced variants unless required or requested.\n"
         "- Do NOT ask the user which format to use. Provide code using the starter template directly."
     )
 
