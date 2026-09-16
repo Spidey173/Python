@@ -87,7 +87,7 @@ async def submit_code(
     prog_res = await db.execute(
         select(UserProgress).where(
             UserProgress.user_id == current_user.id,
-            UserProgress.challenge_id == ch.id
+            (UserProgress.challenge_id == ch.id) | (UserProgress.challenge_id == ch.level_number)
         )
     )
     progress = prog_res.scalars().first()

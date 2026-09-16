@@ -95,6 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('pq_token', data.access_token);
     setToken(data.access_token);
     setUser(data.user);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('pyforge_auth_login'));
+      window.dispatchEvent(new Event('pyforge_problem_solved'));
+    }
   };
 
   const register = async (username: string, email: string, pass: string) => {
@@ -102,6 +106,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('pq_token', data.access_token);
     setToken(data.access_token);
     setUser(data.user);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('pyforge_auth_login'));
+      window.dispatchEvent(new Event('pyforge_problem_solved'));
+    }
   };
 
   const guestLogin = async () => {
@@ -109,6 +117,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('pq_token', data.access_token);
     setToken(data.access_token);
     setUser(data.user);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('pyforge_auth_login'));
+      window.dispatchEvent(new Event('pyforge_problem_solved'));
+    }
   };
 
   const logout = () => {

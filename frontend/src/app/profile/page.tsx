@@ -10,6 +10,8 @@ import {
   SubmissionLogEntry,
   calculateRealStreak,
   calculateRealAverageRuntime,
+  getCanonicalProblemId,
+  isProblemSolved,
 } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
@@ -92,22 +94,17 @@ export default function ProgressPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const chaps = await api.getChapters().catch(() => []);
-        if (!user) {
-          setChapters(chaps);
-          setSolvedIds([]);
-          setSubmissions([]);
-          return;
-        }
-        const [localSolved, subs] = await Promise.all([
-          persistence.getSolvedIds(),
-          persistence.getSubmissions(),
+        const [chaps, localSolved, subs] = await Promise.all([
+          api.getChapters().catch(() => [] as ChapterGroup[]),
+          persistence.getSolvedIds().catch(() => [] as number[]),
+          persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
         ]);
-        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
+        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
         const solvedSet = new Set<number>();
         for (const rawId of [...backendSolved, ...localSolved]) {
-          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
-          if (norm >= 1 && norm <= 70) solvedSet.add(norm);
+          const canonical = getCanonicalProblemId(rawId, flatLevels);
+          if (canonical >= 1 && canonical <= 70) solvedSet.add(canonical);
         }
         setChapters(chaps);
         setSolvedIds(Array.from(solvedSet));
@@ -118,12 +115,17 @@ export default function ProgressPage() {
     }
     loadData();
 
-    const handleLogout = () => {
-      setSolvedIds([]);
-      setSubmissions([]);
+    const handleRefresh = () => {
+      loadData();
     };
-    window.addEventListener('pyforge_auth_logout', handleLogout);
-    return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
+    window.addEventListener('pyforge_auth_logout', handleRefresh);
+    window.addEventListener('pyforge_auth_login', handleRefresh);
+    window.addEventListener('pyforge_problem_solved', handleRefresh);
+    return () => {
+      window.removeEventListener('pyforge_auth_logout', handleRefresh);
+      window.removeEventListener('pyforge_auth_login', handleRefresh);
+      window.removeEventListener('pyforge_problem_solved', handleRefresh);
+    };
   }, [user]);
 
   const allProblems = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);

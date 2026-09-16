@@ -10,6 +10,8 @@ import {
   persistence,
   SubmissionLogEntry,
   calculateRealStreak,
+  getCanonicalProblemId,
+  isProblemSolved,
 } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
@@ -84,23 +86,14 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        if (!user) {
-          // Fresh unauthenticated visitor session has 0 solved, 0 submissions, 0 streak
-          const chaps = await api.getChapters().catch(() => []);
-          setChapters(chaps);
-          setSolvedIds([]);
-          setLastActiveId(1);
-          setSubmissions([]);
-          return;
-        }
-
-        const chaps = await api.getChapters().catch(() => []);
-        const [localSolved, lastId, subs] = await Promise.all([
-          persistence.getSolvedIds(),
-          persistence.getLastActiveProblemId(),
-          persistence.getSubmissions(),
+        const [chaps, localSolved, lastId, subs] = await Promise.all([
+          api.getChapters().catch(() => [] as ChapterGroup[]),
+          persistence.getSolvedIds().catch(() => [] as number[]),
+          persistence.getLastActiveProblemId().catch(() => 1),
+          persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
         ]);
-        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
+        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
         const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
         setChapters(chaps);
         setSolvedIds(mergedSolved);
@@ -113,17 +106,17 @@ export default function DashboardPage() {
     loadData();
 
     const handleLogout = () => {
-      setSolvedIds([]);
-      setSubmissions([]);
-      setLastActiveId(1);
+      loadData();
     };
     const handleProblemSolved = () => {
       loadData();
     };
     window.addEventListener('pyforge_auth_logout', handleLogout);
+    window.addEventListener('pyforge_auth_login', handleProblemSolved);
     window.addEventListener('pyforge_problem_solved', handleProblemSolved);
     return () => {
       window.removeEventListener('pyforge_auth_logout', handleLogout);
+      window.removeEventListener('pyforge_auth_login', handleProblemSolved);
       window.removeEventListener('pyforge_problem_solved', handleProblemSolved);
     };
   }, [user]);
@@ -135,22 +128,21 @@ export default function DashboardPage() {
   const canonicalSolvedSet = useMemo(() => {
     const set = new Set<number>();
     for (const rawId of solvedIds) {
-      if (typeof rawId !== 'number') continue;
-      const normalized = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
-      if (normalized >= 1 && normalized <= 70) {
-        set.add(normalized);
+      const canonical = getCanonicalProblemId(rawId, allProblems);
+      if (canonical >= 1 && canonical <= 70) {
+        set.add(canonical);
       }
     }
     for (const p of allProblems) {
       if (p.passed) {
-        const lvl = p.level_number || (p.id >= 151 && p.id <= 220 ? p.id - 150 : p.id);
-        if (lvl) set.add(lvl);
+        const canonical = getCanonicalProblemId(p, allProblems);
+        if (canonical >= 1 && canonical <= 70) set.add(canonical);
       }
     }
     return set;
   }, [solvedIds, allProblems]);
 
-  const solvedCount = user ? canonicalSolvedSet.size : 0;
+  const solvedCount = canonicalSolvedSet.size;
   const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
 
   // Real calculated analytics
@@ -174,10 +166,10 @@ export default function DashboardPage() {
     (p: { id: number; level_number?: number; passed?: boolean } | null | undefined) => {
       if (!p) return false;
       if (p.passed) return true;
-      const lvl = p.level_number || (p.id >= 151 && p.id <= 220 ? p.id - 150 : p.id);
-      return canonicalSolvedSet.has(lvl) || canonicalSolvedSet.has(p.id);
+      const canonical = getCanonicalProblemId(p, allProblems);
+      return canonicalSolvedSet.has(canonical) || canonicalSolvedSet.has(p.id);
     },
-    [canonicalSolvedSet]
+    [canonicalSolvedSet, allProblems]
   );
 
   // Find active problem to resume:

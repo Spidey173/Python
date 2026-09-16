@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
-import { persistence } from '@/lib/persistence';
+import { persistence, isProblemSolved, getCanonicalProblemId } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
 import {
@@ -48,7 +48,10 @@ function CurriculumExplorerContent() {
 
     async function loadData() {
       try {
-        const chaps = await api.getChapters().catch(() => []);
+        const [chaps, localSolved] = await Promise.all([
+          api.getChapters().catch(() => [] as ChapterGroup[]),
+          persistence.getSolvedIds().catch(() => [] as number[]),
+        ]);
         if (Array.isArray(chaps) && chaps.length > 0) {
           try {
             localStorage.setItem('pq_cached_chapters_v3', JSON.stringify(chaps));
@@ -56,13 +59,8 @@ function CurriculumExplorerContent() {
             // ignore
           }
         }
-        if (!user) {
-          setChapters(chaps);
-          setSolvedIds([]);
-          return;
-        }
-        const localSolved = await persistence.getSolvedIds();
-        const backendSolved = chaps.flatMap((c) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
+        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
         const merged = Array.from(new Set([...backendSolved, ...localSolved]));
         setChapters(chaps);
         setSolvedIds(merged);
@@ -74,11 +72,17 @@ function CurriculumExplorerContent() {
     }
     loadData();
 
-    const handleLogout = () => {
-      setSolvedIds([]);
+    const handleRefresh = () => {
+      loadData();
     };
-    window.addEventListener('pyforge_auth_logout', handleLogout);
-    return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
+    window.addEventListener('pyforge_auth_logout', handleRefresh);
+    window.addEventListener('pyforge_auth_login', handleRefresh);
+    window.addEventListener('pyforge_problem_solved', handleRefresh);
+    return () => {
+      window.removeEventListener('pyforge_auth_logout', handleRefresh);
+      window.removeEventListener('pyforge_auth_login', handleRefresh);
+      window.removeEventListener('pyforge_problem_solved', handleRefresh);
+    };
   }, [user]);
 
   // Track-scoped chapters (Basics: 1-10, Advanced: 11-14, All: 1-14)
@@ -99,7 +103,9 @@ function CurriculumExplorerContent() {
 
   // Global counts for track headers
   const trackTotalCount = trackProblems.length;
-  const trackSolvedCount = trackProblems.filter((p) => solvedIds.includes(p.id)).length;
+  const trackSolvedCount = useMemo(() => {
+    return trackProblems.filter((p) => isProblemSolved(p, solvedIds, trackProblems)).length;
+  }, [trackProblems, solvedIds]);
 
   const allProblemsTotal = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
   const basicsCount = useMemo(() => chapters.filter((c) => c.chapter_id <= 10).flatMap((c) => c.levels).length, [chapters]);
@@ -109,21 +115,24 @@ function CurriculumExplorerContent() {
   const filteredProblems = useMemo(() => {
     return trackProblems.filter((p) => {
       const matchesModule = selectedModule === 'all' || p.chapter_id === selectedModule;
+      const pDiff = (p.difficulty || 'Easy').toLowerCase();
       const matchesDifficulty =
-        difficultyFilter === 'all' || p.difficulty.toLowerCase() === difficultyFilter;
-      const isSolved = solvedIds.includes(p.id);
+        difficultyFilter === 'all' || pDiff === difficultyFilter;
+      const isSolved = isProblemSolved(p, solvedIds, trackProblems);
       const matchesStatus =
         statusFilter === 'all' ||
         (statusFilter === 'solved' && isSolved) ||
         (statusFilter === 'unsolved' && !isSolved);
       const q = searchQuery.toLowerCase().trim();
-      const numStr = (p.level_number || p.id).toString();
+      const numStr = (p.level_number || p.id || '').toString();
+      const pTitle = p.title || '';
+      const pChapTitle = p.chapter_title || '';
       const matchesSearch =
         !q ||
-        p.title.toLowerCase().includes(q) ||
+        pTitle.toLowerCase().includes(q) ||
         numStr.includes(q) ||
         p.id.toString().includes(q) ||
-        (p.chapter_title && p.chapter_title.toLowerCase().includes(q));
+        pChapTitle.toLowerCase().includes(q);
 
       return matchesModule && matchesDifficulty && matchesStatus && matchesSearch;
     });
@@ -245,7 +254,7 @@ function CurriculumExplorerContent() {
 
             {trackChapters.map((chap) => {
               const chapLevels = chap.levels || [];
-              const chapSolved = chapLevels.filter((l) => solvedIds.includes(l.id)).length;
+              const chapSolved = chapLevels.filter((l) => isProblemSolved(l, solvedIds, trackProblems)).length;
               const isSelected = selectedModule === chap.chapter_id;
 
               return (
@@ -327,7 +336,7 @@ function CurriculumExplorerContent() {
                   </div>
                 ) : (
                   filteredProblems.map((problem) => {
-                    const isSolved = solvedIds.includes(problem.id);
+                    const isSolved = isProblemSolved(problem, solvedIds, trackProblems);
                     const displayNum = problem.level_number || problem.id;
                     const isAdvanced = displayNum >= 51 || problem.chapter_id >= 11;
 

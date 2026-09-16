@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { persistence } from '@/lib/persistence';
+import { persistence, getCanonicalProblemId } from '@/lib/persistence';
 import { api } from '@/lib/api';
 import { ChapterGroup } from '@/lib/types';
 import { CommandPalette } from '@/components/ui/CommandPalette';
@@ -26,28 +26,25 @@ export default function Navbar() {
 
   useEffect(() => {
     async function loadSolved() {
-      if (!user) {
-        setSolvedCount(0);
-        return;
-      }
       try {
         const [localSolved, chaps] = await Promise.all([
-          persistence.getSolvedIds(),
+          persistence.getSolvedIds().catch(() => [] as number[]),
           api.getChapters().catch(() => [] as ChapterGroup[]),
         ]);
-        const backendSolved = (chaps as ChapterGroup[]).flatMap((c: ChapterGroup) => c.levels).filter((l) => l.passed).map((l) => l.id);
+        const flatLevels = (chaps as ChapterGroup[]).flatMap((c: ChapterGroup) => c.levels || []);
+        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
         const solvedSet = new Set<number>();
         for (const rawId of [...backendSolved, ...localSolved]) {
-          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
-          if (norm >= 1 && norm <= 70) solvedSet.add(norm);
+          const canonical = getCanonicalProblemId(rawId, flatLevels);
+          if (canonical >= 1 && canonical <= 70) solvedSet.add(canonical);
         }
         setSolvedCount(solvedSet.size);
       } catch {
-        const solved = await persistence.getSolvedIds();
+        const solved = await persistence.getSolvedIds().catch(() => [] as number[]);
         const fallbackSet = new Set<number>();
         for (const rawId of solved) {
-          const norm = rawId >= 151 && rawId <= 220 ? rawId - 150 : rawId;
-          if (norm >= 1 && norm <= 70) fallbackSet.add(norm);
+          const canonical = getCanonicalProblemId(rawId);
+          if (canonical >= 1 && canonical <= 70) fallbackSet.add(canonical);
         }
         setSolvedCount(fallbackSet.size);
       }
@@ -62,9 +59,11 @@ export default function Navbar() {
     };
 
     window.addEventListener('pyforge_auth_logout', handleLogout);
+    window.addEventListener('pyforge_auth_login', handleProblemSolved);
     window.addEventListener('pyforge_problem_solved', handleProblemSolved);
     return () => {
       window.removeEventListener('pyforge_auth_logout', handleLogout);
+      window.removeEventListener('pyforge_auth_login', handleProblemSolved);
       window.removeEventListener('pyforge_problem_solved', handleProblemSolved);
     };
   }, [pathname, user]);

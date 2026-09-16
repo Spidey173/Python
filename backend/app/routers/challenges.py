@@ -44,7 +44,7 @@ async def list_chapters(
                 "completed_count": 0
             }
 
-        prog = user_progress_map.get(ch.id)
+        prog = user_progress_map.get(ch.id) or user_progress_map.get(ch.level_number)
         passed = bool(prog.passed) if prog else False
         stars = prog.stars if prog else 0
 
@@ -117,7 +117,7 @@ async def get_challenge_detail(
         prog_res = await db.execute(
             select(UserProgress).where(
                 UserProgress.user_id == current_user.id,
-                UserProgress.challenge_id == ch.id
+                (UserProgress.challenge_id == ch.id) | (UserProgress.challenge_id == ch.level_number)
             )
         )
         prog = prog_res.scalars().first()

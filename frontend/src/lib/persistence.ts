@@ -276,3 +276,77 @@ export function createDebouncedSaver(
     }, delayMs);
   };
 }
+
+/**
+ * Resolves any problem identifier or summary to a canonical problem number (1..70).
+ * Handles direct numbers, database primary keys (e.g. 361..430, 151..220), and problem objects.
+ */
+export function getCanonicalProblemId(
+  item: number | string | { id?: number; level_number?: number } | null | undefined,
+  allProblems?: Array<{ id: number; level_number?: number }>
+): number {
+  if (item === null || item === undefined) return 0;
+
+  if (typeof item === 'object') {
+    if (typeof item.level_number === 'number' && item.level_number >= 1 && item.level_number <= 70) {
+      return item.level_number;
+    }
+    if (typeof item.id === 'number') {
+      return getCanonicalProblemId(item.id, allProblems);
+    }
+    return 0;
+  }
+
+  const num = typeof item === 'string' ? parseInt(item, 10) : item;
+  if (isNaN(num) || num <= 0) return 0;
+
+  // Direct canonical 1..70
+  if (num >= 1 && num <= 70) return num;
+
+  // Known legacy / database sequence offsets
+  if (num >= 151 && num <= 220) return num - 150;
+  if (num >= 361 && num <= 430) return num - 360;
+
+  // Lookup in allProblems if available
+  if (allProblems && allProblems.length > 0) {
+    const found = allProblems.find((p) => p.id === num || p.level_number === num);
+    if (found?.level_number && found.level_number >= 1 && found.level_number <= 70) {
+      return found.level_number;
+    }
+  }
+
+  return num;
+}
+
+/**
+ * Robust, cross-tier solved checker.
+ * Correctly evaluates whether a challenge is solved considering backend status,
+ * canonical IDs, database sequence IDs, and local storage progress.
+ */
+export function isProblemSolved(
+  problem: { id: number; level_number?: number; passed?: boolean } | null | undefined,
+  solvedIds: (number | string)[],
+  allProblems?: Array<{ id: number; level_number?: number }>
+): boolean {
+  if (!problem) return false;
+  if (problem.passed === true) return true;
+
+  const canonical = getCanonicalProblemId(problem, allProblems);
+  const problemId = problem.id;
+
+  for (const raw of solvedIds) {
+    if (raw === problemId || raw === canonical || (problem.level_number && raw === problem.level_number)) {
+      return true;
+    }
+    const resolvedRaw = getCanonicalProblemId(raw, allProblems);
+    if (
+      resolvedRaw > 0 &&
+      (resolvedRaw === canonical || (problem.level_number && resolvedRaw === problem.level_number))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
