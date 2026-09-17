@@ -5,116 +5,126 @@
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python)](https://python.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Python Quest** is a gamified, high-performance coding platform engineered to take developers from core Data Structures & Algorithms (DSA) to FAANG/Tier-1 interview readiness. It features a modern Notion × Linear × Stripe Docs design system, instant in-browser code execution, direct context-aware AI mentorship, line-by-line AST explanations, and comprehensive technical interview Q&A modules for every challenge.
+**Python Quest** is an interactive, beginner-friendly coding platform designed to help students and freshers learn Data Structures & Algorithms (DSA) through hands-on practice, simple AI explanations, and interview Q&As.
 
 ---
 
-## 🌟 Key Features & Architecture Highlights
-
-- 🎯 **High-Frequency DSA Programs**: Structured chapters covering Strings, Two Pointers, Sliding Window, Linked Lists, Trees, Graphs, Dynamic Programming, and System Design patterns.
-- 🤖 **Context-Direct AI Assistant**:
-  - Direct context integration supporting **Groq** (`gpt-oss-120b`), **Google Gemini** (`gemini-3.6-flash`), and **GitHub Models / Copilot API** with automatic fallback.
-  - Smart intent routing:
-    - **Greetings & Casual Chat**: Concise, friendly 1-2 sentence replies without unwanted solution dumps.
-    - **Code Requests**: Generates clean, interview-accepted solutions using the authoritative starter template.
-    - **Debug Requests**: Analyzes user code & test tracebacks to explain bugs clearly.
-- 🎨 **Notion × Linear × Stripe Docs Design System**:
-  - High contrast Dark Mode UI with refined typography, 15px readable font size, and IDE-like code blocks.
-  - Interactive tabbed workspace: Problem Specification, AI Chat Assistant, Solution Vault, and Spoken Interview Q&As.
-- 🎙️ **15+ Technical Interview Q&As Per Problem**: Real technical screening questions, edge-case traps, and Big-O trade-offs to master verbal interview communication.
-- ⚡ **Execution Sandbox & Test Runner**:
-  - Secure function-based test runner supporting multiple test cases.
-  - Instant line-by-line AST code explanation and dry-run state tracer.
-- 🎮 **Gamification & User System**:
-  - Guest Trial mode & permanent JWT user accounts.
-  - XP, levels, streak tracking, hearts, coins, global leaderboard, and mystery box rewards.
+## 🔗 Live Demo
+- **Frontend App**: `http://localhost:3000` (Local Dev)
+- **Backend API Docs (Swagger UI)**: `http://localhost:8000/api/docs`
 
 ---
 
-## 🏗️ Tech Stack
+## 🖼️ Platform Screenshots
 
-### Frontend
-- **Framework**: Next.js 16 (React 19, Turbopack, App Router)
-- **Styling**: Vanilla CSS + Tailwind CSS utilities with custom dark terminal aesthetics
-- **Editor**: Monaco Editor (`@monaco-editor/react`)
-- **Icons & UI Components**: Lucide React
+### 1. Main Dashboard
+![Python Quest Dashboard](docs/assets/Dashboard.png)
 
-### Backend
-- **Framework**: FastAPI (Async ASGI)
-- **Language**: Python 3.12+
-- **Database & ORM**: SQLAlchemy 2.0 (AsyncIO) + SQLite / PostgreSQL (Neon Serverless)
-- **Authentication**: JWT (HS256) with Passlib bcrypt hashing
-- **Testing**: Pytest & Async HTTPX test client
+### 2. Curriculum Explorer
+![Python Quest Curriculum](docs/assets/Curriculum.png)
+
+### 3. Coding Workspace & AI Assistant
+![Python Quest Challenge Workspace](docs/assets/Challenge.png)
+
+### 4. Progress Analytics
+![Python Quest Progress Tracker](docs/assets/Progress.png)
 
 ---
 
-## 🚀 Getting Started
+## 📐 Architecture Diagram
 
-### 1. Repository Setup
-```bash
-git clone https://github.com/Spidey173/Python.git
-cd Python
+```mermaid
+flowchart TD
+    User([User / Browser]) <--> Frontend[Next.js 16 Frontend\nMonaco Editor & UI]
+    Frontend <--> API[FastAPI Backend\nREST API & Auth]
+    API <--> DB[(SQLite Database\nUsers & Progress)]
+    API <--> Runner[Code Execution Runner\nPython 3.12 Sandbox]
+    API <--> AI[AI Mentor Service\nGroq / Gemini LLM API]
 ```
 
-### 2. Backend Setup
+---
+
+## 🌟 Key Features
+
+- 🎯 **High-Frequency DSA Programs**: Structured topics covering Strings, Two Pointers, Sliding Window, Linked Lists, Trees, and Graphs.
+- 🤖 **Friendly AI Mentor**:
+  - Responds politely to greetings without dumping big code blocks unnecessarily.
+  - Gives hints, code solutions, or simple bug explanations when asked.
+- 🎙️ **Spoken Interview Q&As**: Practical interview questions and answers for each problem to help freshers prepare for technical interviews.
+- ⚡ **Instant Code Runner**: Run Python code with test cases directly in the browser.
+- 🎮 **Gamification & Auth**: XP points, levels, daily streaks, persistent user login sessions, and profile tracking.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 16, React 19, Tailwind CSS, Monaco Code Editor
+- **Backend**: Python 3.12, FastAPI, SQLAlchemy
+- **Database**: SQLite (Local Dev) / PostgreSQL
+- **Testing**: Pytest & Next.js build verification
+
+---
+
+## 📚 API Documentation
+
+FastAPI automatically generates interactive documentation:
+- **Swagger UI**: `http://localhost:8000/api/docs`
+- **ReDoc**: `http://localhost:8000/api/redoc`
+
+### Main API Routes:
+- `POST /api/auth/register` — Create a user account
+- `POST /api/auth/login` — Sign in with username & password
+- `POST /api/auth/guest` — Start a quick guest trial session
+- `GET  /api/challenges/chapters` — Fetch DSA chapters & levels
+- `POST /api/execution/run` — Run Python code against test cases
+- `POST /api/ai/tutor` — Ask the AI tutor for hints or explanations
+
+---
+
+## 🧪 Tests & Verification
+
+### Run Backend Tests:
 ```bash
 cd backend
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-Create a `.env` file in `backend/`:
-```env
-# Database & Auth
-DATABASE_URL=sqlite+aiosqlite:///./python_quest.db
-SECRET_KEY=your-super-secret-key-change-in-production
-
-# AI Keys (Optional - automatic fallbacks enabled)
-GROQ_API_KEY=
-GEMINI_API_KEY=
-COPILOT_API_KEY=
-```
-
-Start the backend server:
-```bash
-uvicorn app.main:app --reload --port 8000
-```
-API Documentation available at: `http://localhost:8000/api/docs`.
-
-### 3. Frontend Setup
-```bash
-cd ../frontend
-npm install
-```
-
-Create a `.env.local` file in `frontend/`:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
-```
-
-Start the development server:
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 🧪 Verification & Build
-
-```bash
-# Frontend build check
-cd frontend
-npm run build
-
-# Backend test suite
-cd ../backend
 PYTHONPATH=. pytest
 ```
 
+### Run Frontend Build Check:
+```bash
+cd frontend
+npm run build
+```
+
 ---
 
-## 📜 License
+## 📜 Commit History Standards
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The repository follows clean conventional commit guidelines:
+- `feat`: New features (e.g., `feat(ui): add interview Q&A panel`)
+- `fix`: Bug fixes (e.g., `fix(ai): friendly greeting response for chat`)
+- `style`: Formatting & UI changes (e.g., `style(chatbot): increase font size by 1px`)
+- `docs`: Documentation updates (e.g., `docs: update README with architecture and live demo details`)
+
+---
+
+## 🚀 Quick Setup Guide
+
+1. **Clone the project**:
+   ```bash
+   git clone https://github.com/Spidey173/Python.git
+   cd Python
+   ```
+2. **Start Backend**:
+   ```bash
+   cd backend
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload --port 8000
+   ```
+3. **Start Frontend**:
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```

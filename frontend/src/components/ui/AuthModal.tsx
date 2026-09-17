@@ -171,7 +171,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
         </div>
 
         {/* Tab Switcher */}
-        <div className="grid grid-cols-3 border-b border-[#30363D] bg-[#0D1117] p-1.5 gap-1 text-xs">
+        <div className="grid grid-cols-2 border-b border-[#30363D] bg-[#0D1117] p-1.5 gap-1 text-xs">
           <button
             type="button"
             onClick={() => { setTab('signin'); setError(null); setSuccessMsg(null); }}
@@ -193,17 +193,6 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
             }`}
           >
             Sign Up
-          </button>
-          <button
-            type="button"
-            onClick={() => { setTab('guest'); setError(null); setSuccessMsg(null); }}
-            className={`py-2 font-semibold rounded-md transition-all ${
-              tab === 'guest'
-                ? 'bg-[#21262D] text-[#E6EDF3] border border-[#30363D] shadow-sm'
-                : 'text-[#8B949E] hover:text-[#E6EDF3]'
-            }`}
-          >
-            Guest User
           </button>
         </div>
 
@@ -404,38 +393,6 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 </button>
               </p>
             </form>
-          )}
-
-          {/* GUEST ACCESS TAB */}
-          {tab === 'guest' && (
-            <div className="space-y-4 text-xs">
-              <div className="rounded-lg border border-[#30363D] bg-[#0D1117] p-4 space-y-2.5">
-                <div className="flex items-center gap-2 text-[#3FB950] font-semibold text-sm">
-                  <Zap className="h-4 w-4" />
-                  <span>Instant Guest Session</span>
-                </div>
-                <p className="text-[#8B949E] leading-relaxed">
-                  Start coding and solving DSA questions immediately without entering an email or password.
-                </p>
-                <ul className="list-disc list-inside text-[#8B949E] space-y-1 pt-1 font-mono text-[11px]">
-                  <li>Solve any of the 50 interview problems</li>
-                  <li>Run code and view test suite execution</li>
-                  <li>Can sign up or log in anytime to keep progress</li>
-                </ul>
-              </div>
-
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                isLoading={isLoading}
-                onClick={handleGuest}
-                className="w-full justify-center gap-2 font-semibold h-9 text-sm"
-              >
-                <span>Continue as Guest</span>
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
           )}
         </div>
 

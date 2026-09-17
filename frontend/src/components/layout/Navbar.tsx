@@ -187,44 +187,21 @@ export default function Navbar() {
             {/* Auth Controls */}
             {user ? (
               <div className="flex items-center gap-2">
-                {isGuest ? (
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#D29922]/40 bg-[#D29922]/10 text-xs sm:text-sm font-semibold text-[#F59E0B]"
-                      title="Guest Trial Mode"
-                    >
-                      <span className="h-2 w-2 rounded-full bg-[#F59E0B] animate-pulse" />
-                      <span>Guest Trial</span>
-                    </div>
-
-                    <button
-                      onClick={logout}
-                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
-                      title="Exit trial session"
-                      aria-label="Exit trial session"
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href="/profile"
-                      className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#21262D] px-3 py-1.5 text-xs sm:text-sm text-[#E6EDF3] hover:border-[#8B949E] transition-colors font-semibold"
-                    >
-                      <UserIcon className="h-4 w-4 text-[#58A6FF]" />
-                      <span className="max-w-[130px] truncate">{user.username}</span>
-                    </Link>
-                    <button
-                      onClick={logout}
-                      className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
-                      title="Sign out"
-                      aria-label="Sign out"
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#21262D] px-3 py-1.5 text-xs sm:text-sm text-[#E6EDF3] hover:border-[#8B949E] transition-colors font-semibold"
+                >
+                  <UserIcon className="h-4 w-4 text-[#58A6FF]" />
+                  <span className="max-w-[130px] truncate">{user.username}</span>
+                </Link>
+                <button
+                  onClick={logout}
+                  className="p-1.5 rounded-lg text-[#9198A1] hover:text-[#F85149] hover:bg-[#21262D] transition-colors cursor-pointer"
+                  title="Sign out"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">

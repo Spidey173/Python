@@ -7,8 +7,9 @@ import { api } from '@/lib/api';
 import { persistence, isProblemSolved, getCanonicalProblemId } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
+import { AuthModal } from '@/components/ui/AuthModal';
 import {
-  Search, CheckCircle2, Circle, ArrowRight, Zap
+  Search, CheckCircle2, Circle, ArrowRight, Zap, Lock
 } from 'lucide-react';
 
 function CurriculumExplorerContent() {
@@ -17,6 +18,7 @@ function CurriculumExplorerContent() {
   const initialModule = searchParams.get('module');
   const initialTrack = searchParams.get('track');
   const { user } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
@@ -343,7 +345,13 @@ function CurriculumExplorerContent() {
                     return (
                       <div
                         key={problem.id}
-                        onClick={() => router.push(`/quest/${displayNum}`)}
+                        onClick={() => {
+                          if (!user) {
+                            setAuthModalOpen(true);
+                          } else {
+                            router.push(`/quest/${displayNum}`);
+                          }
+                        }}
                         className="grid grid-cols-12 px-5 py-3.5 items-center text-sm hover:bg-[#21262D]/60 cursor-pointer transition-colors duration-100 group"
                       >
                         {/* Status */}
@@ -391,6 +399,12 @@ function CurriculumExplorerContent() {
           </div>
         </main>
       </div>
+
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialTab="signin"
+      />
     </div>
   );
 }
