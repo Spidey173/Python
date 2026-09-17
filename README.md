@@ -1,17 +1,22 @@
 # ⚡ Python Quest — Gamified Data Structures & Algorithms Platform
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![Build Passing](https://img.shields.io/badge/build-passing-brightgreen?style=flat&logo=github-actions)](https://github.com/Spidey173/Python)
+[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python)](https://python.org/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python)](https://python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Deploy Status](https://img.shields.io/badge/deploy-active-success)](https://python-frontend-ruby.vercel.app/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Spidey173/Python/pulls)
 
 **Python Quest** is an interactive, beginner-friendly coding platform designed to help students and freshers learn Data Structures & Algorithms (DSA) through hands-on practice, simple AI explanations, and interview Q&As.
 
 ---
 
 ## 🔗 Live Demo
-- **Frontend App**: `http://localhost:3000` (Local Dev)
-- **Backend API Docs (Swagger UI)**: `http://localhost:8000/api/docs`
+- 🌐 **Frontend App**: [https://python-frontend-ruby.vercel.app/](https://python-frontend-ruby.vercel.app/)
+- ⚡ **Backend API**: [https://python-7pu9.vercel.app/](https://python-7pu9.vercel.app/)
+- 📚 **Swagger API Docs**: [https://python-7pu9.vercel.app/api/docs](https://python-7pu9.vercel.app/api/docs)
 
 ---
 
@@ -31,16 +36,72 @@
 
 ---
 
-## 📐 Architecture Diagram
+## 📐 Architecture & System Design
 
 ```mermaid
 flowchart TD
     User([User / Browser]) <--> Frontend[Next.js 16 Frontend\nMonaco Editor & UI]
     Frontend <--> API[FastAPI Backend\nREST API & Auth]
-    API <--> DB[(SQLite Database\nUsers & Progress)]
+    API <--> DB[(SQLite / PostgreSQL DB\nUsers & Progress)]
     API <--> Runner[Code Execution Runner\nPython 3.12 Sandbox]
     API <--> AI[AI Mentor Service\nGroq / Gemini LLM API]
 ```
+
+### Why this Architecture?
+- **Next.js 16**: Handles fast UI rendering, client-side state, and Monaco editor integration.
+- **FastAPI**: Exposes high-performance async REST APIs with automatic OpenAPI schema validation.
+- **SQLite / PostgreSQL**: Stores persistent user profiles, solved status, streaks, and XP points.
+- **Execution Runner**: Isolates and safely executes user Python code against test suites with strict execution quotas.
+- **AI Service**: Generates instant hints, code explanations, and debugging feedback.
+
+---
+
+## 🤖 AI Mentor Flow
+
+```mermaid
+flowchart LR
+    Question["Student Question"] --> FastAPI["FastAPI Engine"]
+    FastAPI --> Prompt["Prompt Builder"]
+    Prompt --> LLM["Gemini / Groq API"]
+    LLM --> JSON["Structured JSON"]
+    JSON --> Renderer["Frontend Renderer"]
+```
+
+---
+
+## 📁 Folder Structure
+
+```text
+Python/
+├── frontend/                  # Next.js 16 Web Application
+│   ├── src/
+│   │   ├── app/              # App Router Pages (Dashboard, Curriculum, Challenge)
+│   │   ├── components/       # UI Components (Editor, Chatbot, Interview Panel, Modals)
+│   │   ├── hooks/            # Custom React Hooks
+│   │   └── lib/              # API Client, Auth Context & Utilities
+│   ├── public/               # Static Assets
+│   └── package.json
+│
+└── backend/                   # FastAPI Backend Service
+    ├── app/
+    │   ├── ai/               # Copilot & LLM Integrations (Groq / Gemini / Copilot)
+    │   ├── routers/          # API Route Endpoints (Auth, Challenges, Execution)
+    │   ├── models.py         # SQLAlchemy Database Models
+    │   ├── schemas.py        # Pydantic Schemas & Validation
+    │   └── main.py           # FastAPI Application Entry Point
+    ├── tests/                # Pytest Backend Unit & Integration Tests
+    └── requirements.txt
+```
+
+---
+
+## 🚀 Cloud Deployment
+
+- 🌐 **Frontend**: Hosted on **Vercel** ([python-frontend-ruby.vercel.app](https://python-frontend-ruby.vercel.app/))
+- ⚡ **Backend API**: Hosted on **Vercel** ([python-7pu9.vercel.app](https://python-7pu9.vercel.app/))
+- 🗄️ **Database**: **SQLite** / **Neon PostgreSQL**
+- 🤖 **AI Engine**: **Google Gemini** / **Groq**
+- 🔄 **CI/CD**: **GitHub Actions** / Vercel Automated Deployments
 
 ---
 
@@ -60,7 +121,7 @@ flowchart TD
 
 - **Frontend**: Next.js 16, React 19, Tailwind CSS, Monaco Code Editor
 - **Backend**: Python 3.12, FastAPI, SQLAlchemy
-- **Database**: SQLite (Local Dev) / PostgreSQL
+- **Database**: SQLite (Local Dev) / PostgreSQL (Neon)
 - **Testing**: Pytest & Next.js build verification
 
 ---
@@ -68,28 +129,37 @@ flowchart TD
 ## 📚 API Documentation
 
 FastAPI automatically generates interactive documentation:
-- **Swagger UI**: `http://localhost:8000/api/docs`
-- **ReDoc**: `http://localhost:8000/api/redoc`
+- **Swagger UI**: [https://python-7pu9.vercel.app/api/docs](https://python-7pu9.vercel.app/api/docs)
+- **ReDoc**: [https://python-7pu9.vercel.app/api/redoc](https://python-7pu9.vercel.app/api/redoc)
 
 ### Main API Routes:
 - `POST /api/auth/register` — Create a user account
 - `POST /api/auth/login` — Sign in with username & password
-- `POST /api/auth/guest` — Start a quick guest trial session
 - `GET  /api/challenges/chapters` — Fetch DSA chapters & levels
 - `POST /api/execution/run` — Run Python code against test cases
 - `POST /api/ai/tutor` — Ask the AI tutor for hints or explanations
 
 ---
 
-## 🧪 Tests & Verification
+## 🧪 Testing & Verification
 
-### Run Backend Tests:
+### Backend Verification
+- ✓ **Authentication**: Registration, password verification, JWT token issuance
+- ✓ **Code Execution**: Python sandbox execution & test case assertions
+- ✓ **AI APIs**: Groq, Gemini & Copilot LLM prompt formatting & fallback
+- ✓ **Progress**: Solved status tracking & XP calculation
+- ✓ **User Profile**: Streak computation & leaderboard placement
+
 ```bash
 cd backend
 PYTHONPATH=. pytest
 ```
 
-### Run Frontend Build Check:
+### Frontend Verification
+- ✓ **Production Build**: Clean Next.js Turbopack compilation
+- ✓ **Linting**: ESLint checks passed
+- ✓ **Type Safety**: 100% Strict TypeScript type checks
+
 ```bash
 cd frontend
 npm run build
@@ -107,7 +177,7 @@ The repository follows clean conventional commit guidelines:
 
 ---
 
-## 🚀 Quick Setup Guide
+## 🚀 Quick Local Setup Guide
 
 1. **Clone the project**:
    ```bash
