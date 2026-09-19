@@ -48,23 +48,30 @@ async def test_guest_login_and_auth():
 
 
 @pytest.mark.asyncio
-async def test_admin_and_case_insensitive_login():
+async def test_case_insensitive_login():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-        # Lowercase
-        res1 = await ac.post("/api/auth/login", json={"username": "admin", "password": "admin123"})
+        # Register a fresh user
+        reg = await ac.post("/api/auth/register", json={
+            "username": "fresh_user",
+            "email": "fresh@pythonquest.io",
+            "password": "password123"
+        })
+        assert reg.status_code == 200
+
+        # Lowercase login
+        res1 = await ac.post("/api/auth/login", json={"username": "fresh_user", "password": "password123"})
         assert res1.status_code == 200
-        assert res1.json()["user"]["role"] == "admin"
 
         # Uppercase / mixed
-        res2 = await ac.post("/api/auth/login", json={"username": "Admin", "password": "admin123"})
+        res2 = await ac.post("/api/auth/login", json={"username": "Fresh_User", "password": "password123"})
         assert res2.status_code == 200
 
         # Email login
-        res3 = await ac.post("/api/auth/login", json={"identifier": "admin@pythonquest.io", "password": "admin123"})
+        res3 = await ac.post("/api/auth/login", json={"identifier": "fresh@pythonquest.io", "password": "password123"})
         assert res3.status_code == 200
 
         # Bad password
-        res4 = await ac.post("/api/auth/login", json={"username": "admin", "password": "badpassword"})
+        res4 = await ac.post("/api/auth/login", json={"username": "fresh_user", "password": "badpassword"})
         assert res4.status_code == 401
 
 

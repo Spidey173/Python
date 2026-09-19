@@ -53,35 +53,6 @@ async def seed_database():
                 coin_bonus=ach["coin_bonus"]
             )
             session.add(new_ach)
-
-        admin_check = await session.execute(select(User).where(User.username == "admin"))
-        if not admin_check.scalars().first():
-            admin_user = User(
-                username="admin",
-                email="admin@pythonquest.io",
-                hashed_password=hash_password("admin123"),
-                role="admin",
-                xp=5000,
-                coins=1500,
-                level=10,
-                streak=15
-            )
-            session.add(admin_user)
-
-        guest_check = await session.execute(select(User).where(User.username == "student_dev"))
-        if not guest_check.scalars().first():
-            guest_user = User(
-                username="student_dev",
-                email="student@pythonquest.io",
-                hashed_password=hash_password("student123"),
-                role="user",
-                xp=100,
-                coins=100,
-                level=1,
-                streak=1
-            )
-            session.add(guest_user)
-
         await session.commit()
 
 

@@ -62,54 +62,6 @@ export const api = {
         body: JSON.stringify({ username, password }),
       }, 3500);
     } catch (err: any) {
-      // If backend is unreachable or times out, provide instant fallback for standard demo accounts
-      const normUser = username.trim().toLowerCase();
-      if (normUser === 'admin' && password === 'admin123') {
-        const adminUser: User = {
-          id: 1,
-          username: 'admin',
-          email: 'admin@pythonquest.io',
-          role: 'admin',
-          xp: 999,
-          coins: 5000,
-          level: 50,
-          lives: 99,
-          streak: 30,
-          avatar: 'cyber-snake',
-          theme: 'cyber-dark',
-          created_at: new Date().toISOString(),
-        };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('pq_local_user', JSON.stringify(adminUser));
-        }
-        return {
-          access_token: 'local_user_admin_' + Date.now(),
-          user: adminUser,
-        };
-      }
-      if (normUser === 'student_dev' && password === 'student123') {
-        const studentUser: User = {
-          id: 2,
-          username: 'student_dev',
-          email: 'student@pythonquest.io',
-          role: 'user',
-          xp: 150,
-          coins: 300,
-          level: 3,
-          lives: 5,
-          streak: 3,
-          avatar: 'cyber-snake',
-          theme: 'cyber-dark',
-          created_at: new Date().toISOString(),
-        };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('pq_local_user', JSON.stringify(studentUser));
-        }
-        return {
-          access_token: 'local_user_student_' + Date.now(),
-          user: studentUser,
-        };
-      }
       throw err;
     }
   },

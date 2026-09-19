@@ -258,26 +258,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 </div>
               </div>
 
-              {/* Demo Account Quick Buttons */}
-              <div className="rounded-lg border border-[#30363D]/70 bg-[#0D1117]/80 p-2.5 text-[11px] text-[#8B949E]">
-                <span className="font-semibold text-[#C9D1D9]">Quick Demo Accounts:</span>
-                <div className="flex gap-2 mt-1.5">
-                  <button
-                    type="button"
-                    onClick={() => fillDemoAccount('admin', 'admin123')}
-                    className="px-2 py-1 rounded bg-[#21262D] hover:bg-[#30363D] text-[#58A6FF] font-mono transition-colors"
-                  >
-                    admin (pwd: admin123)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => fillDemoAccount('student_dev', 'student123')}
-                    className="px-2 py-1 rounded bg-[#21262D] hover:bg-[#30363D] text-[#3FB950] font-mono transition-colors"
-                  >
-                    student_dev (pwd: student123)
-                  </button>
-                </div>
-              </div>
+
 
               <div className="pt-1">
                 <Button
