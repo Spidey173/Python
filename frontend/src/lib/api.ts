@@ -1,7 +1,7 @@
 import {
   ChapterGroup, ChallengeDetail, CodeRunResponse,
   CodeSubmitResponse, ExplainResponse, LeaderboardEntry,
-  Achievement, ProfileResponse, User
+  Achievement, ProfileResponse, User, SubmissionLogEntry
 } from './types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -185,6 +185,10 @@ export const api = {
   // Profile
   async getProfile(): Promise<ProfileResponse> {
     return request('/profile/me');
+  },
+
+  async getUserSubmissions(): Promise<SubmissionLogEntry[]> {
+    return request<SubmissionLogEntry[]>('/profile/submissions', {}, 4000).catch(() => []);
   },
 
   // Admin

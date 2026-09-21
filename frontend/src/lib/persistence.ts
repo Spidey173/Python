@@ -30,6 +30,7 @@ export interface PersistenceProvider {
   getLastActiveProblemId(): Promise<number>;
   setLastActiveProblemId(id: number): Promise<void>;
   getSubmissions(): Promise<SubmissionLogEntry[]>;
+  saveSubmissions(entries: SubmissionLogEntry[]): Promise<void>;
   recordSubmission(entry: Omit<SubmissionLogEntry, 'id' | 'timestamp'>): Promise<SubmissionLogEntry>;
   clearUserData(): Promise<void>;
 }
@@ -160,6 +161,15 @@ class LocalPersistenceProvider implements PersistenceProvider {
       return JSON.parse(raw);
     } catch {
       return [];
+    }
+  }
+
+  async saveSubmissions(entries: SubmissionLogEntry[]): Promise<void> {
+    if (!this.isBrowser) return;
+    try {
+      localStorage.setItem('pyforge_submissions_log', JSON.stringify(entries.slice(0, 100)));
+    } catch (e) {
+      console.warn('Failed to save submissions:', e);
     }
   }
 

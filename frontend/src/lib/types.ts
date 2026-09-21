@@ -172,3 +172,14 @@ export interface ProfileResponse {
     date: string;
   }>;
 }
+
+export interface SubmissionLogEntry {
+  id: string;
+  problemId: number;
+  problemTitle: string;
+  passed: boolean;
+  runtimeMs: number;
+  timestamp: number;
+  code: string;
+}
+

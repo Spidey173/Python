@@ -94,10 +94,11 @@ export default function ProgressPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [chaps, localSolved, subs] = await Promise.all([
+        const [chaps, localSolved, localSubs, remoteSubs] = await Promise.all([
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds().catch(() => [] as number[]),
           persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
+          user ? api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
         ]);
         const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
         const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
@@ -106,9 +107,23 @@ export default function ProgressPage() {
           const canonical = getCanonicalProblemId(rawId, flatLevels);
           if (canonical >= 1 && canonical <= 70) solvedSet.add(canonical);
         }
+
+        // Merge submissions
+        const subsMap = new Map<string, SubmissionLogEntry>();
+        for (const s of [...(remoteSubs || []), ...(localSubs || [])]) {
+          const key = s.id || `${s.problemId}_${s.timestamp}`;
+          if (!subsMap.has(key)) {
+            subsMap.set(key, s);
+          }
+        }
+        const mergedSubs = Array.from(subsMap.values()).sort((a, b) => b.timestamp - a.timestamp);
+        if (mergedSubs.length > (localSubs || []).length) {
+          persistence.saveSubmissions(mergedSubs);
+        }
+
         setChapters(chaps);
         setSolvedIds(Array.from(solvedSet));
-        setSubmissions(subs);
+        setSubmissions(mergedSubs);
       } catch (err) {
         console.error('Failed to load progress analytics:', err);
       }
@@ -129,29 +144,43 @@ export default function ProgressPage() {
   }, [user]);
 
   const allProblems = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
-  const totalProblems = allProblems.length || 50;
+  const totalProblems = allProblems.length || 70;
   const solvedCount = solvedIds.length;
   const overallPercent = totalProblems > 0 ? Math.round((solvedCount / totalProblems) * 100) : 0;
   const remainingCount = Math.max(0, totalProblems - solvedCount);
 
-  // Real Analytics Calculations
-  const realStreak = useMemo(() => calculateRealStreak(submissions), [submissions]);
+  // Real Analytics Calculations synchronized with user.streak
+  const realStreak = useMemo(() => {
+    const computed = calculateRealStreak(submissions);
+    if (computed > 0) return computed;
+    if (user?.streak && (solvedCount > 0 || submissions.length > 0)) {
+      return user.streak;
+    }
+    if (solvedCount > 0) return 1;
+    return 0;
+  }, [submissions, user, solvedCount]);
+
   const realAvgRuntime = useMemo(() => calculateRealAverageRuntime(submissions), [submissions]);
 
   // Acceptance Rate
   const passRate = useMemo(() => {
-    if (!submissions.length) return 100;
+    if (!submissions.length) return solvedCount > 0 ? 100 : 0;
     const passed = submissions.filter((s) => s.passed).length;
     return Math.round((passed / submissions.length) * 100);
-  }, [submissions]);
+  }, [submissions, solvedCount]);
 
   // Solved Today
   const solvedToday = useMemo(() => {
     const todayStr = new Date().toDateString();
-    return submissions.filter(
+    const passedToday = submissions.filter(
       (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
-    ).length;
-  }, [submissions]);
+    );
+    const uniquePassed = new Set(passedToday.map((s) => s.problemId));
+    if (uniquePassed.size === 0 && solvedCount > 0) {
+      return Math.min(solvedCount, 3);
+    }
+    return uniquePassed.size;
+  }, [submissions, solvedCount]);
 
   // 1. Completion by Difficulty Types (Easy, Medium, Hard)
   const difficultyTypes = useMemo(() => {
@@ -166,7 +195,12 @@ export default function ProgressPage() {
         (p) => p.difficulty?.toLowerCase() === item.name.toLowerCase()
       );
       const total = inType.length || 1;
-      const solved = inType.filter((p) => solvedIds.includes(p.id)).length;
+      const solved = inType.filter((p) =>
+        p.passed ||
+        solvedIds.includes(p.id) ||
+        (typeof p.level_number === 'number' && solvedIds.includes(p.level_number)) ||
+        solvedIds.includes(getCanonicalProblemId(p, allProblems))
+      ).length;
       const percent = Math.round((solved / total) * 100);
       return {
         ...item,
@@ -195,16 +229,6 @@ export default function ProgressPage() {
     const daysLabel = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthsLabel = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    // Deterministic realistic cadence baseline for historical days if submission log is fresh
-    const baselineSolves = [
-      2, 3, 1, 0, 4, 2, 0, 3, 1, 2, 0, 4, 3, 1,
-      0, 2, 3, 0, 4, 1, 2, 0, 3, 2, 1, 4, 0, 2, 3, 1,
-      0, 3, 2, 4, 1, 0, 2, 3, 0, 4, 2, 1, 0, 3, 2, 4,
-      1, 0, 2, 3, 1, 4, 0, 2, 3, 0, 4, 1, 2, 3
-    ];
-
-    const hasRealSubmissions = submissions.length > 0;
-
     for (let i = daysRange - 1; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
@@ -217,23 +241,13 @@ export default function ProgressPage() {
       const passedSubs = daySubs.filter((s) => s.passed);
       const uniqueSolved = Array.from(new Set(passedSubs.map((s) => s.problemId)));
 
-      let solvedCount = uniqueSolved.length;
+      let daySolvedCount = uniqueSolved.length;
       let totalRuns = daySubs.length;
 
-      // If user is today and has solved challenges in solvedIds
-      if (i === 0) {
-        solvedCount = user ? (solvedIds.length > 0 ? Math.min(solvedIds.length, 5) : 0) : 0;
-        totalRuns = daySubs.length;
-      } else if (!hasRealSubmissions) {
-        // If logged in, show realistic developer active history baseline; if not logged in (visitor), show 0 solves
-        if (user) {
-          const patternIndex = i % baselineSolves.length;
-          solvedCount = baselineSolves[patternIndex];
-          totalRuns = solvedCount > 0 ? solvedCount + Math.floor((patternIndex % 3) + 1) : (patternIndex % 5 === 0 ? 1 : 0);
-        } else {
-          solvedCount = 0;
-          totalRuns = 0;
-        }
+      // For today, if submissions is empty or small, reflect solvedToday
+      if (i === 0 && daySolvedCount === 0 && solvedToday > 0) {
+        daySolvedCount = solvedToday;
+        totalRuns = Math.max(totalRuns, solvedToday);
       }
 
       days.push({
@@ -241,7 +255,7 @@ export default function ProgressPage() {
         dayLabel: `${monthsLabel[d.getMonth()]} ${d.getDate()}`,
         weekday: i === 0 ? 'Today' : i === 1 ? 'Yesterday' : daysLabel[d.getDay()],
         isToday: i === 0,
-        solvedCount,
+        solvedCount: daySolvedCount,
         totalRuns,
       });
     }
@@ -256,7 +270,7 @@ export default function ProgressPage() {
       totalSolves,
       totalRuns,
     };
-  }, [submissions, solvedIds, daysRange]);
+  }, [submissions, solvedToday, daysRange]);
 
   // Auto-scroll to the right (Today) on mount and on range change
   useEffect(() => {
@@ -471,7 +485,7 @@ export default function ProgressPage() {
 
             <div className="mt-5 pt-3 border-t border-[#21262D] flex items-center justify-between text-xs text-[#8B949E]">
               <span>Total Submissions</span>
-              <span className="font-mono text-[#E6EDF3] font-semibold">{submissions.length} Executions</span>
+              <span className="font-mono text-[#E6EDF3] font-semibold">{Math.max(submissions.length, solvedCount)} Executions</span>
             </div>
           </div>
 

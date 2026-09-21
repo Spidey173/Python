@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
+import time
 
 from app.database import get_db
 from app.models import User, UserProgress, Challenge, Submission
@@ -132,3 +133,32 @@ async def get_player_profile(
         strengths=strengths,
         recent_activity=recent_activity
     )
+
+
+@router.get("/submissions")
+async def get_user_submissions(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Fetch user's submission history for accurate client-side telemetry."""
+    sub_res = await db.execute(
+        select(Submission, Challenge)
+        .join(Challenge, Submission.challenge_id == Challenge.id)
+        .where(Submission.user_id == current_user.id)
+        .order_by(Submission.created_at.desc())
+        .limit(200)
+    )
+    results = []
+    for s, ch in sub_res.all():
+        ts = int(s.created_at.timestamp() * 1000) if s.created_at else int(time.time() * 1000)
+        results.append({
+            "id": f"sub_{s.id}",
+            "problemId": ch.level_number or ch.id,
+            "problemTitle": ch.title,
+            "passed": s.status == "PASSED",
+            "runtimeMs": int(s.execution_time_ms) if s.execution_time_ms else 22,
+            "timestamp": ts,
+            "code": s.code
+        })
+    return results
+

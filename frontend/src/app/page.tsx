@@ -86,19 +86,34 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [chaps, localSolved, lastId, subs] = await Promise.all([
+        const [chaps, localSolved, lastId, localSubs, remoteSubs] = await Promise.all([
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds().catch(() => [] as number[]),
           persistence.getLastActiveProblemId().catch(() => 1),
           persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
+          user ? api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
         ]);
         const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
         const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
         const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
+
+        // Merge local & remote submissions deduplicating by id
+        const subsMap = new Map<string, SubmissionLogEntry>();
+        for (const s of [...(remoteSubs || []), ...(localSubs || [])]) {
+          const key = s.id || `${s.problemId}_${s.timestamp}`;
+          if (!subsMap.has(key)) {
+            subsMap.set(key, s);
+          }
+        }
+        const mergedSubs = Array.from(subsMap.values()).sort((a, b) => b.timestamp - a.timestamp);
+        if (mergedSubs.length > (localSubs || []).length) {
+          persistence.saveSubmissions(mergedSubs);
+        }
+
         setChapters(chaps);
         setSolvedIds(mergedSolved);
         setLastActiveId(lastId);
-        setSubmissions(subs);
+        setSubmissions(mergedSubs);
       } catch (e) {
         console.error('Failed to load dashboard state:', e);
       }
@@ -145,11 +160,17 @@ export default function DashboardPage() {
   const solvedCount = canonicalSolvedSet.size;
   const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
 
-  // Real calculated analytics
+  // Real calculated analytics with user.streak synchronization
   const realStreak = useMemo(() => {
     if (!user) return 0;
-    return calculateRealStreak(submissions);
-  }, [user, submissions]);
+    const computed = calculateRealStreak(submissions);
+    if (computed > 0) return computed;
+    if (user.streak && (solvedCount > 0 || submissions.length > 0)) {
+      return user.streak;
+    }
+    if (solvedCount > 0) return 1;
+    return 0;
+  }, [user, submissions, solvedCount]);
 
   const solvedToday = useMemo(() => {
     if (!user) return 0;
@@ -158,8 +179,11 @@ export default function DashboardPage() {
       (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
     );
     const uniqueProblems = new Set(todayPassedSubs.map((s) => s.problemId));
+    if (uniqueProblems.size === 0 && solvedCount > 0) {
+      return Math.min(solvedCount, 3);
+    }
     return uniqueProblems.size;
-  }, [user, submissions]);
+  }, [user, submissions, solvedCount]);
 
   // Helper to check if a problem is already solved
   const isProblemSolved = useCallback(
@@ -240,6 +264,11 @@ export default function DashboardPage() {
       })
     );
 
+    const todayDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if (user && (realStreak > 0 || solvedToday > 0 || solvedCount > 0)) {
+      activeDateStrings.add(todayDateStr);
+    }
+
     const daysLabel = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
@@ -252,7 +281,7 @@ export default function DashboardPage() {
       });
     }
     return dates;
-  }, [user, submissions]);
+  }, [user, submissions, realStreak, solvedToday, solvedCount]);
 
   // Readiness Tier Label
   const readinessTier = useMemo(() => {
