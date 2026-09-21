@@ -73,62 +73,7 @@ export const api = {
     }, 4000);
   },
 
-  async guestLogin(): Promise<{ access_token: string; user: User }> {
-    try {
-      return await request('/auth/guest', {
-        method: 'POST',
-      }, 2500);
-    } catch (err) {
-      console.warn('Backend guest auth endpoint unreachable or timed out, initializing instant offline-ready guest session:', err);
-      const guestId = 'runner_' + Math.random().toString(36).substring(2, 9);
-      const fallbackUser: User = {
-        id: Date.now(),
-        username: guestId,
-        email: `${guestId}@pythonquest.io`,
-        role: 'guest',
-        xp: 0,
-        coins: 100,
-        level: 1,
-        lives: 5,
-        streak: 1,
-        avatar: 'cyber-snake',
-        theme: 'cyber-dark',
-        created_at: new Date().toISOString(),
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('pq_local_user', JSON.stringify(fallbackUser));
-      }
-      return {
-        access_token: 'local_guest_' + Date.now(),
-        user: fallbackUser,
-      };
-    }
-  },
-
   async getMe(): Promise<User> {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('pq_token') : null;
-    if (token) {
-      if (token.startsWith('local_')) {
-        const saved = localStorage.getItem('pq_local_user');
-        if (saved) {
-          try { return JSON.parse(saved); } catch {}
-        }
-        return {
-          id: 9999,
-          username: 'runner_guest',
-          email: 'guest@pythonquest.io',
-          role: 'guest',
-          xp: 0,
-          coins: 100,
-          level: 1,
-          lives: 5,
-          streak: 1,
-          avatar: 'cyber-snake',
-          theme: 'cyber-dark',
-          created_at: new Date().toISOString(),
-        };
-      }
-    }
     return request('/auth/me', {}, 3000);
   },
 
@@ -141,7 +86,7 @@ export const api = {
     return request(`/challenges/${id}`);
   },
 
-  // Sandbox Execution
+  // Code Execution
   async runCode(challengeId: number, code: string, customInput?: string): Promise<CodeRunResponse> {
     return request('/execution/run', {
       method: 'POST',
@@ -150,14 +95,6 @@ export const api = {
   },
 
   async submitCode(challengeId: number, code: string, hintsUsed: number = 0): Promise<CodeSubmitResponse> {
-    if (typeof window !== 'undefined' && !localStorage.getItem('pq_token')) {
-      try {
-        const guestData = await api.guestLogin();
-        localStorage.setItem('pq_token', guestData.access_token);
-      } catch (e) {
-        console.warn('Auto guest login failed:', e);
-      }
-    }
     return request('/execution/submit', {
       method: 'POST',
       body: JSON.stringify({ challenge_id: challengeId, code, hints_used: hintsUsed }),

@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 
@@ -35,39 +36,31 @@ async def test_get_challenge_detail():
     assert len(detail["visible_test_cases"]) > 0
 
 
-@pytest.mark.asyncio
-async def test_guest_login_and_auth():
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-        response = await ac.post("/api/auth/guest")
-    assert response.status_code == 200
-    data = response.json()
-    assert "access_token" in data
-    assert data["user"]["lives"] == 5
-    assert data["user"]["role"] == "guest"
-    assert data["user"]["username"].startswith("runner_")
 
 
 @pytest.mark.asyncio
 async def test_case_insensitive_login():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-        # Register a fresh user
+        uid = uuid.uuid4().hex[:6]
+        username = f"fresh_user_{uid}"
+        email = f"fresh_{uid}@pythonquest.io"
         reg = await ac.post("/api/auth/register", json={
-            "username": "fresh_user",
-            "email": "fresh@pythonquest.io",
+            "username": username,
+            "email": email,
             "password": "password123"
         })
         assert reg.status_code == 200
 
         # Lowercase login
-        res1 = await ac.post("/api/auth/login", json={"username": "fresh_user", "password": "password123"})
+        res1 = await ac.post("/api/auth/login", json={"username": username, "password": "password123"})
         assert res1.status_code == 200
 
         # Uppercase / mixed
-        res2 = await ac.post("/api/auth/login", json={"username": "Fresh_User", "password": "password123"})
+        res2 = await ac.post("/api/auth/login", json={"username": username.upper(), "password": "password123"})
         assert res2.status_code == 200
 
         # Email login
-        res3 = await ac.post("/api/auth/login", json={"identifier": "fresh@pythonquest.io", "password": "password123"})
+        res3 = await ac.post("/api/auth/login", json={"identifier": email, "password": "password123"})
         assert res3.status_code == 200
 
         # Bad password

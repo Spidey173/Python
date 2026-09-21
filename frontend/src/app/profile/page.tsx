@@ -84,9 +84,9 @@ function CircularCompletionGauge({
 }
 
 export default function ProgressPage() {
-  const { user, isGuest } = useAuth();
+  const { user } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signup');
+  const [authTab, setAuthTab] = useState<'signin' | 'signup'>('signup');
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionLogEntry[]>([]);
@@ -297,10 +297,6 @@ export default function ProgressPage() {
                     <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#8B949E]/15 text-[#8B949E] border border-[#8B949E]/40 font-semibold">
                       Visitor (Not Signed In)
                     </span>
-                  ) : isGuest ? (
-                    <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#D29922]/15 text-[#F59E0B] border border-[#D29922]/40 font-semibold">
-                      Guest Session
-                    </span>
                   ) : (
                     <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#238636]/15 text-[#3FB950] border border-[#238636]/40 font-semibold">
                       Verified Member
@@ -325,19 +321,6 @@ export default function ProgressPage() {
                   className="shadow-md shadow-[#238636]/20 font-semibold"
                 >
                   <span>Sign In / Register</span>
-                </Button>
-              )}
-              {isGuest && (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    setAuthTab('signup');
-                    setAuthModalOpen(true);
-                  }}
-                  className="shadow-md shadow-[#238636]/20 font-semibold"
-                >
-                  <span>Save Progress to Cloud</span>
                 </Button>
               )}
               <Link href="/quest">

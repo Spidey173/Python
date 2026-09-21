@@ -11,12 +11,12 @@ import {
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialTab?: 'signin' | 'signup' | 'guest';
+  initialTab?: 'signin' | 'signup';
 }
 
 export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalProps) {
-  const { login, register, guestLogin, user } = useAuth();
-  const [tab, setTab] = useState<'signin' | 'signup' | 'guest'>(initialTab);
+  const { login, register } = useAuth();
+  const [tab, setTab] = useState<'signin' | 'signup'>(initialTab);
 
   // Dedicated Form states
   const [signInIdentifier, setSignInIdentifier] = useState('');
@@ -112,29 +112,6 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
     }
   };
 
-  const handleGuest = async () => {
-    setError(null);
-    setSuccessMsg(null);
-    setIsLoading(true);
-    try {
-      await guestLogin();
-      setSuccessMsg('Guest session initialized!');
-      setTimeout(() => {
-        onClose();
-      }, 350);
-    } catch (err: any) {
-      setError(err?.message || 'Failed to initialize guest session.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fillDemoAccount = (u: string, p: string) => {
-    setSignInIdentifier(u);
-    setSignInPassword(p);
-    setError(null);
-  };
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-[3px] animate-fadeIn"
@@ -153,12 +130,10 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
             <h2 className="text-base font-bold text-[#E6EDF3] tracking-tight">
               {tab === 'signin' && 'Sign In to Python'}
               {tab === 'signup' && 'Create Your Python Account'}
-              {tab === 'guest' && 'Instant Guest Session'}
             </h2>
             <p className="text-xs text-[#8B949E] mt-0.5">
               {tab === 'signin' && 'Access your saved problems, streak, and interview solutions'}
               {tab === 'signup' && 'Save all your solved questions and track interview readiness'}
-              {tab === 'guest' && 'Try challenges immediately without creating an account'}
             </p>
           </div>
           <button

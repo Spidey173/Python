@@ -74,9 +74,9 @@ function CircularProgressGauge({
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, isGuest } = useAuth();
+  const { user } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signup');
+  const [authTab, setAuthTab] = useState<'signin' | 'signup'>('signup');
 
   const [chapters, setChapters] = useState<ChapterGroup[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
@@ -275,7 +275,7 @@ export default function DashboardPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#E6EDF3]">
-                {user && !isGuest ? `Welcome back, ${user.username}` : 'Python Interview Preparation'}
+                {user ? `Welcome back, ${user.username}` : 'Python Interview Preparation'}
               </h1>
               <span className={`text-xs uppercase font-mono px-2.5 py-1 rounded border font-semibold ${readinessTier.color}`}>
                 {readinessTier.label}

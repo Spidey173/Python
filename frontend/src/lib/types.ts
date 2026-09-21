@@ -2,7 +2,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  role: 'user' | 'admin' | 'guest';
+  role: 'user' | 'admin';
   xp: number;
   coins: number;
   level: number;

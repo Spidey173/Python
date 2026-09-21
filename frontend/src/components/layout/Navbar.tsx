@@ -17,10 +17,10 @@ import {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, logout, isGuest } = useAuth();
+  const { user, logout } = useAuth();
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<'signin' | 'signup' | 'guest'>('signin');
+  const [authTab, setAuthTab] = useState<'signin' | 'signup'>('signin');
   const [solvedCount, setSolvedCount] = useState<number>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -90,7 +90,7 @@ export default function Navbar() {
     { href: '/profile', label: 'Progress', icon: BarChart2, exact: false },
   ];
 
-  const openAuth = (tab: 'signin' | 'signup' | 'guest') => {
+  const openAuth = (tab: 'signin' | 'signup') => {
     setAuthTab(tab);
     setAuthModalOpen(true);
   };
@@ -286,14 +286,9 @@ export default function Navbar() {
                     <div className="flex items-center gap-2 min-w-0">
                       <UserIcon className="h-4 w-4 text-[#58A6FF] shrink-0" />
                       <span className="font-semibold text-sm text-[#E6EDF3] truncate">
-                        {isGuest ? 'Guest Runner' : user.username}
+                        {user.username}
                       </span>
                     </div>
-                    {isGuest && (
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#D29922]/15 text-[#F59E0B] border border-[#D29922]/40 font-semibold">
-                        Guest
-                      </span>
-                    )}
                   </div>
 
                   <div className="flex items-center gap-2 text-xs font-mono text-[#8B949E]">
@@ -386,7 +381,7 @@ export default function Navbar() {
                   className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs font-semibold transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>{isGuest ? 'Exit Guest Session' : 'Sign Out'}</span>
+                  <span>Sign Out</span>
                 </button>
               </div>
             )}
