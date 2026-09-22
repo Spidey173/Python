@@ -754,7 +754,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       setActiveConsoleTab('tests');
 
       const res = await api.submitCode(problemId, code, hintTier);
-      const duration = 22;
+      // Use real execution time from test results; fall back to 22ms if unavailable
+      const duration = res.test_results && res.test_results.length > 0
+        ? Math.round(res.test_results.reduce((sum: number, t: any) => sum + (t.execution_time_ms || 0), 0))
+        : 22;
       setLastExecutionRuntime(duration);
 
       await persistence.recordSubmission({
@@ -772,7 +775,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         // Unlock solution and automatically open it normally!
         setIsSolutionUnlocked(true);
         setActiveTab('vault');
-        const canonicalNum = problem.level_number || (problem.id > 150 ? problem.id - 150 : problem.id);
+        // Use the shared utility so all ID ranges (1-70, 151-220, 361-430) are handled correctly
+        const canonicalNum = getCanonicalProblemId(problem, allProblems);
         setSolvedIds((prev) => Array.from(new Set([...prev, canonicalNum, problem.id])));
         await persistence.markSolved(canonicalNum);
         if (problem.id && problem.id !== canonicalNum) {
