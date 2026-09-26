@@ -1,6 +1,6 @@
 import asyncio
 import json
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, text
 from app.database import AsyncSessionLocal, engine, Base
 from app.models import Challenge, Achievement, User, UserProgress, Submission
 from app.security import hash_password
@@ -18,10 +18,19 @@ async def seed_database():
         await session.execute(delete(UserProgress))
         await session.execute(delete(Challenge))
         await session.execute(delete(Achievement))
+        try:
+            await session.execute(text("SELECT setval('challenges_id_seq', 70)"))
+        except Exception:
+            pass
+        try:
+            await session.execute(text("DELETE FROM sqlite_sequence WHERE name IN ('challenges', 'achievements', 'submissions', 'user_progress')"))
+        except Exception:
+            pass
         await session.commit()
 
         for item in JOB_FOCUSED_CHALLENGES:
             new_ch = Challenge(
+                id=item["level_number"],
                 level_number=item["level_number"],
                 chapter_id=item["chapter_id"],
                 chapter_title=item["chapter_title"],

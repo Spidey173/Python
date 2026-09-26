@@ -14,8 +14,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
-    # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./python_quest.db"
+    # Database: Default to Hosted Neon Serverless PostgreSQL
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql://neondb_owner:npg_PuF8eGWo0siL@ep-calm-pine-aen7hl2d-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require"
+    )
 
     # Redis (Optional)
     REDIS_URL: Optional[str] = None
