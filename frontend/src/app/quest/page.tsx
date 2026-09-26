@@ -151,11 +151,10 @@ function CurriculumExplorerContent() {
               setActiveTrack('basics');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
-              activeTrack === 'basics'
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'basics'
                 ? 'bg-[#238636] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
-            }`}
+              }`}
           >
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
             <span>Basics ({basicsCount || 50})</span>
@@ -165,11 +164,10 @@ function CurriculumExplorerContent() {
               setActiveTrack('advanced');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
-              activeTrack === 'advanced'
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'advanced'
                 ? 'bg-[#1F6FEB] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
-            }`}
+              }`}
           >
             <Zap className="h-3 w-3 text-amber-400" />
             <span>Advanced ({advancedCount || 20})</span>
@@ -179,28 +177,13 @@ function CurriculumExplorerContent() {
               setActiveTrack('all');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
-              activeTrack === 'all'
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${activeTrack === 'all'
                 ? 'bg-[#21262D] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
-            }`}
+              }`}
           >
             All ({allProblemsTotal.length || 70})
           </button>
-        </div>
-
-        {/* Search input */}
-        <div className="flex items-center gap-2.5 flex-1 max-w-sm min-w-[200px]">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#8B949E]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search challenges or #..."
-              className="w-full h-8.5 pl-9 pr-3 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] placeholder-[#8B949E] focus:outline-none focus:border-[#1F6FEB]"
-            />
-          </div>
         </div>
 
         {/* Filter Dropdowns */}
@@ -244,11 +227,10 @@ function CurriculumExplorerContent() {
           <nav className="p-3 space-y-1 overflow-y-auto flex-1" aria-label="Curriculum Modules">
             <button
               onClick={() => setSelectedModule('all')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all ${
-                selectedModule === 'all'
+              className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-between transition-all ${selectedModule === 'all'
                   ? 'bg-[#21262D] text-white border border-[#30363D] shadow-sm'
                   : 'text-[#9198A1] hover:bg-[#21262D]/60 hover:text-white'
-              }`}
+                }`}
             >
               <span>{activeTrack === 'basics' ? 'All Basics (50)' : activeTrack === 'advanced' ? 'All Advanced (20)' : 'All Challenges'}</span>
               <span className="font-mono text-xs text-[#8B949E] font-semibold">{trackProblems.length}</span>
@@ -263,11 +245,10 @@ function CurriculumExplorerContent() {
                 <button
                   key={chap.chapter_id}
                   onClick={() => setSelectedModule(chap.chapter_id)}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between ${
-                    isSelected
+                  className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between ${isSelected
                       ? 'bg-[#21262D] text-white border border-[#30363D] shadow-sm font-semibold'
                       : 'text-[#9198A1] hover:bg-[#21262D]/60 hover:text-white font-medium'
-                  }`}
+                    }`}
                 >
                   <div className="truncate pr-2">
                     <div className={`truncate text-sm font-semibold ${isSelected ? 'text-white' : 'text-[#E6EDF3]'}`}>
