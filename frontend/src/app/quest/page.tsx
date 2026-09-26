@@ -4,12 +4,12 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
-import { persistence, isProblemSolved, getCanonicalProblemId } from '@/lib/persistence';
+import { persistence, isProblemSolved, getCanonicalProblemId, buildSolvedIdSet } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
 import { AuthModal } from '@/components/ui/AuthModal';
 import {
-  Search, CheckCircle2, Circle, ArrowRight, Zap, Lock
+  CheckCircle2, Circle, ArrowRight, Zap
 } from 'lucide-react';
 
 function CurriculumExplorerContent() {
@@ -60,12 +60,23 @@ function CurriculumExplorerContent() {
           } catch {
             // ignore
           }
+          const flatLevels = chaps.flatMap((c) => c.levels || []);
+          const backendSolved = flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels));
+          const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
+          const merged = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
+          setChapters(chaps);
+          setSolvedIds(merged);
+        } else {
+          // If remote returned empty (e.g. timeout or offline), NEVER wipe out existing chapters!
+          setChapters((prev) => {
+            if (prev && prev.length > 0) {
+              const flatLevels = prev.flatMap((c) => c.levels || []);
+              const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
+              setSolvedIds((prevSolved) => Array.from(new Set([...prevSolved, ...normalizedLocalSolved])));
+            }
+            return prev;
+          });
         }
-        const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
-        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
-        const merged = Array.from(new Set([...backendSolved, ...localSolved]));
-        setChapters(chaps);
-        setSolvedIds(merged);
       } catch (err) {
         console.error('Failed to load curriculum:', err);
       } finally {
@@ -105,9 +116,15 @@ function CurriculumExplorerContent() {
 
   // Global counts for track headers
   const trackTotalCount = trackProblems.length;
+
+  // Pre-computed canonical Set of solved IDs for O(1) checks
+  const solvedSet = useMemo(() => {
+    return buildSolvedIdSet(solvedIds, trackProblems);
+  }, [solvedIds, trackProblems]);
+
   const trackSolvedCount = useMemo(() => {
-    return trackProblems.filter((p) => isProblemSolved(p, solvedIds, trackProblems)).length;
-  }, [trackProblems, solvedIds]);
+    return trackProblems.filter((p) => isProblemSolved(p, solvedSet, trackProblems)).length;
+  }, [trackProblems, solvedSet]);
 
   const allProblemsTotal = useMemo(() => chapters.flatMap((c) => c.levels), [chapters]);
   const basicsCount = useMemo(() => chapters.filter((c) => c.chapter_id <= 10).flatMap((c) => c.levels).length, [chapters]);
@@ -120,7 +137,7 @@ function CurriculumExplorerContent() {
       const pDiff = (p.difficulty || 'Easy').toLowerCase();
       const matchesDifficulty =
         difficultyFilter === 'all' || pDiff === difficultyFilter;
-      const isSolved = isProblemSolved(p, solvedIds, trackProblems);
+      const isSolved = isProblemSolved(p, solvedSet, trackProblems);
       const matchesStatus =
         statusFilter === 'all' ||
         (statusFilter === 'solved' && isSolved) ||
@@ -138,7 +155,7 @@ function CurriculumExplorerContent() {
 
       return matchesModule && matchesDifficulty && matchesStatus && matchesSearch;
     });
-  }, [trackProblems, selectedModule, difficultyFilter, statusFilter, searchQuery, solvedIds]);
+  }, [trackProblems, selectedModule, difficultyFilter, statusFilter, searchQuery, solvedSet]);
 
   return (
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] flex flex-col min-h-0 overflow-hidden">
@@ -319,7 +336,7 @@ function CurriculumExplorerContent() {
                   </div>
                 ) : (
                   filteredProblems.map((problem) => {
-                    const isSolved = isProblemSolved(problem, solvedIds, trackProblems);
+                    const isSolved = isProblemSolved(problem, solvedSet, trackProblems);
                     const displayNum = problem.level_number || problem.id;
                     const isAdvanced = displayNum >= 51 || problem.chapter_id >= 11;
 

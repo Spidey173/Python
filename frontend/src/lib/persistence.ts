@@ -1,15 +1,8 @@
 // PyForge Persistence Layer
 // Pluggable persistence service conforming to docs/engineering.md specification
 
-export interface SubmissionLogEntry {
-  id: string;
-  problemId: number;
-  problemTitle: string;
-  passed: boolean;
-  runtimeMs: number;
-  timestamp: number;
-  code: string;
-}
+import type { SubmissionLogEntry } from './types';
+export type { SubmissionLogEntry };
 
 export interface LayoutSettings {
   navigatorCollapsed: boolean;
@@ -200,6 +193,9 @@ class LocalPersistenceProvider implements PersistenceProvider {
       localStorage.removeItem('pyforge_solved_ids');
       localStorage.removeItem('pyforge_submissions_log');
       localStorage.removeItem('pyforge_last_active_problem');
+      localStorage.removeItem('pq_cached_chapters_v3');
+      localStorage.removeItem('pyforge_unlocked_solution_ids');
+      localStorage.removeItem('pyforge_layout_settings');
       const toRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -329,33 +325,46 @@ export function getCanonicalProblemId(
 }
 
 /**
- * Robust, cross-tier solved checker.
- * Correctly evaluates whether a challenge is solved considering backend status,
- * canonical IDs, database sequence IDs, and local storage progress.
+ * Builds a Set containing all canonical and raw IDs from a list of solved IDs.
+ * Use this when doing batch checks (e.g. rendering lists of problems) to avoid
+ * rebuilding the set repeatedly.
  */
-export function isProblemSolved(
-  problem: { id: number; level_number?: number; passed?: boolean } | null | undefined,
+export function buildSolvedIdSet(
   solvedIds: (number | string)[],
   allProblems?: Array<{ id: number; level_number?: number }>
-): boolean {
-  if (!problem) return false;
-  if (problem.passed === true) return true;
-
-  const canonical = getCanonicalProblemId(problem, allProblems);
-  const problemId = problem.id;
-
+): Set<number> {
+  const solvedSet = new Set<number>();
   for (const raw of solvedIds) {
-    if (raw === problemId || raw === canonical || (problem.level_number && raw === problem.level_number)) {
-      return true;
-    }
-    const resolvedRaw = getCanonicalProblemId(raw, allProblems);
-    if (
-      resolvedRaw > 0 &&
-      (resolvedRaw === canonical || (problem.level_number && resolvedRaw === problem.level_number))
-    ) {
-      return true;
-    }
+    const num = typeof raw === 'string' ? parseInt(raw, 10) : raw;
+    if (!isNaN(num)) solvedSet.add(num);
+    const resolved = getCanonicalProblemId(raw, allProblems);
+    if (resolved > 0) solvedSet.add(resolved);
   }
+  return solvedSet;
+}
+
+/**
+ * Robust, cross-tier solved checker.
+ * Accepts either a pre-computed Set<number> (fastest) or an array of solved IDs.
+ */
+export function isProblemSolved(
+  problem: number | string | { id: number; level_number?: number; passed?: boolean } | null | undefined,
+  solvedIds: (number | string)[] | Set<number>,
+  allProblems?: Array<{ id: number; level_number?: number }>
+): boolean {
+  if (problem === null || problem === undefined) return false;
+  if (typeof problem === 'object' && problem.passed === true) return true;
+
+  const solvedSet = solvedIds instanceof Set ? solvedIds : buildSolvedIdSet(solvedIds, allProblems);
+
+  // Check the problem against the pre-computed set (O(1) each)
+  const canonical = getCanonicalProblemId(problem, allProblems);
+  if (canonical > 0 && solvedSet.has(canonical)) return true;
+
+  const problemId = typeof problem === 'object' ? problem.id : (typeof problem === 'string' ? parseInt(problem, 10) : problem);
+  if (!isNaN(problemId) && solvedSet.has(problemId)) return true;
+
+  if (typeof problem === 'object' && problem.level_number !== undefined && solvedSet.has(problem.level_number)) return true;
 
   return false;
 }

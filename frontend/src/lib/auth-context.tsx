@@ -55,6 +55,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     initAuth();
+
+    const handleLogoutEvent = () => {
+      setToken(null);
+      setUser(null);
+    };
+
+    window.addEventListener('pyforge_auth_logout', handleLogoutEvent);
+    return () => {
+      window.removeEventListener('pyforge_auth_logout', handleLogoutEvent);
+    };
   }, []);
 
   const login = async (username: string, pass: string) => {
@@ -64,7 +74,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user);
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('pyforge_auth_login'));
-      window.dispatchEvent(new Event('pyforge_problem_solved'));
     }
   };
 
@@ -75,7 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user);
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('pyforge_auth_login'));
-      window.dispatchEvent(new Event('pyforge_problem_solved'));
     }
   };
 

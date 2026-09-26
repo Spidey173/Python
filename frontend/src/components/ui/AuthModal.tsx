@@ -33,12 +33,22 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const switchTab = (newTab: 'signin' | 'signup') => {
+    setTab(newTab);
+    setError(null);
+    setSuccessMsg(null);
+    setSignInPassword('');
+    setSignUpPassword('');
+  };
+
   // Sync tab and reset errors when modal opens or initialTab changes
   useEffect(() => {
     if (isOpen) {
       setTab(initialTab);
       setError(null);
       setSuccessMsg(null);
+      setSignInPassword('');
+      setSignUpPassword('');
     }
   }, [isOpen, initialTab]);
 
@@ -65,6 +75,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
       setSuccessMsg('Signed in successfully!');
       setTimeout(() => {
         onClose();
+        setSignInIdentifier('');
         setSignInPassword('');
       }, 350);
     } catch (err: any) {
@@ -149,7 +160,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
         <div className="grid grid-cols-2 border-b border-[#30363D] bg-[#0D1117] p-1.5 gap-1 text-xs">
           <button
             type="button"
-            onClick={() => { setTab('signin'); setError(null); setSuccessMsg(null); }}
+            onClick={() => switchTab('signin')}
             className={`py-2 font-semibold rounded-md transition-all ${
               tab === 'signin'
                 ? 'bg-[#21262D] text-[#E6EDF3] border border-[#30363D] shadow-sm'
@@ -160,7 +171,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
           </button>
           <button
             type="button"
-            onClick={() => { setTab('signup'); setError(null); setSuccessMsg(null); }}
+            onClick={() => switchTab('signup')}
             className={`py-2 font-semibold rounded-md transition-all ${
               tab === 'signup'
                 ? 'bg-[#21262D] text-[#E6EDF3] border border-[#30363D] shadow-sm'
@@ -251,7 +262,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 Don&apos;t have an account?{' '}
                 <button
                   type="button"
-                  onClick={() => { setTab('signup'); setError(null); }}
+                  onClick={() => switchTab('signup')}
                   className="text-[#58A6FF] hover:underline font-medium"
                 >
                   Sign up now
@@ -342,7 +353,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
                 Already have an account?{' '}
                 <button
                   type="button"
-                  onClick={() => { setTab('signin'); setError(null); }}
+                  onClick={() => switchTab('signin')}
                   className="text-[#58A6FF] hover:underline font-medium"
                 >
                   Sign in

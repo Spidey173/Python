@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
-import { sounds } from '@/lib/audio-engine';
+import { sounds } from '@/lib/audio';
 import { User, ChapterGroup } from '@/lib/types';
 import { Shield } from 'lucide-react';
 

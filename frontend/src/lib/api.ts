@@ -1,7 +1,7 @@
 import {
   ChapterGroup, ChallengeDetail, CodeRunResponse,
-  CodeSubmitResponse, ExplainResponse, LeaderboardEntry,
-  Achievement, ProfileResponse, User, SubmissionLogEntry
+  CodeSubmitResponse, ExplainResponse,
+  ProfileResponse, User, SubmissionLogEntry
 } from './types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
@@ -12,7 +12,7 @@ function getAuthHeader(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs: number = 4000): Promise<T> {
+async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs: number = 15000): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -31,6 +31,16 @@ async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs
     clearTimeout(timer);
 
     if (!res.ok) {
+      // Handle expired/invalid token — auto-logout
+      if (res.status === 401) {
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('pq_token');
+          localStorage.removeItem('pq_local_user');
+          window.dispatchEvent(new Event('pyforge_auth_logout'));
+        }
+        throw new Error('Session expired. Please sign in again.');
+      }
+
       const errorData = await res.json().catch(() => ({}));
       let msg = `Request failed with status ${res.status}`;
       if (typeof errorData.detail === 'string') {
@@ -153,34 +163,6 @@ export const api = {
     });
   },
 
-
-  // Gamification
-  async getLeaderboard(): Promise<LeaderboardEntry[]> {
-    return request('/gamification/leaderboard');
-  },
-
-  async getAchievements(): Promise<Achievement[]> {
-    return request('/gamification/achievements');
-  },
-
-  async openMysteryBox(boxType: 'BRONZE' | 'SILVER' | 'CYBER_GOLD'): Promise<{
-    success: boolean;
-    reward_type: string;
-    reward_value: string;
-    reward_display: string;
-    coins_left: number;
-  }> {
-    return request('/gamification/mystery-box/open', {
-      method: 'POST',
-      body: JSON.stringify({ box_type: boxType }),
-    });
-  },
-
-  async claimStreak(): Promise<{ success: boolean; new_streak: number; xp_awarded: number; coins_awarded: number; message: string }> {
-    return request('/gamification/streak/claim', {
-      method: 'POST',
-    });
-  },
 
   // Profile
   async getProfile(): Promise<ProfileResponse> {

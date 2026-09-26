@@ -11,7 +11,6 @@ import {
   SubmissionLogEntry,
   calculateRealStreak,
   getCanonicalProblemId,
-  isProblemSolved,
 } from '@/lib/persistence';
 import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
@@ -84,6 +83,19 @@ export default function DashboardPage() {
   const [submissions, setSubmissions] = useState<SubmissionLogEntry[]>([]);
 
   useEffect(() => {
+    // Instant cache hydration
+    try {
+      const cached = localStorage.getItem('pq_cached_chapters_v3');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setChapters(parsed);
+        }
+      }
+    } catch {
+      // ignore
+    }
+
     async function loadData() {
       try {
         const [chaps, localSolved, lastId, localSubs, remoteSubs] = await Promise.all([
@@ -93,9 +105,29 @@ export default function DashboardPage() {
           persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
           user ? api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
         ]);
-        const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
-        const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
-        const mergedSolved = Array.from(new Set([...backendSolved, ...localSolved]));
+
+        if (Array.isArray(chaps) && chaps.length > 0) {
+          try {
+            localStorage.setItem('pq_cached_chapters_v3', JSON.stringify(chaps));
+          } catch {
+            // ignore
+          }
+          const flatLevels = chaps.flatMap((c) => c.levels || []);
+          const backendSolved = flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels));
+          const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
+          const mergedSolved = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
+          setChapters(chaps);
+          setSolvedIds(mergedSolved);
+        } else {
+          setChapters((prev) => {
+            if (prev && prev.length > 0) {
+              const flatLevels = prev.flatMap((c) => c.levels || []);
+              const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
+              setSolvedIds((prevSolved) => Array.from(new Set([...prevSolved, ...normalizedLocalSolved])));
+            }
+            return prev;
+          });
+        }
 
         // Merge local & remote submissions deduplicating by id
         const subsMap = new Map<string, SubmissionLogEntry>();
@@ -110,8 +142,6 @@ export default function DashboardPage() {
           persistence.saveSubmissions(mergedSubs);
         }
 
-        setChapters(chaps);
-        setSolvedIds(mergedSolved);
         setLastActiveId(lastId);
         setSubmissions(mergedSubs);
       } catch (e) {

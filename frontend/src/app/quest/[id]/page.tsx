@@ -176,10 +176,23 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         ]);
 
         setProblem(prob);
-        const flatProblems = (chapters as ChapterGroup[]).flatMap((c) => c.levels);
+        let chaps = (chapters as ChapterGroup[]) || [];
+        if (!chaps || chaps.length === 0) {
+          try {
+            const cached = localStorage.getItem('pq_cached_chapters_v3');
+            if (cached) {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) chaps = parsed;
+            }
+          } catch {
+            // ignore
+          }
+        }
+        const flatProblems = chaps.flatMap((c) => c.levels || []);
         setAllProblems(flatProblems);
-        const backendSolved = flatProblems.filter((p) => p.passed).map((p) => p.id);
-        const resolvedSolved = Array.from(new Set([...backendSolved, ...solved]));
+        const backendSolved = flatProblems.filter((p) => p.passed).map((p) => getCanonicalProblemId(p, flatProblems));
+        const normalizedLocalSolved = (solved || []).map((id) => getCanonicalProblemId(id, flatProblems));
+        const resolvedSolved = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
         setSolvedIds(resolvedSolved);
 
         // If challenge was already solved, stop timer immediately
@@ -188,25 +201,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           stopTimer();
         }
 
-        // Code restoration: Always load the problem's clean starter_code so the user solves it independently
+        // Code restoration: load the problem's starter_code, or restore user's saved draft if present
         let initialCode = prob.starter_code;
-        // Only restore draft if user actively edited their own code and it's not a pre-filled solution
         if (savedDraft && savedDraft.trim() !== '' && savedDraft !== prob.starter_code) {
-          const rankedSols = getProblemRankedSolutions(prob);
-          const isOfficialSolution = rankedSols.some(
-            (s) => s.code.trim() === savedDraft.trim() || (s.code.trim().length > 15 && savedDraft.includes(s.code.trim()))
-          );
-          const isLeakedSolution = isOfficialSolution ||
-                                  savedDraft.includes('while left < right and not') || 
-                                  savedDraft.includes('cleaned == cleaned[::-1]') ||
-                                  savedDraft.includes('words[::-1]') ||
-                                  savedDraft.includes('counts[c] = counts.get');
-          if (!isLeakedSolution) {
-            initialCode = savedDraft;
-          } else {
-            // Clean out the stale/leaked solution from localStorage so it never re-appears
-            persistence.saveDraft(problemId, prob.starter_code);
-          }
+          initialCode = savedDraft;
         }
         setCode(initialCode);
 
@@ -262,7 +260,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     debouncedSaveRef.current(val);
 
     // Resume timer if it was stopped after an attempt and challenge is not yet solved
-    if (!isTimerRunningRef.current && !solvedIds.includes(problemId)) {
+    if (!isTimerRunningRef.current && !isProblemSolved(problem || problemId, solvedIds, allProblems)) {
       startTimer();
     }
   };
@@ -747,7 +745,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     try {
       setIsSubmitting(true);
-      setIsSubmitting(true);
       await persistence.saveDraft(problemId, code);
 
       setConsoleCollapsed(false);
@@ -795,15 +792,20 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         soundFX.playFailureThud();
       }
 
-      const runRes = await api.runCode(problemId, code);
-      setRunResponse(runRes);
+      setRunResponse({
+        success: res.success,
+        stdout: '',
+        stderr: '',
+        test_results: res.test_results || [],
+        passed_all: res.passed_all,
+        execution_time_ms: duration,
+      });
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
         setMobileDrawerOpen(true);
       }
       setConsoleCollapsed(false);
       setActiveConsoleTab('tests');
       await refreshUser();
-      await persistence.saveDraft(problemId, code);
     } catch (err: any) {
       stopTimer();
       soundFX.playFailureThud();
@@ -834,7 +836,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     return unregister;
   }, [handleRunCode, handleSubmitCode]);
 
-  const isCurrentProblemSolved = solvedIds.includes(problemId) || problem?.passed;
+  const isCurrentProblemSolved = isProblemSolved(problem || problemId, solvedIds, allProblems) || Boolean(problem?.passed);
 
   return (
     <div className="h-[calc(100dvh-48px)] max-h-[calc(100dvh-48px)] md:h-[calc(100vh-48px)] md:max-h-[calc(100vh-48px)] flex flex-col bg-[#070A0F] text-[#E6EDF3] overflow-hidden select-none">

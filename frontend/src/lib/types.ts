@@ -94,19 +94,18 @@ export interface CodeRunResponse {
 export interface CodeSubmitResponse {
   success: boolean;
   passed_all: boolean;
-  stars_earned: number;
-  xp_earned: number;
-  coins_earned: number;
-  combo_bonus: number;
-  speed_bonus: number;
-  lives_remaining: number;
-  level_up: boolean;
-  new_level: number;
+  stars_earned?: number;
+  xp_earned?: number;
+  coins_earned?: number;
+  combo_bonus?: number;
+  speed_bonus?: number;
+  lives_remaining?: number;
+  level_up?: boolean;
+  new_level?: number;
   test_results: TestCaseResult[];
   next_challenge_id?: number;
-  new_achievements: Achievement[];
-  message: string;
-  boss_defeated: boolean;
+  message?: string;
+  boss_defeated?: boolean;
 }
 
 export interface ExplainResponse {
@@ -118,30 +117,6 @@ export interface ExplainResponse {
   better_approach: string;
   optimized_code: string;
   dry_run_trace: Array<{ step: number; action: string; variables: Record<string, string>; output: string }>;
-}
-
-export interface Achievement {
-  id: number;
-  code: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-  xp_bonus: number;
-  coin_bonus: number;
-  unlocked: boolean;
-  unlocked_at?: string;
-}
-
-export interface LeaderboardEntry {
-  rank: number;
-  user_id: number;
-  username: string;
-  avatar: string;
-  level: number;
-  xp: number;
-  stars: number;
-  streak: number;
 }
 
 export interface ChapterMastery {
