@@ -1,4 +1,4 @@
-# ⚡ Python Quest — Gamified Data Structures & Algorithms Platform
+# ⚡ Python Quest — Data Structures & Algorithms Practice Platform
 
 [![Build Passing](https://img.shields.io/badge/build-passing-brightgreen?style=flat&logo=github-actions)](https://github.com/Spidey173/Python)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
@@ -113,7 +113,7 @@ Python/
   - Gives hints, code solutions, or simple bug explanations when asked.
 - 🎙️ **Spoken Interview Q&As**: Practical interview questions and answers for each problem to help freshers prepare for technical interviews.
 - ⚡ **Instant Code Runner**: Run Python code with test cases directly in the browser.
-- 🎮 **Gamification & Auth**: XP points, levels, daily streaks, persistent user login sessions, and profile tracking.
+- 🔐 **Secure Authentication & Progress Tracking**: Persistent user login sessions, challenge progress, and solution tracking.
 
 ---
 

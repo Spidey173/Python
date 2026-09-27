@@ -1,7 +1,7 @@
 import pytest
 import asyncio
 from app.sandbox.runner import execute_code_in_sandbox, inspect_code_safety
-from app.sandbox.evaluator import evaluate_challenge_test_cases, calculate_rewards_and_stars
+from app.sandbox.evaluator import evaluate_challenge_test_cases
 from app.ai.ast_explainer import ASTCodeAnalyzer
 
 
@@ -90,22 +90,6 @@ async def test_evaluator_beginner_friendly_matching():
     passed, res, _ = await evaluate_challenge_test_cases(code_prompt, test_case_prompt)
     assert passed is True
 
-
-def test_rewards_and_stars_calculation():
-    rewards = calculate_rewards_and_stars(
-        passed_all=True,
-        base_xp=100,
-        base_coins=25,
-        hints_used=0,
-        attempts=1,
-        execution_time_ms=50.0,
-        current_streak=3
-    )
-    assert rewards["stars"] == 3
-    assert rewards["speed_bonus"] == 25
-    assert rewards["combo_bonus"] == 30
-    assert rewards["perfect_score"] is True
-    assert rewards["xp_earned"] > 100
 
 
 def test_local_ast_explainer():
