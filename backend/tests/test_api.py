@@ -15,13 +15,14 @@ async def test_health_endpoint():
 @pytest.mark.asyncio
 async def test_unauthenticated_access_is_blocked():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-        # Unauthenticated calls must return 401 across all protected domains
-        res1 = await ac.get("/api/challenges/chapters")
-        assert res1.status_code == 401
+        # Public read-only catalog can be explored by guests
+        res_chap = await ac.get("/api/challenges/chapters")
+        assert res_chap.status_code == 200
 
-        res2 = await ac.get("/api/challenges/1")
-        assert res2.status_code == 401
+        res_detail = await ac.get("/api/challenges/1")
+        assert res_detail.status_code == 200
 
+        # Protected mutations and compute endpoints must return 401
         res3 = await ac.post("/api/execution/run", json={"challenge_id": 1, "code": "print(1)"})
         assert res3.status_code == 401
 

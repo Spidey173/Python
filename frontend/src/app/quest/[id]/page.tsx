@@ -175,19 +175,14 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // 3. Load Problem, Restore Draft & Initialize Mentor Greeting
   useEffect(() => {
     async function loadWorkspace() {
-      if (!user) {
-        setProblem(null);
-        setSolvedIds([]);
-        return;
-      }
       try {
         const [prob, chapters, solved, savedDraft, layoutSettings, unlockedIds] = await Promise.all([
           api.getChallenge(problemId),
           api.getChapters().catch(() => [] as ChapterGroup[]),
-          persistence.getSolvedIds(),
-          persistence.loadDraft(problemId),
-          persistence.loadLayoutSettings(),
-          persistence.getUnlockedSolutionIds(),
+          user ? persistence.getSolvedIds().catch(() => [] as number[]) : Promise.resolve([] as number[]),
+          user ? persistence.loadDraft(problemId).catch(() => null) : Promise.resolve(null),
+          persistence.loadLayoutSettings().catch(() => ({ consoleCollapsed: false, splitRatio: 0.5 })),
+          user ? persistence.getUnlockedSolutionIds().catch(() => [] as number[]) : Promise.resolve([] as number[]),
         ]);
 
         setProblem(prob);
@@ -205,9 +200,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         }
         const flatProblems = chaps.flatMap((c) => c.levels || []);
         setAllProblems(flatProblems);
-        const backendSolved = flatProblems.filter((p) => p.passed).map((p) => getCanonicalProblemId(p, flatProblems));
-        const normalizedLocalSolved = (solved || []).map((id) => getCanonicalProblemId(id, flatProblems));
-        const resolvedSolved = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
+        const backendSolved = user ? flatProblems.filter((p) => p.passed).map((p) => getCanonicalProblemId(p, flatProblems)) : [];
+        const normalizedLocalSolved = user ? (solved || []).map((id) => getCanonicalProblemId(id, flatProblems)) : [];
+        const resolvedSolved = user ? Array.from(new Set([...backendSolved, ...normalizedLocalSolved])) : [];
         setSolvedIds(resolvedSolved);
 
         // If challenge was already solved, stop timer immediately
@@ -226,8 +221,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setCode(initialCode);
 
         // Layout restore
-        setConsoleCollapsed(layoutSettings.consoleCollapsed);
-        await persistence.setLastActiveProblemId(problemId);
+        setConsoleCollapsed(layoutSettings?.consoleCollapsed || false);
+        if (user) {
+          await persistence.setLastActiveProblemId(problemId).catch(() => {});
+        }
 
         // Solution is unlocked if the problem was solved or previously unlocked
         const isSolutionUnlockedLocally = (unlockedIds || []).includes(problemId);
@@ -240,7 +237,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     loadWorkspace();
 
     const handleLogout = () => {
-      setProblem(null);
       setSolvedIds([]);
     };
     window.addEventListener('pyforge_auth_logout', handleLogout);
@@ -2048,12 +2044,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       {/* Global Auth Gate Modal for Protected Workspace */}
       <AuthModal
         isOpen={authModalOpen}
-        onClose={() => {
-          setAuthModalOpen(false);
-          if (!user) {
-            router.push('/quest');
-          }
-        }}
+        onClose={() => setAuthModalOpen(false)}
       />
     </div>
   );

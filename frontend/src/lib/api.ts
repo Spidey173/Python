@@ -32,15 +32,19 @@ async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs
     clearTimeout(timer);
 
     if (!res.ok) {
-      // Handle expired/invalid token — auto-logout
+      // Handle expired/invalid token — auto-logout only if user had a token attached
       if (res.status === 401) {
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('pq_token');
-          localStorage.removeItem('pq_local_user');
-          persistence.clearUserData();
-          window.dispatchEvent(new Event('pyforge_auth_logout'));
+          const hadToken = !!localStorage.getItem('pq_token');
+          if (hadToken) {
+            localStorage.removeItem('pq_token');
+            localStorage.removeItem('pq_local_user');
+            persistence.clearUserData();
+            window.dispatchEvent(new Event('pyforge_auth_logout'));
+            throw new Error('Session expired. Please sign in again.');
+          }
         }
-        throw new Error('Session expired. Please sign in again.');
+        throw new Error('Authentication required.');
       }
 
       const errorData = await res.json().catch(() => ({}));

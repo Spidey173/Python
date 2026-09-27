@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -6,7 +6,7 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models import Challenge, UserProgress, User
 from app.schemas import ChapterGroup, ChallengeSummary, ChallengeDetail, TestCaseSchema
-from app.security import get_current_user
+from app.security import get_current_user_optional
 
 router = APIRouter(prefix="/challenges", tags=["Challenges"])
 
@@ -14,17 +14,19 @@ router = APIRouter(prefix="/challenges", tags=["Challenges"])
 @router.get("/chapters", response_model=List[ChapterGroup])
 async def list_chapters(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     # Fetch all challenges sorted by level_number
     res = await db.execute(select(Challenge).order_by(Challenge.level_number.asc()))
     challenges = res.scalars().all()
 
     # Fetch user progress for authenticated user
-    prog_res = await db.execute(
-        select(UserProgress).where(UserProgress.user_id == current_user.id)
-    )
-    user_progress_map = {p.challenge_id: p for p in prog_res.scalars().all()}
+    user_progress_map = {}
+    if current_user:
+        prog_res = await db.execute(
+            select(UserProgress).where(UserProgress.user_id == current_user.id)
+        )
+        user_progress_map = {p.challenge_id: p for p in prog_res.scalars().all()}
 
     # Group by chapter
     chapters_dict = {}
@@ -44,7 +46,8 @@ async def list_chapters(
         passed = bool(prog.passed) if prog else False
 
         # Level 1 always unlocked. Subsequent levels unlocked if previous level passed or user is admin
-        is_unlocked = (ch.level_number == 1) or prev_passed or (current_user.role == "admin")
+        is_admin = bool(current_user and current_user.role == "admin")
+        is_unlocked = (ch.level_number == 1) or prev_passed or is_admin
 
         summary = ChallengeSummary(
             id=ch.id,
@@ -84,7 +87,7 @@ async def list_chapters(
 async def get_challenge_detail(
     level_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     # Can query by level_number or id
     res = await db.execute(
@@ -97,15 +100,18 @@ async def get_challenge_detail(
             detail=f"Challenge with ID/Level {level_id} not found."
         )
 
-    prog_res = await db.execute(
-        select(UserProgress).where(
-            UserProgress.user_id == current_user.id,
-            (UserProgress.challenge_id == ch.id) | (UserProgress.challenge_id == ch.level_number)
+    passed = False
+    saved_code = None
+    if current_user:
+        prog_res = await db.execute(
+            select(UserProgress).where(
+                UserProgress.user_id == current_user.id,
+                (UserProgress.challenge_id == ch.id) | (UserProgress.challenge_id == ch.level_number)
+            )
         )
-    )
-    prog = prog_res.scalars().first()
-    passed = bool(prog.passed) if prog else False
-    saved_code = prog.code_submitted if prog else None
+        prog = prog_res.scalars().first()
+        passed = bool(prog.passed) if prog else False
+        saved_code = prog.code_submitted if prog else None
 
     # Filter visible test cases for student
     visible_tests = [
