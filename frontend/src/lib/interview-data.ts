@@ -12936,12 +12936,48 @@ export const ALL_50_STUDY_DATA: Record<number, ProblemStudyData> = {
     "mistakes": [
       {
             "id": "m1",
-            "title": "Simply removing",
-            "description": "",
-            "badSnippet": "# Common Mistake: Simply removing",
-            "failingInput": "Edge case or boundary input violating assumption",
-            "consequence": "",
-            "howToFix": "Verify boundary checks, algorithmic constraints, and edge case handling."
+            "title": "String concatenation creating O(n²) runtime",
+            "description": "Building the processed string using repeated string concatenation instead of a list stack or right-to-left pointers creates quadratic allocations.",
+            "badSnippet": "res = ''\nfor ch in s:\n    if ch == '#': res = res[:-1]\n    else: res += ch",
+            "failingInput": "s = 'a#b#c#...' (length 100,000)",
+            "consequence": "Leads to Time Limit Exceeded (TLE) in online assessments due to immutable string copying on each character.",
+            "howToFix": "Use a list as an O(1) stack (`stack.append()` / `stack.pop()`) or iterate right-to-left with two pointers in O(1) space."
+      },
+      {
+            "id": "m2",
+            "title": "Popping from an empty stack on leading backspaces",
+            "description": "Calling pop() without checking if the stack is non-empty raises an IndexError when consecutive backspaces appear at the beginning of the string.",
+            "badSnippet": "stack = []\nfor ch in s:\n    if ch == '#':\n        stack.pop()  # IndexError if stack is empty\n    else:\n        stack.append(ch)",
+            "failingInput": "s = '##a#b'",
+            "consequence": "IndexError: pop from empty list on inputs starting with '#' or having excess backspaces.",
+            "howToFix": "Always guard with `if stack: stack.pop()` before popping."
+      },
+      {
+            "id": "m3",
+            "title": "Forgetting accumulated backspace skips in two-pointer approach",
+            "description": "Not tracking backspace count when multiple consecutive '#' characters appear while iterating backwards.",
+            "badSnippet": "if s[i] == '#':\n    i -= 2  # Skips only 1 character, breaks on '###'",
+            "failingInput": "s = 'bxj##tw', t = 'bxo#j##tw'",
+            "consequence": "Fails on clustered backspaces because previous backspaces compound the number of valid characters to skip.",
+            "howToFix": "Maintain a `skip` counter that increments on '#' and decrements when skipping valid characters."
+      },
+      {
+            "id": "m4",
+            "title": "Comparing character without verifying both pointers are within bounds",
+            "description": "Comparing s[i] == t[j] when one string has run out of characters while the other still has valid characters remaining.",
+            "badSnippet": "if s[i] != t[j]: return False  # Error or false positive when i < 0 <= j",
+            "failingInput": "s = 'ab##', t = 'c'",
+            "consequence": "Out of bounds IndexError or evaluating unequal string lengths as matching.",
+            "howToFix": "Check `(i >= 0) != (j >= 0)` after skipping backspaces; if one index is exhausted while the other is not, return False immediately."
+      },
+      {
+            "id": "m5",
+            "title": "Early termination assumption before full traversal",
+            "description": "Returning True as soon as matching suffixes are found without ensuring all remaining prefix characters are completely backspaced.",
+            "badSnippet": "while i >= 0 and j >= 0:\n    # compare characters...\nreturn True # Premature if one string still has un-cancelled characters",
+            "failingInput": "s = 'a', t = 'b#a'",
+            "consequence": "Incorrectly returns True when leftover characters remain on one side after the other reaches -1.",
+            "howToFix": "Continue loop until both pointers are < 0, ensuring neither string has leftover non-backspaced characters."
       }
 ]
   },
