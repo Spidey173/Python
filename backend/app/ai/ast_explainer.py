@@ -1,5 +1,5 @@
 import ast
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 
 
 class ASTCodeAnalyzer:
@@ -87,7 +87,7 @@ class ASTCodeAnalyzer:
             return f"Calls function '{func_name}' with specified arguments."
         return "Executes Python instruction."
 
-    def _estimate_complexity(self, tree: ast.AST) -> (str, str):
+    def _estimate_complexity(self, tree: ast.AST) -> Tuple[str, str]:
         loops = 0
         nested_loops = 0
 
