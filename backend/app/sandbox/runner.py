@@ -5,7 +5,7 @@ import time
 from typing import Dict, Any, Optional, Tuple
 
 FORBIDDEN_MODULES = {
-    "os", "sys", "subprocess", "shutil", "importlib", "socket",
+    "os", "subprocess", "shutil", "importlib", "socket",
     "http", "urllib", "requests", "ctypes", "pty", "multiprocessing",
     "threading", "signal", "posix", "gc", "builtins", "_thread",
     "pathlib", "code", "pdb", "inspect"

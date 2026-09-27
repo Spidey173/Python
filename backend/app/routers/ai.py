@@ -3,15 +3,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.database import get_db
-from app.models import Challenge
+from app.models import Challenge, User
 from app.schemas import ExplainRequest, ExplainResponse, AITutorChatRequest, AITutorChatResponse
+from app.security import get_current_user
 from app.ai.copilot_client import get_ai_explanation, chat_with_ai_tutor
 
 router = APIRouter(prefix="/ai", tags=["AI Copilot & Tutor"])
 
 
 @router.post("/explain", response_model=ExplainResponse)
-async def explain_code(req: ExplainRequest, db: AsyncSession = Depends(get_db)):
+async def explain_code(
+    req: ExplainRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     ch_title = ""
     if req.challenge_id:
         res = await db.execute(
@@ -40,7 +45,11 @@ async def explain_code(req: ExplainRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/tutor", response_model=AITutorChatResponse)
-async def tutor_chat(req: AITutorChatRequest, db: AsyncSession = Depends(get_db)):
+async def tutor_chat(
+    req: AITutorChatRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     ch_info = None
     if req.challenge_id:
         res = await db.execute(

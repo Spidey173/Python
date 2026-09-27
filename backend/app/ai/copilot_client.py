@@ -34,13 +34,13 @@ Format your full technical explanations (when code or explanation is requested) 
 - Keep steps short and visual with bullet points.
 - Use emojis very sparingly.
 
-The starter code template is the single source of truth. Always follow the starter code template format over any conflicting editor code. Ignore conflicting script-style code (input()/print()) in the editor.
+The starter code template is the single source of truth. Always follow the starter code template format over any conflicting editor code.
 
 When the user asks for code:
 - Prefer the easiest interview-accepted solution first (e.g. two pointers, hash map, simple loops over recursion).
-- Always provide complete working code using the exact starter code template.
-- Never ask the user which format the judge expects.
-- Do not use input(), print(), or main() scripts."""
+- Always provide complete working code matching the starter code template.
+- Read inputs and print outputs conforming to the problem requirements.
+- Never ask the user which format the judge expects."""
 
 
 def clean_llm_response(text: str) -> str:
@@ -130,7 +130,7 @@ async def chat_with_ai_tutor(
 
     context_sections.append(
         "### Platform Rules & Solution Style\n"
-        "- Platform Judge Type: Function-based judge (LeetCode style).\n"
+        "- Platform Judge Type: Standard input/output scripts using input() and print().\n"
         "- Authoritative Template: Starter Code Template.\n"
         "- Preferred Solution Style: Easiest interview-accepted solution first (prefer two pointers / hash maps / simple loops over recursion).\n"
         "- Avoid: Complex recursive or advanced variants unless required or requested.\n"
