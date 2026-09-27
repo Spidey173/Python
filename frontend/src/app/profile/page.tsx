@@ -291,6 +291,53 @@ export default function ProgressPage() {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] py-16 px-4 flex items-center justify-center">
+        <div className="mx-auto max-w-md w-full text-center space-y-5 rounded-2xl border border-[#30363D] bg-[#161B22] p-8 shadow-xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 shadow-md">
+            <User className="h-8 w-8" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-white tracking-tight">Developer Profile</h1>
+            <p className="text-sm text-[#8B949E] leading-relaxed">
+              Sign in to view your learning progress, test suite pass rates, topic mastery, and submission history.
+            </p>
+          </div>
+          <div className="pt-2 flex flex-col gap-3">
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full font-semibold shadow-lg shadow-[#238636]/20 cursor-pointer"
+              onClick={() => {
+                setAuthTab('signin');
+                setAuthModalOpen(true);
+              }}
+            >
+              Sign In
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              className="w-full font-semibold cursor-pointer"
+              onClick={() => {
+                setAuthTab('signup');
+                setAuthModalOpen(true);
+              }}
+            >
+              Create Account
+            </Button>
+          </div>
+        </div>
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          initialTab={authTab}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] py-6 px-4 sm:px-6 lg:px-8 overflow-y-auto">
       <div className="w-full space-y-6">
@@ -305,17 +352,11 @@ export default function ProgressPage() {
               <div>
                 <div className="flex items-center gap-2.5">
                   <h1 className="text-2xl sm:text-3xl font-bold text-[#E6EDF3] tracking-tight">
-                    {user ? user.username : 'Developer Profile'}
+                    {user.username}
                   </h1>
-                  {!user ? (
-                    <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#8B949E]/15 text-[#8B949E] border border-[#8B949E]/40 font-semibold">
-                      Visitor (Not Signed In)
-                    </span>
-                  ) : (
-                    <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#238636]/15 text-[#3FB950] border border-[#238636]/40 font-semibold">
-                      Verified Member
-                    </span>
-                  )}
+                  <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-full bg-[#238636]/15 text-[#3FB950] border border-[#238636]/40 font-semibold">
+                    Verified Member
+                  </span>
                 </div>
                 <p className="text-sm text-[#8B949E] mt-1">
                   Full analytics breakdown: daily solved problem velocity, difficulty distribution, and curriculum mastery.
@@ -324,19 +365,6 @@ export default function ProgressPage() {
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              {!user && (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    setAuthTab('signin');
-                    setAuthModalOpen(true);
-                  }}
-                  className="shadow-md shadow-[#238636]/20 font-semibold"
-                >
-                  <span>Sign In / Register</span>
-                </Button>
-              )}
               <Link href="/quest">
                 <Button variant="secondary" size="md">
                   <span>Open Curriculum</span>

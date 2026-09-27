@@ -13,6 +13,7 @@ import {
 } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
 import { CommandPalette } from '@/components/ui/CommandPalette';
+import { AuthModal } from '@/components/ui/AuthModal';
 import { useAuth } from '@/lib/auth-context';
 import { soundFX } from '@/lib/audio';
 import { SolutionVault } from '@/components/mentor/SolutionVault';
@@ -45,7 +46,7 @@ interface TerminalHistoryEntry {
 
 export default function WorkspacePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { user, refreshUser } = useAuth();
+  const { user, loading, refreshUser } = useAuth();
   const resolvedParams = use(params);
   const problemId = parseInt(resolvedParams.id, 10) || 1;
 
@@ -65,6 +66,14 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [activeConsoleTab, setActiveConsoleTab] = useState<'terminal' | 'tests'>('terminal');
   const [selectedCaseIndex, setSelectedCaseIndex] = useState(0);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  // Auto-prompt login if visitor opens problem workspace directly
+  useEffect(() => {
+    if (!loading && !user) {
+      setAuthModalOpen(true);
+    }
+  }, [loading, user]);
 
   // Mobile Workspace States
   const [mobileTab, setMobileTab] = useState<'spec' | 'code' | 'interview'>('code');
@@ -167,12 +176,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   useEffect(() => {
     async function loadWorkspace() {
       try {
-        const [prob, chapters, solved, savedDraft, layoutSettings] = await Promise.all([
+        const [prob, chapters, solved, savedDraft, layoutSettings, unlockedIds] = await Promise.all([
           api.getChallenge(problemId),
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds(),
           persistence.loadDraft(problemId),
           persistence.loadLayoutSettings(),
+          persistence.getUnlockedSolutionIds(),
         ]);
 
         setProblem(prob);
@@ -212,8 +222,9 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         setConsoleCollapsed(layoutSettings.consoleCollapsed);
         await persistence.setLastActiveProblemId(problemId);
 
-        // Solution is strictly locked until the user submits code and passes all test suites in this session
-        setIsSolutionUnlocked(false);
+        // Solution is unlocked if the problem was solved or previously unlocked
+        const isSolutionUnlockedLocally = (unlockedIds || []).includes(problemId);
+        setIsSolutionUnlocked(Boolean(isAlreadySolved || isSolutionUnlockedLocally));
       } catch (err) {
         console.error('Failed to load problem workspace:', err);
       }
@@ -407,6 +418,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   };
 
   const handleRunCode = async (overrideStdin?: string) => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
     if (!problem || isRunning || isSubmitting) return;
 
     if (overrideStdin !== undefined) {
@@ -436,6 +451,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   };
 
   const handleRunTestCases = async () => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
     if (!problem || isRunning || isSubmitting) return;
 
     try {
@@ -738,6 +757,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
   // 7. Submit Code Pipeline with Mission Complete Celebration
   const handleSubmitCode = async () => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
     if (!problem || isRunning || isSubmitting) return;
 
     // Freeze mission timer immediately upon clicking Submit
@@ -776,6 +799,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         const canonicalNum = getCanonicalProblemId(problem, allProblems);
         setSolvedIds((prev) => Array.from(new Set([...prev, canonicalNum, problem.id])));
         await persistence.markSolved(canonicalNum);
+        await persistence.markSolutionUnlocked(canonicalNum);
+        await persistence.markSolutionUnlocked(problemId);
         if (problem.id && problem.id !== canonicalNum) {
           await persistence.markSolved(problem.id);
         }
@@ -828,18 +853,18 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // Keyboard Shortcuts
   useEffect(() => {
     const unregister = registerGlobalShortcuts({
-      onRun: () => handleRunCode(),
+      onRun: () => handleRunTestCases(),
       onSubmit: handleSubmitCode,
       onToggleConsole: () => setConsoleCollapsed((p) => !p),
       onOpenCommandPalette: () => setCommandPaletteOpen(true),
     });
     return unregister;
-  }, [handleRunCode, handleSubmitCode]);
+  }, [handleRunTestCases, handleSubmitCode]);
 
   const isCurrentProblemSolved = isProblemSolved(problem || problemId, solvedIds, allProblems) || Boolean(problem?.passed);
 
   return (
-    <div className="h-[calc(100dvh-48px)] max-h-[calc(100dvh-48px)] md:h-[calc(100vh-48px)] md:max-h-[calc(100vh-48px)] flex flex-col bg-[#070A0F] text-[#E6EDF3] overflow-hidden select-none">
+    <div className="h-[calc(100dvh-56px)] max-h-[calc(100dvh-56px)] md:h-[calc(100vh-56px)] md:max-h-[calc(100vh-56px)] flex flex-col bg-[#070A0F] text-[#E6EDF3] overflow-hidden select-none">
 
       {/* 1. Futuristic Mission Sub-Header (Compact Responsive Header) */}
       <header className="h-12 md:h-13 border-b border-[#21262D] bg-[#0E131C]/90 backdrop-blur-md px-3 md:px-4 flex items-center justify-between gap-2 md:gap-3 shrink-0 z-20">
@@ -961,10 +986,10 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           </button>
 
           <button
-            onClick={() => handleRunCode()}
+            onClick={() => handleRunTestCases()}
             disabled={isRunning || isSubmitting}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#58A6FF] text-sm font-semibold text-[#E6EDF3] transition-all shadow-md disabled:opacity-50 cursor-pointer"
-            title="Run code in Terminal (Ctrl+Enter)"
+            title="Run code against test cases (Ctrl+Enter)"
           >
             {isRunning ? (
               <RefreshCw className="h-4 w-4 animate-spin text-[#58A6FF]" />
@@ -1173,7 +1198,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             {activeTab === 'interview' && problem && (
               <InterviewPanel
                 problem={problem}
-                isSolved={isSolutionUnlocked}
+                isSolved={Boolean(isCurrentProblemSolved || isSolutionUnlocked)}
                 onClose={() => setActiveTab('spec')}
               />
             )}
@@ -1817,7 +1842,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             <div className="flex-1 overflow-y-auto">
               <InterviewPanel
                 problem={problem}
-                isSolved={isSolutionUnlocked}
+                isSolved={Boolean(isCurrentProblemSolved || isSolutionUnlocked)}
                 onClose={() => setMobileTab('code')}
               />
             </div>
@@ -1990,7 +2015,6 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         <MissionCompleteModal
           problemTitle={problem.title}
           problemId={problem.id}
-          xpReward={problem.xp_reward || 50}
           runtimeMs={lastExecutionRuntime}
           onViewSolution={() => {
             setShowMissionCompleteModal(false);
@@ -1999,7 +2023,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           onNextChallenge={() => {
             setShowMissionCompleteModal(false);
             const nextId = problemId + 1;
-            router.push(`/quest/${nextId}`);
+            if (nextId <= 70) {
+              router.push(`/quest/${nextId}`);
+            } else {
+              router.push('/quest');
+            }
           }}
           onClose={() => setShowMissionCompleteModal(false)}
         />
@@ -2007,6 +2035,17 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
       {/* Command Palette */}
       <CommandPalette isOpen={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
+
+      {/* Global Auth Gate Modal for Protected Workspace */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => {
+          setAuthModalOpen(false);
+          if (!user) {
+            router.push('/quest');
+          }
+        }}
+      />
     </div>
   );
 }

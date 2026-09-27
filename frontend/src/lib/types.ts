@@ -3,10 +3,6 @@ export interface User {
   username: string;
   email: string;
   role: 'user' | 'admin';
-  xp: number;
-  coins: number;
-  level: number;
-  lives: number;
   streak: number;
   avatar: string;
   theme: string;
@@ -26,13 +22,8 @@ export interface ChallengeSummary {
   chapter_title: string;
   level_number: number;
   title: string;
-  xp_reward: number;
-  coin_reward: number;
-  is_boss: boolean;
-  boss_name?: string;
   difficulty: string;
   passed: boolean;
-  stars: number;
   locked: boolean;
 }
 
@@ -41,7 +32,6 @@ export interface ChapterGroup {
   chapter_title: string;
   levels: ChallengeSummary[];
   completion_percentage: number;
-  total_xp: number;
 }
 
 export interface ChallengeDetail {
@@ -58,14 +48,8 @@ export interface ChallengeDetail {
   visible_test_cases: TestCase[];
   total_test_cases: number;
   explanation?: string;
-  xp_reward: number;
-  coin_reward: number;
-  is_boss: boolean;
-  boss_name?: string;
-  boss_hp?: number;
   difficulty: string;
   passed: boolean;
-  stars: number;
   saved_code?: string;
 }
 
@@ -94,18 +78,10 @@ export interface CodeRunResponse {
 export interface CodeSubmitResponse {
   success: boolean;
   passed_all: boolean;
-  stars_earned?: number;
-  xp_earned?: number;
-  coins_earned?: number;
-  combo_bonus?: number;
-  speed_bonus?: number;
-  lives_remaining?: number;
-  level_up?: boolean;
-  new_level?: number;
+  execution_time_ms?: number;
   test_results: TestCaseResult[];
   next_challenge_id?: number;
   message?: string;
-  boss_defeated?: boolean;
 }
 
 export interface ExplainResponse {
@@ -124,8 +100,6 @@ export interface ChapterMastery {
   chapter_title: string;
   total_levels: number;
   completed_levels: number;
-  stars_earned: number;
-  total_stars: number;
   percentage: number;
 }
 
@@ -133,8 +107,6 @@ export interface ProfileResponse {
   user: User;
   total_completed: number;
   total_challenges: number;
-  total_stars: number;
-  max_stars: number;
   accuracy_percentage: number;
   chapter_mastery: ChapterMastery[];
   weak_topics: string[];
@@ -157,4 +129,3 @@ export interface SubmissionLogEntry {
   timestamp: number;
   code: string;
 }
-

@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
         destination: `${backendUrl}/api/execution/:path*`,
       },
       {
-        source: '/api/gamification/:path*',
-        destination: `${backendUrl}/api/gamification/:path*`,
+        source: '/api/ai/:path*',
+        destination: `${backendUrl}/api/ai/:path*`,
       },
       {
         source: '/api/profile/:path*',

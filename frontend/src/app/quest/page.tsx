@@ -228,6 +228,22 @@ function CurriculumExplorerContent() {
         </div>
       </div>
 
+      {/* Auth Gate Notification for Unauthenticated Visitors */}
+      {!user && (
+        <div className="mx-4 sm:mx-6 lg:mx-8 my-2.5 px-4 py-2.5 rounded-xl border border-[#388BFD]/30 bg-[#388BFD]/10 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-[#E6EDF3] shrink-0">
+          <div className="flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-[#58A6FF] animate-pulse" />
+            <span>Sign in or create an account to run code against test suites and track your curriculum progress.</span>
+          </div>
+          <button
+            onClick={() => setAuthModalOpen(true)}
+            className="px-3 py-1 rounded-lg bg-[#238636] hover:bg-[#2EA043] font-semibold text-white transition-colors cursor-pointer text-xs"
+          >
+            Sign In / Register
+          </button>
+        </div>
+      )}
+
       {/* Main Two-Column Layout */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
         {/* Left Sidebar (288px): Modules list for active track */}

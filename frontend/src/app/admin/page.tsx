@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
-import { sounds } from '@/lib/audio';
+import { soundFX } from '@/lib/audio';
 import { User, ChapterGroup } from '@/lib/types';
 import { Shield } from 'lucide-react';
 
@@ -43,10 +43,10 @@ export default function AdminDashboardPage() {
   }, []);
 
   const handleAdjustUser = async (userId: number, updates: Partial<User>) => {
-    sounds.playClick();
+    soundFX.playClick();
     try {
       await api.updateAdminUser(userId, updates);
-      sounds.playSuccess();
+      soundFX.playSuccessFanfare();
       loadData();
     } catch (err) {
       alert('Failed to update user: ' + err);
@@ -54,27 +54,27 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-white py-10 px-4 sm:px-6 lg:px-8 cyber-grid-bg">
+    <div className="min-h-screen bg-[#080808] text-white py-10 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-6">
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold text-violet-400 font-mono uppercase mb-1">
-              <Shield className="h-4 w-4" /> Cyber Control Center
+              <Shield className="h-4 w-4" /> Platform Control Center
             </div>
-            <h1 className="text-3xl font-black text-white">Mainframe Administration</h1>
+            <h1 className="text-3xl font-black text-white">Platform Administration</h1>
             <p className="text-xs text-zinc-400">
-              Manage curriculum levels, live telemetry metrics, and user credentials
+              Manage curriculum challenges, live telemetry metrics, and user accounts
             </p>
           </div>
 
           <div className="flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 p-1 text-xs">
             <button
               onClick={() => {
-                sounds.playClick();
+                soundFX.playClick();
                 setActiveTab('analytics');
               }}
-              className={`rounded-lg px-3.5 py-1.5 font-bold transition ${
+              className={`rounded-lg px-3.5 py-1.5 font-bold transition cursor-pointer ${
                 activeTab === 'analytics' ? 'bg-violet-600 text-white' : 'text-zinc-400'
               }`}
             >
@@ -82,115 +82,98 @@ export default function AdminDashboardPage() {
             </button>
             <button
               onClick={() => {
-                sounds.playClick();
+                soundFX.playClick();
                 setActiveTab('challenges');
               }}
-              className={`rounded-lg px-3.5 py-1.5 font-bold transition ${
+              className={`rounded-lg px-3.5 py-1.5 font-bold transition cursor-pointer ${
                 activeTab === 'challenges' ? 'bg-violet-600 text-white' : 'text-zinc-400'
               }`}
             >
-              Challenges (50)
+              Challenges ({metrics?.total_challenges ?? 70})
             </button>
             <button
               onClick={() => {
-                sounds.playClick();
+                soundFX.playClick();
                 setActiveTab('users');
               }}
-              className={`rounded-lg px-3.5 py-1.5 font-bold transition ${
+              className={`rounded-lg px-3.5 py-1.5 font-bold transition cursor-pointer ${
                 activeTab === 'users' ? 'bg-violet-600 text-white' : 'text-zinc-400'
               }`}
             >
-              Users ({usersList.length})
+              Users
             </button>
           </div>
         </div>
 
-        {/* TAB 1: ANALYTICS METRICS */}
-        {activeTab === 'analytics' && (
+        {/* TAB 1: ANALYTICS */}
+        {activeTab === 'analytics' && metrics && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="rounded-2xl border border-violet-800/40 bg-zinc-900/60 p-5 backdrop-blur-xl">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Total Learners</span>
-                <p className="mt-2 font-mono text-3xl font-black text-white">
-                  {metrics?.total_users ?? usersList.length}
-                </p>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 backdrop-blur-xl">
+                <span className="text-[10px] font-mono uppercase text-zinc-400">Total Developers</span>
+                <p className="text-2xl font-black text-white mt-1">{metrics.total_users}</p>
               </div>
-
-              <div className="rounded-2xl border border-cyan-800/40 bg-zinc-900/60 p-5 backdrop-blur-xl">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Curriculum Levels</span>
-                <p className="mt-2 font-mono text-3xl font-black text-cyan-400">
-                  {metrics?.total_challenges ?? 50}
-                </p>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 backdrop-blur-xl">
+                <span className="text-[10px] font-mono uppercase text-zinc-400">Total Challenges</span>
+                <p className="text-2xl font-black text-white mt-1">{metrics.total_challenges}</p>
               </div>
-
-              <div className="rounded-2xl border border-emerald-800/40 bg-zinc-900/60 p-5 backdrop-blur-xl">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Total Runs</span>
-                <p className="mt-2 font-mono text-3xl font-black text-emerald-400">
-                  {metrics?.total_submissions ?? 142}
-                </p>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 backdrop-blur-xl">
+                <span className="text-[10px] font-mono uppercase text-zinc-400">Code Submissions</span>
+                <p className="text-2xl font-black text-white mt-1">{metrics.total_submissions}</p>
               </div>
-
-              <div className="rounded-2xl border border-amber-800/40 bg-zinc-900/60 p-5 backdrop-blur-xl">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Pass Rate</span>
-                <p className="mt-2 font-mono text-3xl font-black text-amber-400">
-                  {metrics?.overall_pass_rate ?? 78.4}%
-                </p>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 backdrop-blur-xl">
+                <span className="text-[10px] font-mono uppercase text-zinc-400">Overall Pass Rate</span>
+                <p className="text-2xl font-black text-emerald-400 mt-1">{metrics.overall_pass_rate}%</p>
               </div>
             </div>
 
-            {/* Popular Challenges Table */}
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 backdrop-blur-xl">
-              <h3 className="text-sm font-bold text-white mb-4">Most Active Challenges</h3>
-              <div className="divide-y divide-zinc-800/60 font-mono text-xs">
-                {metrics?.popular_challenges?.map((pc, idx) => (
-                  <div key={idx} className="flex items-center justify-between py-3">
-                    <span className="text-zinc-300">Level {pc.level}: {pc.title}</span>
-                    <span className="text-cyan-400 font-bold">{pc.runs} Runs</span>
+            {/* Popular Challenges */}
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 backdrop-blur-xl space-y-4">
+              <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                High-Frequency Problems Tested
+              </h2>
+              <div className="space-y-2">
+                {metrics.popular_challenges.map((c, i) => (
+                  <div key={i} className="flex items-center justify-between text-xs py-2 border-b border-zinc-800/50">
+                    <span className="text-zinc-300">
+                      <span className="font-mono text-violet-400 mr-2">#{c.level}</span>
+                      {c.title}
+                    </span>
+                    <span className="font-mono text-zinc-400">{c.runs} submissions</span>
                   </div>
                 ))}
-                {(!metrics?.popular_challenges || metrics.popular_challenges.length === 0) && (
-                  <p className="text-zinc-500 py-2">Execution data logging active.</p>
-                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 2: CHALLENGES CRUD */}
+        {/* TAB 2: CHALLENGES */}
         {activeTab === 'challenges' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-white">50 Python Challenges Curriculum</h2>
+              <h2 className="text-base font-bold text-white">70 Python Challenges Curriculum</h2>
             </div>
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 overflow-hidden backdrop-blur-xl">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-400 uppercase tracking-wider text-[10px]">
-                    <th className="px-4 py-3">LVL</th>
-                    <th className="px-4 py-3">Sector</th>
+                    <th className="px-4 py-3">#</th>
+                    <th className="px-4 py-3">Module</th>
                     <th className="px-4 py-3">Title</th>
                     <th className="px-4 py-3">Difficulty</th>
-                    <th className="px-4 py-3">Type</th>
-                    <th className="px-4 py-3">Rewards</th>
+                    <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-800/60 font-mono">
                   {chapters.flatMap((c) => c.levels).map((lvl) => (
                     <tr key={lvl.id} className="hover:bg-violet-950/10 transition">
                       <td className="px-4 py-3 font-bold text-cyan-400">#{lvl.level_number}</td>
-                      <td className="px-4 py-3 text-zinc-400">Ch.{lvl.chapter_id}</td>
+                      <td className="px-4 py-3 text-zinc-400">Module {lvl.chapter_id}</td>
                       <td className="px-4 py-3 font-sans font-bold text-white">{lvl.title}</td>
                       <td className="px-4 py-3 text-zinc-400">{lvl.difficulty}</td>
-                      <td className="px-4 py-3">
-                        {lvl.is_boss ? (
-                          <span className="text-rose-400 font-bold">⚔️ BOSS</span>
-                        ) : (
-                          <span className="text-zinc-500">Standard</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-amber-400">
-                        +{lvl.xp_reward}XP / +{lvl.coin_reward}C
+                      <td className="px-4 py-3 text-emerald-400 font-sans">
+                        {lvl.passed ? '✓ Solved' : 'Available'}
                       </td>
                     </tr>
                   ))}
@@ -209,10 +192,8 @@ export default function AdminDashboardPage() {
                   <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-400 uppercase tracking-wider text-[10px]">
                     <th className="px-4 py-3">User</th>
                     <th className="px-4 py-3">Role</th>
-                    <th className="px-4 py-3">Level</th>
-                    <th className="px-4 py-3">XP</th>
-                    <th className="px-4 py-3">Coins</th>
-                    <th className="px-4 py-3">Hearts</th>
+                    <th className="px-4 py-3">Streak</th>
+                    <th className="px-4 py-3">Joined</th>
                     <th className="px-4 py-3 text-right">Quick Actions</th>
                   </tr>
                 </thead>
@@ -234,33 +215,27 @@ export default function AdminDashboardPage() {
                           {u.role}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-cyan-400">LVL {u.level}</td>
-                      <td className="px-4 py-3 text-violet-300">{u.xp}</td>
-                      <td className="px-4 py-3 text-amber-400">{u.coins}</td>
-                      <td className="px-4 py-3 text-rose-400">{u.lives}/5</td>
+                      <td className="px-4 py-3 text-amber-400">{u.streak}d active</td>
+                      <td className="px-4 py-3 text-zinc-400">{u.created_at ? new Date(u.created_at).toLocaleDateString() : '-'}</td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1.5 font-sans">
-                          <button
-                            onClick={() => handleAdjustUser(u.id, { coins: u.coins + 100 })}
-                            className="rounded bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300 hover:bg-amber-500/40"
-                            title="Add 100 Coins"
-                          >
-                            +100C
-                          </button>
-                          <button
-                            onClick={() => handleAdjustUser(u.id, { xp: u.xp + 250 })}
-                            className="rounded bg-violet-500/20 border border-violet-500/40 px-2 py-0.5 text-[10px] font-bold text-violet-300 hover:bg-violet-500/40"
-                            title="Add 250 XP"
-                          >
-                            +250XP
-                          </button>
-                          <button
-                            onClick={() => handleAdjustUser(u.id, { lives: 5 })}
-                            className="rounded bg-rose-500/20 border border-rose-500/40 px-2 py-0.5 text-[10px] font-bold text-rose-300 hover:bg-rose-500/40"
-                            title="Refill 5 Hearts"
-                          >
-                            Max Hearts
-                          </button>
+                          {u.role === 'user' ? (
+                            <button
+                              onClick={() => handleAdjustUser(u.id, { role: 'admin' })}
+                              className="rounded bg-violet-500/20 border border-violet-500/40 px-2.5 py-1 text-[10px] font-bold text-violet-300 hover:bg-violet-500/40 cursor-pointer"
+                              title="Promote to Administrator"
+                            >
+                              Make Admin
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleAdjustUser(u.id, { role: 'user' })}
+                              className="rounded bg-zinc-800 border border-zinc-700 px-2.5 py-1 text-[10px] font-bold text-zinc-300 hover:bg-zinc-700 cursor-pointer"
+                              title="Demote to Standard Developer"
+                            >
+                              Make User
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

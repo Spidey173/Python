@@ -95,20 +95,20 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
   // Strictly lock Interview Q&A if challenge has not been solved/submitted
   if (!isSolved) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200 select-none font-sans">
-        <div className="w-full max-w-lg flex flex-col items-center justify-center p-8 bg-[#0D1117] border border-[#30363D] rounded-2xl shadow-2xl text-center space-y-6 relative overflow-hidden">
-          <div className="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-purple-500/10 via-amber-500/10 to-blue-500/10 blur-3xl pointer-events-none" />
+      <div className="relative h-full flex flex-col items-center justify-center p-6 text-center select-none overflow-hidden">
+        <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-purple-500/10 via-amber-500/10 to-blue-500/10 blur-3xl pointer-events-none" />
 
+        <div className="relative z-10 max-w-md w-full space-y-5">
           {/* Holographic Lock */}
-          <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-b from-[#1F242C] to-[#161B22] border border-[#30363D] flex items-center justify-center shadow-xl">
-            <Lock className="w-8 h-8 text-[#D29922]" />
+          <div className="relative mx-auto w-14 h-14 rounded-xl bg-gradient-to-b from-[#1F242C] to-[#161B22] border border-[#30363D] flex items-center justify-center shadow-xl">
+            <Lock className="w-7 h-7 text-[#D29922]" />
           </div>
 
-          <div className="relative z-10 space-y-2">
+          <div className="space-y-1.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#D29922]/15 text-[#D29922] text-[11px] font-mono font-semibold border border-[#D29922]/30">
               <Lock className="w-3 h-3" /> INTERVIEW PREP HUB LOCKED
             </span>
-            <h3 className="text-xl font-bold text-[#F0F6FC] tracking-tight">
+            <h3 className="text-lg sm:text-xl font-bold text-[#F0F6FC] tracking-tight">
               Submit Your Code to Unlock
             </h3>
             <p className="text-xs text-[#8B949E] leading-relaxed max-w-sm mx-auto">
@@ -117,18 +117,18 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
           </div>
 
           {/* Unlock Requirements */}
-          <div className="relative z-10 w-full rounded-xl border border-[#21262D] bg-[#161B22]/80 backdrop-blur-md p-4 text-left space-y-2.5">
+          <div className="rounded-xl border border-[#21262D] bg-[#111622]/80 backdrop-blur-md p-3.5 text-left space-y-2">
             <span className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider font-semibold block">
               How to Unlock:
             </span>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center gap-2.5 text-[#E6EDF3]">
+            <div className="space-y-1.5 text-xs">
+              <div className="flex items-center gap-2 text-[#E6EDF3]">
                 <div className="w-4 h-4 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center text-[10px] font-bold">
                   1
                 </div>
                 <span>Implement your solution in <strong>solution.py</strong></span>
               </div>
-              <div className="flex items-center gap-2.5 text-[#E6EDF3]">
+              <div className="flex items-center gap-2 text-[#E6EDF3]">
                 <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-[10px] font-bold">
                   2
                 </div>
@@ -137,7 +137,7 @@ export const InterviewPanel: React.FC<InterviewPanelProps> = ({ problem, isSolve
             </div>
           </div>
 
-          <div className="relative z-10 w-full pt-1">
+          <div className="pt-1">
             <button
               onClick={handleClose}
               className="w-full py-2.5 px-4 rounded-xl bg-[#21262D] hover:bg-[#30363D] border border-[#30363D] text-xs font-bold text-[#F0F6FC] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"

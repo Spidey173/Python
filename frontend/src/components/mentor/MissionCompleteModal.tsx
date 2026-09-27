@@ -4,14 +4,13 @@ import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import {
   Trophy, Sparkles, CheckCircle2, ArrowRight,
-  Unlock, Award, Zap
+  Unlock, Zap, CheckSquare
 } from 'lucide-react';
 import { soundFX } from '@/lib/audio';
 
 interface MissionCompleteModalProps {
   problemTitle: string;
   problemId: number;
-  xpReward: number;
   runtimeMs: number;
   onViewSolution: () => void;
   onNextChallenge: () => void;
@@ -21,7 +20,6 @@ interface MissionCompleteModalProps {
 export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
   problemTitle,
   problemId,
-  xpReward,
   runtimeMs,
   onViewSolution,
   onNextChallenge,
@@ -61,11 +59,11 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
 
   const unlockedItems = [
     { id: 1, title: 'Official Optimal Solution', desc: 'Production-ready Python 3.12 reference' },
-    { id: 2, title: 'Mentor Architectural Breakdown', desc: 'Conceptual deep-dive into why it works' },
-    { id: 3, title: 'Ranked Interview Alternatives', desc: '4 distinct algorithmic approaches compared' },
+    { id: 2, title: 'Interview Architectural Breakdown', desc: 'Conceptual deep-dive into why it works' },
+    { id: 3, title: 'Ranked Alternative Implementations', desc: 'Multiple distinct algorithmic approaches compared' },
     { id: 4, title: 'Big-O Complexity Matrix', desc: 'Time and space asymptotes evaluated' },
     { id: 5, title: 'Common Pitfalls & Edge Cases', desc: 'What top tech interviewers probe for' },
-    { id: 6, title: 'Curriculum Progression Unlocked', desc: 'Next algorithmic milestone unlocked' },
+    { id: 6, title: 'Interview Hub Unlocked', desc: 'Real mock technical interview simulation available' },
   ];
 
   return (
@@ -82,20 +80,20 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
           </div>
         </div>
 
-        {/* Mission Complete Headers */}
+        {/* Challenge Complete Headers */}
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" /> MISSION COMPLETE
+            <Sparkles className="w-3.5 h-3.5" /> CHALLENGE COMPLETED
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            You conquered #{problemId}{problemTitle ? `: ${problemTitle}` : ''}
+            #{problemId}{problemTitle ? `: ${problemTitle}` : ''}
           </h2>
           <p className="text-xs sm:text-sm text-emerald-300/90 font-medium">
-            You solved it without looking at the answer.
+            All test cases passed cleanly! Full architectural review and interview guide unlocked.
           </p>
         </div>
 
-        {/* Live Performance Cockpit */}
+        {/* Performance Metrics Cockpit */}
         <div className="grid grid-cols-3 gap-2.5 bg-[#161B22]/80 border border-[#30363D] rounded-2xl p-3 text-center">
           <div className="space-y-0.5">
             <span className="text-[10px] font-mono uppercase text-[#8B949E]">Runtime</span>
@@ -105,17 +103,17 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
             </div>
           </div>
           <div className="space-y-0.5 border-x border-[#30363D]">
-            <span className="text-[10px] font-mono uppercase text-[#8B949E]">Reward</span>
-            <div className="text-sm sm:text-base font-mono font-bold text-[#D29922] flex items-center justify-center gap-1">
-              <Award className="w-3.5 h-3.5" />
-              <span>+{xpReward} XP</span>
+            <span className="text-[10px] font-mono uppercase text-[#8B949E]">Test Suites</span>
+            <div className="text-sm sm:text-base font-mono font-bold text-[#3FB950] flex items-center justify-center gap-1">
+              <CheckSquare className="w-3.5 h-3.5 text-[#3FB950]" />
+              <span>100% Passed</span>
             </div>
           </div>
           <div className="space-y-0.5">
-            <span className="text-[10px] font-mono uppercase text-[#8B949E]">Status</span>
-            <div className="text-sm sm:text-base font-mono font-bold text-[#3FB950] flex items-center justify-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Passed</span>
+            <span className="text-[10px] font-mono uppercase text-[#8B949E]">Interview Hub</span>
+            <div className="text-sm sm:text-base font-mono font-bold text-[#A371F7] flex items-center justify-center gap-1">
+              <Unlock className="w-3.5 h-3.5" />
+              <span>Unlocked</span>
             </div>
           </div>
         </div>
@@ -123,7 +121,7 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
         {/* Staggered Unlock Cascade */}
         <div className="space-y-2 text-left bg-[#0D1117]/80 rounded-2xl border border-white/5 p-4 max-h-48 overflow-y-auto">
           <span className="text-[10px] font-mono uppercase tracking-wider text-[#8B949E] font-semibold block">
-            Vault Rewards Unlocked:
+            Vault Resources Unlocked:
           </span>
           <div className="space-y-1.5">
             {unlockedItems.map((item, idx) => {
@@ -157,7 +155,7 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
               onClose();
               onViewSolution();
             }}
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl border border-[#30363D] bg-[#21262D] hover:bg-[#30363D] text-xs font-semibold text-white transition-all flex items-center justify-center gap-2 shadow-md"
+            className="w-full sm:flex-1 py-3 px-4 rounded-xl border border-[#30363D] bg-[#21262D] hover:bg-[#30363D] text-xs font-semibold text-white transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
           >
             <Unlock className="w-4 h-4 text-emerald-400" />
             <span>Examine Solution Vault</span>
@@ -165,7 +163,7 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
 
           <button
             onClick={onNextChallenge}
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#238636] to-[#2EA043] hover:from-[#2EA043] hover:to-[#3FB950] text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/50"
+            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#238636] to-[#2EA043] hover:from-[#2EA043] hover:to-[#3FB950] text-xs font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/50 cursor-pointer"
           >
             <span>Next Challenge</span>
             <ArrowRight className="w-4 h-4" />
