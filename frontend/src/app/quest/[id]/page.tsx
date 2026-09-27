@@ -175,6 +175,11 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   // 3. Load Problem, Restore Draft & Initialize Mentor Greeting
   useEffect(() => {
     async function loadWorkspace() {
+      if (!user) {
+        setProblem(null);
+        setSolvedIds([]);
+        return;
+      }
       try {
         const [prob, chapters, solved, savedDraft, layoutSettings, unlockedIds] = await Promise.all([
           api.getChallenge(problemId),
@@ -211,10 +216,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           stopTimer();
         }
 
-        // Code restoration: load the problem's starter_code, or restore user's saved draft if present
+        // Code restoration: load the problem's starter_code, or restore user's saved draft if present, or backend saved_code
         let initialCode = prob.starter_code;
         if (savedDraft && savedDraft.trim() !== '' && savedDraft !== prob.starter_code) {
           initialCode = savedDraft;
+        } else if (prob.saved_code && prob.saved_code.trim() !== '') {
+          initialCode = prob.saved_code;
         }
         setCode(initialCode);
 
@@ -233,11 +240,12 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     loadWorkspace();
 
     const handleLogout = () => {
+      setProblem(null);
       setSolvedIds([]);
     };
     window.addEventListener('pyforge_auth_logout', handleLogout);
     return () => window.removeEventListener('pyforge_auth_logout', handleLogout);
-  }, [problemId, stopTimer]);
+  }, [user, problemId, stopTimer]);
 
   // Sync solved state when user status changes without re-initializing code editor
   useEffect(() => {
@@ -459,6 +467,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
 
     try {
       setIsRunning(true);
+      await persistence.saveDraft(problemId, code);
       setConsoleCollapsed(false);
       setActiveConsoleTab('tests');
 

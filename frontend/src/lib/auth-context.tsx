@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } catch {
           localStorage.removeItem('pq_token');
           localStorage.removeItem('pq_local_user');
+          persistence.clearUserData();
           setToken(null);
           setUser(null);
         }

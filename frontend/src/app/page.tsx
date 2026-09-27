@@ -100,9 +100,9 @@ export default function DashboardPage() {
       try {
         const [chaps, localSolved, lastId, localSubs, remoteSubs] = await Promise.all([
           api.getChapters().catch(() => [] as ChapterGroup[]),
-          persistence.getSolvedIds().catch(() => [] as number[]),
-          persistence.getLastActiveProblemId().catch(() => 1),
-          persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
+          user ? persistence.getSolvedIds().catch(() => [] as number[]) : Promise.resolve([] as number[]),
+          user ? persistence.getLastActiveProblemId().catch(() => 1) : Promise.resolve(1),
+          user ? persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
           user ? api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
         ]);
 
@@ -113,17 +113,17 @@ export default function DashboardPage() {
             // ignore
           }
           const flatLevels = chaps.flatMap((c) => c.levels || []);
-          const backendSolved = flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels));
-          const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
-          const mergedSolved = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
+          const backendSolved = user ? flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels)) : [];
+          const normalizedLocalSolved = user ? (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels)) : [];
+          const mergedSolved = user ? Array.from(new Set([...backendSolved, ...normalizedLocalSolved])) : [];
           setChapters(chaps);
           setSolvedIds(mergedSolved);
         } else {
           setChapters((prev) => {
             if (prev && prev.length > 0) {
               const flatLevels = prev.flatMap((c) => c.levels || []);
-              const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
-              setSolvedIds((prevSolved) => Array.from(new Set([...prevSolved, ...normalizedLocalSolved])));
+              const normalizedLocalSolved = user ? (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels)) : [];
+              setSolvedIds(user ? Array.from(new Set([...normalizedLocalSolved])) : []);
             }
             return prev;
           });
@@ -131,18 +131,20 @@ export default function DashboardPage() {
 
         // Merge local & remote submissions deduplicating by id
         const subsMap = new Map<string, SubmissionLogEntry>();
-        for (const s of [...(remoteSubs || []), ...(localSubs || [])]) {
-          const key = s.id || `${s.problemId}_${s.timestamp}`;
-          if (!subsMap.has(key)) {
-            subsMap.set(key, s);
+        if (user) {
+          for (const s of [...(remoteSubs || []), ...(localSubs || [])]) {
+            const key = s.id || `${s.problemId}_${s.timestamp}`;
+            if (!subsMap.has(key)) {
+              subsMap.set(key, s);
+            }
           }
         }
         const mergedSubs = Array.from(subsMap.values()).sort((a, b) => b.timestamp - a.timestamp);
-        if (mergedSubs.length > (localSubs || []).length) {
+        if (user && mergedSubs.length > (localSubs || []).length) {
           persistence.saveSubmissions(mergedSubs);
         }
 
-        setLastActiveId(lastId);
+        setLastActiveId(user ? lastId : 1);
         setSubmissions(mergedSubs);
       } catch (e) {
         console.error('Failed to load dashboard state:', e);
@@ -171,6 +173,7 @@ export default function DashboardPage() {
 
   // Set of canonical unique solved problem numbers (1..70)
   const canonicalSolvedSet = useMemo(() => {
+    if (!user) return new Set<number>();
     const set = new Set<number>();
     for (const rawId of solvedIds) {
       const canonical = getCanonicalProblemId(rawId, allProblems);
@@ -185,7 +188,7 @@ export default function DashboardPage() {
       }
     }
     return set;
-  }, [solvedIds, allProblems]);
+  }, [user, solvedIds, allProblems]);
 
   const solvedCount = canonicalSolvedSet.size;
   const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
@@ -218,12 +221,12 @@ export default function DashboardPage() {
   // Helper to check if a problem is already solved
   const isProblemSolved = useCallback(
     (p: { id: number; level_number?: number; passed?: boolean } | null | undefined) => {
-      if (!p) return false;
+      if (!user || !p) return false;
       if (p.passed) return true;
       const canonical = getCanonicalProblemId(p, allProblems);
       return canonicalSolvedSet.has(canonical) || canonicalSolvedSet.has(p.id);
     },
-    [canonicalSolvedSet, allProblems]
+    [user, canonicalSolvedSet, allProblems]
   );
 
   // Find active problem to resume:
@@ -241,6 +244,10 @@ export default function DashboardPage() {
         level_number: 1,
         passed: false,
       };
+    }
+
+    if (!user) {
+      return allProblems[0];
     }
 
     let activeId = lastActiveId;

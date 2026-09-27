@@ -26,6 +26,10 @@ export default function Navbar() {
 
   useEffect(() => {
     async function loadSolved() {
+      if (!user) {
+        setSolvedCount(0);
+        return;
+      }
       try {
         const [localSolved, chaps] = await Promise.all([
           persistence.getSolvedIds().catch(() => [] as number[]),

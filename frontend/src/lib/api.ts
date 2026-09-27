@@ -3,6 +3,7 @@ import {
   CodeSubmitResponse, ExplainResponse,
   ProfileResponse, User, SubmissionLogEntry
 } from './types';
+import { persistence } from './persistence';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
@@ -36,6 +37,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}, timeoutMs
         if (typeof window !== 'undefined') {
           localStorage.removeItem('pq_token');
           localStorage.removeItem('pq_local_user');
+          persistence.clearUserData();
           window.dispatchEvent(new Event('pyforge_auth_logout'));
         }
         throw new Error('Session expired. Please sign in again.');

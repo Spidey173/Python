@@ -52,7 +52,7 @@ function CurriculumExplorerContent() {
       try {
         const [chaps, localSolved] = await Promise.all([
           api.getChapters().catch(() => [] as ChapterGroup[]),
-          persistence.getSolvedIds().catch(() => [] as number[]),
+          user ? persistence.getSolvedIds().catch(() => [] as number[]) : Promise.resolve([] as number[]),
         ]);
         if (Array.isArray(chaps) && chaps.length > 0) {
           try {
@@ -61,9 +61,9 @@ function CurriculumExplorerContent() {
             // ignore
           }
           const flatLevels = chaps.flatMap((c) => c.levels || []);
-          const backendSolved = flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels));
-          const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
-          const merged = Array.from(new Set([...backendSolved, ...normalizedLocalSolved]));
+          const backendSolved = user ? flatLevels.filter((l) => l.passed).map((l) => getCanonicalProblemId(l, flatLevels)) : [];
+          const normalizedLocalSolved = user ? (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels)) : [];
+          const merged = user ? Array.from(new Set([...backendSolved, ...normalizedLocalSolved])) : [];
           setChapters(chaps);
           setSolvedIds(merged);
         } else {
@@ -71,8 +71,8 @@ function CurriculumExplorerContent() {
           setChapters((prev) => {
             if (prev && prev.length > 0) {
               const flatLevels = prev.flatMap((c) => c.levels || []);
-              const normalizedLocalSolved = (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels));
-              setSolvedIds((prevSolved) => Array.from(new Set([...prevSolved, ...normalizedLocalSolved])));
+              const normalizedLocalSolved = user ? (localSolved || []).map((id) => getCanonicalProblemId(id, flatLevels)) : [];
+              setSolvedIds(user ? Array.from(new Set([...normalizedLocalSolved])) : []);
             }
             return prev;
           });

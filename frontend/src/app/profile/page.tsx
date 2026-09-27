@@ -93,12 +93,18 @@ export default function ProgressPage() {
 
   useEffect(() => {
     async function loadData() {
+      if (!user) {
+        setChapters([]);
+        setSolvedIds([]);
+        setSubmissions([]);
+        return;
+      }
       try {
         const [chaps, localSolved, localSubs, remoteSubs] = await Promise.all([
           api.getChapters().catch(() => [] as ChapterGroup[]),
           persistence.getSolvedIds().catch(() => [] as number[]),
           persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
-          user ? api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]) : Promise.resolve([] as SubmissionLogEntry[]),
+          api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]),
         ]);
         const flatLevels = (chaps || []).flatMap((c) => c.levels || []);
         const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
