@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -5,7 +6,7 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models import Challenge, User
 from app.schemas import ExplainRequest, ExplainResponse, AITutorChatRequest, AITutorChatResponse
-from app.security import get_current_user
+from app.security import get_current_user_optional
 from app.ai.copilot_client import get_ai_explanation, chat_with_ai_tutor
 
 router = APIRouter(prefix="/ai", tags=["AI Copilot & Tutor"])
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/ai", tags=["AI Copilot & Tutor"])
 async def explain_code(
     req: ExplainRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     ch_title = ""
     if req.challenge_id:
@@ -48,7 +49,7 @@ async def explain_code(
 async def tutor_chat(
     req: AITutorChatRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     ch_info = None
     if req.challenge_id:

@@ -3,11 +3,20 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+    let backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://python-7pu9.vercel.app/api';
+    backendUrl = backendUrl.replace(/\/+$/, '');
+
+    const incomingAuth = req.headers.get('authorization') || '';
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (incomingAuth) {
+      headers['Authorization'] = incomingAuth;
+    }
 
     const res = await fetch(`${backendUrl}/ai/tutor`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(body),
     });
 

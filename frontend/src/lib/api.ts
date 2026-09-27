@@ -136,7 +136,10 @@ export const api = {
     try {
       const res = await fetch('/api/ai/tutor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader(),
+        },
         body: JSON.stringify({
           message,
           code,

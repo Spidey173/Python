@@ -32,11 +32,12 @@ async def test_unauthenticated_access_is_blocked():
         res5 = await ac.get("/api/profile/me")
         assert res5.status_code == 401
 
+        # AI tutor and explain endpoints are accessible to guests and users alike
         res6 = await ac.post("/api/ai/explain", json={"code": "print('hello')"})
-        assert res6.status_code == 401
+        assert res6.status_code == 200
 
         res7 = await ac.post("/api/ai/tutor", json={"message": "hello", "code": "x = 1"})
-        assert res7.status_code == 401
+        assert res7.status_code == 200
 
 
 @pytest.mark.asyncio

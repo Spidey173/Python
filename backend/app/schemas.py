@@ -130,7 +130,7 @@ class CodeSubmitResponse(BaseModel):
 
 # --- AI Schemas ---
 class ExplainRequest(BaseModel):
-    challenge_id: int
+    challenge_id: Optional[int] = None
     code: str
     user_question: Optional[str] = None
 
