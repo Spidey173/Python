@@ -45,10 +45,6 @@ async def register(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
         email=clean_email,
         hashed_password=hash_password(user_in.password),
         role="user",
-        xp=0,
-        coins=100,
-        level=1,
-        lives=5,
         streak=1
     )
     db.add(user)

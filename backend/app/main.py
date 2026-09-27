@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import engine, Base
-from app.routers import auth, challenges, execution, ai, gamification, profile, admin
+from app.routers import auth, challenges, execution, ai, profile, admin
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -29,7 +29,6 @@ app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(challenges.router, prefix=settings.API_V1_STR)
 app.include_router(execution.router, prefix=settings.API_V1_STR)
 app.include_router(ai.router, prefix=settings.API_V1_STR)
-app.include_router(gamification.router, prefix=settings.API_V1_STR)
 app.include_router(profile.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 

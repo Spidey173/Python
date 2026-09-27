@@ -97,11 +97,6 @@ async def create_challenge(
         hints_json=json.dumps(ch_in.hints),
         test_cases_json=json.dumps([t.model_dump() for t in ch_in.test_cases]),
         explanation=ch_in.explanation,
-        xp_reward=ch_in.xp_reward,
-        coin_reward=ch_in.coin_reward,
-        is_boss=ch_in.is_boss,
-        boss_name=ch_in.boss_name,
-        boss_hp=ch_in.boss_hp,
         difficulty=ch_in.difficulty
     )
     db.add(new_ch)
@@ -133,11 +128,6 @@ async def update_challenge(
     ch.hints_json = json.dumps(ch_in.hints)
     ch.test_cases_json = json.dumps([t.model_dump() for t in ch_in.test_cases])
     ch.explanation = ch_in.explanation
-    ch.xp_reward = ch_in.xp_reward
-    ch.coin_reward = ch_in.coin_reward
-    ch.is_boss = ch_in.is_boss
-    ch.boss_name = ch_in.boss_name
-    ch.boss_hp = ch_in.boss_hp
     ch.difficulty = ch_in.difficulty
 
     await db.commit()
