@@ -9,7 +9,7 @@ import { ChapterGroup } from '@/lib/types';
 import { DifficultyBadge } from '@/components/ui/Badge';
 import { AuthModal } from '@/components/ui/AuthModal';
 import {
-  CheckCircle2, Circle, ArrowRight, Zap
+  CheckCircle2, Circle, ArrowRight, Zap, Search, X
 } from 'lucide-react';
 
 function CurriculumExplorerContent() {
@@ -160,7 +160,7 @@ function CurriculumExplorerContent() {
   return (
     <div className="flex-1 bg-[#0D1117] text-[#E6EDF3] flex flex-col min-h-0 overflow-hidden">
       {/* Top Track Switcher & Filter Sub-bar */}
-      <div className="h-auto sm:h-14 border-b border-[#30363D] bg-[#161B22] px-4 sm:px-6 lg:px-8 py-2.5 sm:py-0 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 shrink-0">
+      <div className="h-auto border-b border-[#30363D] bg-[#161B22] px-3 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0">
         {/* Track Selector Pills (Basics vs Advanced vs All) */}
         <div className="flex items-center p-1 bg-[#0D1117] border border-[#30363D] rounded-lg shrink-0">
           <button
@@ -168,7 +168,7 @@ function CurriculumExplorerContent() {
               setActiveTrack('basics');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'basics'
+            className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'basics'
                 ? 'bg-[#238636] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
               }`}
@@ -181,7 +181,7 @@ function CurriculumExplorerContent() {
               setActiveTrack('advanced');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'advanced'
+            className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${activeTrack === 'advanced'
                 ? 'bg-[#1F6FEB] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
               }`}
@@ -194,7 +194,7 @@ function CurriculumExplorerContent() {
               setActiveTrack('all');
               setSelectedModule('all');
             }}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${activeTrack === 'all'
+            className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${activeTrack === 'all'
                 ? 'bg-[#21262D] text-white shadow-sm'
                 : 'text-[#8B949E] hover:text-[#E6EDF3]'
               }`}
@@ -203,12 +203,48 @@ function CurriculumExplorerContent() {
           </button>
         </div>
 
-        {/* Filter Dropdowns */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Search & Filter Controls */}
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap flex-1 sm:flex-initial justify-end min-w-0">
+          {/* Quick Search Input */}
+          <div className="relative flex-1 sm:w-48 md:w-56 min-w-[140px]">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#8B949E] pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search challenges..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-8.5 pl-8 pr-7 bg-[#0D1117] border border-[#30363D] rounded-md text-xs text-[#E6EDF3] placeholder:text-[#8B949E] focus:outline-none focus:border-[#1F6FEB] transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#8B949E] hover:text-white"
+                title="Clear search"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Module Selector Dropdown (Shown on mobile when sidebar is hidden) */}
+          <select
+            value={selectedModule}
+            onChange={(e) => setSelectedModule(e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10))}
+            className="md:hidden h-8.5 px-2 bg-[#0D1117] border border-[#30363D] rounded-md text-xs text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB] max-w-[110px] truncate"
+          >
+            <option value="all">All Modules</option>
+            {trackChapters.map((c) => (
+              <option key={c.chapter_id} value={c.chapter_id}>
+                Mod {c.chapter_id}: {c.chapter_title.replace(/^Module \d+:\s*/, '')}
+              </option>
+            ))}
+          </select>
+
+          {/* Difficulty Dropdown */}
           <select
             value={difficultyFilter}
             onChange={(e) => setDifficultyFilter(e.target.value as any)}
-            className="h-8.5 px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
+            className="h-8.5 px-2 sm:px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
           >
             <option value="all">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -216,10 +252,11 @@ function CurriculumExplorerContent() {
             <option value="hard">Hard</option>
           </select>
 
+          {/* Status Dropdown */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="h-8.5 px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs sm:text-sm text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
+            className="h-8.5 px-2 sm:px-2.5 bg-[#0D1117] border border-[#30363D] rounded-md text-xs text-[#E6EDF3] focus:outline-none focus:border-[#1F6FEB]"
           >
             <option value="all">All Statuses</option>
             <option value="solved">Solved</option>
@@ -246,8 +283,8 @@ function CurriculumExplorerContent() {
 
       {/* Main Two-Column Layout */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
-        {/* Left Sidebar (288px): Modules list for active track */}
-        <aside className="w-72 border-r border-[#30363D] bg-[#161B22] flex flex-col min-h-0 shrink-0 hidden md:flex">
+        {/* Left Sidebar (Responsive 240px / 288px): Modules list for active track */}
+        <aside className="w-60 lg:w-72 border-r border-[#30363D] bg-[#161B22] flex flex-col min-h-0 shrink-0 hidden md:flex">
           <div className="p-4 border-b border-[#30363D] flex items-center justify-between shrink-0">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#8B949E]">
               {activeTrack === 'basics' ? 'Basics Modules' : activeTrack === 'advanced' ? 'Advanced Modules' : 'All Modules'} ({trackChapters.length})
@@ -305,7 +342,7 @@ function CurriculumExplorerContent() {
         </aside>
 
         {/* Right Area: Dense Linear-style Data Table with Smooth Scroll */}
-        <main className="flex-1 min-h-0 overflow-y-auto bg-[#0D1117] p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 min-h-0 overflow-y-auto bg-[#0D1117] p-3 sm:p-5 lg:p-7">
           <div className="w-full space-y-4">
             {/* Table Header Summary */}
             <div className="flex items-center justify-between text-xs text-[#8B949E]">
@@ -326,11 +363,11 @@ function CurriculumExplorerContent() {
 
             {/* Dense Problem Table */}
             <div className="rounded-xl border border-[#30363D] bg-[#161B22] overflow-hidden">
-              <div className="grid grid-cols-12 px-5 py-3 border-b border-[#30363D] bg-[#161B22] text-xs font-semibold text-[#8B949E] uppercase tracking-wider">
+              <div className="grid grid-cols-12 px-3 sm:px-5 py-3 border-b border-[#30363D] bg-[#161B22] text-xs font-semibold text-[#8B949E] uppercase tracking-wider">
                 <div className="col-span-1">Status</div>
                 <div className="col-span-1">#</div>
-                <div className="col-span-5">Title</div>
-                <div className="col-span-3">Module</div>
+                <div className="col-span-8 lg:col-span-5">Title</div>
+                <div className="hidden lg:block lg:col-span-3">Module</div>
                 <div className="col-span-2 text-right">Difficulty</div>
               </div>
 
@@ -338,12 +375,12 @@ function CurriculumExplorerContent() {
                 {loading && filteredProblems.length === 0 ? (
                   // Sleek Shimmer Skeleton Loader for fast visual feedback
                   Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="grid grid-cols-12 px-5 py-4 items-center animate-pulse">
+                    <div key={i} className="grid grid-cols-12 px-3 sm:px-5 py-3.5 sm:py-4 items-center animate-pulse">
                       <div className="col-span-1"><div className="h-4 w-4 rounded-full bg-[#21262D]" /></div>
-                      <div className="col-span-1"><div className="h-3 w-6 rounded bg-[#21262D]" /></div>
-                      <div className="col-span-5"><div className="h-3.5 w-48 rounded bg-[#21262D]" /></div>
-                      <div className="col-span-3"><div className="h-3 w-32 rounded bg-[#21262D]" /></div>
-                      <div className="col-span-2 flex justify-end"><div className="h-5 w-14 rounded-full bg-[#21262D]" /></div>
+                      <div className="col-span-1"><div className="h-3 w-5 sm:w-6 rounded bg-[#21262D]" /></div>
+                      <div className="col-span-8 lg:col-span-5"><div className="h-3.5 w-36 sm:w-48 rounded bg-[#21262D]" /></div>
+                      <div className="hidden lg:block lg:col-span-3"><div className="h-3 w-32 rounded bg-[#21262D]" /></div>
+                      <div className="col-span-2 flex justify-end"><div className="h-5 w-12 sm:w-14 rounded-full bg-[#21262D]" /></div>
                     </div>
                   ))
                 ) : filteredProblems.length === 0 ? (
@@ -366,39 +403,46 @@ function CurriculumExplorerContent() {
                             router.push(`/quest/${displayNum}`);
                           }
                         }}
-                        className="grid grid-cols-12 px-5 py-3.5 items-center text-sm hover:bg-[#21262D]/60 cursor-pointer transition-colors duration-100 group"
+                        className="grid grid-cols-12 px-3 sm:px-5 py-3 sm:py-3.5 items-center text-sm hover:bg-[#21262D]/60 cursor-pointer transition-colors duration-100 group"
                       >
                         {/* Status */}
                         <div className="col-span-1 flex items-center">
                           {isSolved ? (
-                            <CheckCircle2 className="h-4.5 w-4.5 text-[#3FB950]" aria-label="Solved" />
+                            <CheckCircle2 className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-[#3FB950] shrink-0" aria-label="Solved" />
                           ) : (
-                            <Circle className="h-4 w-4 text-[#30363D]" aria-label="Unsolved" />
+                            <Circle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#30363D] shrink-0" aria-label="Unsolved" />
                           )}
                         </div>
 
                         {/* Number: Clean 01 - 70 ordering */}
-                        <div className="col-span-1 font-mono text-xs text-[#8B949E] font-medium">
+                        <div className="col-span-1 font-mono text-[11px] sm:text-xs text-[#8B949E] font-medium">
                           {String(displayNum).padStart(2, '0')}
                         </div>
 
-                        {/* Title */}
-                        <div className="col-span-5 font-semibold text-[#E6EDF3] group-hover:text-[#58A6FF] transition-colors truncate pr-3 flex items-center gap-2">
-                          <span className="truncate">{problem.title}</span>
-                          {isAdvanced && (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 shrink-0">
-                              Advanced
+                        {/* Title + Mobile Module Subtitle */}
+                        <div className="col-span-8 lg:col-span-5 min-w-0 pr-2 sm:pr-3 flex flex-col justify-center">
+                          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                            <span className="font-semibold text-xs sm:text-sm text-[#E6EDF3] group-hover:text-[#58A6FF] transition-colors truncate">
+                              {problem.title}
                             </span>
-                          )}
+                            {isAdvanced && (
+                              <span className="hidden sm:inline-flex px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 shrink-0">
+                                Advanced
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-[#8B949E] font-mono lg:hidden truncate mt-0.5 block">
+                            {problem.chapter_title?.replace(/^Module \d+:\s*/, '')}
+                          </span>
                         </div>
 
-                        {/* Module */}
-                        <div className="col-span-3 text-xs text-[#8B949E] truncate pr-2">
+                        {/* Module (Shown on lg+) */}
+                        <div className="hidden lg:block lg:col-span-3 text-xs text-[#8B949E] truncate pr-2">
                           {problem.chapter_title?.replace(/^Module \d+:\s*/, '')}
                         </div>
 
                         {/* Difficulty */}
-                        <div className="col-span-2 flex items-center justify-end gap-3">
+                        <div className="col-span-2 flex items-center justify-end gap-1.5 sm:gap-3">
                           <DifficultyBadge difficulty={problem.difficulty} size="sm" />
                           <span className="text-[#8B949E] group-hover:text-[#E6EDF3] transition-colors hidden sm:inline-block">
                             <ArrowRight className="h-4 w-4" />

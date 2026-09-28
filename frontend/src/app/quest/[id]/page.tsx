@@ -24,7 +24,7 @@ import {
   Play, RotateCcw, ArrowLeft, Clock, BookOpen,
   Check, X, Terminal, ChevronDown, ChevronUp, Copy, Trash2,
   CheckSquare, RefreshCw, Bot, Lock, Unlock,
-  Briefcase, Zap, Sparkles, Code
+  Briefcase, Zap, Sparkles, Code, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -57,6 +57,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
   const [code, setCode] = useState<string>('');
 
   // Layout & Tabs
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [consoleCollapsed, setConsoleCollapsed] = useState(false);
   const [dockHeight, setDockHeight] = useState<'normal' | 'expanded'>('normal');
   // Left Panel Tab: Problem Spec, Chatbot, Solution Vault, Interview Q&A
@@ -860,6 +861,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
     const unregister = registerGlobalShortcuts({
       onRun: () => handleRunTestCases(),
       onSubmit: handleSubmitCode,
+      onToggleSidebar: () => setSidebarCollapsed((p) => !p),
       onToggleConsole: () => setConsoleCollapsed((p) => !p),
       onOpenCommandPalette: () => setCommandPaletteOpen(true),
     });
@@ -906,30 +908,39 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
             </button>
           </div>
 
-          <div className="flex items-center gap-2 min-w-0 truncate">
-            <span className="text-sm md:text-lg font-bold text-[#E6EDF3] truncate">
+          {/* Desktop Sidebar Toggle Button */}
+          <button
+            onClick={() => setSidebarCollapsed((p) => !p)}
+            className="hidden md:flex p-1.5 rounded-lg text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors shrink-0"
+            title={sidebarCollapsed ? "Expand Problem Spec / Mentor (Ctrl+B)" : "Collapse Problem Spec / Mentor (Ctrl+B)"}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen className="h-4.5 w-4.5 text-[#58A6FF]" /> : <PanelLeftClose className="h-4.5 w-4.5" />}
+          </button>
+
+          <div className="flex items-center gap-1.5 md:gap-2 min-w-0 flex-1 truncate">
+            <span className="text-sm md:text-base lg:text-lg font-bold text-[#E6EDF3] truncate max-w-[160px] sm:max-w-[260px] md:max-w-[240px] lg:max-w-[380px] xl:max-w-[580px] 2xl:max-w-none" title={problem?.title}>
               {problem?.title || 'Loading challenge...'}
             </span>
             {problem && (
-              <span className="hidden sm:inline-flex">
+              <span className="hidden xl:inline-flex">
                 <DifficultyBadge difficulty={problem.difficulty} size="sm" />
               </span>
             )}
             {(problemId >= 51 || (problem?.chapter_id && problem.chapter_id >= 11)) && (
-              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 font-semibold shrink-0">
+              <span className="hidden 2xl:inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#1F6FEB]/15 text-[#58A6FF] border border-[#1F6FEB]/30 font-semibold shrink-0">
                 <Zap className="h-3 w-3 text-amber-400" />
                 Advanced
               </span>
             )}
             {isCurrentProblemSolved && (
               <span className="flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold shrink-0">
-                <Check className="h-3 w-3" /> <span className="hidden sm:inline">Solved</span>
+                <Check className="h-3 w-3" /> <span className="hidden md:inline">Solved</span>
               </span>
             )}
           </div>
         </div>
 
-        {/* Center: Live Mission Timer (Desktop) */}
+        {/* Center: Live Mission Timer (Desktop LG+) */}
         <button
           type="button"
           onClick={() => {
@@ -940,7 +951,7 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               startTimer();
             }
           }}
-          className={`hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-sm font-mono transition-all ${
+          className={`hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-sm font-mono transition-all ${
             isCurrentProblemSolved
               ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
               : !isTimerRunning
@@ -974,35 +985,35 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           ) : null}
         </button>
 
-        {/* Mobile Timer Pill */}
-        <div className="flex md:hidden items-center gap-1.5 px-2 py-1 rounded-md bg-[#111622] border border-white/5 text-xs font-mono text-[#8B949E] shrink-0">
+        {/* Mobile / Tablet Compact Timer Pill */}
+        <div className="flex lg:hidden items-center gap-1.5 px-2 py-1 rounded-md bg-[#111622] border border-white/5 text-xs font-mono text-[#8B949E] shrink-0">
           <Clock className="h-3 w-3 text-[#58A6FF]" />
           <span>{formatTimer(elapsedSeconds)}</span>
         </div>
 
         {/* Right: Code Actions (Reset, Run, Submit) — Desktop Only */}
-        <div className="hidden md:flex items-center gap-2.5">
+        <div className="hidden md:flex items-center gap-2 lg:gap-2.5">
           <button
             onClick={handleResetCode}
-            className="p-2 rounded-lg text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
+            className="p-1.5 lg:p-2 rounded-lg text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22] transition-colors"
             title="Reset code template"
           >
-            <RotateCcw className="h-4.5 w-4.5" />
+            <RotateCcw className="h-4 lg:h-4.5 w-4 lg:w-4.5" />
           </button>
 
           <button
             onClick={() => handleRunTestCases()}
             disabled={isRunning || isSubmitting}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#58A6FF] text-sm font-semibold text-[#E6EDF3] transition-all shadow-md disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-1.5 lg:py-2 rounded-xl border border-white/10 bg-[#161B22] hover:bg-[#21262D] hover:border-[#58A6FF] text-xs lg:text-sm font-semibold text-[#E6EDF3] transition-all shadow-md disabled:opacity-50 cursor-pointer"
             title="Run code against test cases (Ctrl+Enter)"
           >
             {isRunning ? (
-              <RefreshCw className="h-4 w-4 animate-spin text-[#58A6FF]" />
+              <RefreshCw className="h-3.5 lg:h-4 w-3.5 lg:w-4 animate-spin text-[#58A6FF]" />
             ) : (
-              <Play className="h-4 w-4 fill-current text-emerald-400" />
+              <Play className="h-3.5 lg:h-4 w-3.5 lg:w-4 fill-current text-emerald-400" />
             )}
             <span>Run</span>
-            <kbd className="hidden lg:inline-block font-mono text-xs text-[#8B949E] bg-[#0D1117] px-1.5 py-0.5 rounded border border-[#30363D]">
+            <kbd className="hidden xl:inline-block font-mono text-xs text-[#8B949E] bg-[#0D1117] px-1.5 py-0.5 rounded border border-[#30363D]">
               ↵
             </kbd>
           </button>
@@ -1010,13 +1021,13 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
           <button
             onClick={handleSubmitCode}
             disabled={isRunning || isSubmitting}
-            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-[#238636] to-[#2EA043] hover:from-[#2EA043] hover:to-[#3FB950] text-sm font-bold text-white transition-all shadow-lg shadow-emerald-950/60 disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 lg:gap-2 px-3.5 lg:px-5 py-1.5 lg:py-2 rounded-xl bg-gradient-to-r from-[#238636] to-[#2EA043] hover:from-[#2EA043] hover:to-[#3FB950] text-xs lg:text-sm font-bold text-white transition-all shadow-lg shadow-emerald-950/60 disabled:opacity-50 cursor-pointer"
             title="Submit solution for evaluation (Ctrl+Shift+Enter)"
           >
             {isSubmitting ? (
-              <RefreshCw className="h-4 w-4 animate-spin" />
+              <RefreshCw className="h-3.5 lg:h-4 w-3.5 lg:w-4 animate-spin" />
             ) : (
-              <Check className="h-4 w-4 stroke-[3]" />
+              <Check className="h-3.5 lg:h-4 w-3.5 lg:w-4 stroke-[3]" />
             )}
             <span>Submit</span>
           </button>
@@ -1026,72 +1037,82 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
       {/* 2. Desktop Workspace Layout (MD+ Only): 2 Focused Panes (Mentor Cockpit + Editor & Terminal) */}
       <div className="hidden md:flex flex-1 overflow-hidden relative min-h-0">
 
-        {/* Left Cockpit Panel (480px / 520px) — Problem Spec / Mentor / Solution Vault */}
-        <section className="w-[480px] lg:w-[540px] border-r border-[#21262D] bg-[#0B0F17]/90 flex flex-col shrink-0 overflow-hidden">
+        {/* Left Cockpit Panel (Responsive fluid split: 40% on laptops, capped at 480px on large displays) */}
+        <section className={sidebarCollapsed ? 'hidden' : 'w-full md:w-[44%] lg:w-[38%] xl:w-[440px] 2xl:w-[480px] min-w-[320px] max-w-[520px] border-r border-[#21262D] bg-[#0B0F17]/90 flex flex-col shrink-0 overflow-hidden'}>
           {/* Cockpit Navigation Tabs */}
-          <div className="h-11 border-b border-[#21262D] bg-[#111622] px-3 flex items-center gap-2 shrink-0 overflow-x-auto scrollbar-none">
-            {/* Tab 1: Problem Spec */}
-            <button
-              onClick={() => setActiveTab('spec')}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
-                activeTab === 'spec'
-                  ? 'bg-[#21262D] text-[#E6EDF3] border border-[#30363D] shadow-sm'
-                  : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
-              }`}
-            >
-              <BookOpen className={`w-4 h-4 ${activeTab === 'spec' ? 'text-[#58A6FF]' : 'text-[#8B949E]'}`} />
-              <span>Problem Spec</span>
-            </button>
+          <div className="h-11 border-b border-[#21262D] bg-[#111622] px-2.5 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none">
+              {/* Tab 1: Problem Spec */}
+              <button
+                onClick={() => setActiveTab('spec')}
+                className={`px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
+                  activeTab === 'spec'
+                    ? 'bg-[#21262D] text-[#E6EDF3] border border-[#30363D] shadow-sm'
+                    : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
+                }`}
+              >
+                <BookOpen className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${activeTab === 'spec' ? 'text-[#58A6FF]' : 'text-[#8B949E]'}`} />
+                <span><span className="hidden xl:inline">Problem </span>Spec</span>
+              </button>
 
-            {/* Tab 2: AI Chatbot */}
-            <button
-              onClick={() => setActiveTab('chat')}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
-                activeTab === 'chat'
-                  ? 'bg-[#1F6FEB]/20 text-[#58A6FF] border border-[#1F6FEB]/40 shadow-sm'
-                  : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
-              }`}
-            >
-              <Bot className="w-4 h-4 text-[#58A6FF]" />
-              <span>AI Chat</span>
-            </button>
+              {/* Tab 2: AI Chatbot */}
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
+                  activeTab === 'chat'
+                    ? 'bg-[#1F6FEB]/20 text-[#58A6FF] border border-[#1F6FEB]/40 shadow-sm'
+                    : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
+                }`}
+              >
+                <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#58A6FF]" />
+                <span>AI Chat</span>
+              </button>
 
-            {/* Tab 2: Solution */}
-            <button
-              onClick={() => setActiveTab('vault')}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
-                activeTab === 'vault'
-                  ? isSolutionUnlocked
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm'
-                    : 'bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 shadow-sm'
-                  : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
-              }`}
-            >
-              {isSolutionUnlocked ? (
-                <Unlock className="w-4 h-4 text-emerald-400" />
-              ) : (
-                <Lock className="w-4 h-4 text-[#D29922]" />
-              )}
-              <span>Solution</span>
-            </button>
+              {/* Tab 2: Solution */}
+              <button
+                onClick={() => setActiveTab('vault')}
+                className={`px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
+                  activeTab === 'vault'
+                    ? isSolutionUnlocked
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm'
+                      : 'bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 shadow-sm'
+                    : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
+                }`}
+              >
+                {isSolutionUnlocked ? (
+                  <Unlock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+                ) : (
+                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D29922]" />
+                )}
+                <span>Solution</span>
+              </button>
 
-            {/* Tab 3: Interview Q&A */}
+              {/* Tab 3: Interview Q&A */}
+              <button
+                onClick={() => setActiveTab('interview')}
+                className={`px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
+                  activeTab === 'interview'
+                    ? isSolutionUnlocked
+                      ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40 shadow-sm'
+                      : 'bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 shadow-sm'
+                    : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
+                }`}
+              >
+                {isSolutionUnlocked ? (
+                  <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
+                ) : (
+                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D29922]" />
+                )}
+                <span>Interview<span className="hidden xl:inline"> Q&A</span></span>
+              </button>
+            </div>
+
             <button
-              onClick={() => setActiveTab('interview')}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 shrink-0 ${
-                activeTab === 'interview'
-                  ? isSolutionUnlocked
-                    ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40 shadow-sm'
-                    : 'bg-[#D29922]/20 text-[#D29922] border border-[#D29922]/40 shadow-sm'
-                  : 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#161B22]'
-              }`}
+              onClick={() => setSidebarCollapsed(true)}
+              className="p-1 rounded text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] transition-colors shrink-0"
+              title="Collapse Cockpit (Ctrl+B)"
             >
-              {isSolutionUnlocked ? (
-                <Briefcase className="w-4 h-4 text-purple-400" />
-              ) : (
-                <Lock className="w-4 h-4 text-[#D29922]" />
-              )}
-              <span>Interview Q&A</span>
+              <PanelLeftClose className="h-4 w-4" />
             </button>
           </div>
 
@@ -1213,10 +1234,20 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
         {/* Right Pane: Monaco Code Canvas + Real Interactive Terminal Dock */}
         <div className="flex-1 flex flex-col bg-[#080B12] overflow-hidden">
           {/* Editor Header Bar */}
-          <div className="h-11 border-b border-[#21262D] bg-[#0E131C] px-4 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-2.5">
-              <span className="font-mono font-bold text-sm text-[#E6EDF3]">solution.py</span>
-              <span className="text-xs text-[#8B949E] font-mono">Python 3.12</span>
+          <div className="h-11 border-b border-[#21262D] bg-[#0E131C] px-3 sm:px-4 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              {sidebarCollapsed && (
+                <button
+                  onClick={() => setSidebarCollapsed(false)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-[#58A6FF] bg-[#1F6FEB]/15 border border-[#1F6FEB]/30 hover:bg-[#1F6FEB]/25 transition-all cursor-pointer mr-1"
+                  title="Expand Problem Spec & Chat (Ctrl+B)"
+                >
+                  <PanelLeftOpen className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Spec & Chat</span>
+                </button>
+              )}
+              <span className="font-mono font-bold text-xs sm:text-sm text-[#E6EDF3]">solution.py</span>
+              <span className="text-[11px] sm:text-xs text-[#8B949E] font-mono">Python 3.12</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -1268,8 +1299,8 @@ export default function WorkspacePage({ params }: { params: Promise<{ id: string
               onChange={handleCodeChange}
               options={{
                 fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, monospace",
-                fontSize: 16,
-                lineHeight: 26,
+                fontSize: 14.5,
+                lineHeight: 23,
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
                 automaticLayout: true,

@@ -144,10 +144,10 @@ export default function Navbar() {
           </div>
 
           {/* Center Search / Command Launcher — Sleek & Refined (Desktop only) */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <button
               onClick={() => setPaletteOpen(true)}
-              className="group flex items-center gap-2.5 rounded-lg border border-[#30363D] bg-[#0D1117]/90 hover:bg-[#21262D] hover:border-[#58A6FF]/60 hover:shadow-[0_0_12px_rgba(88,166,255,0.12)] px-3 py-1.5 text-xs sm:text-sm text-[#9198A1] transition-all duration-150 w-52 sm:w-64 lg:w-72 justify-between shadow-sm cursor-pointer"
+              className="group flex items-center gap-2.5 rounded-lg border border-[#30363D] bg-[#0D1117]/90 hover:bg-[#21262D] hover:border-[#58A6FF]/60 hover:shadow-[0_0_12px_rgba(88,166,255,0.12)] px-3 py-1.5 text-xs sm:text-sm text-[#9198A1] transition-all duration-150 w-52 xl:w-72 justify-between shadow-sm cursor-pointer"
               aria-label="Search problems and shortcuts (⌘K)"
               title="Quick Search (⌘K)"
             >
@@ -163,13 +163,24 @@ export default function Navbar() {
             </button>
           </div>
 
+          {/* Compact Search Trigger for MD screens (768px - 1024px) */}
+          <div className="hidden md:flex lg:hidden items-center">
+            <button
+              onClick={() => setPaletteOpen(true)}
+              className="p-2 rounded-lg border border-[#30363D] bg-[#0D1117]/90 hover:bg-[#21262D] text-[#9198A1] hover:text-[#58A6FF] transition-colors cursor-pointer"
+              title="Quick Search (⌘K)"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          </div>
+
           {/* Right Controls (Desktop) */}
-          <div className="hidden md:flex items-center gap-2.5 sm:gap-3">
+          <div className="hidden md:flex items-center gap-2 sm:gap-2.5 lg:gap-3">
             {/* Solved Counter Pill */}
             {user && (
               <Link
                 href="/quest"
-                className="flex items-center gap-2 rounded-lg border border-[#238636]/50 bg-[#238636]/15 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#3FB950] hover:bg-[#238636]/25 transition-all shadow-sm"
+                className="hidden xl:flex items-center gap-2 rounded-lg border border-[#238636]/50 bg-[#238636]/15 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#3FB950] hover:bg-[#238636]/25 transition-all shadow-sm"
                 title="Problems Solved"
               >
                 <CheckCircle2 className="h-4 w-4" />
@@ -180,7 +191,7 @@ export default function Navbar() {
             {/* Streak Indicator */}
             {user && (
               <div
-                className="flex items-center gap-2 rounded-lg border border-[#D29922]/50 bg-[#D29922]/15 px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#F59E0B] shadow-sm"
+                className="hidden lg:flex items-center gap-2 rounded-lg border border-[#D29922]/50 bg-[#D29922]/15 px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#F59E0B] shadow-sm"
                 title="Daily Active Streak"
               >
                 <Flame className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
@@ -193,10 +204,10 @@ export default function Navbar() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/profile"
-                  className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#21262D] px-3 py-1.5 text-xs sm:text-sm text-[#E6EDF3] hover:border-[#8B949E] transition-colors font-semibold"
+                  className="flex items-center gap-2 rounded-lg border border-[#30363D] bg-[#21262D] px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm text-[#E6EDF3] hover:border-[#8B949E] transition-colors font-semibold"
                 >
                   <UserIcon className="h-4 w-4 text-[#58A6FF]" />
-                  <span className="max-w-[130px] truncate">{user.username}</span>
+                  <span className="max-w-[90px] lg:max-w-[130px] truncate">{user.username}</span>
                 </Link>
                 <button
                   onClick={logout}
