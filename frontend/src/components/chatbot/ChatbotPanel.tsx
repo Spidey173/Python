@@ -122,21 +122,6 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
               );
             }
 
-            // Callout: Real-Life Analogy (🌟 or Analogy)
-            if (trimmed.startsWith('🌟') || trimmed.includes('Real-Life Analogy') || trimmed.includes('Real-life Analogy')) {
-              return (
-                <div key={lIdx} className="my-3 rounded-xl border border-indigo-500/30 bg-indigo-950/20 p-4 text-[13px] text-indigo-100 space-y-1.5 shadow-sm">
-                  <div className="font-semibold text-indigo-400 flex items-center gap-1.5 text-[13px]">
-                    <span>🌟</span>
-                    <span>Real-Life Analogy</span>
-                  </div>
-                  <p className="text-indigo-200/90 leading-relaxed pl-5">
-                    {trimmed.replace(/^[>#*\s🌟]+/, '').replace(/^Real-Life Analogy:?\s*/i, '').replace(/^Real-life Analogy:?\s*/i, '')}
-                  </p>
-                </div>
-              );
-            }
-
             // Callout: Tips (💡)
             if (trimmed.startsWith('💡') || trimmed.startsWith('> ## 💡') || trimmed.startsWith('**Interview Tip**') || trimmed.startsWith('💡 Interview Tip')) {
               return (
@@ -250,13 +235,6 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
     });
   };
 
-  const quickActions = [
-    { label: "💡 Need a hint", prompt: "Can you give me a subtle hint without spoiling the full solution?" },
-    { label: "🌟 Explain with analogy", prompt: "Can you explain the intuition behind this problem using a relatable real-world analogy?" },
-    { label: "🔍 Debug my error", prompt: "Why is my current code failing? Can you identify the bug with a counter-example?" },
-    { label: "💻 Show solution", prompt: "Can you show the optimal Python solution and explain how it works step-by-step?" }
-  ];
-
   return (
     <div className="flex flex-col h-full bg-[#0B0F17] text-[#E6EDF3] border-r border-[#21262D]">
       {/* Header */}
@@ -265,40 +243,19 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
           <div className="w-6 h-6 rounded-full bg-[#1F6FEB]/20 border border-[#1F6FEB]/40 flex items-center justify-center">
             <Bot className="w-3.5 h-3.5 text-[#58A6FF]" />
           </div>
-          <span className="font-semibold text-sm text-[#E6EDF3]">AI Coding Mentor</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[11px] font-medium text-emerald-400">Ready</span>
+          <span className="font-semibold text-sm text-[#E6EDF3]">AI Assistant</span>
         </div>
       </div>
 
       {/* Messages Feed */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 text-[15px]">
         {messages.length === 0 && (
-          <div className="text-center py-10 px-2 text-[#8B949E] space-y-4">
-            <div className="w-11 h-11 rounded-full bg-[#1F6FEB]/20 border border-[#1F6FEB]/40 flex items-center justify-center mx-auto">
+          <div className="text-center py-14 text-[#8B949E] space-y-3">
+            <div className="w-10 h-10 rounded-full bg-[#1F6FEB]/20 border border-[#1F6FEB]/40 flex items-center justify-center mx-auto">
               <Bot className="w-5 h-5 text-[#58A6FF]" />
             </div>
-            <div>
-              <p className="font-semibold text-base text-[#E6EDF3]">AI Coding Mentor</p>
-              <p className="text-xs max-w-xs mx-auto text-[#8B949E] mt-1">
-                Ask for an intuitive analogy, a subtle hint, a step-by-step breakdown, or help debugging your logic.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto pt-2 text-left">
-              {quickActions.map((qa, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => onSendMessage(qa.prompt)}
-                  className="p-2.5 rounded-xl bg-[#161B22] hover:bg-[#21262D] border border-white/5 hover:border-[#58A6FF]/40 text-[#E6EDF3] text-xs font-medium transition-all group"
-                >
-                  <span className="block text-[#58A6FF] font-semibold">{qa.label}</span>
-                  <span className="text-[11px] text-[#8B949E] line-clamp-1 mt-0.5">{qa.prompt}</span>
-                </button>
-              ))}
-            </div>
+            <p className="font-semibold text-base text-[#E6EDF3]">How can I help you solve this challenge?</p>
+            <p className="text-xs max-w-xs mx-auto text-[#8B949E]">Ask for a hint, solution code, or help debugging your logic.</p>
           </div>
         )}
 
@@ -343,21 +300,6 @@ export function ChatbotPanel({ messages, isThinking, onSendMessage }: ChatbotPan
         )}
 
         <div ref={chatEndRef} />
-      </div>
-
-      {/* Quick Action Chips Bar */}
-      <div className="px-3 py-1.5 border-t border-[#21262D]/60 bg-[#0E131C] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        {quickActions.map((action, idx) => (
-          <button
-            key={idx}
-            type="button"
-            disabled={isThinking}
-            onClick={() => onSendMessage(action.prompt)}
-            className="text-[12px] whitespace-nowrap px-2.5 py-1 rounded-full bg-[#161B22] hover:bg-[#21262D] border border-white/10 text-[#C9D1D9] hover:text-white transition-all disabled:opacity-40 shrink-0"
-          >
-            {action.label}
-          </button>
-        ))}
       </div>
 
       {/* Input Form */}

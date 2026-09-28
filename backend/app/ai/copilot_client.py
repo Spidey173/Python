@@ -7,11 +7,7 @@ from app.ai.ast_explainer import ASTCodeAnalyzer
 ast_analyzer = ASTCodeAnalyzer()
 
 SYSTEM_EXPLAIN_PROMPT = """You are the Python Quest Senior Code Explainer AI.
-Given the student's Python code and challenge context, return ONLY valid JSON.
-Do not wrap the JSON in markdown.
-Do not include explanations outside the JSON.
-
-JSON schema:
+Given the student's Python code and challenge context, return a structured JSON with:
 - line_by_line: list of objects with line (int), code (str), explanation (str)
 - beginner_summary: friendly 2-sentence explanation of what the code does
 - time_complexity: Big O notation with brief reasoning
@@ -22,65 +18,29 @@ JSON schema:
 - dry_run_trace: list of 3-5 steps showing variable changes
 """
 
-SYSTEM_TUTOR_PROMPT = """You are an experienced software engineer and friendly coding mentor.
-Your job is to help users truly understand programming concepts and solve algorithmic challenges.
+SYSTEM_TUTOR_PROMPT = """You are a senior software engineer helping users learn programming.
 
-CORE PRINCIPLES:
-1. Prioritize clarity over completeness.
-   Explain one idea extremely well rather than five ideas superficially.
-2. Answer the user's question first.
-   Always answer the user's actual question directly before adding extra learning material.
-3. Match the depth to the question.
-   Keep explanations proportional to the user's request:
-   - Short question -> Short answer.
-   - Detailed question -> Detailed explanation.
-4. Teach for understanding.
-   Help the user build the correct mental model before diving into implementation details.
-5. Use simple language.
-   Use plain English before technical jargon. If technical terms are necessary, explain them briefly.
-6. Encourage thoughtful learning.
-   If the user's approach is mostly correct, acknowledge what works before explaining what needs improvement. Be encouraging, but never use fake praise.
-7. Be honest.
-   If you're uncertain, say so clearly. Never invent APIs, library behavior, or language features.
+Reply naturally, conversationally, and clearly.
 
-ADAPT YOUR STRUCTURE BASED ON INTENT:
-- Avoid repeating section headings when they add no value. Only include sections that are relevant to the user's question.
-- GREETINGS & CASUAL CHAT (e.g., "hi", "hello", "hey", "how are you"):
-  Reply with a warm, friendly 1-2 sentence greeting offering help with the current challenge. NEVER dump code, steps, or explanations for a simple greeting.
-- HINT REQUESTS:
-  Give an encouraging nudge, a guiding question, or a small thought experiment. Let the student think—do NOT spoil the full solution immediately.
-- DEBUG & ERROR REQUESTS:
-  Identify what the code intended vs. what it actually did. Highlight what is already working, point out the logic flaw with a small, concrete counter-example, and then show the clean fix.
-- CONCEPT & GENERAL QUESTIONS:
-  Explain the concept with intuition first. When an analogy would genuinely improve understanding (e.g. HashMap = Phone Contacts app, Binary Search = Dictionary lookup, Two Pointers = Walking towards each other), use one! Don't force analogies for simple syntax.
-- CODE & FULL EXPLANATION REQUESTS:
-  Directly answer the question, then provide structured learning using ONLY the relevant sections from below:
-  ## 💡 Simple Explanation
-  Brief plain-English explanation of what the problem asks and why this solution works.
-  
-  ## 🌟 Real-Life Analogy (include only if it genuinely clarifies the concept)
-  
-  ## 👣 Step-by-Step
-  3-4 small, numbered steps breaking down the logic.
-  
-  ## 💻 Python Solution
-  ONE complete, working code block using the exact Starter Code Template. Add inline comments on 1-2 crucial lines.
-  
-  ## ⏱ Complexity
-  - Time Complexity: O(...) with a 1-sentence plain English reason.
-  - Space Complexity: O(...) with a 1-sentence plain English reason.
-  
-  ## ⚠️ Common Mistakes
-  1-2 beginner traps or sneaky edge cases to watch out for.
-  
-  ## ✅ Summary
-  A short, memorable 1-sentence takeaway.
+IMPORTANT INTENT RULES:
+- GREETINGS & CASUAL CHAT (e.g. "hi", "hello", "hey", "how are you", "what's up"): Reply with a short, friendly 1-2 sentence greeting offering help with the challenge (e.g., "Hey! Ready to tackle Valid Palindrome? Ask me for a hint, solution, or debugging help whenever you're ready!"). DO NOT dump a solution, code, steps, or execution trace for casual greetings.
+- HINT REQUESTS: Give only a concise hint.
+- CODE REQUESTS: Provide the full code solution using the starter template.
+- DEBUG REQUESTS: Explain the bug briefly and show the fix.
 
-IMPORTANT RULES:
-- If you are uncertain, say so clearly. Do not invent APIs, functions, library behavior, or language features. When assumptions are necessary, state them explicitly.
-- The Starter Code Template is the single source of truth. Always conform to it.
-- Never ask the user which format the judge expects; provide standard working code matching the starter template.
-- Prefer the cleanest, most interview-accepted approach first (e.g., two pointers, hash map, simple loops over unnecessary recursion)."""
+Format your full technical explanations (when code or explanation is requested) for quick understanding:
+- Start with a 1-line core intuition / main idea.
+- Keep ONE clean, complete code block using the exact starter code template. Do NOT repeat multiple snippet blocks.
+- Keep steps short and visual with bullet points.
+- Use emojis very sparingly.
+
+The starter code template is the single source of truth. Always follow the starter code template format over any conflicting editor code.
+
+When the user asks for code:
+- Prefer the easiest interview-accepted solution first (e.g. two pointers, hash map, simple loops over recursion).
+- Always provide complete working code matching the starter code template.
+- Read inputs and print outputs conforming to the problem requirements.
+- Never ask the user which format the judge expects."""
 
 
 def clean_llm_response(text: str) -> str:
@@ -127,14 +87,8 @@ async def get_ai_explanation(
             )
             if response.status_code == 200:
                 data = response.json()
-                content = data["choices"][0]["message"]["content"].strip()
-                if content.startswith("```json"):
-                    content = content[7:]
-                elif content.startswith("```"):
-                    content = content[3:]
-                if content.endswith("```"):
-                    content = content[:-3]
-                return json.loads(content.strip())
+                content = data["choices"][0]["message"]["content"]
+                return json.loads(content)
     except Exception:
         pass
 
@@ -215,15 +169,14 @@ async def chat_with_ai_tutor(
                         "Content-Type": "application/json",
                     },
                     json={
-                        "model": settings.GROQ_MODEL or "llama-3.3-70b-versatile",
+                        "model": settings.GROQ_MODEL or "openai/gpt-oss-120b",
                         "messages": messages,
                         "temperature": 0.5,
-                        "max_tokens": 1200,
+                        "max_tokens": 800,
                     }
                 )
                 if resp.status_code == 200:
                     return clean_llm_response(resp.json()["choices"][0]["message"]["content"])
-                print(f"Groq API returned status {resp.status_code}: {resp.text}")
         except Exception as e:
             print("Groq API call error:", e)
 
@@ -239,82 +192,26 @@ async def chat_with_ai_tutor(
                     })
             contents.append({"role": "user", "parts": [{"text": full_user_prompt}]})
 
-            gemini_models_to_try = [settings.GEMINI_MODEL, "gemini-1.5-flash", "gemini-2.0-flash"]
-            # Deduplicate while preserving order
-            gemini_models_to_try = list(dict.fromkeys([m for m in gemini_models_to_try if m]))
-
-            async with httpx.AsyncClient(timeout=15.0) as client:
-                for g_model in gemini_models_to_try:
-                    resp = await client.post(
-                        f"https://generativelanguage.googleapis.com/v1beta/models/{g_model}:generateContent",
-                        headers={
-                            "Content-Type": "application/json",
-                            "x-goog-api-key": settings.GEMINI_API_KEY,
-                        },
-                        json={
-                            "system_instruction": {
-                                "parts": [{"text": SYSTEM_TUTOR_PROMPT}]
-                            },
-                            "contents": contents
-                        }
-                    )
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        return clean_llm_response(data["candidates"][0]["content"]["parts"][0]["text"])
-                    print(f"Gemini API ({g_model}) returned status {resp.status_code}: {resp.text}")
-        except Exception as e:
-            print("Gemini API call error:", e)
-
-    # 3. GitHub Copilot / OpenAI API proxy if configured
-    if settings.COPILOT_API_KEY:
-        try:
-            messages = [{"role": "system", "content": SYSTEM_TUTOR_PROMPT}]
-            if chat_history:
-                for h in chat_history[-6:]:
-                    messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
-            messages.append({"role": "user", "content": full_user_prompt})
-
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.post(
-                    f"{settings.COPILOT_API_BASE}/chat/completions",
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent",
                     headers={
-                        "Authorization": f"Bearer {settings.COPILOT_API_KEY}",
                         "Content-Type": "application/json",
+                        "x-goog-api-key": settings.GEMINI_API_KEY,
                     },
                     json={
-                        "model": settings.COPILOT_MODEL,
-                        "messages": messages,
-                        "temperature": 0.5,
-                        "max_tokens": 1200,
+                        "system_instruction": {
+                            "parts": [{"text": SYSTEM_TUTOR_PROMPT}]
+                        },
+                        "contents": contents
                     }
                 )
                 if resp.status_code == 200:
-                    return clean_llm_response(resp.json()["choices"][0]["message"]["content"])
-                print(f"Copilot/OpenAI API returned status {resp.status_code}: {resp.text}")
+                    data = resp.json()
+                    return clean_llm_response(data["candidates"][0]["content"]["parts"][0]["text"])
         except Exception as e:
-            print("Copilot/OpenAI API call error:", e)
+            print("Gemini API call error:", e)
 
-    # 4. Intelligent AST / Challenge Fallback
-    if clean_code:
-        try:
-            analysis = ast_analyzer.analyze(clean_code, message)
-            if is_debug_request:
-                mistakes = analysis.get("common_mistakes", [])
-                mistake_text = f"\n- {mistakes[0]}" if mistakes else ""
-                return (
-                    f"## 💡 Debug Analysis\n"
-                    f"{analysis.get('beginner_summary', 'I reviewed your code.')}\n\n"
-                    f"**Potential edge cases / pitfalls to check:**{mistake_text}\n\n"
-                    f"**Suggested improvement:** {analysis.get('better_approach', '')}"
-                )
-            return (
-                f"## 💡 Intuition\n"
-                f"{analysis.get('beginner_summary', 'Here is how to approach this problem.')}\n\n"
-                f"**Time Complexity:** {analysis.get('time_complexity', 'O(N)')}\n\n"
-                f"**Space Complexity:** {analysis.get('space_complexity', 'O(1)')}"
-            )
-        except Exception:
-            pass
-
+    # 3. Honest API offline response
     return "I'm currently unable to reach the AI server. Please verify that your API key is configured or backend server is running."
 

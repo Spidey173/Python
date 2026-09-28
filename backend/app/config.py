@@ -25,9 +25,9 @@ class Settings(BaseSettings):
 
     # AI Integration (Groq / Gemini / OpenAI / GitHub Copilot compatible)
     GROQ_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
-    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
     COPILOT_API_KEY: Optional[str] = os.getenv("COPILOT_API_KEY") or os.getenv("GITHUB_TOKEN")
     COPILOT_API_BASE: str = os.getenv("COPILOT_API_BASE", "https://api.github.com")
     COPILOT_MODEL: str = os.getenv("COPILOT_MODEL", "gpt-4o-mini")
