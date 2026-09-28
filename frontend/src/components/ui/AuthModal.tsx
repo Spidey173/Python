@@ -132,7 +132,7 @@ export function AuthModal({ isOpen, onClose, initialTab = 'signin' }: AuthModalP
       aria-label="Authentication"
     >
       <div
-        className="w-full max-w-md rounded-xl border border-[#30363D] bg-[#161B22] shadow-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-md max-h-[92vh] overflow-y-auto rounded-xl border border-[#30363D] bg-[#161B22] shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

@@ -151,12 +151,12 @@ export const SolutionVault: React.FC<SolutionVaultProps> = ({
 
       {/* Solution Approach Switcher */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
           <span className="text-xs font-mono text-[#8B949E] uppercase tracking-wider font-semibold">
             Ranked Approaches for Interviews
           </span>
-          <span className="text-[11px] font-mono text-[#58A6FF] bg-[#1F6FEB]/10 px-2 py-0.5 rounded border border-[#1F6FEB]/20">
-            Click rank tab to inspect & load into editor
+          <span className="text-[11px] font-mono text-[#58A6FF] bg-[#1F6FEB]/10 px-2 py-0.5 rounded border border-[#1F6FEB]/20 self-start sm:self-auto">
+            Click rank tab to inspect & load
           </span>
         </div>
 

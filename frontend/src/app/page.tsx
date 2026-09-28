@@ -374,7 +374,7 @@ export default function DashboardPage() {
         </div>
 
         {/* 3. Metrics Cockpit: 3 High-Impact Cards (Sandbox Velocity Removed) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
           {/* Metric 1: Curriculum Solved with Radial Progress */}
           <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between">
@@ -449,7 +449,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Metric 3: Study Streak with 7-Day Dot Visualizer */}
-          <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between">
+          <div className="rounded-xl border border-[#30363D] bg-[#161B22] p-5 sm:p-6 card-hover-interactive flex flex-col justify-between sm:col-span-2 lg:col-span-1">
             <div className="flex items-center justify-between text-sm text-[#8B949E]">
               <span className="font-semibold text-[#E6EDF3]">Active Study Streak</span>
               <Flame className="h-5 w-5 text-[#D29922] fill-[#D29922]" />

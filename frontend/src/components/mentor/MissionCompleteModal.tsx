@@ -71,7 +71,7 @@ export const MissionCompleteModal: React.FC<MissionCompleteModalProps> = ({
       {/* Background ambient glow */}
       <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-cyan-500/15 to-blue-500/20 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-lg w-full rounded-3xl border border-emerald-500/40 bg-[#0B0F17]/95 shadow-2xl p-6 sm:p-8 text-center space-y-6 overflow-hidden">
+      <div className="relative z-10 max-w-lg w-full max-h-[92vh] overflow-y-auto rounded-3xl border border-emerald-500/40 bg-[#0B0F17]/95 shadow-2xl p-6 sm:p-8 text-center space-y-6">
         {/* Glowing Trophy Icon */}
         <div className="relative mx-auto w-24 h-24 flex items-center justify-center">
           <div className="absolute inset-0 rounded-full bg-emerald-500/25 blur-xl animate-pulse" />

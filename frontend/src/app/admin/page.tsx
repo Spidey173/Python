@@ -154,8 +154,8 @@ export default function AdminDashboardPage() {
               <h2 className="text-base font-bold text-white">70 Python Challenges Curriculum</h2>
             </div>
 
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 overflow-hidden backdrop-blur-xl">
-              <table className="w-full text-left text-xs">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 overflow-x-auto backdrop-blur-xl">
+              <table className="w-full min-w-[500px] text-left text-xs">
                 <thead>
                   <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-400 uppercase tracking-wider text-[10px]">
                     <th className="px-4 py-3">#</th>
@@ -186,8 +186,8 @@ export default function AdminDashboardPage() {
         {/* TAB 3: USERS MANAGEMENT */}
         {activeTab === 'users' && (
           <div className="space-y-6">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 overflow-hidden backdrop-blur-xl">
-              <table className="w-full text-left text-xs">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 overflow-x-auto backdrop-blur-xl">
+              <table className="w-full min-w-[540px] text-left text-xs">
                 <thead>
                   <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-400 uppercase tracking-wider text-[10px]">
                     <th className="px-4 py-3">User</th>
