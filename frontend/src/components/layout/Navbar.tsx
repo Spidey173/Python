@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { persistence, getCanonicalProblemId } from '@/lib/persistence';
+import { persistence, getCanonicalProblemId, calculateRealStreak, SubmissionLogEntry } from '@/lib/persistence';
 import { api } from '@/lib/api';
 import { ChapterGroup } from '@/lib/types';
 import { CommandPalette } from '@/components/ui/CommandPalette';
@@ -22,18 +22,22 @@ export default function Navbar() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'signin' | 'signup'>('signin');
   const [solvedCount, setSolvedCount] = useState<number>(0);
+  const [streakCount, setStreakCount] = useState<number>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function loadSolved() {
       if (!user) {
         setSolvedCount(0);
+        setStreakCount(0);
         return;
       }
       try {
-        const [localSolved, chaps] = await Promise.all([
+        const [localSolved, chaps, localSubs, remoteSubs] = await Promise.all([
           persistence.getSolvedIds().catch(() => [] as number[]),
           api.getChapters().catch(() => [] as ChapterGroup[]),
+          persistence.getSubmissions().catch(() => [] as SubmissionLogEntry[]),
+          api.getUserSubmissions().catch(() => [] as SubmissionLogEntry[]),
         ]);
         const flatLevels = (chaps as ChapterGroup[]).flatMap((c: ChapterGroup) => c.levels || []);
         const backendSolved = flatLevels.filter((l) => l.passed).map((l) => l.id);
@@ -43,6 +47,14 @@ export default function Navbar() {
           if (canonical >= 1 && canonical <= 70) solvedSet.add(canonical);
         }
         setSolvedCount(solvedSet.size);
+
+        const subsMap = new Map<string, SubmissionLogEntry>();
+        for (const s of [...(remoteSubs || []), ...(localSubs || [])]) {
+          const key = s.id || `${s.problemId}_${s.timestamp}`;
+          if (!subsMap.has(key)) subsMap.set(key, s);
+        }
+        const mergedSubs = Array.from(subsMap.values());
+        setStreakCount(calculateRealStreak(mergedSubs));
       } catch {
         const solved = await persistence.getSolvedIds().catch(() => [] as number[]);
         const fallbackSet = new Set<number>();
@@ -57,6 +69,7 @@ export default function Navbar() {
 
     const handleLogout = () => {
       setSolvedCount(0);
+      setStreakCount(0);
     };
     const handleProblemSolved = () => {
       loadSolved();
@@ -195,7 +208,7 @@ export default function Navbar() {
                 title="Daily Active Streak"
               >
                 <Flame className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
-                <span>{user?.streak || 0}d</span>
+                <span>{streakCount}d</span>
               </div>
             )}
 
@@ -247,7 +260,7 @@ export default function Navbar() {
             {user && (
               <div className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded bg-[#D29922]/15 text-[#F59E0B] border border-[#D29922]/30">
                 <Flame className="h-3.5 w-3.5 fill-[#F59E0B]" />
-                <span>{user?.streak || 0}d</span>
+                <span>{streakCount}d</span>
               </div>
             )}
 
@@ -309,7 +322,7 @@ export default function Navbar() {
                   <div className="flex items-center gap-2 text-xs font-mono text-[#8B949E]">
                     <span className="text-[#3FB950] font-semibold">{solvedCount} Solved</span>
                     <span>•</span>
-                    <span className="text-[#F59E0B] font-semibold">{user?.streak || 0} Day Streak</span>
+                    <span className="text-[#F59E0B] font-semibold">{streakCount} Day Streak</span>
                   </div>
                 </div>
               ) : (

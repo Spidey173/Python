@@ -198,12 +198,8 @@ export default function DashboardPage() {
     if (!user) return 0;
     const computed = calculateRealStreak(submissions);
     if (computed > 0) return computed;
-    if (user.streak && (solvedCount > 0 || submissions.length > 0)) {
-      return user.streak;
-    }
-    if (solvedCount > 0) return 1;
     return 0;
-  }, [user, submissions, solvedCount]);
+  }, [user, submissions]);
 
   const solvedToday = useMemo(() => {
     if (!user) return 0;
@@ -211,12 +207,11 @@ export default function DashboardPage() {
     const todayPassedSubs = submissions.filter(
       (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
     );
-    const uniqueProblems = new Set(todayPassedSubs.map((s) => s.problemId));
-    if (uniqueProblems.size === 0 && solvedCount > 0) {
-      return Math.min(solvedCount, 3);
-    }
+    const uniqueProblems = new Set(
+      todayPassedSubs.map((s) => getCanonicalProblemId(s.problemId, allProblems))
+    );
     return uniqueProblems.size;
-  }, [user, submissions, solvedCount]);
+  }, [user, submissions, allProblems]);
 
   // Helper to check if a problem is already solved
   const isProblemSolved = useCallback(
@@ -301,11 +296,6 @@ export default function DashboardPage() {
       })
     );
 
-    const todayDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    if (user && (realStreak > 0 || solvedToday > 0 || solvedCount > 0)) {
-      activeDateStrings.add(todayDateStr);
-    }
-
     const daysLabel = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
@@ -318,7 +308,7 @@ export default function DashboardPage() {
       });
     }
     return dates;
-  }, [user, submissions, realStreak, solvedToday, solvedCount]);
+  }, [user, submissions]);
 
   // Readiness Tier Label
   const readinessTier = useMemo(() => {
@@ -474,7 +464,7 @@ export default function DashboardPage() {
                             ? 'border border-[#D29922]/50 bg-[#21262D]'
                             : 'bg-[#21262D]'
                         }`}
-                      title={`${day.label}: ${day.active ? 'Active practice day' : 'No submission'}`}
+                      title={`${day.label}${day.isToday ? ' (Today)' : ''}: ${day.active ? 'Active practice day' : day.isToday ? 'Pending practice today' : 'No submission'}`}
                     />
                     <span className={`text-[11px] font-mono ${day.isToday ? 'text-[#E6EDF3] font-bold' : 'text-[#8B949E]'}`}>
                       {day.label}
@@ -484,7 +474,17 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="mt-4 pt-3 border-t border-[#21262D] text-xs sm:text-sm text-[#8B949E] truncate">
-              {realStreak > 0 ? 'Consecutive daily consistency' : 'Solve a challenge today to ignite streak'}
+              {realStreak > 0 ? (
+                solvedToday > 0 ? (
+                  <span className="text-[#3FB950] font-medium flex items-center gap-1.5">
+                    <Check className="h-4 w-4" /> Streak extended today!
+                  </span>
+                ) : (
+                  'Consecutive daily consistency • Solve today to extend'
+                )
+              ) : (
+                'Solve a challenge today to ignite streak'
+              )}
             </div>
           </div>
 

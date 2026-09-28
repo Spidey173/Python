@@ -114,6 +114,7 @@ async def submit_code(
     db.add(sub)
 
     if passed_all:
+        now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
         if not progress:
             progress = UserProgress(
                 user_id=current_user.id,
@@ -122,7 +123,7 @@ async def submit_code(
                 attempts=attempts,
                 best_time_ms=total_time,
                 code_submitted=req.code,
-                completed_at=datetime.now(timezone.utc).replace(tzinfo=None)
+                completed_at=now_utc
             )
             db.add(progress)
         else:
@@ -130,7 +131,22 @@ async def submit_code(
             progress.attempts = attempts
             progress.best_time_ms = min(progress.best_time_ms or total_time, total_time) if progress.best_time_ms else total_time
             progress.code_submitted = req.code
-            progress.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
+            progress.completed_at = now_utc
+
+        # Update user streak and activity date
+        if current_user.last_active_date:
+            last_date = current_user.last_active_date.date()
+            today_date = now_utc.date()
+            diff = (today_date - last_date).days
+            if diff == 1:
+                current_user.streak = (current_user.streak or 0) + 1
+            elif diff > 1:
+                current_user.streak = 1
+            elif diff == 0:
+                current_user.streak = max(current_user.streak or 0, 1)
+        else:
+            current_user.streak = 1
+        current_user.last_active_date = now_utc
 
         await db.commit()
 

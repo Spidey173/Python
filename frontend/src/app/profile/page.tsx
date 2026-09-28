@@ -155,16 +155,10 @@ export default function ProgressPage() {
   const overallPercent = totalProblems > 0 ? Math.round((solvedCount / totalProblems) * 100) : 0;
   const remainingCount = Math.max(0, totalProblems - solvedCount);
 
-  // Real Analytics Calculations synchronized with user.streak
+  // Real Analytics Calculations synchronized with submissions
   const realStreak = useMemo(() => {
-    const computed = calculateRealStreak(submissions);
-    if (computed > 0) return computed;
-    if (user?.streak && (solvedCount > 0 || submissions.length > 0)) {
-      return user.streak;
-    }
-    if (solvedCount > 0) return 1;
-    return 0;
-  }, [submissions, user, solvedCount]);
+    return calculateRealStreak(submissions);
+  }, [submissions]);
 
   const realAvgRuntime = useMemo(() => calculateRealAverageRuntime(submissions), [submissions]);
 
@@ -181,12 +175,11 @@ export default function ProgressPage() {
     const passedToday = submissions.filter(
       (s) => s.passed && new Date(s.timestamp).toDateString() === todayStr
     );
-    const uniquePassed = new Set(passedToday.map((s) => s.problemId));
-    if (uniquePassed.size === 0 && solvedCount > 0) {
-      return Math.min(solvedCount, 3);
-    }
+    const uniquePassed = new Set(
+      passedToday.map((s) => getCanonicalProblemId(s.problemId, allProblems))
+    );
     return uniquePassed.size;
-  }, [submissions, solvedCount]);
+  }, [submissions, allProblems]);
 
   // 1. Completion by Difficulty Types (Easy, Medium, Hard)
   const difficultyTypes = useMemo(() => {

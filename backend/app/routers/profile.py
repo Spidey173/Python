@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 import time
+from datetime import datetime, timezone, timedelta
 
 from app.database import get_db
 from app.models import User, UserProgress, Challenge, Submission
@@ -105,12 +106,18 @@ async def get_developer_profile(
     )
     recent_activity = []
     for s, ch in recent_sub_res.all():
+        iso_str = None
+        if s.created_at:
+            dt = s.created_at
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            iso_str = dt.isoformat()
         recent_activity.append({
             "challenge_title": ch.title,
             "level_number": ch.level_number,
             "status": s.status,
             "execution_time_ms": s.execution_time_ms,
-            "date": s.created_at.isoformat() if s.created_at else None
+            "date": iso_str
         })
 
     return ProfileResponse(
@@ -140,7 +147,13 @@ async def get_user_submissions(
     )
     results = []
     for s, ch in sub_res.all():
-        ts = int(s.created_at.timestamp() * 1000) if s.created_at else int(time.time() * 1000)
+        if s.created_at:
+            dt = s.created_at
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            ts = int(dt.timestamp() * 1000)
+        else:
+            ts = int(time.time() * 1000)
         results.append({
             "id": f"sub_{s.id}",
             "problemId": ch.level_number or ch.id,
