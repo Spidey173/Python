@@ -223,6 +223,7 @@ async def chat_with_ai_tutor(
                 )
                 if resp.status_code == 200:
                     return clean_llm_response(resp.json()["choices"][0]["message"]["content"])
+                print(f"Groq API returned status {resp.status_code}: {resp.text}")
         except Exception as e:
             print("Groq API call error:", e)
 
@@ -238,26 +239,82 @@ async def chat_with_ai_tutor(
                     })
             contents.append({"role": "user", "parts": [{"text": full_user_prompt}]})
 
+            gemini_models_to_try = [settings.GEMINI_MODEL, "gemini-1.5-flash", "gemini-2.0-flash"]
+            # Deduplicate while preserving order
+            gemini_models_to_try = list(dict.fromkeys([m for m in gemini_models_to_try if m]))
+
             async with httpx.AsyncClient(timeout=15.0) as client:
-                resp = await client.post(
-                    f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent",
-                    headers={
-                        "Content-Type": "application/json",
-                        "x-goog-api-key": settings.GEMINI_API_KEY,
-                    },
-                    json={
-                        "system_instruction": {
-                            "parts": [{"text": SYSTEM_TUTOR_PROMPT}]
+                for g_model in gemini_models_to_try:
+                    resp = await client.post(
+                        f"https://generativelanguage.googleapis.com/v1beta/models/{g_model}:generateContent",
+                        headers={
+                            "Content-Type": "application/json",
+                            "x-goog-api-key": settings.GEMINI_API_KEY,
                         },
-                        "contents": contents
-                    }
-                )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    return clean_llm_response(data["candidates"][0]["content"]["parts"][0]["text"])
+                        json={
+                            "system_instruction": {
+                                "parts": [{"text": SYSTEM_TUTOR_PROMPT}]
+                            },
+                            "contents": contents
+                        }
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        return clean_llm_response(data["candidates"][0]["content"]["parts"][0]["text"])
+                    print(f"Gemini API ({g_model}) returned status {resp.status_code}: {resp.text}")
         except Exception as e:
             print("Gemini API call error:", e)
 
-    # 3. Honest API offline response
+    # 3. GitHub Copilot / OpenAI API proxy if configured
+    if settings.COPILOT_API_KEY:
+        try:
+            messages = [{"role": "system", "content": SYSTEM_TUTOR_PROMPT}]
+            if chat_history:
+                for h in chat_history[-6:]:
+                    messages.append({"role": h.get("role", "user"), "content": h.get("content", "")})
+            messages.append({"role": "user", "content": full_user_prompt})
+
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.post(
+                    f"{settings.COPILOT_API_BASE}/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {settings.COPILOT_API_KEY}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": settings.COPILOT_MODEL,
+                        "messages": messages,
+                        "temperature": 0.5,
+                        "max_tokens": 1200,
+                    }
+                )
+                if resp.status_code == 200:
+                    return clean_llm_response(resp.json()["choices"][0]["message"]["content"])
+                print(f"Copilot/OpenAI API returned status {resp.status_code}: {resp.text}")
+        except Exception as e:
+            print("Copilot/OpenAI API call error:", e)
+
+    # 4. Intelligent AST / Challenge Fallback
+    if clean_code:
+        try:
+            analysis = ast_analyzer.analyze(clean_code, message)
+            if is_debug_request:
+                mistakes = analysis.get("common_mistakes", [])
+                mistake_text = f"\n- {mistakes[0]}" if mistakes else ""
+                return (
+                    f"## 💡 Debug Analysis\n"
+                    f"{analysis.get('beginner_summary', 'I reviewed your code.')}\n\n"
+                    f"**Potential edge cases / pitfalls to check:**{mistake_text}\n\n"
+                    f"**Suggested improvement:** {analysis.get('better_approach', '')}"
+                )
+            return (
+                f"## 💡 Intuition\n"
+                f"{analysis.get('beginner_summary', 'Here is how to approach this problem.')}\n\n"
+                f"**Time Complexity:** {analysis.get('time_complexity', 'O(N)')}\n\n"
+                f"**Space Complexity:** {analysis.get('space_complexity', 'O(1)')}"
+            )
+        except Exception:
+            pass
+
     return "I'm currently unable to reach the AI server. Please verify that your API key is configured or backend server is running."
 
